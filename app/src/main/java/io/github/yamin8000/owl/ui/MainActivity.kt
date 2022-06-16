@@ -18,46 +18,62 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl
+package io.github.yamin8000.owl.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.TextField
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            OwlTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
+        setContent { MainContent() }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    private fun MainContent() {
+        OwlTheme {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                color = MaterialTheme.colors.background,
+            ) {
+                var searchText by remember { mutableStateOf("") }
+
+                Column() {
+                    TextField(
+                        label = {
+                            Text(
+                                stringResource(R.string.search),
+                                textAlign = TextAlign.Right,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        },
+                        value = searchText,
+                        singleLine = true,
+                        onValueChange = {
+                            searchText = it
+                        })
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    OwlTheme {
-        Greeting("Android")
     }
 }

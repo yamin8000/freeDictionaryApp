@@ -21,3 +21,4 @@ local.properties
 /.idea/misc.xml
 /.idea/vcs.xml
 /.idea/
+/app/src/main/java/io/github/yamin8000/owl/network/ApiKey.kt

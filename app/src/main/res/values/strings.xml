@@ -20,4 +20,5 @@
 
 <resources>
     <string name="app_name">Owl</string>
+    <string name="search">جستجو</string>
 </resources>

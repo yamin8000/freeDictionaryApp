@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~     Owl: an android app for Owlbot Dictionary API
   ~     AndroidManifest.xml Created by Yamin Siahmargooei at 2022/6/16
   ~     This file is part of Owl.
@@ -24,6 +23,7 @@
     package="io.github.yamin8000.owl">
 
     <application
+        android:name=".util.MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -34,7 +34,7 @@
         android:theme="@style/Theme.Owl"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|locale|screenLayout|screenSize"
             android:exported="true"
             android:theme="@style/Theme.Owl">
