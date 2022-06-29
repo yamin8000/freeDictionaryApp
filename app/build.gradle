@@ -79,7 +79,7 @@ dependencies {
     //core android
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
     implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
     implementation 'com.google.android.material:material:1.6.1'
     //compose
     implementation "androidx.compose.ui:ui:$compose_version"
