@@ -21,9 +21,13 @@
 package io.github.yamin8000.owl.ui.theme
 
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import io.github.yamin8000.owl.R
+
+val Samim = FontFamily(Font(resId = R.font.samimbold))
 
 val Roboto = FontFamily.Default
 

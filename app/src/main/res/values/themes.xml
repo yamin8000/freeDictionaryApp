@@ -22,6 +22,5 @@
 <resources>
 
     <style name="Theme.Owl" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
     </style>
 </resources>
