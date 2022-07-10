@@ -43,13 +43,14 @@ fun PersianText(
     text: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 14.sp,
-    fontFamily: FontFamily = Samim
+    fontFamily: FontFamily = Samim,
+    textAlign: TextAlign = TextAlign.Right
 ) {
     Text(
         text,
         modifier = modifier,
         fontFamily = fontFamily,
-        textAlign = TextAlign.Right,
+        textAlign = textAlign,
         fontSize = fontSize
     )
 }

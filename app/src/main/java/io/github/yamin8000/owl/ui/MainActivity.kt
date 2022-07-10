@@ -24,21 +24,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.ClickableIcon
+import io.github.yamin8000.owl.ui.composable.ButtonWithIcon
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.OwlTheme
+import io.github.yamin8000.owl.ui.theme.Samim
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,21 +58,55 @@ class MainActivity : ComponentActivity() {
                 color = MaterialTheme.colors.background,
             ) {
                 Scaffold(topBar = { MainTopAppBar() }) { contentPadding ->
-                    var searchText by remember { mutableStateOf("") }
 
-                    Column(modifier = Modifier.padding(contentPadding)) {
-                        Row(
+                    Column(
+                        modifier = Modifier
+                            .padding(contentPadding)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        ButtonWithIcon(
+                            onClick = {
+
+                            },
+                            iconPainter = painterResource(id = R.drawable.ic_history),
+                            contentDescription = stringResource(id = R.string.search_history),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally)
+                        )
+
+
+                        ButtonWithIcon(
+                            onClick = { },
+                            iconPainter = painterResource(id = R.drawable.ic_favorites),
+                            contentDescription = stringResource(id = R.string.favourites),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally)
+                        )
+
+                        ButtonWithIcon(
+                            onClick = {},
+                            iconPainter = painterResource(id = R.drawable.ic_casino),
+                            contentDescription = stringResource(id = R.string.random_word),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally)
+                        )
+
+                        PersianText(
+                            stringResource(id = R.string.search_hint),
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            PersianText("سلام علیک")
-                            PersianText("خوش آمدید")
-                        }
+                            textAlign = TextAlign.Center
+                        )
+
+                        var searchText by remember { mutableStateOf("") }
                         TextField(
+                            modifier = Modifier.fillMaxWidth(),
                             label = {
-                                Text(
+                                PersianText(
                                     stringResource(R.string.search),
-                                    textAlign = TextAlign.Right,
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             },
@@ -77,45 +114,12 @@ class MainActivity : ComponentActivity() {
                             singleLine = true,
                             onValueChange = {
                                 searchText = it
-                            })
-                    }
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun MainTopAppBar() {
-        TopAppBar(
-            elevation = 2.dp,
-            contentColor = Color.Black
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Icon(
-                    painterResource(R.drawable.ic_launcher_foreground),
-                    "Owl"
-                )
-                PersianText(
-                    text = stringResource(R.string.app_name),
-                    fontSize = 16.sp
-                )
-                Row(
-                ) {
-                    ClickableIcon(
-                        iconPainter = painterResource(id = R.drawable.ic_settings_applications),
-                        contentDescription = ""
-                    ) {
-
-                    }
-                    ClickableIcon(
-                        iconPainter = painterResource(id = R.drawable.ic_contact_support),
-                        contentDescription = ""
-                    ) {
-
+                            },
+                            textStyle = TextStyle(
+                                fontFamily = Samim,
+                                textAlign = TextAlign.Right
+                            )
+                        )
                     }
                 }
             }

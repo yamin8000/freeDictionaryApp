@@ -20,9 +20,16 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 
 
@@ -38,4 +45,19 @@ fun ClickableIcon(
             contentDescription = contentDescription
         )
     }
+}
+
+@Composable
+fun ButtonWithIcon(
+    onClick: () -> Unit,
+    iconPainter: Painter,
+    contentDescription: String,
+    modifier: Modifier = Modifier,
+    contentScope: @Composable RowScope.() -> Unit = {
+        Icon(iconPainter, contentDescription)
+        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+        PersianText(contentDescription)
+    }
+) {
+    Button(onClick = onClick, modifier = modifier, content = contentScope)
 }
