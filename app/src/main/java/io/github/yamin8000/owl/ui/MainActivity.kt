@@ -21,19 +21,19 @@
 package io.github.yamin8000.owl.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.TextField
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,9 +41,9 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ButtonWithIcon
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.OwlTheme
-import io.github.yamin8000.owl.ui.theme.Samim
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { MainContent() }
@@ -57,7 +57,31 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colors.background,
             ) {
-                Scaffold(topBar = { MainTopAppBar() }) { contentPadding ->
+                val focusManager = LocalFocusManager.current
+                var searchText by remember { mutableStateOf("") }
+
+                Scaffold(
+                    topBar = { MainTopBar() },
+                    floatingActionButton = {
+                        FloatingActionButton(onClick = {
+                            search(searchText)
+                            focusManager.clearFocus()
+                        }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
+                    },
+                    bottomBar = {
+                        MainBottomBar(
+                            MainBottomBarCallbacks(
+                                onSearch = {
+                                    searchText = it
+                                    search(searchText)
+                                    focusManager.clearFocus()
+                                },
+                                onTextChanged = {
+                                    searchText = it
+                                }
+                            )
+                        )
+                    }) { contentPadding ->
 
                     Column(
                         modifier = Modifier
@@ -76,9 +100,10 @@ class MainActivity : ComponentActivity() {
                                 .align(Alignment.CenterHorizontally)
                         )
 
-
                         ButtonWithIcon(
-                            onClick = { },
+                            onClick = {
+
+                            },
                             iconPainter = painterResource(id = R.drawable.ic_favorites),
                             contentDescription = stringResource(id = R.string.favourites),
                             modifier = Modifier
@@ -87,7 +112,9 @@ class MainActivity : ComponentActivity() {
                         )
 
                         ButtonWithIcon(
-                            onClick = {},
+                            onClick = {
+
+                            },
                             iconPainter = painterResource(id = R.drawable.ic_casino),
                             contentDescription = stringResource(id = R.string.random_word),
                             modifier = Modifier
@@ -100,29 +127,13 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center
                         )
-
-                        var searchText by remember { mutableStateOf("") }
-                        TextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            label = {
-                                PersianText(
-                                    stringResource(R.string.search),
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            },
-                            value = searchText,
-                            singleLine = true,
-                            onValueChange = {
-                                searchText = it
-                            },
-                            textStyle = TextStyle(
-                                fontFamily = Samim,
-                                textAlign = TextAlign.Right
-                            )
-                        )
                     }
                 }
             }
         }
+    }
+
+    private fun search(searchTerm: String) {
+        Toast.makeText(this, "search: $searchTerm", Toast.LENGTH_SHORT).show()
     }
 }

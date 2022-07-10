@@ -40,7 +40,7 @@ import io.github.yamin8000.owl.ui.composable.PersianText
 
 @Preview
 @Composable
-fun MainTopAppBar() {
+fun MainTopBar() {
     TopAppBar(
         elevation = 2.dp,
         contentColor = Color.Black

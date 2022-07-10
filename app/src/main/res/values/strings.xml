@@ -24,5 +24,5 @@
     <string name="search_hint">واژه‌ای برای جستجو بنویسید</string>
     <string name="favourites">واژه‌های برگزیده</string>
     <string name="search_history">جستجوهای پیشین</string>
-    <string name="random_word">عدد تصادفی</string>
+    <string name="random_word">واژه تصادفی</string>
 </resources>
