@@ -34,12 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ButtonWithIcon
-import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 
 class MainActivity : ComponentActivity() {
@@ -120,12 +118,6 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.CenterHorizontally)
-                        )
-
-                        PersianText(
-                            stringResource(id = R.string.search_hint),
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
                         )
                     }
                 }

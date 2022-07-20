@@ -20,7 +20,10 @@
 
 package io.github.yamin8000.owl.ui
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextField
@@ -31,6 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.Samim
@@ -44,29 +48,40 @@ data class MainBottomBarCallbacks(
 fun MainBottomBar(
     params: MainBottomBarCallbacks
 ) {
-    var searchText by remember { mutableStateOf("") }
-    TextField(
-        modifier = Modifier.fillMaxWidth(),
-        label = {
-            PersianText(
-                stringResource(R.string.search),
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        value = searchText,
-        singleLine = true,
-        onValueChange = {
-            searchText = it
-            params.onTextChanged(searchText)
-        },
-        textStyle = TextStyle(
-            fontFamily = Samim,
-            textAlign = TextAlign.Right,
-            textDirection = TextDirection.Rtl
-        ),
-        keyboardActions = KeyboardActions(onSearch = {
-            params.onSearch(searchText)
-        }),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
-    )
+    Column(
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        PersianText(
+            stringResource(id = R.string.search_hint),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+
+        var searchText by remember { mutableStateOf("") }
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            label = {
+                PersianText(
+                    stringResource(R.string.search),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            value = searchText,
+            singleLine = true,
+            onValueChange = {
+                searchText = it
+                params.onTextChanged(searchText)
+            },
+            textStyle = TextStyle(
+                fontFamily = Samim,
+                textAlign = TextAlign.Right,
+                textDirection = TextDirection.Rtl
+            ),
+            keyboardActions = KeyboardActions(onSearch = {
+                params.onSearch(searchText)
+            }),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
+        )
+    }
 }
