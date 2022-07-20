@@ -28,6 +28,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import io.github.yamin8000.owl.model.Definition
+
+@Composable
+fun AddDefinitionCard(definition: Definition) {
+    DefinitionCard(
+        definition = definition.definition,
+        imageUrl = definition.imageUrl,
+        type = definition.type,
+        example = definition.example,
+        emoji = definition.emoji
+    )
+}
 
 @Composable
 fun DefinitionCard(

@@ -21,6 +21,7 @@
 package io.github.yamin8000.owl.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -44,8 +45,8 @@ import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.asyncResponse
+import io.github.yamin8000.owl.ui.composable.AddDefinitionCard
 import io.github.yamin8000.owl.ui.composable.ButtonWithIcon
-import io.github.yamin8000.owl.ui.composable.DefinitionCard
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import retrofit2.Response
 
@@ -64,16 +65,19 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colors.background,
             ) {
+
                 val focusManager = LocalFocusManager.current
                 var searchText by remember { mutableStateOf("") }
-
                 var searchResult by remember { mutableStateOf<List<Definition>>(emptyList()) }
+                var isSearching by remember { mutableStateOf(false) }
 
                 Scaffold(
                     topBar = { MainTopBar() },
                     floatingActionButton = {
                         FloatingActionButton(onClick = {
+                            isSearching = true
                             createSearchWordRequest(searchText) { response ->
+                                isSearching = false
                                 val body = response.body()
                                 if (body != null) searchResult = body.definitions
                                 else handleNullResponseBody(response.code())
@@ -82,29 +86,36 @@ class MainActivity : ComponentActivity() {
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
                     },
                     bottomBar = {
-                        MainBottomBar(
-                            MainBottomBarCallbacks(
-                                onSearch = {
-                                    searchText = it
-                                    createSearchWordRequest(searchText) { response ->
-                                        val body = response.body()
-                                        if (body != null) searchResult = body.definitions
-                                        else handleNullResponseBody(response.code())
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            if (isSearching)
+                                CircularProgressIndicator()
+                            MainBottomBar(
+                                MainBottomBarCallbacks(
+                                    onSearch = {
+                                        searchText = it
+                                        isSearching = true
+                                        createSearchWordRequest(searchText) { response ->
+                                            isSearching = false
+                                            val body = response.body()
+                                            if (body != null) searchResult = body.definitions
+                                            else handleNullResponseBody(response.code())
+                                        }
+                                        focusManager.clearFocus()
+                                    },
+                                    onTextChanged = {
+                                        searchText = it
                                     }
-                                    focusManager.clearFocus()
-                                },
-                                onTextChanged = {
-                                    searchText = it
-                                }
+                                )
                             )
-                        )
+                        }
                     }) { contentPadding ->
 
                     Column(
                         modifier = Modifier
                             .padding(contentPadding)
                             .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         ButtonWithIcon(
                             onClick = {
@@ -153,27 +164,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Composable
-    private fun AddDefinitionCard(definition: Definition) {
-        DefinitionCard(
-            definition = definition.definition,
-            imageUrl = definition.imageUrl,
-            type = definition.type,
-            example = definition.example,
-            emoji = definition.emoji
-        )
-    }
-
     private fun createSearchWordRequest(input: String, callback: (Response<Word>) -> Unit) {
-        Web.getAPI<APIs.WordAPI>().searchWord(input).asyncResponse(this, {
+        Web.getAPI<APIs.WordAPI>().searchWord(input.trim()).asyncResponse(this, {
             callback(it)
         }, { throwable -> handleException(throwable) })
     }
 
     private fun handleException(throwable: Throwable) {
         Logger.d(throwable.stackTraceToString())
-        //toast(getString(R.string.general_net_error), Toast.LENGTH_LONG)
-        //binding.searchProgress.gone()
+        Toast.makeText(this, getString(R.string.general_net_error), Toast.LENGTH_LONG).show()
     }
 
     private fun handleNullResponseBody(code: Int) {
@@ -183,7 +182,6 @@ class MainActivity : ComponentActivity() {
             429 -> getString(R.string.api_throttled)
             else -> getString(R.string.general_net_error)
         }
-        //toast(message, Toast.LENGTH_LONG)
-        //binding.searchProgress.gone()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }
