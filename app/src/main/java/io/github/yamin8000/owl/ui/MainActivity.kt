@@ -21,10 +21,10 @@
 package io.github.yamin8000.owl.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -36,9 +36,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.orhanobut.logger.Logger
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.model.Word
+import io.github.yamin8000.owl.network.APIs
+import io.github.yamin8000.owl.network.Web
+import io.github.yamin8000.owl.network.Web.asyncResponse
 import io.github.yamin8000.owl.ui.composable.ButtonWithIcon
+import io.github.yamin8000.owl.ui.composable.DefinitionCard
 import io.github.yamin8000.owl.ui.theme.OwlTheme
+import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
 
@@ -62,7 +69,7 @@ class MainActivity : ComponentActivity() {
                     topBar = { MainTopBar() },
                     floatingActionButton = {
                         FloatingActionButton(onClick = {
-                            search(searchText)
+                            createSearchWordRequest(searchText)
                             focusManager.clearFocus()
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
                     },
@@ -71,7 +78,7 @@ class MainActivity : ComponentActivity() {
                             MainBottomBarCallbacks(
                                 onSearch = {
                                     searchText = it
-                                    search(searchText)
+                                    createSearchWordRequest(searchText)
                                     focusManager.clearFocus()
                                 },
                                 onTextChanged = {
@@ -119,13 +126,69 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .align(Alignment.CenterHorizontally)
                         )
+
+                        LazyColumn(
+                            content = {
+                                item {
+                                    DefinitionCard(
+                                        word = "test",
+                                        imagePainter = painterResource(id = R.drawable.ic_casino),
+                                        type = "noun",
+                                        definition = "hello",
+                                        example = "hello there",
+                                        emoji = "duh"
+                                    )
+                                }
+                            },
+                            verticalArrangement = Arrangement.spacedBy(2.dp),
+                        )
                     }
                 }
             }
         }
     }
 
-    private fun search(searchTerm: String) {
-        Toast.makeText(this, "search: $searchTerm", Toast.LENGTH_SHORT).show()
+    private fun createSearchWordRequest(input: String) {
+        Web.getAPI<APIs.WordAPI>().searchWord(input).asyncResponse(this, {
+            handleReceivedResponse(it)
+        }, { throwable -> handleException(throwable) })
+    }
+
+    private fun handleReceivedResponse(it: Response<Word>) {
+        val body = it.body()
+        if (body != null) handleOkResponseBody(body)
+        else handleNullResponseBody(it.code())
+    }
+
+    private fun handleException(throwable: Throwable) {
+        Logger.d(throwable.stackTraceToString())
+        //toast(getString(R.string.general_net_error), Toast.LENGTH_LONG)
+        //binding.searchProgress.gone()
+    }
+
+    private fun handleOkResponseBody(body: Word) {
+        //hideKeyboard()
+        //binding.basicInfoCard.visible()
+        //binding.wordText.handleViewDataNullity(body.word)
+        //binding.pronunciationText.handleViewDataNullity(body.pronunciation)
+
+        //val adapter = DefinitionListAdapter(this::imageClickListener)
+        //binding.recyclerView.adapter = adapter
+        body.definitions.forEachIndexed { index, definition ->
+            //adapter.addItem(definition)
+            //adapter.notifyItemInserted(index)
+        }
+        //binding.searchProgress.gone()
+    }
+
+    private fun handleNullResponseBody(code: Int) {
+        val message = when (code) {
+            401 -> getString(R.string.api_authorization_error)
+            404 -> getString(R.string.definition_not_found)
+            429 -> getString(R.string.api_throttled)
+            else -> getString(R.string.general_net_error)
+        }
+        //toast(message, Toast.LENGTH_LONG)
+        //binding.searchProgress.gone()
     }
 }

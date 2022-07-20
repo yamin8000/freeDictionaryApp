@@ -32,13 +32,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object Web {
 
-    private const val BaseUrl = "https://owlbot.info/api/v4/"
+    private const val baseUrl = "https://owlbot.info/api/v4/"
 
     val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createRetrofit() }
 
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BaseUrl)
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

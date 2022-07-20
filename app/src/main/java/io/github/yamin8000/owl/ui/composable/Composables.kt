@@ -20,17 +20,45 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.dp
 
+@Composable
+fun DefinitionCard(
+    word: String,
+    imagePainter: Painter,
+    type: String,
+    definition: String,
+    example: String,
+    emoji: String
+) {
+    Card(
+        shape = RoundedCornerShape(25.dp),
+        modifier = Modifier.padding(vertical = 8.dp),
+        backgroundColor = MaterialTheme.colors.surface
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Image(
+                painter = imagePainter,
+                contentDescription = word,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Text(type, modifier = Modifier.fillMaxWidth())
+            Text(definition, modifier = Modifier.fillMaxWidth())
+            Text(example, modifier = Modifier.fillMaxWidth())
+            Text(emoji, modifier = Modifier.fillMaxWidth())
+        }
+    }
+}
 
 @Composable
 fun ClickableIcon(
