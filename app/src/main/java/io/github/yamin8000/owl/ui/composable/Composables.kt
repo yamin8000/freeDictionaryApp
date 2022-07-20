@@ -20,7 +20,6 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -28,15 +27,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 
 @Composable
 fun DefinitionCard(
-    word: String,
-    imagePainter: Painter,
-    type: String,
     definition: String,
-    example: String,
-    emoji: String
+    imageUrl: String?,
+    type: String?,
+    example: String?,
+    emoji: String?
 ) {
     Card(
         shape = RoundedCornerShape(25.dp),
@@ -47,15 +46,18 @@ fun DefinitionCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Image(
-                painter = imagePainter,
-                contentDescription = word,
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = definition,
                 modifier = Modifier.fillMaxWidth()
             )
-            Text(type, modifier = Modifier.fillMaxWidth())
+            if (type != null)
+                Text(type, modifier = Modifier.fillMaxWidth())
             Text(definition, modifier = Modifier.fillMaxWidth())
-            Text(example, modifier = Modifier.fillMaxWidth())
-            Text(emoji, modifier = Modifier.fillMaxWidth())
+            if (example != null)
+                Text(example, modifier = Modifier.fillMaxWidth())
+            if (emoji != null)
+                Text(emoji, modifier = Modifier.fillMaxWidth())
         }
     }
 }

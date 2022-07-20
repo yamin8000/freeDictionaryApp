@@ -25,6 +25,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -38,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.orhanobut.logger.Logger
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
@@ -65,11 +67,17 @@ class MainActivity : ComponentActivity() {
                 val focusManager = LocalFocusManager.current
                 var searchText by remember { mutableStateOf("") }
 
+                var searchResult by remember { mutableStateOf<List<Definition>>(emptyList()) }
+
                 Scaffold(
                     topBar = { MainTopBar() },
                     floatingActionButton = {
                         FloatingActionButton(onClick = {
-                            createSearchWordRequest(searchText)
+                            createSearchWordRequest(searchText) { response ->
+                                val body = response.body()
+                                if (body != null) searchResult = body.definitions
+                                else handleNullResponseBody(response.code())
+                            }
                             focusManager.clearFocus()
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
                     },
@@ -78,7 +86,11 @@ class MainActivity : ComponentActivity() {
                             MainBottomBarCallbacks(
                                 onSearch = {
                                     searchText = it
-                                    createSearchWordRequest(searchText)
+                                    createSearchWordRequest(searchText) { response ->
+                                        val body = response.body()
+                                        if (body != null) searchResult = body.definitions
+                                        else handleNullResponseBody(response.code())
+                                    }
                                     focusManager.clearFocus()
                                 },
                                 onTextChanged = {
@@ -129,15 +141,8 @@ class MainActivity : ComponentActivity() {
 
                         LazyColumn(
                             content = {
-                                item {
-                                    DefinitionCard(
-                                        word = "test",
-                                        imagePainter = painterResource(id = R.drawable.ic_casino),
-                                        type = "noun",
-                                        definition = "hello",
-                                        example = "hello there",
-                                        emoji = "duh"
-                                    )
+                                items(searchResult) { item ->
+                                    AddDefinitionCard(item)
                                 }
                             },
                             verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -148,36 +153,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun createSearchWordRequest(input: String) {
-        Web.getAPI<APIs.WordAPI>().searchWord(input).asyncResponse(this, {
-            handleReceivedResponse(it)
-        }, { throwable -> handleException(throwable) })
+    @Composable
+    private fun AddDefinitionCard(definition: Definition) {
+        DefinitionCard(
+            definition = definition.definition,
+            imageUrl = definition.imageUrl,
+            type = definition.type,
+            example = definition.example,
+            emoji = definition.emoji
+        )
     }
 
-    private fun handleReceivedResponse(it: Response<Word>) {
-        val body = it.body()
-        if (body != null) handleOkResponseBody(body)
-        else handleNullResponseBody(it.code())
+    private fun createSearchWordRequest(input: String, callback: (Response<Word>) -> Unit) {
+        Web.getAPI<APIs.WordAPI>().searchWord(input).asyncResponse(this, {
+            callback(it)
+        }, { throwable -> handleException(throwable) })
     }
 
     private fun handleException(throwable: Throwable) {
         Logger.d(throwable.stackTraceToString())
         //toast(getString(R.string.general_net_error), Toast.LENGTH_LONG)
-        //binding.searchProgress.gone()
-    }
-
-    private fun handleOkResponseBody(body: Word) {
-        //hideKeyboard()
-        //binding.basicInfoCard.visible()
-        //binding.wordText.handleViewDataNullity(body.word)
-        //binding.pronunciationText.handleViewDataNullity(body.pronunciation)
-
-        //val adapter = DefinitionListAdapter(this::imageClickListener)
-        //binding.recyclerView.adapter = adapter
-        body.definitions.forEachIndexed { index, definition ->
-            //adapter.addItem(definition)
-            //adapter.notifyItemInserted(index)
-        }
         //binding.searchProgress.gone()
     }
 

@@ -22,6 +22,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="io.github.yamin8000.owl">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".util.MyApp"
         android:allowBackup="true"
