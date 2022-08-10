@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        compose_version = '1.2.0'
+        compose_version = '1.2.1'
     }
 }/*
  *     Owl: an android app for Owlbot Dictionary API
