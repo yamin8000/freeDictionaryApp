@@ -40,7 +40,7 @@ class MyApp : Application() {
             if (BuildConfig.DEBUG)
                 prepareLogger()
 
-            DynamicColors.applyToActivitiesIfAvailable(this)
+            //DynamicColors.applyToActivitiesIfAvailable(this)
         } catch (e: Exception) {
             Log.d(LOG_TAG, "Application Failed!")
             if (BuildConfig.DEBUG)

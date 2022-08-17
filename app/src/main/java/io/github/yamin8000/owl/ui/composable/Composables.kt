@@ -22,7 +22,7 @@ package io.github.yamin8000.owl.ui.composable
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -52,7 +52,6 @@ fun DefinitionCard(
     Card(
         shape = RoundedCornerShape(25.dp),
         modifier = Modifier.padding(vertical = 8.dp),
-        backgroundColor = MaterialTheme.colors.surface
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -63,9 +62,9 @@ fun DefinitionCard(
                 contentDescription = definition,
                 modifier = Modifier.fillMaxWidth()
             )
+            Text(definition, modifier = Modifier.fillMaxWidth())
             if (type != null)
                 Text(type, modifier = Modifier.fillMaxWidth())
-            Text(definition, modifier = Modifier.fillMaxWidth())
             if (example != null)
                 Text(example, modifier = Modifier.fillMaxWidth())
             if (emoji != null)

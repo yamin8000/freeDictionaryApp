@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.ui
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -27,9 +28,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,13 +58,14 @@ class MainActivity : ComponentActivity() {
         setContent { MainContent() }
     }
 
-    @Preview(showBackground = true)
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
     @Composable
     private fun MainContent() {
         OwlTheme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colors.background,
+                color = MaterialTheme.colorScheme.background,
             ) {
 
                 val focusManager = LocalFocusManager.current
