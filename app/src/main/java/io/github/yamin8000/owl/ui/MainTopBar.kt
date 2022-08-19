@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     MainAppBar.kt Created by Yamin Siahmargooei at 2022/7/10
+ *     MainTopBar.kt Created by Yamin Siahmargooei at 2022/7/10
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -20,13 +20,16 @@
 
 package io.github.yamin8000.owl.ui
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
@@ -37,12 +40,34 @@ import io.github.yamin8000.owl.ui.composable.PersianText
 @Preview
 @Composable
 fun MainTopBar() {
-    SmallTopAppBar(title = {
+    MediumTopAppBar(title = {
         PersianText(
             text = stringResource(R.string.app_name),
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
     }, actions = {
+        ClickableIcon(
+            iconPainter = painterResource(id = R.drawable.ic_history),
+            contentDescription = stringResource(id = R.string.search_history),
+        ) {
+
+        }
+
+        ClickableIcon(
+            iconPainter = painterResource(id = R.drawable.ic_favorites),
+            contentDescription = stringResource(id = R.string.favourites),
+        ) {
+
+        }
+
+        ClickableIcon(
+            iconPainter = painterResource(id = R.drawable.ic_casino),
+            contentDescription = stringResource(id = R.string.random_word),
+        ) {
+
+        }
         ClickableIcon(
             iconPainter = painterResource(id = R.drawable.ic_settings_applications),
             contentDescription = ""

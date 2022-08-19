@@ -26,8 +26,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -35,7 +38,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,7 +49,7 @@ import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.asyncResponse
 import io.github.yamin8000.owl.ui.composable.AddDefinitionCard
-import io.github.yamin8000.owl.ui.composable.ButtonWithIcon
+import io.github.yamin8000.owl.ui.composable.RippleText
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import retrofit2.Response
 
@@ -67,11 +69,12 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colorScheme.background,
             ) {
-
                 val focusManager = LocalFocusManager.current
                 var searchText by remember { mutableStateOf("") }
                 var searchResult by remember { mutableStateOf<List<Definition>>(emptyList()) }
+                var rawBody by remember { mutableStateOf<Word?>(null) }
                 var isSearching by remember { mutableStateOf(false) }
+                val gridState = rememberLazyGridState()
 
                 Scaffold(
                     topBar = { MainTopBar() },
@@ -83,6 +86,7 @@ class MainActivity : ComponentActivity() {
                                 val body = response.body()
                                 if (body != null) searchResult = body.definitions
                                 else handleNullResponseBody(response.code())
+                                rawBody = body
                             }
                             focusManager.clearFocus()
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
@@ -101,6 +105,7 @@ class MainActivity : ComponentActivity() {
                                             val body = response.body()
                                             if (body != null) searchResult = body.definitions
                                             else handleNullResponseBody(response.code())
+                                            rawBody = body
                                         }
                                         focusManager.clearFocus()
                                     },
@@ -119,49 +124,47 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        ButtonWithIcon(
-                            onClick = {
-
-                            },
-                            iconPainter = painterResource(id = R.drawable.ic_history),
-                            contentDescription = stringResource(id = R.string.search_history),
+                        Card(
+                            shape = RoundedCornerShape(25.dp),
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally)
-                        )
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth(),
+                        ) {
+                            rawBody?.let { AddWordCard(it) }
+                        }
 
-                        ButtonWithIcon(
-                            onClick = {
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 128.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            state = gridState
 
-                            },
-                            iconPainter = painterResource(id = R.drawable.ic_favorites),
-                            contentDescription = stringResource(id = R.string.favourites),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally)
-                        )
-
-                        ButtonWithIcon(
-                            onClick = {
-
-                            },
-                            iconPainter = painterResource(id = R.drawable.ic_casino),
-                            contentDescription = stringResource(id = R.string.random_word),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally)
-                        )
-
-                        LazyColumn(
-                            content = {
-                                items(searchResult) { item ->
-                                    AddDefinitionCard(item)
-                                }
-                            },
-                            verticalArrangement = Arrangement.spacedBy(2.dp),
-                        )
+                        ) {
+                            items(searchResult) { definition ->
+                                AddDefinitionCard(definition)
+                            }
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    @Composable
+    private fun AddWordCard(word: Word) {
+        Card(
+            shape = RoundedCornerShape(25.dp),
+            modifier = Modifier.padding(vertical = 8.dp),
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                RippleText(text = word.word) {
+
+                }
+                if (word.pronunciation != null)
+                    RippleText(text = word.pronunciation) {}
             }
         }
     }

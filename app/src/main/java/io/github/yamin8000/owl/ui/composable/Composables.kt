@@ -20,15 +20,22 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.github.yamin8000.owl.model.Definition
+import org.intellij.lang.annotations.JdkConstants
 
 @Composable
 fun AddDefinitionCard(definition: Definition) {
@@ -51,24 +58,29 @@ fun DefinitionCard(
 ) {
     Card(
         shape = RoundedCornerShape(25.dp),
-        modifier = Modifier.padding(vertical = 8.dp),
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .fillMaxWidth(),
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        Column() {
             AsyncImage(
                 model = imageUrl,
                 contentDescription = definition,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillWidth
             )
-            Text(definition, modifier = Modifier.fillMaxWidth())
-            if (type != null)
-                Text(type, modifier = Modifier.fillMaxWidth())
-            if (example != null)
-                Text(example, modifier = Modifier.fillMaxWidth())
-            if (emoji != null)
-                Text(emoji, modifier = Modifier.fillMaxWidth())
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                if (type != null)
+                    Text(type)
+                Text(definition)
+                if (example != null)
+                    Text(example)
+                if (emoji != null)
+                    Text(emoji)
+            }
         }
     }
 }
@@ -100,4 +112,19 @@ fun ButtonWithIcon(
     }
 ) {
     Button(onClick = onClick, modifier = modifier, content = contentScope)
+}
+
+@Composable
+fun RippleText(
+    text: String,
+    onClick: () -> Unit
+) {
+    Text(
+        text = text,
+        modifier = Modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = rememberRipple(),
+            onClick = onClick
+        )
+    )
 }
