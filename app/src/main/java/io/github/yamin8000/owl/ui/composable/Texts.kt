@@ -20,8 +20,12 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -52,5 +56,20 @@ fun PersianText(
         fontFamily = fontFamily,
         textAlign = textAlign,
         fontSize = fontSize
+    )
+}
+
+@Composable
+fun RippleText(
+    text: String,
+    onClick: () -> Unit
+) {
+    Text(
+        text = text,
+        modifier = Modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = rememberRipple(),
+            onClick = onClick
+        )
     )
 }

@@ -33,8 +33,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 object Web {
 
     private const val baseUrl = "https://owlbot.info/api/v4/"
+    const val ninjaApiBaseUrl = "https://api.api-ninjas.com/v1/"
 
     val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createRetrofit() }
+
+    fun createCustomUrlRetrofit(baseUrl: String): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
 
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
@@ -49,7 +57,7 @@ object Web {
      * @param T type/class/interface of api
      * @return service for that api
      */
-    inline fun <reified T> getAPI(): T = retrofit.create(T::class.java)
+    inline fun <reified T> Retrofit.getAPI(): T = this.create(T::class.java)
 
     /**
      * async callback

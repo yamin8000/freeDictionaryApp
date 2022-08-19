@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     APIs.kt Created by Yamin Siahmargooei at 2022/1/16
+ *     RandomWord.kt Created by Yamin Siahmargooei at 2022/8/20
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -18,30 +18,6 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.network
+package io.github.yamin8000.owl.model
 
-import io.github.yamin8000.owl.model.RandomWord
-import io.github.yamin8000.owl.model.Word
-import io.github.yamin8000.owl.network.ApiKey.API_NINJA_KEY
-import io.github.yamin8000.owl.network.ApiKey.OWLBOT_TOKEN
-import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
-
-object APIs {
-
-    interface OwlBotWordAPI {
-
-        @Headers(OWLBOT_TOKEN)
-        @GET("dictionary/{word}")
-        fun searchWord(@Path("word") word: String): Call<Word>
-    }
-
-    interface NinjaAPI {
-
-        @Headers(API_NINJA_KEY)
-        @GET("randomword")
-        fun getRandomWord(): Call<RandomWord>
-    }
-}
+data class RandomWord(val word: String)

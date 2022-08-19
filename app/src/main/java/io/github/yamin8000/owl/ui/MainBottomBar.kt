@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
@@ -45,10 +47,18 @@ data class MainBottomBarCallbacks(
     val onTextChanged: (String) -> Unit
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainBottomBar(
     params: MainBottomBarCallbacks
+) {
+    GenericMainBottomBar(params)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+private fun GenericMainBottomBar(
+    params: MainBottomBarCallbacks? = null,
 ) {
     Column(
         modifier = Modifier.padding(16.dp),
@@ -73,7 +83,7 @@ fun MainBottomBar(
             singleLine = true,
             onValueChange = {
                 searchText = it
-                params.onTextChanged(searchText)
+                params?.onTextChanged?.invoke(searchText)
             },
             textStyle = TextStyle(
                 fontFamily = Samim,
@@ -81,7 +91,7 @@ fun MainBottomBar(
                 textDirection = TextDirection.Rtl
             ),
             keyboardActions = KeyboardActions(onSearch = {
-                params.onSearch(searchText)
+                params?.onSearch?.invoke(searchText)
             }),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
         )

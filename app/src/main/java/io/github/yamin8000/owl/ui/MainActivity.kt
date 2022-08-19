@@ -48,10 +48,10 @@ import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.asyncResponse
+import io.github.yamin8000.owl.network.Web.getAPI
 import io.github.yamin8000.owl.ui.composable.AddDefinitionCard
-import io.github.yamin8000.owl.ui.composable.RippleText
+import io.github.yamin8000.owl.ui.composable.AddWordCard
 import io.github.yamin8000.owl.ui.theme.OwlTheme
-import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
 
@@ -77,16 +77,42 @@ class MainActivity : ComponentActivity() {
                 val gridState = rememberLazyGridState()
 
                 Scaffold(
-                    topBar = { MainTopBar() },
+                    topBar = {
+                        MainTopBar(
+                            MainTopAppBarCallbacks(
+                                onHistoryClick = {
+
+                                },
+                                onFavouritesClick = {
+
+                                },
+                                onRandomWordClick = {
+                                    isSearching = true
+                                    onRandomWordClick {
+                                        searchText = it
+                                        createSearchWordRequest(searchText) { word ->
+                                            isSearching = false
+                                            searchResult = word.definitions
+                                            rawBody = word
+                                        }
+                                    }
+                                },
+                                onSettingsClick = {
+
+                                },
+                                onInfoClick = {
+
+                                }
+                            )
+                        )
+                    },
                     floatingActionButton = {
                         FloatingActionButton(onClick = {
                             isSearching = true
-                            createSearchWordRequest(searchText) { response ->
+                            createSearchWordRequest(searchText) { word ->
                                 isSearching = false
-                                val body = response.body()
-                                if (body != null) searchResult = body.definitions
-                                else handleNullResponseBody(response.code())
-                                rawBody = body
+                                searchResult = word.definitions
+                                rawBody = word
                             }
                             focusManager.clearFocus()
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
@@ -100,12 +126,10 @@ class MainActivity : ComponentActivity() {
                                     onSearch = {
                                         searchText = it
                                         isSearching = true
-                                        createSearchWordRequest(searchText) { response ->
+                                        createSearchWordRequest(searchText) { word ->
                                             isSearching = false
-                                            val body = response.body()
-                                            if (body != null) searchResult = body.definitions
-                                            else handleNullResponseBody(response.code())
-                                            rawBody = body
+                                            searchResult = word.definitions
+                                            rawBody = word
                                         }
                                         focusManager.clearFocus()
                                     },
@@ -150,28 +174,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Composable
-    private fun AddWordCard(word: Word) {
-        Card(
-            shape = RoundedCornerShape(25.dp),
-            modifier = Modifier.padding(vertical = 8.dp),
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                RippleText(text = word.word) {
-
+    private fun onRandomWordClick(onResponse: (String) -> Unit) {
+        val retrofit = Web.createCustomUrlRetrofit(Web.ninjaApiBaseUrl)
+        retrofit.getAPI<APIs.NinjaAPI>().getRandomWord()
+            .asyncResponse(this, {
+                val body = it.body()
+                body?.let { randomWord ->
+                    onResponse(randomWord.word)
                 }
-                if (word.pronunciation != null)
-                    RippleText(text = word.pronunciation) {}
-            }
-        }
+                if (body == null) onResponse("")
+            }, { handleNullResponseBody(999) })
     }
 
-    private fun createSearchWordRequest(input: String, callback: (Response<Word>) -> Unit) {
-        Web.getAPI<APIs.WordAPI>().searchWord(input.trim()).asyncResponse(this, {
-            callback(it)
+    private fun createSearchWordRequest(input: String, callback: (Word) -> Unit) {
+        Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(input.trim()).asyncResponse(this, {
+            val body = it.body()
+            if (body != null) callback(body)
+            else handleNullResponseBody(it.code())
         }, { throwable -> handleException(throwable) })
     }
 

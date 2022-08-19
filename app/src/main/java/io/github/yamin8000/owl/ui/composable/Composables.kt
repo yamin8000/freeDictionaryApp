@@ -20,22 +20,19 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.github.yamin8000.owl.model.Definition
-import org.intellij.lang.annotations.JdkConstants
+import io.github.yamin8000.owl.model.Word
 
 @Composable
 fun AddDefinitionCard(definition: Definition) {
@@ -62,7 +59,7 @@ fun DefinitionCard(
             .padding(vertical = 8.dp)
             .fillMaxWidth(),
     ) {
-        Column() {
+        Column {
             AsyncImage(
                 model = imageUrl,
                 contentDescription = definition,
@@ -74,12 +71,12 @@ fun DefinitionCard(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 if (type != null)
-                    Text(type)
-                Text(definition)
+                    RippleText(type) {}
+                RippleText(definition) {}
                 if (example != null)
-                    Text(example)
+                    RippleText(example) {}
                 if (emoji != null)
-                    Text(emoji)
+                    RippleText(emoji) {}
             }
         }
     }
@@ -100,31 +97,20 @@ fun ClickableIcon(
 }
 
 @Composable
-fun ButtonWithIcon(
-    onClick: () -> Unit,
-    iconPainter: Painter,
-    contentDescription: String,
-    modifier: Modifier = Modifier,
-    contentScope: @Composable RowScope.() -> Unit = {
-        Icon(iconPainter, contentDescription)
-        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-        PersianText(contentDescription)
-    }
-) {
-    Button(onClick = onClick, modifier = modifier, content = contentScope)
-}
+fun AddWordCard(word: Word) {
+    Card(
+        shape = RoundedCornerShape(25.dp),
+        modifier = Modifier.padding(vertical = 8.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            RippleText(text = word.word) {
 
-@Composable
-fun RippleText(
-    text: String,
-    onClick: () -> Unit
-) {
-    Text(
-        text = text,
-        modifier = Modifier.clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(),
-            onClick = onClick
-        )
-    )
+            }
+            if (word.pronunciation != null)
+                RippleText(text = word.pronunciation) {}
+        }
+    }
 }
