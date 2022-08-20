@@ -29,57 +29,118 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Word
+import io.github.yamin8000.owl.util.TtsEngine
 
-@Composable
-fun AddDefinitionCard(definition: Definition) {
-    DefinitionCard(
-        definition = definition.definition,
-        imageUrl = definition.imageUrl,
-        type = definition.type,
-        example = definition.example,
-        emoji = definition.emoji
-    )
+class DefinitionProvider : PreviewParameterProvider<Definition> {
+    override val values: Sequence<Definition> = listOf(
+        Definition(
+            "noun",
+            "a word definition",
+            "some word in a sentence",
+            "",
+            "\uD83D\uDE02"
+        )
+    ).asSequence()
 }
 
+class WordProvider : PreviewParameterProvider<Word> {
+    override val values: Sequence<Word> = listOf(
+        Word("word", "wurd", listOf())
+    ).asSequence()
+}
+
+@Preview(showBackground = true)
 @Composable
 fun DefinitionCard(
-    definition: String,
-    imageUrl: String?,
-    type: String?,
-    example: String?,
-    emoji: String?
+    @PreviewParameter(DefinitionProvider::class)
+    definition: Definition
 ) {
     Card(
         shape = RoundedCornerShape(25.dp),
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = definition,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.FillWidth
-            )
+            if (!definition.imageUrl.isNullOrBlank())
+                AsyncImage(
+                    model = definition.imageUrl,
+                    contentDescription = definition.definition,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillWidth
+                )
             Column(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (type != null)
-                    RippleText(type) {}
-                RippleText(definition) {}
-                if (example != null)
-                    RippleText(example) {}
-                if (emoji != null)
-                    RippleText(emoji) {}
+                TtsReadyComposable { ttsEngine ->
+                    if (definition.type != null)
+                        WordTypeText(definition.type, ttsEngine)
+                    WordDefinitionText(definition.definition, ttsEngine)
+                    if (definition.example != null)
+                        WordExampleText(definition.example, ttsEngine)
+                    if (definition.emoji != null)
+                        WordEmojiText(definition.emoji, ttsEngine)
+                }
             }
         }
     }
+}
+
+@Composable
+fun WordEmojiText(
+    emoji: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        emoji,
+        painterResource(id = R.drawable.ic_emoji_symbols),
+        ttsEngine
+    )
+}
+
+@Composable
+fun WordExampleText(
+    example: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        example,
+        painterResource(id = R.drawable.ic_text_snippet),
+        ttsEngine
+    )
+}
+
+@Composable
+fun WordDefinitionText(
+    definition: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        definition,
+        painterResource(id = R.drawable.ic_short_text),
+        ttsEngine
+    )
+}
+
+@Composable
+private fun WordTypeText(
+    type: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        type,
+        painterResource(id = R.drawable.ic_category),
+        ttsEngine
+    )
 }
 
 @Composable
@@ -96,8 +157,12 @@ fun ClickableIcon(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun AddWordCard(word: Word) {
+fun WordCard(
+    @PreviewParameter(WordProvider::class)
+    word: Word
+) {
     Card(
         shape = RoundedCornerShape(25.dp),
         modifier = Modifier.padding(vertical = 8.dp),
@@ -106,11 +171,48 @@ fun AddWordCard(word: Word) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            RippleText(text = word.word) {
-
+            TtsReadyComposable { ttsEngine ->
+                WordText(word.word, ttsEngine)
             }
             if (word.pronunciation != null)
-                RippleText(text = word.pronunciation) {}
+                PronunciationText(
+                    word.pronunciation,
+                    word.word
+                )
         }
     }
+}
+
+@Composable
+private fun WordText(
+    word: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        word,
+        painterResource(id = R.drawable.ic_form_text),
+        ttsEngine
+    )
+}
+
+@Composable
+private fun PronunciationText(
+    pronunciation: String,
+    word: String
+) {
+    TtsReadyComposable { ttsEngine ->
+        RippleTextWithIcon(
+            text = pronunciation,
+            iconPainter = painterResource(id = R.drawable.ic_person_voice)
+        ) {
+            ttsEngine.speak(word)
+        }
+    }
+}
+
+@Composable
+fun TtsReadyComposable(
+    content: @Composable (TtsEngine) -> Unit
+) {
+    content(TtsEngine(LocalContext.current))
 }

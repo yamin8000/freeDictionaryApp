@@ -22,21 +22,27 @@ package io.github.yamin8000.owl.ui.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.ui.theme.Samim
+import io.github.yamin8000.owl.util.TtsEngine
 
-class TextProvider : PreviewParameterProvider<String> {
+private class TextProvider : PreviewParameterProvider<String> {
     override val values = listOf("سلام", "یمین").asSequence()
 }
 
@@ -72,4 +78,29 @@ fun RippleText(
             onClick = onClick
         )
     )
+}
+
+@Composable
+fun RippleTextWithIcon(
+    text: String,
+    iconPainter: Painter,
+    onClick: () -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(iconPainter, text)
+        RippleText(text, onClick)
+    }
+}
+
+@Composable
+fun SpeakableRippleTextWithIcon(
+    text: String,
+    iconPainter: Painter,
+    ttsEngine: TtsEngine
+) {
+    RippleTextWithIcon(text, iconPainter) {
+        ttsEngine.speak(text)
+    }
 }

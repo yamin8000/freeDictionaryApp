@@ -24,7 +24,6 @@ import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import com.orhanobut.logger.Logger
-import io.github.yamin8000.owl.R
 import java.util.*
 
 class TtsEngine(

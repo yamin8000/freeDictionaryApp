@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -49,8 +48,8 @@ import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.asyncResponse
 import io.github.yamin8000.owl.network.Web.getAPI
-import io.github.yamin8000.owl.ui.composable.AddDefinitionCard
-import io.github.yamin8000.owl.ui.composable.AddWordCard
+import io.github.yamin8000.owl.ui.composable.DefinitionCard
+import io.github.yamin8000.owl.ui.composable.WordCard
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 
 class MainActivity : ComponentActivity() {
@@ -74,7 +73,6 @@ class MainActivity : ComponentActivity() {
                 var searchResult by remember { mutableStateOf<List<Definition>>(emptyList()) }
                 var rawBody by remember { mutableStateOf<Word?>(null) }
                 var isSearching by remember { mutableStateOf(false) }
-                val gridState = rememberLazyGridState()
 
                 Scaffold(
                     topBar = {
@@ -154,18 +152,19 @@ class MainActivity : ComponentActivity() {
                                 .padding(vertical = 8.dp)
                                 .fillMaxWidth(),
                         ) {
-                            rawBody?.let { AddWordCard(it) }
+                            rawBody?.let { WordCard(it) }
                         }
 
+                        
+
                         LazyVerticalGrid(
-                            columns = GridCells.Adaptive(minSize = 128.dp),
+                            columns = GridCells.Fixed(2),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            state = gridState
 
-                        ) {
+                            ) {
                             items(searchResult) { definition ->
-                                AddDefinitionCard(definition)
+                                DefinitionCard(definition)
                             }
                         }
                     }
