@@ -26,9 +26,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -88,11 +87,11 @@ class MainActivity : ComponentActivity() {
                                     isSearching = true
                                     onRandomWordClick {
                                         searchText = it
-                                        createSearchWordRequest(searchText) { word ->
+                                        createSearchWordRequest(searchText, onSuccess = { word ->
                                             isSearching = false
                                             searchResult = word.definitions
                                             rawBody = word
-                                        }
+                                        }) { isSearching = false }
                                     }
                                 },
                                 onSettingsClick = {
@@ -107,11 +106,11 @@ class MainActivity : ComponentActivity() {
                     floatingActionButton = {
                         FloatingActionButton(onClick = {
                             isSearching = true
-                            createSearchWordRequest(searchText) { word ->
+                            createSearchWordRequest(searchText, onSuccess = { word ->
                                 isSearching = false
                                 searchResult = word.definitions
                                 rawBody = word
-                            }
+                            }) { isSearching = false }
                             focusManager.clearFocus()
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
                     },
@@ -124,11 +123,11 @@ class MainActivity : ComponentActivity() {
                                     onSearch = {
                                         searchText = it
                                         isSearching = true
-                                        createSearchWordRequest(searchText) { word ->
+                                        createSearchWordRequest(searchText, onSuccess = { word ->
                                             isSearching = false
                                             searchResult = word.definitions
                                             rawBody = word
-                                        }
+                                        }) { isSearching = false }
                                         focusManager.clearFocus()
                                     },
                                     onTextChanged = {
@@ -149,56 +148,82 @@ class MainActivity : ComponentActivity() {
                         Card(
                             shape = RoundedCornerShape(25.dp),
                             modifier = Modifier
-                                .padding(vertical = 8.dp)
+                                .padding(vertical = 4.dp)
                                 .fillMaxWidth(),
                         ) {
                             rawBody?.let { WordCard(it) }
                         }
 
-                        
-
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-
-                            ) {
-                            items(searchResult) { definition ->
-                                DefinitionCard(definition)
-                            }
-                        }
+                        if (searchResult.size > 1)
+                            DefinitionCardLazyGrid(searchResult)
+                        if (searchResult.size == 1)
+                            SingleDefinitionCardList(searchResult.first())
                     }
                 }
             }
         }
     }
 
-    private fun onRandomWordClick(onResponse: (String) -> Unit) {
-        val retrofit = Web.createCustomUrlRetrofit(Web.ninjaApiBaseUrl)
-        retrofit.getAPI<APIs.NinjaAPI>().getRandomWord()
-            .asyncResponse(this, {
-                val body = it.body()
-                body?.let { randomWord ->
-                    onResponse(randomWord.word)
-                }
-                if (body == null) onResponse("")
-            }, { handleNullResponseBody(999) })
+    @Composable
+    private fun SingleDefinitionCardList(singleDefinition: Definition) {
+        LazyColumn(content = {
+            item {
+                DefinitionCard(singleDefinition)
+            }
+        })
     }
 
-    private fun createSearchWordRequest(input: String, callback: (Word) -> Unit) {
+    @Composable
+    private fun DefinitionCardLazyGrid(
+        searchResult: List<Definition>
+    ) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            content = {
+                items(searchResult) { definition ->
+                    DefinitionCard(definition)
+                }
+            })
+    }
+
+    private fun onRandomWordClick(
+        onResponse: (String) -> Unit
+    ) {
+        Web.ninjaApiRetrofit.getAPI<APIs.NinjaAPI>()
+            .getRandomWord()
+            .asyncResponse(this, {
+                onResponse(it.body()?.word ?: "")
+            }, { handleException(it) })
+    }
+
+    private fun createSearchWordRequest(
+        input: String,
+        onSuccess: (Word) -> Unit,
+        onFailed: ((Throwable) -> Unit)? = null
+    ) {
         Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(input.trim()).asyncResponse(this, {
             val body = it.body()
-            if (body != null) callback(body)
-            else handleNullResponseBody(it.code())
-        }, { throwable -> handleException(throwable) })
+            if (body == null) {
+                handleNullResponseBody(it.code())
+                onFailed?.invoke(Exception("No Body"))
+            } else onSuccess(body)
+        }, { throwable ->
+            handleException(throwable)
+            onFailed?.invoke(throwable)
+        })
     }
 
-    private fun handleException(throwable: Throwable) {
+    private fun handleException(
+        throwable: Throwable
+    ) {
         Logger.d(throwable.stackTraceToString())
         Toast.makeText(this, getString(R.string.general_net_error), Toast.LENGTH_LONG).show()
     }
 
-    private fun handleNullResponseBody(code: Int) {
+    private fun handleNullResponseBody(
+        code: Int
+    ) {
         val message = when (code) {
             401 -> getString(R.string.api_authorization_error)
             404 -> getString(R.string.definition_not_found)

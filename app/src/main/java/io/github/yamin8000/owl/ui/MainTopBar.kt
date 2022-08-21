@@ -21,21 +21,16 @@
 package io.github.yamin8000.owl.ui
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
-import io.github.yamin8000.owl.ui.composable.PersianText
 
 data class MainTopAppBarCallbacks(
     val onHistoryClick: () -> Unit,
@@ -58,51 +53,45 @@ fun MainTopBar(
 private fun GenericMainTopAppBar(
     callbacks: MainTopAppBarCallbacks? = null
 ) {
-    MediumTopAppBar(title = {
-        PersianText(
-            text = stringResource(R.string.app_name),
-            fontSize = 16.sp,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-    }, actions = {
-        ClickableIcon(
-            iconPainter = painterResource(id = R.drawable.ic_history),
-            contentDescription = stringResource(id = R.string.search_history),
-        ) {
-            callbacks?.onHistoryClick?.invoke()
-        }
+    SmallTopAppBar(title = {},
+        actions = {
+            ClickableIcon(
+                iconPainter = painterResource(id = R.drawable.ic_history),
+                contentDescription = stringResource(id = R.string.search_history),
+            ) {
+                callbacks?.onHistoryClick?.invoke()
+            }
 
-        ClickableIcon(
-            iconPainter = painterResource(id = R.drawable.ic_favorites),
-            contentDescription = stringResource(id = R.string.favourites),
-        ) {
-            callbacks?.onFavouritesClick?.invoke()
-        }
+            ClickableIcon(
+                iconPainter = painterResource(id = R.drawable.ic_favorites),
+                contentDescription = stringResource(id = R.string.favourites),
+            ) {
+                callbacks?.onFavouritesClick?.invoke()
+            }
 
-        ClickableIcon(
-            iconPainter = painterResource(id = R.drawable.ic_casino),
-            contentDescription = stringResource(id = R.string.random_word),
-        ) {
-            callbacks?.onRandomWordClick?.invoke()
-        }
-        ClickableIcon(
-            iconPainter = painterResource(id = R.drawable.ic_settings_applications),
-            contentDescription = ""
-        ) {
-            callbacks?.onSettingsClick?.invoke()
-        }
-        ClickableIcon(
-            iconPainter = painterResource(id = R.drawable.ic_contact_support),
-            contentDescription = ""
-        ) {
-            callbacks?.onInfoClick?.invoke()
-        }
-    }, navigationIcon = {
-        Icon(
-            painterResource(R.drawable.ic_launcher_foreground),
-            "Owl",
-            tint = MaterialTheme.colorScheme.onSurface
-        )
-    })
+            ClickableIcon(
+                iconPainter = painterResource(id = R.drawable.ic_casino),
+                contentDescription = stringResource(id = R.string.random_word),
+            ) {
+                callbacks?.onRandomWordClick?.invoke()
+            }
+            ClickableIcon(
+                iconPainter = painterResource(id = R.drawable.ic_settings_applications),
+                contentDescription = ""
+            ) {
+                callbacks?.onSettingsClick?.invoke()
+            }
+            ClickableIcon(
+                iconPainter = painterResource(id = R.drawable.ic_contact_support),
+                contentDescription = ""
+            ) {
+                callbacks?.onInfoClick?.invoke()
+            }
+        }, navigationIcon = {
+            Icon(
+                painterResource(R.drawable.ic_launcher_foreground),
+                "Owl",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        })
 }

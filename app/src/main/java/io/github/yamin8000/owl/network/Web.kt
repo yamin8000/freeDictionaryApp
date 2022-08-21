@@ -33,11 +33,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 object Web {
 
     private const val baseUrl = "https://owlbot.info/api/v4/"
-    const val ninjaApiBaseUrl = "https://api.api-ninjas.com/v1/"
+    private const val ninjaApiBaseUrl = "https://api.api-ninjas.com/v1/"
 
     val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createRetrofit() }
 
-    fun createCustomUrlRetrofit(baseUrl: String): Retrofit {
+    val ninjaApiRetrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createNinjaApiRetrofit() }
+
+    private fun createNinjaApiRetrofit(): Retrofit {
+        return createCustomUrlRetrofit(ninjaApiBaseUrl)
+    }
+
+    private fun createCustomUrlRetrofit(baseUrl: String): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
@@ -70,7 +76,8 @@ object Web {
      * @param onFail callback when request is failed
      */
     inline fun <reified T> Call<T>.async(
-        lifeCycleOwner: LifecycleOwner, crossinline onSuccess: (T?) -> Unit,
+        lifeCycleOwner: LifecycleOwner,
+        crossinline onSuccess: (T?) -> Unit,
         crossinline onFail: (Throwable) -> Unit,
     ) {
         lifeCycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
@@ -105,7 +112,8 @@ object Web {
      * @param onFail callback when request is failed
      */
     fun <T> Call<T>.asyncResponse(
-        lifeCycleOwner: LifecycleOwner, onSuccess: (Response<T>) -> Unit,
+        lifeCycleOwner: LifecycleOwner,
+        onSuccess: (Response<T>) -> Unit,
         onFail: (Throwable) -> Unit,
     ) {
         lifeCycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {

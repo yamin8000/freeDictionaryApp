@@ -67,7 +67,7 @@ fun DefinitionCard(
 ) {
     Card(
         shape = RoundedCornerShape(25.dp),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Column {
             if (!definition.imageUrl.isNullOrBlank())
