@@ -40,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.theme.Samim
+import io.github.yamin8000.owl.ui.util.theme.Samim
 
 data class MainBottomBarCallbacks(
     val onSearch: (String) -> Unit,
@@ -64,12 +64,6 @@ private fun GenericMainBottomBar(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        PersianText(
-            stringResource(id = R.string.search_hint),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )
-
         var searchText by remember { mutableStateOf("") }
         TextField(
             modifier = Modifier.fillMaxWidth(),

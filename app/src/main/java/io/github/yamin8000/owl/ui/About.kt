@@ -38,13 +38,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.composable.RippleText
-import io.github.yamin8000.owl.ui.theme.OwlTheme
+import io.github.yamin8000.owl.ui.composable.CopyAbleRippleText
+import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AboutContent(
-    navController: NavHostController? = null,
+    navController: NavHostController? = null
 ) {
     OwlTheme {
         Surface(
@@ -75,7 +75,7 @@ fun AboutContent(
                         stringResource(id = R.string.license_header),
                         modifier = Modifier.fillMaxWidth()
                     )
-                    RippleText(
+                    CopyAbleRippleText(
                         text = sourceUri,
                         textDecoration = TextDecoration.Underline
                     ) { uriHandler.openUri(sourceUri) }
@@ -83,7 +83,7 @@ fun AboutContent(
                         stringResource(id = R.string.about_app),
                         modifier = Modifier.fillMaxWidth()
                     )
-                    RippleText(
+                    CopyAbleRippleText(
                         text = owlBotUri,
                         textDecoration = TextDecoration.Underline
                     ) { uriHandler.openUri(owlBotUri) }

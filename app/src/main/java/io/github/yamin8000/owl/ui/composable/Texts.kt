@@ -50,10 +50,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.theme.Samim
+import io.github.yamin8000.owl.ui.util.theme.Samim
 import io.github.yamin8000.owl.util.TtsEngine
 
-private class TextProvider : PreviewParameterProvider<String> {
+class TextProvider : PreviewParameterProvider<String> {
     override val values = listOf("سلام", "یمین").asSequence()
 }
 
@@ -79,6 +79,27 @@ fun PersianText(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RippleText(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+    onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null
+) {
+    Box(
+        modifier = modifier
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(),
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
+    ) {
+        content()
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CopyAbleRippleText(
     text: String,
     textDecoration: TextDecoration = TextDecoration.None,
     onClick: () -> Unit
@@ -86,8 +107,8 @@ fun RippleText(
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
     val textCopied = stringResource(R.string.text_copied)
-    Box(modifier = Modifier
-        .combinedClickable(
+    Box(
+        modifier = Modifier.combinedClickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = rememberRipple(),
             onClick = onClick,
@@ -106,7 +127,7 @@ fun RippleText(
 }
 
 @Composable
-fun RippleTextWithIcon(
+fun CopyAbleRippleTextWithIcon(
     text: String,
     iconPainter: Painter,
     onClick: () -> Unit
@@ -116,7 +137,7 @@ fun RippleTextWithIcon(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(iconPainter, text)
-        RippleText(text, onClick = onClick)
+        CopyAbleRippleText(text, onClick = onClick)
     }
 }
 
@@ -126,7 +147,7 @@ fun SpeakableRippleTextWithIcon(
     iconPainter: Painter,
     ttsEngine: TtsEngine
 ) {
-    RippleTextWithIcon(text, iconPainter) {
+    CopyAbleRippleTextWithIcon(text, iconPainter) {
         ttsEngine.speak(text)
     }
 }

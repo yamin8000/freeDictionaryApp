@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     Shape.kt Created by Yamin Siahmargooei at 2022/6/16
+ *     NavigationConstants.kt Created by Yamin Siahmargooei at 2022/8/21
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -18,14 +18,14 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.theme
+package io.github.yamin8000.owl.ui.util.navigation
 
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Shapes
-import androidx.compose.ui.unit.dp
-
-val Shapes = Shapes(
-    small = RoundedCornerShape(4.dp),
-    medium = RoundedCornerShape(4.dp),
-    large = RoundedCornerShape(0.dp)
-)
+object NavigationConstants {
+    object NavRoutes {
+        const val home = "home"
+        const val history = "history"
+        const val settings = "settings"
+        const val about = "about"
+        const val favourites = "favourites"
+    }
+}

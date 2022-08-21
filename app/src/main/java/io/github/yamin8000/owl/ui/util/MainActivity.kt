@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     MainActivity.kt Created by Yamin Siahmargooei at 2022/6/16
+ *     MainActivity.kt Created by Yamin Siahmargooei at 2022/8/22
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui
+package io.github.yamin8000.owl.ui.util
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -27,7 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.github.yamin8000.owl.ui.navigation.NavigationConstants
+import io.github.yamin8000.owl.ui.AboutContent
+import io.github.yamin8000.owl.ui.FavouritesContent
+import io.github.yamin8000.owl.ui.HomeContent
+import io.github.yamin8000.owl.ui.util.navigation.NavigationConstants
 
 class MainActivity : ComponentActivity() {
 
@@ -49,6 +52,10 @@ class MainActivity : ComponentActivity() {
 
             composable(NavigationConstants.NavRoutes.about) {
                 AboutContent(navController)
+            }
+
+            composable(NavigationConstants.NavRoutes.favourites) {
+                FavouritesContent(navController)
             }
         }
     }

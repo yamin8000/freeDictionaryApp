@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     NavigationConstants.kt Created by Yamin Siahmargooei at 2022/8/21
+ *     FavouritesProvider.kt Created by Yamin Siahmargooei at 2022/8/21
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -18,14 +18,21 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.navigation
+package io.github.yamin8000.owl.ui.favourites
 
-object NavigationConstants {
-    object NavRoutes {
-        const val home = "home"
-        const val history = "history"
-        const val settings = "settings"
-        const val about = "about"
-        const val favourites = "favourites"
-    }
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import io.github.yamin8000.owl.util.favouritesDataStore
+
+class FavouritesState(
+    val context: Context
+) {
+    fun getFavourites() = context.favouritesDataStore.data
 }
+
+@Composable
+fun rememberFavouritesState(
+    context: Context = LocalContext.current
+) = remember(context) { FavouritesState(context) }

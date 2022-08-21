@@ -23,12 +23,19 @@
 package io.github.yamin8000.owl.util
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
 import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.util.Constants.LOG_TAG
+
+val Context.historyDataStore: DataStore<Preferences> by preferencesDataStore(name = "history")
+val Context.favouritesDataStore: DataStore<Preferences> by preferencesDataStore(name = "favourites")
 
 class MyApp : Application() {
 

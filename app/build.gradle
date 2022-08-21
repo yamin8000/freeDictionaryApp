@@ -100,4 +100,6 @@ dependencies {
     //navigation
     def nav_version = "2.5.1"
     implementation "androidx.navigation:navigation-compose:$nav_version"
+    //
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 }
