@@ -25,12 +25,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -39,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -76,14 +80,14 @@ fun PersianText(
 @Composable
 fun RippleText(
     text: String,
+    textDecoration: TextDecoration = TextDecoration.None,
     onClick: () -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
     val textCopied = stringResource(R.string.text_copied)
-    Text(
-        text = text,
-        modifier = Modifier.combinedClickable(
+    Box(modifier = Modifier
+        .combinedClickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = rememberRipple(),
             onClick = onClick,
@@ -92,7 +96,13 @@ fun RippleText(
                 Toast.makeText(context, textCopied, Toast.LENGTH_SHORT).show()
             }
         )
-    )
+    ) {
+        Text(
+            text = text,
+            textDecoration = textDecoration,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+    }
 }
 
 @Composable
@@ -102,10 +112,11 @@ fun RippleTextWithIcon(
     onClick: () -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(iconPainter, text)
-        RippleText(text, onClick)
+        RippleText(text, onClick = onClick)
     }
 }
 

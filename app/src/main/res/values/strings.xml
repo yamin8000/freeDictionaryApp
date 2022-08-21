@@ -30,4 +30,10 @@
     <string name="definition_not_found">توضیحی برای این کلمه یافت نشد</string>
     <string name="api_authorization_error">خطای احراز هویت با سرور برنامه</string>
     <string name="text_copied">متن کپی شد</string>
+    <string name="license_header">این یک برنامه آزاد طبق پروانه گنو است که توضیحات بیشتر آن در ادامه آورده شده است</string>
+    <string name="gplv3_image_description">لوگو پروانه برنامه GPLv3</string>
+    <string name="about_app">فرهنگ واژگان انگلیسی به انگلیسی جغد، برگرفته از فرهنگ واژگان</string>
+    <string name="github_source">https://github.com/yamin8000/Owl2</string>
+    <string name="owl_bot_link">https://owlbot.info</string>
+    <string name="very_soon">به زودی</string>
 </resources>
