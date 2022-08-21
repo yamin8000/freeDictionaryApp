@@ -21,7 +21,7 @@
 package io.github.yamin8000.owl.ui.composable
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -66,7 +67,7 @@ fun DefinitionCard(
     definition: Definition
 ) {
     Card(
-        shape = RoundedCornerShape(25.dp),
+        shape = CutCornerShape(15.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {
@@ -164,8 +165,10 @@ fun WordCard(
     word: Word
 ) {
     Card(
-        shape = RoundedCornerShape(25.dp),
-        modifier = Modifier.padding(vertical = 8.dp),
+        shape = CutCornerShape(15.dp),
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

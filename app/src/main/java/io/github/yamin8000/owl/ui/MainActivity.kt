@@ -25,10 +25,17 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -58,20 +65,20 @@ class MainActivity : ComponentActivity() {
         setContent { MainContent() }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
     @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
     @Composable
     private fun MainContent() {
         OwlTheme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background,
             ) {
                 val focusManager = LocalFocusManager.current
                 var searchText by remember { mutableStateOf("") }
                 var searchResult by remember { mutableStateOf<List<Definition>>(emptyList()) }
-                var rawBody by remember { mutableStateOf<Word?>(null) }
+                var rawSearchWordBody by remember { mutableStateOf<Word?>(null) }
                 var isSearching by remember { mutableStateOf(false) }
+                val listState = rememberLazyListState()
 
                 Scaffold(
                     topBar = {
@@ -85,12 +92,12 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onRandomWordClick = {
                                     isSearching = true
-                                    onRandomWordClick {
+                                    createRandomWordRequest {
                                         searchText = it
                                         createSearchWordRequest(searchText, onSuccess = { word ->
                                             isSearching = false
                                             searchResult = word.definitions
-                                            rawBody = word
+                                            rawSearchWordBody = word
                                         }) { isSearching = false }
                                     }
                                 },
@@ -104,15 +111,21 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     floatingActionButton = {
-                        FloatingActionButton(onClick = {
-                            isSearching = true
-                            createSearchWordRequest(searchText, onSuccess = { word ->
-                                isSearching = false
-                                searchResult = word.definitions
-                                rawBody = word
-                            }) { isSearching = false }
-                            focusManager.clearFocus()
-                        }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
+                        AnimatedVisibility(
+                            visible = !listState.isScrollInProgress,
+                            enter = scaleIn(),
+                            exit = scaleOut()
+                        ) {
+                            FloatingActionButton(onClick = {
+                                isSearching = true
+                                createSearchWordRequest(searchText, onSuccess = { word ->
+                                    isSearching = false
+                                    searchResult = word.definitions
+                                    rawSearchWordBody = word
+                                }) { isSearching = false }
+                                focusManager.clearFocus()
+                            }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
+                        }
                     },
                     bottomBar = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -126,7 +139,7 @@ class MainActivity : ComponentActivity() {
                                         createSearchWordRequest(searchText, onSuccess = { word ->
                                             isSearching = false
                                             searchResult = word.definitions
-                                            rawBody = word
+                                            rawSearchWordBody = word
                                         }) { isSearching = false }
                                         focusManager.clearFocus()
                                     },
@@ -145,49 +158,26 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Card(
-                            shape = RoundedCornerShape(25.dp),
-                            modifier = Modifier
-                                .padding(vertical = 4.dp)
-                                .fillMaxWidth(),
-                        ) {
-                            rawBody?.let { WordCard(it) }
-                        }
+                        rawSearchWordBody?.let { WordCard(it) }
 
-                        if (searchResult.size > 1)
-                            DefinitionCardLazyGrid(searchResult)
-                        if (searchResult.size == 1)
-                            SingleDefinitionCardList(searchResult.first())
+                        searchResult = searchResult.sortedByDescending { it.imageUrl }
+
+                        LazyColumn(
+                            state = listState,
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            content = {
+                                items(searchResult) { definition ->
+                                    DefinitionCard(definition)
+                                }
+                            })
                     }
                 }
             }
         }
     }
 
-    @Composable
-    private fun SingleDefinitionCardList(singleDefinition: Definition) {
-        LazyColumn(content = {
-            item {
-                DefinitionCard(singleDefinition)
-            }
-        })
-    }
-
-    @Composable
-    private fun DefinitionCardLazyGrid(
-        searchResult: List<Definition>
-    ) {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            content = {
-                items(searchResult) { definition ->
-                    DefinitionCard(definition)
-                }
-            })
-    }
-
-    private fun onRandomWordClick(
+    private fun createRandomWordRequest(
         onResponse: (String) -> Unit
     ) {
         Web.ninjaApiRetrofit.getAPI<APIs.NinjaAPI>()

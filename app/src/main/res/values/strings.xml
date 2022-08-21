@@ -29,4 +29,5 @@
     <string name="api_throttled">سرور برنامه تحت فشار است، لطفا چند دقیقه دیگر تلاش کنید</string>
     <string name="definition_not_found">توضیحی برای این کلمه یافت نشد</string>
     <string name="api_authorization_error">خطای احراز هویت با سرور برنامه</string>
+    <string name="text_copied">متن کپی شد</string>
 </resources>

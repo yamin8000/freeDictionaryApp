@@ -20,7 +20,9 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import androidx.compose.foundation.clickable
+import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -31,6 +33,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +45,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.TtsEngine
 
@@ -65,17 +72,25 @@ fun PersianText(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RippleText(
     text: String,
     onClick: () -> Unit
 ) {
+    val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
+    val textCopied = stringResource(R.string.text_copied)
     Text(
         text = text,
-        modifier = Modifier.clickable(
+        modifier = Modifier.combinedClickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = rememberRipple(),
-            onClick = onClick
+            onClick = onClick,
+            onLongClick = {
+                clipboardManager.setText(AnnotatedString(text))
+                Toast.makeText(context, textCopied, Toast.LENGTH_SHORT).show()
+            }
         )
     )
 }
