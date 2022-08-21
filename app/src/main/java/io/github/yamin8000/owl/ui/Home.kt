@@ -21,10 +21,8 @@
 package io.github.yamin8000.owl.ui
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import androidx.compose.animation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,6 +37,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -55,7 +54,10 @@ import io.github.yamin8000.owl.ui.composable.WordCard
 import io.github.yamin8000.owl.ui.util.navigation.NavigationConstants
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
+    ExperimentalFoundationApi::class
+)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun HomeContent(
@@ -74,33 +76,42 @@ fun HomeContent(
             var isSearching by rememberSaveable { mutableStateOf(false) }
             val listState = rememberLazyListState()
 
+            val animationDecay = rememberSplineBasedDecay<Float>()
+            val topAppBarState = rememberTopAppBarState()
+            val scrollBehavior = remember {
+                TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+                    animationDecay,
+                    topAppBarState
+                )
+            }
+
             Scaffold(
+                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 topBar = {
                     MainTopBar(
-                        MainTopAppBarCallbacks(
-                            onHistoryClick = {
+                        scrollBehavior,
+                        onHistoryClick = {
 
-                            },
-                            onFavouritesClick = { navController?.navigate(NavigationConstants.NavRoutes.favourites) },
-                            onRandomWordClick = {
-                                isSearching = true
-                                createRandomWordRequest(lifecycleOwner) {
-                                    searchText = it
-                                    createSearchWordRequest(
-                                        lifecycleOwner,
-                                        searchText,
-                                        onSuccess = { word ->
-                                            isSearching = false
-                                            searchResult = word.definitions
-                                            rawSearchWordBody = word
-                                        }) { isSearching = false }
-                                }
-                            },
-                            onSettingsClick = {
+                        },
+                        onFavouritesClick = { navController?.navigate(NavigationConstants.NavRoutes.favourites) },
+                        onRandomWordClick = {
+                            isSearching = true
+                            createRandomWordRequest(lifecycleOwner) {
+                                searchText = it
+                                createSearchWordRequest(
+                                    lifecycleOwner,
+                                    searchText,
+                                    onSuccess = { word ->
+                                        isSearching = false
+                                        searchResult = word.definitions
+                                        rawSearchWordBody = word
+                                    }) { isSearching = false }
+                            }
+                        },
+                        onSettingsClick = {
 
-                            },
-                            onInfoClick = { navController?.navigate(NavigationConstants.NavRoutes.about) }
-                        )
+                        },
+                        onInfoClick = { navController?.navigate(NavigationConstants.NavRoutes.about) }
                     )
                 },
                 floatingActionButton = {
@@ -150,27 +161,32 @@ fun HomeContent(
                     }
                 }) { contentPadding ->
 
-                Column(
+
+                searchResult = searchResult.sortedByDescending { it.imageUrl }
+                LazyColumn(
                     modifier = Modifier
                         .padding(contentPadding)
                         .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    rawSearchWordBody?.let { WordCard(it) }
-
-                    searchResult = searchResult.sortedByDescending { it.imageUrl }
-
-                    LazyColumn(
-                        state = listState,
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        content = {
-                            items(searchResult) { definition ->
-                                DefinitionCard(definition)
+                    state = listState,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    content = {
+                        stickyHeader {
+                            rawSearchWordBody?.let {
+                                WordCard(it)
+                                AnimatedVisibility(
+                                    visible = !listState.isScrollInProgress,
+                                    enter = scaleIn(),
+                                    exit = scaleOut()
+                                ) {
+                                    //WordCard(it)
+                                }
                             }
-                        })
-                }
+                        }
+                        items(searchResult) { definition ->
+                            DefinitionCard(definition)
+                        }
+                    })
             }
         }
     }

@@ -25,6 +25,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,60 +33,52 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 
-data class MainTopAppBarCallbacks(
-    val onHistoryClick: () -> Unit,
-    val onFavouritesClick: () -> Unit,
-    val onRandomWordClick: () -> Unit,
-    val onSettingsClick: () -> Unit,
-    val onInfoClick: () -> Unit,
-)
-
-@Composable
-fun MainTopBar(
-    callbacks: MainTopAppBarCallbacks
-) {
-    GenericMainTopAppBar(callbacks)
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun GenericMainTopAppBar(
-    callbacks: MainTopAppBarCallbacks? = null
+fun MainTopBar(
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    onHistoryClick: (() -> Unit)? = null,
+    onFavouritesClick: (() -> Unit)? = null,
+    onRandomWordClick: (() -> Unit)? = null,
+    onSettingsClick: (() -> Unit)? = null,
+    onInfoClick: (() -> Unit)? = null,
 ) {
-    SmallTopAppBar(title = {},
+    SmallTopAppBar(
+        scrollBehavior = scrollBehavior,
+        title = {},
         actions = {
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_history),
                 contentDescription = stringResource(id = R.string.search_history),
             ) {
-                callbacks?.onHistoryClick?.invoke()
+                onHistoryClick?.invoke()
             }
 
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_favorites),
                 contentDescription = stringResource(id = R.string.favourites),
             ) {
-                callbacks?.onFavouritesClick?.invoke()
+                onFavouritesClick?.invoke()
             }
 
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_casino),
                 contentDescription = stringResource(id = R.string.random_word),
             ) {
-                callbacks?.onRandomWordClick?.invoke()
+                onRandomWordClick?.invoke()
             }
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_settings_applications),
                 contentDescription = ""
             ) {
-                callbacks?.onSettingsClick?.invoke()
+                onSettingsClick?.invoke()
             }
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_contact_support),
                 contentDescription = ""
             ) {
-                callbacks?.onInfoClick?.invoke()
+                onInfoClick?.invoke()
             }
         }, navigationIcon = {
             Icon(

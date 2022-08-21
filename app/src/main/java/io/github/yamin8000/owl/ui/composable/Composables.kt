@@ -31,6 +31,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -180,11 +181,9 @@ fun WordCard(
     val favouriteText = stringResource(R.string.added_to_favourites)
     val coroutineScope = rememberCoroutineScope()
 
-    Card(
+    OutlinedCard(
         shape = CutCornerShape(15.dp),
         modifier = Modifier
-            .padding(vertical = 4.dp)
-            .fillMaxWidth()
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
