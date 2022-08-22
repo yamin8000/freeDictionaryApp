@@ -47,6 +47,7 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.MainBottomBar
 import io.github.yamin8000.owl.ui.MainTopBar
 import io.github.yamin8000.owl.ui.composable.DefinitionCard
+import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.WordCard
 import io.github.yamin8000.owl.ui.util.navigation.NavigationConstants
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
@@ -103,6 +104,8 @@ fun HomeContent(
                 },
                 bottomBar = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (homeState.isShowingError)
+                            PersianText(homeState.errorMessage.value)
                         if (homeState.isSearching.value)
                             CircularProgressIndicator()
                         MainBottomBar(
