@@ -48,35 +48,27 @@ fun MainTopBar(
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_history),
                 contentDescription = stringResource(id = R.string.search_history),
-            ) {
-                onHistoryClick?.invoke()
-            }
+            ) { onHistoryClick?.invoke() }
 
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_favorites),
                 contentDescription = stringResource(id = R.string.favourites),
-            ) {
-                onFavouritesClick?.invoke()
-            }
+            ) { onFavouritesClick?.invoke() }
 
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_casino),
                 contentDescription = stringResource(id = R.string.random_word),
-            ) {
-                onRandomWordClick?.invoke()
-            }
+            ) { onRandomWordClick?.invoke() }
+
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_settings_applications),
                 contentDescription = ""
-            ) {
-                onSettingsClick?.invoke()
-            }
+            ) { onSettingsClick?.invoke() }
+
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_contact_support),
                 contentDescription = ""
-            ) {
-                onInfoClick?.invoke()
-            }
+            ) { onInfoClick?.invoke() }
         }, navigationIcon = {
             Icon(
                 painterResource(R.drawable.ic_launcher_foreground),
