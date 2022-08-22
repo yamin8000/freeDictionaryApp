@@ -29,7 +29,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.github.yamin8000.owl.ui.AboutContent
 import io.github.yamin8000.owl.ui.FavouritesContent
-import io.github.yamin8000.owl.ui.HomeContent
+import io.github.yamin8000.owl.ui.home.HomeContent
 import io.github.yamin8000.owl.ui.util.navigation.NavigationConstants
 
 class MainActivity : ComponentActivity() {

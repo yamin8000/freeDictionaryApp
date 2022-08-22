@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     Home.kt Created by Yamin Siahmargooei at 2022/8/21
+ *     Home.kt Created by Yamin Siahmargooei at 2022/8/22
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui
+package io.github.yamin8000.owl.ui.home
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -31,33 +31,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.model.Definition
-import io.github.yamin8000.owl.model.Word
-import io.github.yamin8000.owl.network.createRandomWordRequest
-import io.github.yamin8000.owl.network.createSearchWordRequest
+import io.github.yamin8000.owl.ui.MainBottomBar
+import io.github.yamin8000.owl.ui.MainTopBar
 import io.github.yamin8000.owl.ui.composable.DefinitionCard
 import io.github.yamin8000.owl.ui.composable.WordCard
 import io.github.yamin8000.owl.ui.util.navigation.NavigationConstants
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 import io.github.yamin8000.owl.util.LockScreenOrientation
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
@@ -70,14 +64,11 @@ fun HomeContent(
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            val lifecycleOwner = LocalLifecycleOwner.current
-            val focusManager = LocalFocusManager.current
+            val homeState = rememberHomeState()
 
-            var searchText by rememberSaveable { mutableStateOf("") }
-            var searchResult by rememberSaveable { mutableStateOf<List<Definition>>(emptyList()) }
-            var rawSearchWordBody by rememberSaveable { mutableStateOf<Word?>(null) }
-            var isSearching by rememberSaveable { mutableStateOf(false) }
-            val listState = rememberLazyListState()
+            LaunchedEffect(Unit) {
+                homeState.searchForRandomWord()
+            }
 
             Scaffold(
                 topBar = {
@@ -87,17 +78,8 @@ fun HomeContent(
                         },
                         onFavouritesClick = { navController?.navigate(NavigationConstants.NavRoutes.favourites) },
                         onRandomWordClick = {
-                            isSearching = true
-                            createRandomWordRequest(lifecycleOwner) {
-                                searchText = it
-                                createSearchWordRequest(
-                                    lifecycleOwner,
-                                    searchText,
-                                    onSuccess = { word ->
-                                        isSearching = false
-                                        searchResult = word.definitions
-                                        rawSearchWordBody = word
-                                    }) { isSearching = false }
+                            homeState.lifecycleOwner.lifecycleScope.launch {
+                                homeState.searchForRandomWord()
                             }
                         },
                         onSettingsClick = {
@@ -108,44 +90,30 @@ fun HomeContent(
                 },
                 floatingActionButton = {
                     AnimatedVisibility(
-                        visible = !listState.isScrollInProgress,
+                        visible = homeState.floatingActionButtonVisibility,
                         enter = slideInHorizontally { it * 2 },
                         exit = slideOutHorizontally { it * 2 }
                     ) {
                         FloatingActionButton(onClick = {
-                            isSearching = true
-                            createSearchWordRequest(
-                                lifecycleOwner,
-                                searchText,
-                                onSuccess = { word ->
-                                    isSearching = false
-                                    searchResult = word.definitions
-                                    rawSearchWordBody = word
-                                }) { isSearching = false }
-                            focusManager.clearFocus()
+                            homeState.lifecycleOwner.lifecycleScope.launch {
+                                homeState.searchForDefinition()
+                            }
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
                     }
                 },
                 bottomBar = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (isSearching)
+                        if (homeState.isSearching.value)
                             CircularProgressIndicator()
                         MainBottomBar(
                             onSearch = {
-                                searchText = it
-                                isSearching = true
-                                createSearchWordRequest(
-                                    lifecycleOwner,
-                                    searchText,
-                                    onSuccess = { word ->
-                                        isSearching = false
-                                        searchResult = word.definitions
-                                        rawSearchWordBody = word
-                                    }) { isSearching = false }
-                                focusManager.clearFocus()
+                                homeState.searchText = it
+                                homeState.lifecycleOwner.lifecycleScope.launch {
+                                    homeState.searchForDefinition()
+                                }
                             },
                             onTextChanged = {
-                                searchText = it
+                                homeState.searchText = it
                             }
                         )
                     }
@@ -155,18 +123,14 @@ fun HomeContent(
                     modifier = Modifier.padding(contentPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    rawSearchWordBody?.let {
-                        WordCard(it)
-                    }
-
-                    searchResult = searchResult.sortedByDescending { it.imageUrl }
+                    homeState.rawWordSearchBody.value?.let { WordCard(it) }
                     LazyColumn(
                         modifier = Modifier.padding(16.dp),
-                        state = listState,
+                        state = homeState.listState,
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         content = {
-                            items(searchResult) { definition ->
+                            items(homeState.searchResult.value) { definition ->
                                 DefinitionCard(definition)
                             }
                         })

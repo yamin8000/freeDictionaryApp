@@ -24,7 +24,6 @@ import io.github.yamin8000.owl.model.RandomWord
 import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.ApiKey.API_NINJA_KEY
 import io.github.yamin8000.owl.network.ApiKey.OWLBOT_TOKEN
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
@@ -35,13 +34,13 @@ object APIs {
 
         @Headers(OWLBOT_TOKEN)
         @GET("dictionary/{word}")
-        fun searchWord(@Path("word") word: String): Call<Word>
+        suspend fun searchWord(@Path("word") word: String): Word
     }
 
     interface NinjaAPI {
 
         @Headers(API_NINJA_KEY)
         @GET("randomword")
-        fun getRandomWord(): Call<RandomWord>
+        suspend fun getRandomWord(): RandomWord
     }
 }

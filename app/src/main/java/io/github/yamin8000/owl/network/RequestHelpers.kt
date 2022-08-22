@@ -30,11 +30,11 @@ fun createRandomWordRequest(
     owner: LifecycleOwner,
     onResponse: (String) -> Unit
 ) {
-    Web.ninjaApiRetrofit.getAPI<APIs.NinjaAPI>()
-        .getRandomWord()
-        .asyncResponse(owner, {
-            onResponse(it.body()?.word ?: "")
-        }, { handleException(it) })
+//    Web.ninjaApiRetrofit.getAPI<APIs.NinjaAPI>()
+//        .getRandomWord()
+//        .asyncResponse(owner, {
+//            onResponse(it.body()?.word ?: "")
+//        }, { handleException(it) })
 }
 
 fun createSearchWordRequest(
@@ -43,7 +43,7 @@ fun createSearchWordRequest(
     onSuccess: (Word) -> Unit,
     onFailed: ((Throwable) -> Unit)? = null
 ) {
-    Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(input.trim()).asyncResponse(owner, {
+    /*Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(input.trim()).asyncResponse(owner, {
         val body = it.body()
         if (body == null) {
             handleNullResponseBody(it.code())
@@ -52,7 +52,7 @@ fun createSearchWordRequest(
     }, { throwable ->
         handleException(throwable)
         onFailed?.invoke(throwable)
-    })
+    })*/
 }
 
 private fun handleException(
