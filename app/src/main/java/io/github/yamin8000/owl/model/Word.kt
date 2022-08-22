@@ -20,8 +20,12 @@
 
 package io.github.yamin8000.owl.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Word(
     val word: String,
     val pronunciation: String?,
     val definitions: List<Definition>
-)
+) : Parcelable

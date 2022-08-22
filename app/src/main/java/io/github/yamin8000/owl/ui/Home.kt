@@ -20,9 +20,11 @@
 
 package io.github.yamin8000.owl.ui
 
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import androidx.compose.animation.*
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,11 +35,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -53,16 +57,15 @@ import io.github.yamin8000.owl.ui.composable.DefinitionCard
 import io.github.yamin8000.owl.ui.composable.WordCard
 import io.github.yamin8000.owl.ui.util.navigation.NavigationConstants
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
+import io.github.yamin8000.owl.util.LockScreenOrientation
 
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun HomeContent(
     navController: NavHostController? = null,
 ) {
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     OwlTheme {
         Surface(
             modifier = Modifier.fillMaxSize()
@@ -72,24 +75,13 @@ fun HomeContent(
 
             var searchText by rememberSaveable { mutableStateOf("") }
             var searchResult by rememberSaveable { mutableStateOf<List<Definition>>(emptyList()) }
-            var rawSearchWordBody by remember { mutableStateOf<Word?>(null) }
+            var rawSearchWordBody by rememberSaveable { mutableStateOf<Word?>(null) }
             var isSearching by rememberSaveable { mutableStateOf(false) }
             val listState = rememberLazyListState()
 
-            val animationDecay = rememberSplineBasedDecay<Float>()
-            val topAppBarState = rememberTopAppBarState()
-            val scrollBehavior = remember {
-                TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-                    animationDecay,
-                    topAppBarState
-                )
-            }
-
             Scaffold(
-                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 topBar = {
                     MainTopBar(
-                        scrollBehavior,
                         onHistoryClick = {
 
                         },
@@ -117,8 +109,8 @@ fun HomeContent(
                 floatingActionButton = {
                     AnimatedVisibility(
                         visible = !listState.isScrollInProgress,
-                        enter = scaleIn(),
-                        exit = scaleOut()
+                        enter = slideInHorizontally { it * 2 },
+                        exit = slideOutHorizontally { it * 2 }
                     ) {
                         FloatingActionButton(onClick = {
                             isSearching = true
@@ -161,32 +153,26 @@ fun HomeContent(
                     }
                 }) { contentPadding ->
 
+                Column(
+                    modifier = Modifier.padding(contentPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    rawSearchWordBody?.let {
+                        WordCard(it)
+                    }
 
-                searchResult = searchResult.sortedByDescending { it.imageUrl }
-                LazyColumn(
-                    modifier = Modifier
-                        .padding(contentPadding)
-                        .padding(16.dp),
-                    state = listState,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    content = {
-                        stickyHeader {
-                            rawSearchWordBody?.let {
-                                WordCard(it)
-                                AnimatedVisibility(
-                                    visible = !listState.isScrollInProgress,
-                                    enter = scaleIn(),
-                                    exit = scaleOut()
-                                ) {
-                                    //WordCard(it)
-                                }
+                    searchResult = searchResult.sortedByDescending { it.imageUrl }
+                    LazyColumn(
+                        modifier = Modifier.padding(16.dp),
+                        state = listState,
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        content = {
+                            items(searchResult) { definition ->
+                                DefinitionCard(definition)
                             }
-                        }
-                        items(searchResult) { definition ->
-                            DefinitionCard(definition)
-                        }
-                    })
+                        })
+                }
             }
         }
     }

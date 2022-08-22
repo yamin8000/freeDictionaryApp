@@ -23,6 +23,8 @@ package io.github.yamin8000.owl.ui
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -37,8 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleText
+import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
@@ -51,6 +53,7 @@ fun AboutContent(
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val uriHandler = LocalUriHandler.current

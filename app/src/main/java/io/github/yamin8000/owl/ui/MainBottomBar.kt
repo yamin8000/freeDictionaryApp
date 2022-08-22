@@ -21,8 +21,6 @@
 package io.github.yamin8000.owl.ui
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -60,34 +58,31 @@ fun MainBottomBar(
 private fun GenericMainBottomBar(
     params: MainBottomBarCallbacks? = null,
 ) {
-    Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        var searchText by remember { mutableStateOf("") }
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            label = {
-                PersianText(
-                    stringResource(R.string.search),
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            value = searchText,
-            singleLine = true,
-            onValueChange = {
-                searchText = it
-                params?.onTextChanged?.invoke(searchText)
-            },
-            textStyle = TextStyle(
-                fontFamily = Samim,
-                textAlign = TextAlign.Right,
-                textDirection = TextDirection.Rtl
-            ),
-            keyboardActions = KeyboardActions(onSearch = {
-                params?.onSearch?.invoke(searchText)
-            }),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
-        )
-    }
+    var searchText by remember { mutableStateOf("") }
+    TextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        label = {
+            PersianText(
+                stringResource(R.string.search),
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        value = searchText,
+        singleLine = true,
+        onValueChange = {
+            searchText = it
+            params?.onTextChanged?.invoke(searchText)
+        },
+        textStyle = TextStyle(
+            fontFamily = Samim,
+            textAlign = TextAlign.Right,
+            textDirection = TextDirection.Rtl
+        ),
+        keyboardActions = KeyboardActions(onSearch = {
+            params?.onSearch?.invoke(searchText)
+        }),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
+    )
 }

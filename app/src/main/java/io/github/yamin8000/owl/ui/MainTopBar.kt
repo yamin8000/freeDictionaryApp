@@ -25,7 +25,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +36,6 @@ import io.github.yamin8000.owl.ui.composable.ClickableIcon
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun MainTopBar(
-    scrollBehavior: TopAppBarScrollBehavior? = null,
     onHistoryClick: (() -> Unit)? = null,
     onFavouritesClick: (() -> Unit)? = null,
     onRandomWordClick: (() -> Unit)? = null,
@@ -45,7 +43,6 @@ fun MainTopBar(
     onInfoClick: (() -> Unit)? = null,
 ) {
     SmallTopAppBar(
-        scrollBehavior = scrollBehavior,
         title = {},
         actions = {
             ClickableIcon(
