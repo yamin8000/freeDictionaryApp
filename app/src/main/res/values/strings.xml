@@ -37,4 +37,5 @@
     <string name="owl_bot_link">https://owlbot.info</string>
     <string name="very_soon">به زودی</string>
     <string name="added_to_favourites">به برگزیده ها اضافه شد</string>
+    <string name="delete">پاک کردن</string>
 </resources>

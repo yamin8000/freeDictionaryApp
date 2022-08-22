@@ -131,24 +131,22 @@ fun HomeContent(
                         if (isSearching)
                             CircularProgressIndicator()
                         MainBottomBar(
-                            MainBottomBarCallbacks(
-                                onSearch = {
-                                    searchText = it
-                                    isSearching = true
-                                    createSearchWordRequest(
-                                        lifecycleOwner,
-                                        searchText,
-                                        onSuccess = { word ->
-                                            isSearching = false
-                                            searchResult = word.definitions
-                                            rawSearchWordBody = word
-                                        }) { isSearching = false }
-                                    focusManager.clearFocus()
-                                },
-                                onTextChanged = {
-                                    searchText = it
-                                }
-                            )
+                            onSearch = {
+                                searchText = it
+                                isSearching = true
+                                createSearchWordRequest(
+                                    lifecycleOwner,
+                                    searchText,
+                                    onSuccess = { word ->
+                                        isSearching = false
+                                        searchResult = word.definitions
+                                        rawSearchWordBody = word
+                                    }) { isSearching = false }
+                                focusManager.clearFocus()
+                            },
+                            onTextChanged = {
+                                searchText = it
+                            }
                         )
                     }
                 }) { contentPadding ->

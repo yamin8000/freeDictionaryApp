@@ -26,9 +26,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -36,27 +38,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.util.theme.Samim
-
-data class MainBottomBarCallbacks(
-    val onSearch: (String) -> Unit,
-    val onTextChanged: (String) -> Unit
-)
-
-@Composable
-fun MainBottomBar(
-    params: MainBottomBarCallbacks
-) {
-    GenericMainBottomBar(params)
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun GenericMainBottomBar(
-    params: MainBottomBarCallbacks? = null,
+fun MainBottomBar(
+    onSearch: ((String) -> Unit)? = null,
+    onTextChanged: ((String) -> Unit)? = null
 ) {
     var searchText by remember { mutableStateOf("") }
     TextField(
@@ -69,11 +62,30 @@ private fun GenericMainBottomBar(
                 modifier = Modifier.fillMaxWidth()
             )
         },
+        placeholder = {
+            PersianText(
+                text = stringResource(id = R.string.search_hint),
+                modifier = Modifier.fillMaxWidth(),
+                fontSize = 12.sp
+            )
+        },
+        leadingIcon = {
+            ClickableIcon(
+                iconPainter = painterResource(id = R.drawable.ic_delete),
+                contentDescription = stringResource(R.string.delete)
+            ) { searchText = "" }
+        },
+        trailingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search),
+                contentDescription = stringResource(R.string.search)
+            )
+        },
         value = searchText,
         singleLine = true,
         onValueChange = {
             searchText = it
-            params?.onTextChanged?.invoke(searchText)
+            onTextChanged?.invoke(searchText)
         },
         textStyle = TextStyle(
             fontFamily = Samim,
@@ -81,7 +93,7 @@ private fun GenericMainBottomBar(
             textDirection = TextDirection.Rtl
         ),
         keyboardActions = KeyboardActions(onSearch = {
-            params?.onSearch?.invoke(searchText)
+            onSearch?.invoke(searchText)
         }),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
     )
