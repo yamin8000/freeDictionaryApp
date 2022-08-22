@@ -20,12 +20,16 @@
 
 package io.github.yamin8000.owl.ui.util.navigation
 
-object NavigationConstants {
-    object NavRoutes {
+object Nav {
+    object Routes {
         const val home = "home"
         const val history = "history"
         const val settings = "settings"
         const val about = "about"
         const val favourites = "favourites"
+    }
+
+    object Arguments {
+        const val search = "search"
     }
 }

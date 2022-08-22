@@ -28,9 +28,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.github.yamin8000.owl.ui.AboutContent
-import io.github.yamin8000.owl.ui.FavouritesContent
+import io.github.yamin8000.owl.ui.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.home.HomeContent
-import io.github.yamin8000.owl.ui.util.navigation.NavigationConstants
+import io.github.yamin8000.owl.ui.util.navigation.Nav
 
 class MainActivity : ComponentActivity() {
 
@@ -44,17 +44,17 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         NavHost(
             navController = navController,
-            startDestination = NavigationConstants.NavRoutes.home
+            startDestination = "${Nav.Routes.home}/{${Nav.Arguments.search}}"
         ) {
-            composable(NavigationConstants.NavRoutes.home) {
-                HomeContent(navController)
+            composable("${Nav.Routes.home}/{${Nav.Arguments.search}}") {
+                HomeContent(navController, it.arguments?.getString(Nav.Arguments.search))
             }
 
-            composable(NavigationConstants.NavRoutes.about) {
+            composable(Nav.Routes.about) {
                 AboutContent(navController)
             }
 
-            composable(NavigationConstants.NavRoutes.favourites) {
+            composable(Nav.Routes.favourites) {
                 FavouritesContent(navController)
             }
         }

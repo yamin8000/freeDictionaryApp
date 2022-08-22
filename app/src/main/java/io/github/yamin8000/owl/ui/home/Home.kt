@@ -49,7 +49,7 @@ import io.github.yamin8000.owl.ui.MainTopBar
 import io.github.yamin8000.owl.ui.composable.DefinitionCard
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.WordCard
-import io.github.yamin8000.owl.ui.util.navigation.NavigationConstants
+import io.github.yamin8000.owl.ui.util.navigation.Nav
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 import io.github.yamin8000.owl.util.LockScreenOrientation
 import kotlinx.coroutines.launch
@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeContent(
     navController: NavHostController? = null,
+    searchTerm: String? = null,
 ) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     OwlTheme {
@@ -67,8 +68,12 @@ fun HomeContent(
         ) {
             val homeState = rememberHomeState()
 
+            if (searchTerm != null)
+                homeState.searchText = searchTerm
             LaunchedEffect(Unit) {
-                homeState.searchForRandomWord()
+                if (homeState.isFirstTimeOpening)
+                    homeState.searchForRandomWord()
+                homeState.searchForDefinitionIfTermIsNotBlank()
             }
 
             Scaffold(
@@ -77,7 +82,7 @@ fun HomeContent(
                         onHistoryClick = {
 
                         },
-                        onFavouritesClick = { navController?.navigate(NavigationConstants.NavRoutes.favourites) },
+                        onFavouritesClick = { navController?.navigate(Nav.Routes.favourites) },
                         onRandomWordClick = {
                             homeState.lifecycleOwner.lifecycleScope.launch {
                                 homeState.searchForRandomWord()
@@ -86,7 +91,7 @@ fun HomeContent(
                         onSettingsClick = {
 
                         },
-                        onInfoClick = { navController?.navigate(NavigationConstants.NavRoutes.about) }
+                        onInfoClick = { navController?.navigate(Nav.Routes.about) }
                     )
                 },
                 floatingActionButton = {
@@ -97,7 +102,7 @@ fun HomeContent(
                     ) {
                         FloatingActionButton(onClick = {
                             homeState.lifecycleOwner.lifecycleScope.launch {
-                                homeState.searchForDefinition()
+                                homeState.searchForDefinitionIfTermIsNotBlank()
                             }
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
                     }
@@ -105,14 +110,17 @@ fun HomeContent(
                 bottomBar = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         if (homeState.isShowingError)
-                            PersianText(homeState.errorMessage.value)
+                            PersianText(
+                                homeState.errorMessage.value,
+                                color = MaterialTheme.colorScheme.error
+                            )
                         if (homeState.isSearching.value)
                             CircularProgressIndicator()
                         MainBottomBar(
                             onSearch = {
                                 homeState.searchText = it
                                 homeState.lifecycleOwner.lifecycleScope.launch {
-                                    homeState.searchForDefinition()
+                                    homeState.searchForDefinitionIfTermIsNotBlank()
                                 }
                             },
                             onTextChanged = {

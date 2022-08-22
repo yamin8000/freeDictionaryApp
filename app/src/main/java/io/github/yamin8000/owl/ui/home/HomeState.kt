@@ -63,6 +63,9 @@ class HomeState(
     val floatingActionButtonVisibility: Boolean
         get() = !listState.isScrollInProgress
 
+    val isFirstTimeOpening: Boolean
+        get() = searchResult.value.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
+
     suspend fun searchForRandomWord() {
         reset()
         val randomWord = withContext(scope) {
@@ -76,9 +79,7 @@ class HomeState(
         }
         searchText = randomWord?.word ?: ""
         if (searchText.isBlank()) searchForRandomWord()
-        withContext(scope) {
-            searchForDefinition()
-        }
+        withContext(scope) { searchForDefinitionIfTermIsNotBlank() }
     }
 
     private suspend fun internalSearchForDefinition(
@@ -88,7 +89,7 @@ class HomeState(
         searchText = searchTerm
         val body = withContext(scope) {
             try {
-                Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm)
+                Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
             } catch (e: HttpException) {
                 errorMessage.value = getErrorMessage(e.code(), context)
                 null
@@ -101,7 +102,12 @@ class HomeState(
         return body
     }
 
-    suspend fun searchForDefinition() {
+    suspend fun searchForDefinitionIfTermIsNotBlank() {
+        if (searchText.isNotBlank()) searchForDefinition()
+        else errorMessage.value = getErrorMessage(998, context)
+    }
+
+    private suspend fun searchForDefinition() {
         rawWordSearchBody.value = withContext(scope) {
             internalSearchForDefinition(searchText)
         }
@@ -162,5 +168,7 @@ private fun getErrorMessage(
     401 -> context.getString(R.string.api_authorization_error)
     404 -> context.getString(R.string.definition_not_found)
     429 -> context.getString(R.string.api_throttled)
+    998 -> context.getString(R.string.no_search_term_entered)
+    999 -> context.getString(R.string.untracked_error)
     else -> context.getString(R.string.general_net_error)
 }

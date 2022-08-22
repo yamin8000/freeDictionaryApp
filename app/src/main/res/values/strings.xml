@@ -38,4 +38,6 @@
     <string name="very_soon">به زودی</string>
     <string name="added_to_favourites">به برگزیده ها اضافه شد</string>
     <string name="delete">پاک کردن</string>
+    <string name="untracked_error">خطای پیش بینی نشده</string>
+    <string name="no_search_term_entered">عبارتی وارد نشده</string>
 </resources>

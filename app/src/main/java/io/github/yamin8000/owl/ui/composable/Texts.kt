@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -65,14 +66,16 @@ fun PersianText(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 14.sp,
     fontFamily: FontFamily = Samim,
-    textAlign: TextAlign = TextAlign.Right
+    textAlign: TextAlign = TextAlign.Right,
+    color: Color = Color.Unspecified
 ) {
     Text(
         text,
         modifier = modifier,
         fontFamily = fontFamily,
         textAlign = textAlign,
-        fontSize = fontSize
+        fontSize = fontSize,
+        color = color
     )
 }
 

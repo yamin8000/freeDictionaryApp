@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui
+package io.github.yamin8000.owl.ui.favourites
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
@@ -45,7 +45,7 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.RippleText
 import io.github.yamin8000.owl.ui.composable.TextProvider
-import io.github.yamin8000.owl.ui.favourites.rememberFavouritesState
+import io.github.yamin8000.owl.ui.util.navigation.Nav
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
@@ -80,10 +80,11 @@ fun FavouritesContent(
                     columns = GridCells.Fixed(2),
                     content = {
                         items(favourites) {
-                            FavouriteItem(it)
+                            FavouriteItem(it) { favourite ->
+                                navController?.navigate("${Nav.Routes.home}/${favourite}")
+                            }
                         }
                     })
-
             }
         }
     }
@@ -93,7 +94,8 @@ fun FavouritesContent(
 @Composable
 private fun FavouriteItem(
     @PreviewParameter(TextProvider::class)
-    favourite: String
+    favourite: String,
+    onClick: ((String) -> Unit)? = null
 ) {
     Card(
         shape = CutCornerShape(15.dp)
@@ -109,7 +111,7 @@ private fun FavouriteItem(
                         .fillMaxWidth()
                 )
             },
-            onClick = {}
+            onClick = { onClick?.invoke(favourite) }
         )
     }
 }
