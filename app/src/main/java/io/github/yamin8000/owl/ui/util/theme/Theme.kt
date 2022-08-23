@@ -36,6 +36,7 @@ private val LightColors = lightColorScheme(
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
     onPrimaryContainer = md_theme_light_onPrimaryContainer,
+    inversePrimary = md_theme_light_inversePrimary,
     secondary = md_theme_light_secondary,
     onSecondary = md_theme_light_onSecondary,
     secondaryContainer = md_theme_light_secondaryContainer,
@@ -44,21 +45,20 @@ private val LightColors = lightColorScheme(
     onTertiary = md_theme_light_onTertiary,
     tertiaryContainer = md_theme_light_tertiaryContainer,
     onTertiaryContainer = md_theme_light_onTertiaryContainer,
-    error = md_theme_light_error,
-    errorContainer = md_theme_light_errorContainer,
-    onError = md_theme_light_onError,
-    onErrorContainer = md_theme_light_onErrorContainer,
     background = md_theme_light_background,
     onBackground = md_theme_light_onBackground,
     surface = md_theme_light_surface,
     onSurface = md_theme_light_onSurface,
     surfaceVariant = md_theme_light_surfaceVariant,
     onSurfaceVariant = md_theme_light_onSurfaceVariant,
-    outline = md_theme_light_outline,
-    inverseOnSurface = md_theme_light_inverseOnSurface,
-    inverseSurface = md_theme_light_inverseSurface,
-    inversePrimary = md_theme_light_inversePrimary,
     surfaceTint = md_theme_light_surfaceTint,
+    inverseSurface = md_theme_light_inverseSurface,
+    inverseOnSurface = md_theme_light_inverseOnSurface,
+    error = md_theme_light_error,
+    onError = md_theme_light_onError,
+    errorContainer = md_theme_light_errorContainer,
+    onErrorContainer = md_theme_light_onErrorContainer,
+    outline = md_theme_light_outline,
     //surfaceTintColor = md_theme_light_surfaceTintColor,
 )
 
@@ -108,8 +108,10 @@ fun OwlTheme(
     val activity = LocalView.current.context as Activity
     SideEffect {
         activity.window.statusBarColor = colors.surface.toArgb()
+        activity.window.navigationBarColor = colors.surface.toArgb()
         val wic = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
-        wic.isAppearanceLightStatusBars = isDarkTheme
+        wic.isAppearanceLightStatusBars = !isDarkTheme
+        wic.isAppearanceLightNavigationBars = !isDarkTheme
     }
 
     MaterialTheme(
