@@ -1,7 +1,12 @@
 # Owl2
-🦉 **Owl2/جغدک** is a simple android application for **OwlBot dictionary**. (a reincarnation of https://github.com/yamin8000/Owl)
 
-Owl2 is the first project in that I used **Jetpack Compose UI** and **Material3** color system. Currently, Google's recommendation is to use MVVM architecture. But I didn't feel it necessary to use MVVM architecture because this project was simple, and adding such an architecture would make it more complex and had no benefits.
+🦉 **Owl2/جغدک** is a simple android application for **OwlBot dictionary**. (a reincarnation
+of https://github.com/yamin8000/Owl)
+
+Owl2 is the first project in that I used **Jetpack Compose UI** and **Material3** color system.
+Currently, Google's recommendation is to use MVVM architecture. But I didn't feel it necessary to
+use MVVM architecture because this project was simple, and adding such an architecture would make it
+more complex and had no benefits.
 
 ---
 
@@ -19,6 +24,7 @@ Owl2 is the first project in that I used **Jetpack Compose UI** and **Material3*
 
 ## Preview
 
+![preview](./screenshots/1.0.1/Screenshot_2022-08-24-02-51-48-048_io.github.yamin8000.owl.jpg)
 
 ## Compatibility
 
