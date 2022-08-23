@@ -20,8 +20,6 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -34,7 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -49,10 +47,7 @@ import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Word
-import io.github.yamin8000.owl.ui.writeToFavouritesDataStore
 import io.github.yamin8000.owl.util.TtsEngine
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 class DefinitionProvider : PreviewParameterProvider<Definition> {
     override val values: Sequence<Definition> = listOf(
@@ -67,6 +62,7 @@ class DefinitionProvider : PreviewParameterProvider<Definition> {
 }
 
 class WordProvider : PreviewParameterProvider<Word> {
+    @Suppress("SpellCheckingInspection")
     override val values: Sequence<Word> = listOf(
         Word("word", "wurd", listOf())
     ).asSequence()
@@ -175,50 +171,43 @@ fun ClickableIcon(
 @Composable
 fun WordCard(
     @PreviewParameter(WordProvider::class)
-    word: Word
+    word: Word,
+    onClick: () -> Unit = {},
+    onAddToFavouriteClick: () -> Unit = {}
 ) {
-    val context = LocalContext.current
-    val favouriteText = stringResource(R.string.added_to_favourites)
-    val coroutineScope = rememberCoroutineScope()
-
     OutlinedCard(
         shape = CutCornerShape(15.dp),
         modifier = Modifier
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
-                onClick = {
-                    //ignored
-                },
-                onDoubleClick = {
-                    onWordCardDoubleClick(coroutineScope, context, word.word, favouriteText)
-                }
+                onClick = onClick
             )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TtsReadyComposable { ttsEngine ->
-                WordText(word.word, ttsEngine)
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                TtsReadyComposable { ttsEngine ->
+                    WordText(word.word, ttsEngine)
+                }
+                if (word.pronunciation != null)
+                    PronunciationText(
+                        word.pronunciation,
+                        word.word
+                    )
             }
-            if (word.pronunciation != null)
-                PronunciationText(
-                    word.pronunciation,
-                    word.word
-                )
+            ClickableIcon(
+                iconPainter = painterResource(id = R.drawable.ic_favorites),
+                contentDescription = stringResource(id = R.string.favourites)
+            ) { onAddToFavouriteClick() }
         }
     }
-}
-
-private fun onWordCardDoubleClick(
-    coroutineScope: CoroutineScope,
-    context: Context,
-    word: String,
-    favouriteText: String
-) {
-    coroutineScope.launch { writeToFavouritesDataStore(word, context) }
-    Toast.makeText(context, favouriteText, Toast.LENGTH_SHORT).show()
 }
 
 @Composable

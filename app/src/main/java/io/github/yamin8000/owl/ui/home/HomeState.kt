@@ -32,6 +32,8 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
@@ -41,6 +43,8 @@ import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
+import io.github.yamin8000.owl.util.favouritesDataStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
@@ -53,9 +57,9 @@ class HomeState(
     var rawWordSearchBody: MutableState<Word?>,
     var searchResult: MutableState<List<Definition>>,
     var errorMessage: MutableState<String>,
-    private val context: Context
+    val context: Context
 ) {
-    private val scope = lifecycleOwner.lifecycleScope.coroutineContext
+    private val lifeCycleScopeContext = lifecycleOwner.lifecycleScope.coroutineContext
 
     val isShowingError: Boolean
         get() = errorMessage.value.isNotBlank()
@@ -68,7 +72,7 @@ class HomeState(
 
     suspend fun searchForRandomWord() {
         reset()
-        val randomWord = withContext(scope) {
+        val randomWord = withContext(lifeCycleScopeContext) {
             try {
                 getNewRandomWord()
             } catch (e: HttpException) {
@@ -79,15 +83,15 @@ class HomeState(
         }
         searchText = randomWord?.word ?: ""
         if (searchText.isBlank()) searchForRandomWord()
-        withContext(scope) { searchForDefinitionIfTermIsNotBlank() }
+        withContext(lifeCycleScopeContext) { searchForDefinitionHandler() }
     }
 
-    private suspend fun internalSearchForDefinition(
+    private suspend fun searchForDefinitionRequest(
         searchTerm: String
     ): Word? {
         reset()
         searchText = searchTerm
-        val body = withContext(scope) {
+        val body = withContext(lifeCycleScopeContext) {
             try {
                 Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
             } catch (e: HttpException) {
@@ -102,14 +106,14 @@ class HomeState(
         return body
     }
 
-    suspend fun searchForDefinitionIfTermIsNotBlank() {
+    suspend fun searchForDefinitionHandler() {
         if (searchText.isNotBlank()) searchForDefinition()
         else errorMessage.value = getErrorMessage(998, context)
     }
 
-    private suspend fun searchForDefinition() {
-        rawWordSearchBody.value = withContext(scope) {
-            internalSearchForDefinition(searchText)
+    suspend fun searchForDefinition() {
+        rawWordSearchBody.value = withContext(lifeCycleScopeContext) {
+            searchForDefinitionRequest(searchText)
         }
         searchResult.value = rawWordSearchBody.value?.definitions ?: listOf()
         searchResult.value = searchResult.value.sortedByDescending { it.imageUrl }
@@ -124,6 +128,29 @@ class HomeState(
         isSearching.value = true
         errorMessage.value = ""
     }
+
+    suspend fun addToFavourite(
+        favouriteWord: String
+    ) {
+        val wordInDataStore = withContext(lifeCycleScopeContext) {
+            findWordInDataStore(favouriteWord)
+        }
+        if (wordInDataStore == null) addFavouriteWordToDataStore(favouriteWord)
+    }
+
+    private suspend fun addFavouriteWordToDataStore(
+        favouriteWord: String
+    ) {
+        context.favouritesDataStore.edit {
+            it[stringPreferencesKey(favouriteWord)] = favouriteWord
+        }
+    }
+
+    private suspend fun findWordInDataStore(
+        favouriteWord: String
+    ) = getFavourites()[stringPreferencesKey(favouriteWord)]
+
+    private suspend fun getFavourites() = context.favouritesDataStore.data.first()
 }
 
 @Composable

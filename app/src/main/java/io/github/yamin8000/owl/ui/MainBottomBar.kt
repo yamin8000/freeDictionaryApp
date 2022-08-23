@@ -48,8 +48,8 @@ import io.github.yamin8000.owl.ui.util.theme.Samim
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun MainBottomBar(
-    onSearch: ((String) -> Unit)? = null,
-    onTextChanged: ((String) -> Unit)? = null
+    onSearchTermChanged: ((String) -> Unit)? = null,
+    onSearch: ((String) -> Unit)? = null
 ) {
     var searchText by remember { mutableStateOf("") }
     TextField(
@@ -85,7 +85,7 @@ fun MainBottomBar(
         singleLine = true,
         onValueChange = {
             searchText = it
-            onTextChanged?.invoke(searchText)
+            onSearchTermChanged?.invoke(searchText)
         },
         textStyle = TextStyle(
             fontFamily = Samim,

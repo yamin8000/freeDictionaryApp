@@ -30,9 +30,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
@@ -47,6 +45,7 @@ import io.github.yamin8000.owl.ui.composable.RippleText
 import io.github.yamin8000.owl.ui.composable.TextProvider
 import io.github.yamin8000.owl.ui.util.navigation.Nav
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
+import kotlinx.coroutines.launch
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
@@ -54,15 +53,6 @@ fun FavouritesContent(
     navController: NavHostController? = null,
 ) {
     val favouritesState = rememberFavouritesState()
-    val favourites = remember { mutableStateListOf<String>() }
-
-    LaunchedEffect(Unit) {
-        favouritesState.getFavourites().collect {
-            it.asMap().forEach { entry ->
-                favourites.add(entry.value.toString())
-            }
-        }
-    }
 
     OwlTheme {
         Surface(
@@ -72,19 +62,24 @@ fun FavouritesContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PersianText(stringResource(id = R.string.favourites))
+                PersianText(
+                    modifier = Modifier.padding(16.dp),
+                    text = stringResource(id = R.string.favourites),
+                    fontSize = 16.sp
+                )
                 LazyVerticalGrid(
                     modifier = Modifier.padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    columns = GridCells.Fixed(2),
-                    content = {
-                        items(favourites) {
-                            FavouriteItem(it) { favourite ->
-                                navController?.navigate("${Nav.Routes.home}/${favourite}")
-                            }
-                        }
-                    })
+                    columns = GridCells.Fixed(2)
+                ) {
+                    items(favouritesState.favourites.value.toList()) {
+                        FavouriteItem(
+                            it,
+                            favouritesState
+                        ) { favourite -> navController?.navigate("${Nav.Routes.home}/${favourite}") }
+                    }
+                }
             }
         }
     }
@@ -95,6 +90,7 @@ fun FavouritesContent(
 private fun FavouriteItem(
     @PreviewParameter(TextProvider::class)
     favourite: String,
+    favouritesState: FavouritesState = rememberFavouritesState(),
     onClick: ((String) -> Unit)? = null
 ) {
     Card(
@@ -111,7 +107,12 @@ private fun FavouriteItem(
                         .fillMaxWidth()
                 )
             },
-            onClick = { onClick?.invoke(favourite) }
+            onClick = { onClick?.invoke(favourite) },
+            onLongClick = {
+                favouritesState.lifeCycleScope.launch {
+                    favouritesState.removeFavourite(favourite)
+                }
+            }
         )
     }
 }

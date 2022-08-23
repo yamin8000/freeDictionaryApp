@@ -22,17 +22,54 @@ package io.github.yamin8000.owl.ui.favourites
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.util.favouritesDataStore
+import kotlinx.coroutines.launch
 
 class FavouritesState(
-    val context: Context
+    val context: Context,
+    val lifeCycleScope: LifecycleCoroutineScope,
+    var favourites: MutableState<Set<String>>
 ) {
-    fun getFavourites() = context.favouritesDataStore.data
+
+    init {
+        lifeCycleScope.launch { getFavourites() }
+    }
+
+    private suspend fun getFavourites() {
+        context.favouritesDataStore.data.collect { preferences ->
+            val newSet = favourites.value.toMutableSet()
+            preferences.asMap().forEach { entry ->
+                newSet.add(entry.value.toString())
+            }
+            favourites.value = newSet
+        }
+    }
+
+    suspend fun removeFavourite(
+        favourite: String
+    ) {
+        context.favouritesDataStore.edit {
+            it.remove(stringPreferencesKey(favourite))
+        }
+        val newSet = favourites.value.toMutableSet()
+        newSet.remove(favourite)
+        favourites.value = newSet
+    }
 }
 
 @Composable
 fun rememberFavouritesState(
-    context: Context = LocalContext.current
-) = remember(context) { FavouritesState(context) }
+    context: Context = LocalContext.current,
+    lifeCycleScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
+    favourites: MutableState<Set<String>> = rememberSaveable { mutableStateOf(emptySet()) }
+) = remember(context) { FavouritesState(context, lifeCycleScope, favourites) }

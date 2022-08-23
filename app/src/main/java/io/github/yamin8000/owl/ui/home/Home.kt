@@ -22,6 +22,7 @@ package io.github.yamin8000.owl.ui.home
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -73,7 +74,8 @@ fun HomeContent(
             LaunchedEffect(Unit) {
                 if (homeState.isFirstTimeOpening)
                     homeState.searchForRandomWord()
-                homeState.searchForDefinitionIfTermIsNotBlank()
+                if (homeState.searchText.isNotBlank())
+                    homeState.searchForDefinition()
             }
 
             Scaffold(
@@ -102,7 +104,7 @@ fun HomeContent(
                     ) {
                         FloatingActionButton(onClick = {
                             homeState.lifecycleOwner.lifecycleScope.launch {
-                                homeState.searchForDefinitionIfTermIsNotBlank()
+                                homeState.searchForDefinitionHandler()
                             }
                         }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
                     }
@@ -117,36 +119,56 @@ fun HomeContent(
                         if (homeState.isSearching.value)
                             CircularProgressIndicator()
                         MainBottomBar(
+                            onSearchTermChanged = { homeState.searchText = it },
                             onSearch = {
                                 homeState.searchText = it
                                 homeState.lifecycleOwner.lifecycleScope.launch {
-                                    homeState.searchForDefinitionIfTermIsNotBlank()
+                                    homeState.searchForDefinitionHandler()
                                 }
-                            },
-                            onTextChanged = {
-                                homeState.searchText = it
                             }
                         )
                     }
                 }) { contentPadding ->
-
                 Column(
                     modifier = Modifier.padding(contentPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    homeState.rawWordSearchBody.value?.let { WordCard(it) }
-                    LazyColumn(
-                        modifier = Modifier.padding(16.dp),
-                        state = homeState.listState,
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        content = {
-                            items(homeState.searchResult.value) { definition ->
-                                DefinitionCard(definition)
-                            }
-                        })
+                    WordCard(homeState)
+                    WordDefinitionsList(homeState)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun WordDefinitionsList(
+    homeState: HomeState
+) {
+    LazyColumn(
+        modifier = Modifier.padding(16.dp),
+        state = homeState.listState,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        content = {
+            items(homeState.searchResult.value) { definition ->
+                DefinitionCard(definition)
+            }
+        })
+}
+
+@Composable
+private fun WordCard(
+    homeState: HomeState
+) {
+    val addedToFavourites = stringResource(id = R.string.added_to_favourites)
+    homeState.rawWordSearchBody.value?.let { word ->
+        WordCard(
+            word,
+            onAddToFavouriteClick = {
+                homeState.lifecycleOwner.lifecycleScope.launch { homeState.addToFavourite(word.word) }
+                Toast.makeText(homeState.context, addedToFavourites, Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 }
