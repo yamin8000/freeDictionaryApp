@@ -29,7 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -105,12 +105,11 @@ fun OwlTheme(
         LightColors
     }
 
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            (view.context as Activity).window.statusBarColor = colors.surface.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = isDarkTheme
-        }
+    val activity = LocalView.current.context as Activity
+    SideEffect {
+        activity.window.statusBarColor = colors.surface.toArgb()
+        val wic = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        wic.isAppearanceLightStatusBars = isDarkTheme
     }
 
     MaterialTheme(
