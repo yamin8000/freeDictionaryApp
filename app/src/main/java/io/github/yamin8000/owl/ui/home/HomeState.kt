@@ -21,6 +21,7 @@
 package io.github.yamin8000.owl.ui.home
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -57,7 +58,8 @@ class HomeState(
     var rawWordSearchBody: MutableState<Word?>,
     var searchResult: MutableState<List<Definition>>,
     var errorMessage: MutableState<String>,
-    val context: Context
+    val context: Context,
+    val isSharing: MutableState<Boolean>
 ) {
     private val lifeCycleScopeContext = lifecycleOwner.lifecycleScope.coroutineContext
 
@@ -151,41 +153,43 @@ class HomeState(
     ) = getFavourites()[stringPreferencesKey(favouriteWord)]
 
     private suspend fun getFavourites() = context.favouritesDataStore.data.first()
-}
 
-@Composable
-fun rememberHomeState(
-    listState: LazyListState = rememberLazyListState(),
-    isSearching: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
-    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-    focusManager: FocusManager = LocalFocusManager.current,
-    searchText: String = rememberSaveable { mutableStateOf("").value },
-    rawWordSearchBody: MutableState<Word?> = rememberSaveable { mutableStateOf(null) },
-    searchResult: MutableState<List<Definition>> = rememberSaveable { mutableStateOf(emptyList()) },
-    errorMessage: MutableState<String> = rememberSaveable { mutableStateOf("") },
-    context: Context = LocalContext.current
-) = remember(
-    listState,
-    isSearching,
-    lifecycleOwner,
-    focusManager,
-    searchText,
-    rawWordSearchBody,
-    searchResult,
-    errorMessage,
-    context
-) {
-    HomeState(
-        listState,
-        isSearching,
-        lifecycleOwner,
-        focusManager,
-        searchText,
-        rawWordSearchBody,
-        searchResult,
-        errorMessage,
-        context
-    )
+    fun handleShareIntent() {
+        isSharing.value = false
+        val text = createShareText()
+
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, text)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
+    }
+
+    private fun createShareText() = buildString {
+        append("Word: ")
+        append(rawWordSearchBody.value?.word ?: "-")
+        append("\n")
+        append("Pronunciation(IPA): ")
+        append(rawWordSearchBody.value?.pronunciation ?: "-")
+        append("\n\n")
+        searchResult.value.forEachIndexed { index, item ->
+            if (searchResult.value.size > 1)
+                append("${index + 1})\n")
+            append("Definition: ${item.definition}\n\n")
+            item.type?.let { append("Type: $it\n\n") }
+            item.example?.let { append("Example: $it\n\n") }
+            item.emoji?.let { append("Emoji: $it") }
+        }
+        trim()
+        append("\n\n")
+        append(context.getString(R.string.this_text_generated_using_owl_fa))
+        append("\nThis text is generated using Owl app.\n")
+        append(context.getString(R.string.github_source))
+        append("\nThis text is extracted from Owlbot Dictionary.\n")
+        append(context.getString(R.string.owl_bot_link))
+    }
 }
 
 private fun getErrorMessage(
@@ -198,4 +202,42 @@ private fun getErrorMessage(
     998 -> context.getString(R.string.no_search_term_entered)
     999 -> context.getString(R.string.untracked_error)
     else -> context.getString(R.string.general_net_error)
+}
+
+@Composable
+fun rememberHomeState(
+    listState: LazyListState = rememberLazyListState(),
+    isSearching: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    focusManager: FocusManager = LocalFocusManager.current,
+    searchText: String = rememberSaveable { mutableStateOf("").value },
+    rawWordSearchBody: MutableState<Word?> = rememberSaveable { mutableStateOf(null) },
+    searchResult: MutableState<List<Definition>> = rememberSaveable { mutableStateOf(emptyList()) },
+    errorMessage: MutableState<String> = rememberSaveable { mutableStateOf("") },
+    context: Context = LocalContext.current,
+    isSharing: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
+) = remember(
+    listState,
+    isSearching,
+    lifecycleOwner,
+    focusManager,
+    searchText,
+    rawWordSearchBody,
+    searchResult,
+    errorMessage,
+    context,
+    isSharing
+) {
+    HomeState(
+        listState,
+        isSearching,
+        lifecycleOwner,
+        focusManager,
+        searchText,
+        rawWordSearchBody,
+        searchResult,
+        errorMessage,
+        context,
+        isSharing
+    )
 }

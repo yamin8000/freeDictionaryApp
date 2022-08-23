@@ -78,6 +78,9 @@ fun HomeContent(
                     homeState.searchForDefinition()
             }
 
+            if (homeState.searchResult.value.isNotEmpty() && homeState.rawWordSearchBody.value != null && homeState.isSharing.value)
+                homeState.handleShareIntent()
+
             Scaffold(
                 topBar = {
                     MainTopBar(
@@ -165,6 +168,7 @@ private fun WordCard(
     homeState.rawWordSearchBody.value?.let { word ->
         WordCard(
             word,
+            onShareWordClick = { homeState.isSharing.value = true },
             onAddToFavouriteClick = {
                 homeState.lifecycleOwner.lifecycleScope.launch { homeState.addToFavourite(word.word) }
                 Toast.makeText(homeState.context, addedToFavourites, Toast.LENGTH_SHORT).show()

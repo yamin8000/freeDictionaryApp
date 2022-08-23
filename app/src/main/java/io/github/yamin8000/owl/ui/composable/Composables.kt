@@ -173,7 +173,8 @@ fun WordCard(
     @PreviewParameter(WordProvider::class)
     word: Word,
     onClick: () -> Unit = {},
-    onAddToFavouriteClick: () -> Unit = {}
+    onAddToFavouriteClick: () -> Unit = {},
+    onShareWordClick: () -> Unit = {}
 ) {
     OutlinedCard(
         shape = CutCornerShape(15.dp),
@@ -202,10 +203,16 @@ fun WordCard(
                         word.word
                     )
             }
-            ClickableIcon(
-                iconPainter = painterResource(id = R.drawable.ic_favorites),
-                contentDescription = stringResource(id = R.string.favourites)
-            ) { onAddToFavouriteClick() }
+            Row {
+                ClickableIcon(
+                    iconPainter = painterResource(id = R.drawable.ic_favorites),
+                    contentDescription = stringResource(id = R.string.favourites)
+                ) { onAddToFavouriteClick() }
+                ClickableIcon(
+                    iconPainter = painterResource(id = R.drawable.ic_share),
+                    contentDescription = stringResource(R.string.share)
+                ) { onShareWordClick() }
+            }
         }
     }
 }

@@ -40,4 +40,6 @@
     <string name="delete">پاک کردن</string>
     <string name="untracked_error">خطای پیش بینی نشده</string>
     <string name="no_search_term_entered">عبارتی وارد نشده</string>
+    <string name="share">اشتراک گذاری</string>
+    <string name="this_text_generated_using_owl_fa">این متن توسط برنامه جغدک تولید شده</string>
 </resources>
