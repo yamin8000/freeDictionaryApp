@@ -24,7 +24,7 @@ more complex and had no benefits.
 
 ## Preview
 
-<img src="./screenshots/1.0.1/Screenshot_2022-08-24-02-51-48-048_io.github.yamin8000.owl.jpg" alt="preview" width="200"/>
+<img src="./screenshots/1.0.1/Screenshot_2022-08-24-02-51-48-048_io.github.yamin8000.owl.jpg" alt="preview" width="400"/>
 
 ## Compatibility
 
