@@ -43,4 +43,5 @@
     <string name="share">اشتراک گذاری</string>
     <string name="this_text_generated_using_owl_fa">این متن توسط برنامه جغدک تولید شده</string>
     <string name="remove_history">پاک کردن همه</string>
+    <string name="list_empty">چیزی برای نمایش پیدا نشد</string>
 </resources>

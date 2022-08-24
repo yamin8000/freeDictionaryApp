@@ -45,6 +45,7 @@ import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
 import io.github.yamin8000.owl.util.favouritesDataStore
+import io.github.yamin8000.owl.util.historyDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -109,8 +110,16 @@ class HomeState(
     }
 
     suspend fun searchForDefinitionHandler() {
-        if (searchText.isNotBlank()) searchForDefinition()
-        else errorMessage.value = getErrorMessage(998, context)
+        if (searchText.isNotBlank()) {
+            searchForDefinition()
+            addSearchTextToHistory()
+        } else errorMessage.value = getErrorMessage(998, context)
+    }
+
+    private suspend fun addSearchTextToHistory() {
+        context.historyDataStore.edit {
+            it[stringPreferencesKey(searchText)] = searchText
+        }
     }
 
     suspend fun searchForDefinition() {

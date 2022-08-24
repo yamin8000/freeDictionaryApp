@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.ui.composable.EmptyListErrorText
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.RemovableCard
 import io.github.yamin8000.owl.ui.composable.TextProvider
@@ -61,6 +62,8 @@ fun FavouritesContent(
                 text = stringResource(id = R.string.favourites),
                 fontSize = 20.sp
             )
+            if (favouritesState.favourites.value.isEmpty())
+                EmptyListErrorText()
             LazyVerticalGrid(
                 modifier = Modifier.padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

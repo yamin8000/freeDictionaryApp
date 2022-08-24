@@ -24,12 +24,10 @@ import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -228,5 +226,18 @@ fun WordTypeText(
         type,
         painterResource(id = R.drawable.ic_category),
         ttsEngine
+    )
+}
+
+
+@Composable
+fun EmptyListErrorText() {
+    PersianText(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        text = stringResource(R.string.list_empty),
+        color = MaterialTheme.colorScheme.error,
+        textAlign = TextAlign.Center
     )
 }

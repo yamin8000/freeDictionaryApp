@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.ui.composable.EmptyListErrorText
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.RemovableCard
 import io.github.yamin8000.owl.ui.util.navigation.Nav
@@ -60,12 +61,10 @@ fun HistoryContent(
                 text = stringResource(id = R.string.search_history),
                 fontSize = 20.sp
             )
-            Button(onClick = {
-                historyState.lifeCycleScope.launch { historyState.removeAllHistory() }
-            }) {
-                PersianText(text = stringResource(R.string.remove_history))
-            }
-
+            if (historyState.history.value.isEmpty())
+                EmptyListErrorText()
+            if (historyState.history.value.isNotEmpty())
+                RemoveAlHistoryButton(historyState)
             LazyVerticalGrid(
                 modifier = Modifier.padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -80,6 +79,15 @@ fun HistoryContent(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun RemoveAlHistoryButton(historyState: HistoryState) {
+    Button(onClick = {
+        historyState.lifeCycleScope.launch { historyState.removeAllHistory() }
+    }) {
+        PersianText(text = stringResource(R.string.remove_history))
     }
 }
 
