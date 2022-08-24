@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -153,4 +154,79 @@ fun SpeakableRippleTextWithIcon(
     CopyAbleRippleTextWithIcon(text, iconPainter) {
         ttsEngine.speak(text)
     }
+}
+
+@Composable
+fun WordText(
+    word: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        word,
+        painterResource(id = R.drawable.ic_form_text),
+        ttsEngine
+    )
+}
+
+@Composable
+fun PronunciationText(
+    pronunciation: String,
+    word: String
+) {
+    TtsReadyComposable { ttsEngine ->
+        CopyAbleRippleTextWithIcon(
+            text = pronunciation,
+            iconPainter = painterResource(id = R.drawable.ic_person_voice)
+        ) {
+            ttsEngine.speak(word)
+        }
+    }
+}
+
+@Composable
+fun WordEmojiText(
+    emoji: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        emoji,
+        painterResource(id = R.drawable.ic_emoji_symbols),
+        ttsEngine
+    )
+}
+
+@Composable
+fun WordExampleText(
+    example: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        example,
+        painterResource(id = R.drawable.ic_text_snippet),
+        ttsEngine
+    )
+}
+
+@Composable
+fun WordDefinitionText(
+    definition: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        definition,
+        painterResource(id = R.drawable.ic_short_text),
+        ttsEngine
+    )
+}
+
+@Composable
+fun WordTypeText(
+    type: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        type,
+        painterResource(id = R.drawable.ic_category),
+        ttsEngine
+    )
 }
