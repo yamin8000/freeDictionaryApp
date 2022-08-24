@@ -84,15 +84,19 @@ fun HomeContent(
                 MainTopBar(
                     onHistoryClick = { navController?.navigate(Nav.Routes.history) },
                     onFavouritesClick = { navController?.navigate(Nav.Routes.favourites) },
+                    onInfoClick = { navController?.navigate(Nav.Routes.about) },
                     onRandomWordClick = {
                         homeState.lifecycleOwner.lifecycleScope.launch {
                             homeState.searchForRandomWord()
                         }
                     },
                     onSettingsClick = {
-
-                    },
-                    onInfoClick = { navController?.navigate(Nav.Routes.about) }
+                        Toast.makeText(
+                            homeState.context,
+                            homeState.context.getString(R.string.very_soon),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
             },
             floatingActionButton = {
