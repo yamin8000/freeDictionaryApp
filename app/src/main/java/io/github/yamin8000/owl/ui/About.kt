@@ -41,56 +41,53 @@ import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleText
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AboutContent(
     navController: NavHostController? = null
 ) {
-    OwlTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize()
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            val uriHandler = LocalUriHandler.current
+            val sourceUri = stringResource(R.string.github_source)
+            val owlBotUri = stringResource(R.string.owl_bot_link)
+            Image(
+                painterResource(id = R.drawable.ic_gplv3),
+                stringResource(id = R.string.gplv3_image_description),
+                modifier = Modifier
+                    .padding(32.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.FillWidth,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+            )
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val uriHandler = LocalUriHandler.current
-                val sourceUri = stringResource(R.string.github_source)
-                val owlBotUri = stringResource(R.string.owl_bot_link)
-                Image(
-                    painterResource(id = R.drawable.ic_gplv3),
-                    stringResource(id = R.string.gplv3_image_description),
-                    modifier = Modifier
-                        .padding(32.dp)
-                        .fillMaxWidth(),
-                    contentScale = ContentScale.FillWidth,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                PersianText(
+                    stringResource(id = R.string.license_header),
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    PersianText(
-                        stringResource(id = R.string.license_header),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    CopyAbleRippleText(
-                        text = sourceUri,
-                        textDecoration = TextDecoration.Underline
-                    ) { uriHandler.openUri(sourceUri) }
-                    PersianText(
-                        stringResource(id = R.string.about_app),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    CopyAbleRippleText(
-                        text = owlBotUri,
-                        textDecoration = TextDecoration.Underline
-                    ) { uriHandler.openUri(owlBotUri) }
-                }
+                CopyAbleRippleText(
+                    text = sourceUri,
+                    textDecoration = TextDecoration.Underline
+                ) { uriHandler.openUri(sourceUri) }
+                PersianText(
+                    stringResource(id = R.string.about_app),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                CopyAbleRippleText(
+                    text = owlBotUri,
+                    textDecoration = TextDecoration.Underline
+                ) { uriHandler.openUri(owlBotUri) }
             }
         }
     }

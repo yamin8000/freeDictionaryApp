@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     Favourites.kt Created by Yamin Siahmargooei at 2022/8/22
+ *     History.kt Created by Yamin Siahmargooei at 2022/8/24
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -18,36 +18,35 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.favourites
+package io.github.yamin8000.owl.ui.history
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.RemovableCard
-import io.github.yamin8000.owl.ui.composable.TextProvider
 import io.github.yamin8000.owl.ui.util.navigation.Nav
 import kotlinx.coroutines.launch
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun FavouritesContent(
+fun HistoryContent(
     navController: NavHostController? = null
 ) {
-    val favouritesState = rememberFavouritesState()
+    val historyState = rememberHistoryState()
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -58,40 +57,44 @@ fun FavouritesContent(
         ) {
             PersianText(
                 modifier = Modifier.padding(16.dp),
-                text = stringResource(id = R.string.favourites),
+                text = stringResource(id = R.string.search_history),
                 fontSize = 20.sp
             )
+            Button(onClick = {
+                historyState.lifeCycleScope.launch { historyState.removeAllHistory() }
+            }) {
+                PersianText(text = stringResource(R.string.remove_history))
+            }
+
             LazyVerticalGrid(
                 modifier = Modifier.padding(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 columns = GridCells.Fixed(2)
             ) {
-                items(favouritesState.favourites.value.toList()) {
-                    FavouriteItem(
+                items(historyState.history.value.toList()) {
+                    HistoryItem(
                         it,
-                        favouritesState
-                    ) { favourite -> navController?.navigate("${Nav.Routes.home}/${favourite}") }
+                        historyState,
+                    ) { history -> navController?.navigate("${Nav.Routes.home}/${history}") }
                 }
             }
         }
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun FavouriteItem(
-    @PreviewParameter(TextProvider::class)
-    favourite: String,
-    favouritesState: FavouritesState = rememberFavouritesState(),
+fun HistoryItem(
+    history: String,
+    historyState: HistoryState,
     onClick: ((String) -> Unit)? = null
 ) {
     RemovableCard(
-        item = favourite,
-        onClick = { onClick?.invoke(favourite) },
+        item = history,
+        onClick = { onClick?.invoke(history) },
         onLongClick = {
-            favouritesState.lifeCycleScope.launch {
-                favouritesState.removeFavourite(favourite)
+            historyState.lifeCycleScope.launch {
+                historyState.removeSingleHistory(history)
             }
         }
     )

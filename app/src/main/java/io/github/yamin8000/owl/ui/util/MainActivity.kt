@@ -29,14 +29,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.github.yamin8000.owl.ui.AboutContent
 import io.github.yamin8000.owl.ui.favourites.FavouritesContent
+import io.github.yamin8000.owl.ui.history.HistoryContent
 import io.github.yamin8000.owl.ui.home.HomeContent
 import io.github.yamin8000.owl.ui.util.navigation.Nav
+import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MainContent() }
+        setContent { OwlTheme { MainContent() } }
     }
 
     @Composable
@@ -56,6 +58,10 @@ class MainActivity : ComponentActivity() {
 
             composable(Nav.Routes.favourites) {
                 FavouritesContent(navController)
+            }
+
+            composable(Nav.Routes.history) {
+                HistoryContent(navController)
             }
         }
     }

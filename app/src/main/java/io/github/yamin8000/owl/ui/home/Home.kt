@@ -51,7 +51,6 @@ import io.github.yamin8000.owl.ui.composable.DefinitionCard
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.WordCard
 import io.github.yamin8000.owl.ui.util.navigation.Nav
-import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 import io.github.yamin8000.owl.util.LockScreenOrientation
 import kotlinx.coroutines.launch
 
@@ -63,82 +62,78 @@ fun HomeContent(
     searchTerm: String? = null,
 ) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-    OwlTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val homeState = rememberHomeState()
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val homeState = rememberHomeState()
 
-            if (searchTerm != null)
-                homeState.searchText = searchTerm
-            LaunchedEffect(Unit) {
-                if (homeState.isFirstTimeOpening)
-                    homeState.searchForRandomWord()
-                if (homeState.searchText.isNotBlank())
-                    homeState.searchForDefinition()
-            }
+        if (searchTerm != null)
+            homeState.searchText = searchTerm
+        LaunchedEffect(Unit) {
+            if (homeState.isFirstTimeOpening)
+                homeState.searchForRandomWord()
+            if (homeState.searchText.isNotBlank())
+                homeState.searchForDefinition()
+        }
 
-            if (homeState.searchResult.value.isNotEmpty() && homeState.rawWordSearchBody.value != null && homeState.isSharing.value)
-                homeState.handleShareIntent()
+        if (homeState.searchResult.value.isNotEmpty() && homeState.rawWordSearchBody.value != null && homeState.isSharing.value)
+            homeState.handleShareIntent()
 
-            Scaffold(
-                topBar = {
-                    MainTopBar(
-                        onHistoryClick = {
+        Scaffold(
+            topBar = {
+                MainTopBar(
+                    onHistoryClick = { navController?.navigate(Nav.Routes.history) },
+                    onFavouritesClick = { navController?.navigate(Nav.Routes.favourites) },
+                    onRandomWordClick = {
+                        homeState.lifecycleOwner.lifecycleScope.launch {
+                            homeState.searchForRandomWord()
+                        }
+                    },
+                    onSettingsClick = {
 
-                        },
-                        onFavouritesClick = { navController?.navigate(Nav.Routes.favourites) },
-                        onRandomWordClick = {
-                            homeState.lifecycleOwner.lifecycleScope.launch {
-                                homeState.searchForRandomWord()
-                            }
-                        },
-                        onSettingsClick = {
-
-                        },
-                        onInfoClick = { navController?.navigate(Nav.Routes.about) }
-                    )
-                },
-                floatingActionButton = {
-                    AnimatedVisibility(
-                        visible = homeState.floatingActionButtonVisibility,
-                        enter = slideInHorizontally { it * 2 },
-                        exit = slideOutHorizontally { it * 2 }
-                    ) {
-                        FloatingActionButton(onClick = {
+                    },
+                    onInfoClick = { navController?.navigate(Nav.Routes.about) }
+                )
+            },
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = homeState.floatingActionButtonVisibility,
+                    enter = slideInHorizontally { it * 2 },
+                    exit = slideOutHorizontally { it * 2 }
+                ) {
+                    FloatingActionButton(onClick = {
+                        homeState.lifecycleOwner.lifecycleScope.launch {
+                            homeState.searchForDefinitionHandler()
+                        }
+                    }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
+                }
+            },
+            bottomBar = {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (homeState.isShowingError)
+                        PersianText(
+                            homeState.errorMessage.value,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    if (homeState.isSearching.value)
+                        CircularProgressIndicator()
+                    MainBottomBar(
+                        onSearchTermChanged = { homeState.searchText = it },
+                        onSearch = {
+                            homeState.searchText = it
                             homeState.lifecycleOwner.lifecycleScope.launch {
                                 homeState.searchForDefinitionHandler()
                             }
-                        }) { Icon(Icons.Filled.Search, stringResource(id = R.string.search)) }
-                    }
-                },
-                bottomBar = {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (homeState.isShowingError)
-                            PersianText(
-                                homeState.errorMessage.value,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        if (homeState.isSearching.value)
-                            CircularProgressIndicator()
-                        MainBottomBar(
-                            onSearchTermChanged = { homeState.searchText = it },
-                            onSearch = {
-                                homeState.searchText = it
-                                homeState.lifecycleOwner.lifecycleScope.launch {
-                                    homeState.searchForDefinitionHandler()
-                                }
-                            }
-                        )
-                    }
-                }) { contentPadding ->
-                Column(
-                    modifier = Modifier.padding(contentPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    WordCard(homeState)
-                    WordDefinitionsList(homeState)
+                        }
+                    )
                 }
+            }) { contentPadding ->
+            Column(
+                modifier = Modifier.padding(contentPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                WordCard(homeState)
+                WordDefinitionsList(homeState)
             }
         }
     }
