@@ -30,6 +30,6 @@ data class Definition(
     val type: String?,
     val definition: String,
     val example: String?,
-    @Json(name = IMAGE_URL) val imageUrl: String?,
+    @field:Json(name = IMAGE_URL) val imageUrl: String?,
     val emoji: String?
 ) : Parcelable
