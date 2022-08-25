@@ -34,7 +34,7 @@ object APIs {
 
         @Headers(OWLBOT_TOKEN)
         @GET("dictionary/{word}")
-        suspend fun searchWord(@Path("word") word: String): Word
+        suspend fun searchWord(@Path("word") word: String): Word?
     }
 
     interface NinjaAPI {

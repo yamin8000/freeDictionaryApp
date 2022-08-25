@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.orhanobut.logger.Logger
 import io.github.yamin8000.owl.ui.AboutContent
 import io.github.yamin8000.owl.ui.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.history.HistoryContent

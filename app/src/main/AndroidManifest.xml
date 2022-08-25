@@ -19,22 +19,17 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="io.github.yamin8000.owl">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".util.MyApp"
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/Theme.Owl"
-        tools:targetApi="31">
+        android:theme="@style/Theme.Owl">
         <activity
             android:name=".ui.util.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|locale|screenLayout|screenSize"

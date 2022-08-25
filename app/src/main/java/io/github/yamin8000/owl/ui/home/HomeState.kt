@@ -37,6 +37,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.orhanobut.logger.Logger
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.RandomWord
@@ -79,14 +80,19 @@ class HomeState(
             try {
                 getNewRandomWord()
             } catch (e: HttpException) {
-                getNewRandomWord()
+                Logger.d(e.stackTraceToString())
+                errorMessage.value = getErrorMessage(e.code(), context)
+                null
             } catch (e: Exception) {
+                Logger.d(e.stackTraceToString())
+                errorMessage.value = getErrorMessage(999, context)
                 null
             }
         }
+        isSearching.value = false
         searchText = randomWord?.word ?: ""
-        if (searchText.isBlank()) searchForRandomWord()
-        withContext(lifeCycleScopeContext) { searchForDefinitionHandler() }
+        if (searchText.isNotBlank())
+            withContext(lifeCycleScopeContext) { searchForDefinitionHandler() }
     }
 
     private suspend fun searchForDefinitionRequest(
@@ -98,9 +104,11 @@ class HomeState(
             try {
                 Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
             } catch (e: HttpException) {
+                Logger.d(e.stackTraceToString())
                 errorMessage.value = getErrorMessage(e.code(), context)
                 null
             } catch (e: Exception) {
+                Logger.d(e.stackTraceToString())
                 errorMessage.value = getErrorMessage(999, context)
                 null
             }
