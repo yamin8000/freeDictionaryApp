@@ -73,7 +73,10 @@ class TtsEngine(
         //toast(context.getString(R.string.tts_failed))
     }
 
-    private fun toast(text: String, length: Int = Toast.LENGTH_SHORT) {
+    private fun toast(
+        text: String,
+        length: Int = Toast.LENGTH_SHORT
+    ) {
         Toast.makeText(context, text, length).show()
     }
 }

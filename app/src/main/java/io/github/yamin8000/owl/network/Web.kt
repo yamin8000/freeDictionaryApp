@@ -21,7 +21,7 @@
 package io.github.yamin8000.owl.network
 
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 @Suppress("SameParameterValue")
 object Web {
@@ -40,14 +40,14 @@ object Web {
     private fun createCustomUrlRetrofit(baseUrl: String): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }
 
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }
 

@@ -21,7 +21,7 @@
 package io.github.yamin8000.owl.model
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 import io.github.yamin8000.owl.util.Constants.IMAGE_URL
 import kotlinx.parcelize.Parcelize
 
@@ -30,6 +30,6 @@ data class Definition(
     val type: String?,
     val definition: String,
     val example: String?,
-    @SerializedName(IMAGE_URL) val imageUrl: String?,
+    @Json(name = IMAGE_URL) val imageUrl: String?,
     val emoji: String?
 ) : Parcelable

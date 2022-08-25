@@ -20,11 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep public class org.bouncycastle.jsse.BCSSLParameters.*
--keep public class org.bouncycastle.jsse.BCSSLSocket.*
--keep public class org.bouncycastle.jsse.provider.BouncyCastleJsseProvider.*
--keep public class org.conscrypt.Conscrypt.*
--keep public class org.conscrypt.ConscryptHostnameVerifier.*
--keep public class org.openjsse.javax.net.ssl.SSLParameters.*
--keep public class org.openjsse.javax.net.ssl.SSLSocket.*
--keep public class org.openjsse.net.ssl.OpenJSSE.*
+-keep class io.github.yamin8000.owl.model.** { <fields>; }
