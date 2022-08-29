@@ -92,7 +92,7 @@ class HomeState(
         isSearching.value = false
         searchText = randomWord?.word ?: ""
         if (searchText.isNotBlank())
-            withContext(lifeCycleScopeContext) { searchForDefinitionHandler() }
+            withContext(lifeCycleScopeContext) { searchForRandomWordDefinition() }
     }
 
     private suspend fun searchForDefinitionRequest(
@@ -122,6 +122,11 @@ class HomeState(
             searchForDefinition()
             addSearchTextToHistory()
         } else errorMessage.value = getErrorMessage(998, context)
+    }
+
+    private suspend fun searchForRandomWordDefinition() {
+        if (searchText.isNotBlank()) searchForDefinition()
+        else errorMessage.value = getErrorMessage(998, context)
     }
 
     private suspend fun addSearchTextToHistory() {
