@@ -71,7 +71,7 @@ fun MainBottomBar(
         },
         leadingIcon = {
             ClickableIcon(
-                iconPainter = painterResource(id = R.drawable.ic_delete),
+                iconPainter = painterResource(id = R.drawable.ic_clear),
                 contentDescription = stringResource(R.string.delete)
             ) { searchText = "" }
         },
