@@ -36,7 +36,7 @@ import io.github.yamin8000.owl.util.historyDataStore
 import kotlinx.coroutines.launch
 
 class HistoryState(
-    val context: Context,
+    private val context: Context,
     val lifeCycleScope: LifecycleCoroutineScope,
     var history: MutableState<Set<String>>
 ) {

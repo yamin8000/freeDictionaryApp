@@ -37,16 +37,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleText
 import io.github.yamin8000.owl.ui.composable.PersianText
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun AboutContent(
-    navController: NavHostController? = null
-) {
+fun AboutContent() {
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {

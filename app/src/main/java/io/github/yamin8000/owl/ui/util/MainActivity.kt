@@ -49,19 +49,26 @@ class MainActivity : ComponentActivity() {
             startDestination = "${Nav.Routes.home}/{${Nav.Arguments.search}}"
         ) {
             composable("${Nav.Routes.home}/{${Nav.Arguments.search}}") {
-                HomeContent(navController, it.arguments?.getString(Nav.Arguments.search))
+                HomeContent(
+                    searchTerm = it.arguments?.getString(Nav.Arguments.search),
+                    onFavouritesClick = { navController.navigate(Nav.Routes.favourites) },
+                    onHistoryClick = { navController.navigate(Nav.Routes.history) },
+                    onInfoClick = { navController.navigate(Nav.Routes.about) }
+                )
             }
 
-            composable(Nav.Routes.about) {
-                AboutContent(navController)
-            }
+            composable(Nav.Routes.about) { AboutContent() }
 
             composable(Nav.Routes.favourites) {
-                FavouritesContent(navController)
+                FavouritesContent { favourite ->
+                    navController.navigate("${Nav.Routes.home}/${favourite}")
+                }
             }
 
             composable(Nav.Routes.history) {
-                HistoryContent(navController)
+                HistoryContent { history ->
+                    navController.navigate("${Nav.Routes.home}/${history}")
+                }
             }
         }
     }

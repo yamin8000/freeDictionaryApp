@@ -63,7 +63,8 @@ class HomeState(
     val context: Context,
     val isSharing: MutableState<Boolean>
 ) {
-    private val lifeCycleScopeContext = lifecycleOwner.lifecycleScope.coroutineContext
+    val lifecycleCoroutineScope = lifecycleOwner.lifecycleScope
+    private val lifeCycleScopeContext = lifecycleCoroutineScope.coroutineContext
 
     val isShowingError: Boolean
         get() = errorMessage.value.isNotBlank()

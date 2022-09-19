@@ -155,87 +155,11 @@ fun SpeakableRippleTextWithIcon(
 }
 
 @Composable
-fun WordText(
-    word: String,
-    ttsEngine: TtsEngine
-) {
-    SpeakableRippleTextWithIcon(
-        word,
-        painterResource(id = R.drawable.ic_form_text),
-        ttsEngine
-    )
-}
-
-@Composable
-fun PronunciationText(
-    pronunciation: String,
-    word: String
-) {
-    TtsReadyComposable { ttsEngine ->
-        CopyAbleRippleTextWithIcon(
-            text = pronunciation,
-            iconPainter = painterResource(id = R.drawable.ic_person_voice)
-        ) {
-            ttsEngine.speak(word)
-        }
-    }
-}
-
-@Composable
-fun WordEmojiText(
-    emoji: String,
-    ttsEngine: TtsEngine
-) {
-    SpeakableRippleTextWithIcon(
-        emoji,
-        painterResource(id = R.drawable.ic_emoji_symbols),
-        ttsEngine
-    )
-}
-
-@Composable
-fun WordExampleText(
-    example: String,
-    ttsEngine: TtsEngine
-) {
-    SpeakableRippleTextWithIcon(
-        example,
-        painterResource(id = R.drawable.ic_text_snippet),
-        ttsEngine
-    )
-}
-
-@Composable
-fun WordDefinitionText(
-    definition: String,
-    ttsEngine: TtsEngine
-) {
-    SpeakableRippleTextWithIcon(
-        definition,
-        painterResource(id = R.drawable.ic_short_text),
-        ttsEngine
-    )
-}
-
-@Composable
-fun WordTypeText(
-    type: String,
-    ttsEngine: TtsEngine
-) {
-    SpeakableRippleTextWithIcon(
-        type,
-        painterResource(id = R.drawable.ic_category),
-        ttsEngine
-    )
-}
-
-
-@Composable
 fun EmptyListErrorText() {
     PersianText(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(8.dp),
         text = stringResource(R.string.list_empty),
         color = MaterialTheme.colorScheme.error,
         textAlign = TextAlign.Center

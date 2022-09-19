@@ -21,45 +21,52 @@
 package io.github.yamin8000.owl.content.home
 
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.MainBottomBar
 import io.github.yamin8000.owl.content.MainTopBar
-import io.github.yamin8000.owl.ui.composable.DefinitionCard
-import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.composable.WordCard
-import io.github.yamin8000.owl.ui.util.navigation.Nav
+import io.github.yamin8000.owl.model.Definition
+import io.github.yamin8000.owl.model.Word
+import io.github.yamin8000.owl.ui.composable.*
 import io.github.yamin8000.owl.util.LockScreenOrientation
+import io.github.yamin8000.owl.util.TtsEngine
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun HomeContent(
-    navController: NavHostController? = null,
-    searchTerm: String? = null,
+    searchTerm: String?,
+    onHistoryClick: () -> Unit,
+    onFavouritesClick: () -> Unit,
+    onInfoClick: () -> Unit
 ) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Surface(
@@ -82,9 +89,9 @@ fun HomeContent(
         Scaffold(
             topBar = {
                 MainTopBar(
-                    onHistoryClick = { navController?.navigate(Nav.Routes.history) },
-                    onFavouritesClick = { navController?.navigate(Nav.Routes.favourites) },
-                    onInfoClick = { navController?.navigate(Nav.Routes.about) },
+                    onHistoryClick = onHistoryClick,
+                    onFavouritesClick = onFavouritesClick,
+                    onInfoClick = onInfoClick,
                     onRandomWordClick = {
                         homeState.lifecycleOwner.lifecycleScope.launch {
                             homeState.searchForRandomWord()
@@ -136,8 +143,23 @@ fun HomeContent(
                 modifier = Modifier.padding(contentPadding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                WordCard(homeState)
-                WordDefinitionsList(homeState)
+                val addedToFavourites = stringResource(id = R.string.added_to_favourites)
+                homeState.rawWordSearchBody.value?.let { word ->
+                    WordCard(
+                        word,
+                        onShareWord = { homeState.isSharing.value = true },
+                        onAddToFavourite = {
+                            homeState.lifecycleCoroutineScope.launch {
+                                homeState.addToFavourite(word.word)
+                            }
+                            Toast.makeText(homeState.context, addedToFavourites, Toast.LENGTH_SHORT)
+                                .show()
+                        },
+                        onClick = {}
+                    )
+                }
+
+                WordDefinitionsList(homeState.listState, homeState.searchResult.value)
             }
         }
     }
@@ -145,33 +167,177 @@ fun HomeContent(
 
 @Composable
 private fun WordDefinitionsList(
-    homeState: HomeState
+    listState: LazyListState,
+    searchResult: List<Definition>
 ) {
     LazyColumn(
         modifier = Modifier.padding(16.dp),
-        state = homeState.listState,
+        state = listState,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            items(homeState.searchResult.value) { definition ->
+            items(searchResult) { definition ->
                 DefinitionCard(definition)
             }
         })
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun WordCard(
-    homeState: HomeState
+    word: Word,
+    onClick: () -> Unit,
+    onAddToFavourite: () -> Unit,
+    onShareWord: () -> Unit
 ) {
-    val addedToFavourites = stringResource(id = R.string.added_to_favourites)
-    homeState.rawWordSearchBody.value?.let { word ->
-        WordCard(
-            word,
-            onShareWordClick = { homeState.isSharing.value = true },
-            onAddToFavouriteClick = {
-                homeState.lifecycleOwner.lifecycleScope.launch { homeState.addToFavourite(word.word) }
-                Toast.makeText(homeState.context, addedToFavourites, Toast.LENGTH_SHORT).show()
+    OutlinedCard(
+        shape = CutCornerShape(15.dp),
+        modifier = Modifier
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(),
+                onClick = onClick
+            )
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                TtsReadyComposable { ttsEngine ->
+                    WordText(word.word, ttsEngine)
+                }
+                if (word.pronunciation != null)
+                    PronunciationText(
+                        word.pronunciation,
+                        word.word
+                    )
             }
-        )
+            Row {
+                ClickableIcon(
+                    iconPainter = painterResource(id = R.drawable.ic_favorites),
+                    contentDescription = stringResource(id = R.string.favourites)
+                ) { onAddToFavourite() }
+                ClickableIcon(
+                    iconPainter = painterResource(id = R.drawable.ic_share),
+                    contentDescription = stringResource(R.string.share)
+                ) { onShareWord() }
+            }
+        }
+    }
+}
+
+@Composable
+fun WordText(
+    word: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        word,
+        painterResource(id = R.drawable.ic_form_text),
+        ttsEngine
+    )
+}
+
+@Composable
+fun PronunciationText(
+    pronunciation: String,
+    word: String
+) {
+    TtsReadyComposable { ttsEngine ->
+        CopyAbleRippleTextWithIcon(
+            text = pronunciation,
+            iconPainter = painterResource(id = R.drawable.ic_person_voice)
+        ) {
+            ttsEngine.speak(word)
+        }
+    }
+}
+
+@Composable
+fun WordEmojiText(
+    emoji: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        emoji,
+        painterResource(id = R.drawable.ic_emoji_symbols),
+        ttsEngine
+    )
+}
+
+@Composable
+fun WordExampleText(
+    example: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        example,
+        painterResource(id = R.drawable.ic_text_snippet),
+        ttsEngine
+    )
+}
+
+@Composable
+fun WordDefinitionText(
+    definition: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        definition,
+        painterResource(id = R.drawable.ic_short_text),
+        ttsEngine
+    )
+}
+
+@Composable
+fun WordTypeText(
+    type: String,
+    ttsEngine: TtsEngine
+) {
+    SpeakableRippleTextWithIcon(
+        type,
+        painterResource(id = R.drawable.ic_category),
+        ttsEngine
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefinitionCard(
+    @PreviewParameter(DefinitionProvider::class)
+    definition: Definition
+) {
+    Card(
+        shape = CutCornerShape(15.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                TtsReadyComposable { ttsEngine ->
+                    if (definition.type != null)
+                        WordTypeText(definition.type, ttsEngine)
+                    WordDefinitionText(definition.definition, ttsEngine)
+                    if (definition.example != null)
+                        WordExampleText(definition.example, ttsEngine)
+                    if (definition.emoji != null)
+                        WordEmojiText(definition.emoji, ttsEngine)
+                }
+            }
+            if (!definition.imageUrl.isNullOrBlank())
+                AsyncImage(
+                    model = definition.imageUrl,
+                    contentDescription = definition.definition,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillWidth
+                )
+        }
     }
 }

@@ -36,7 +36,7 @@ import io.github.yamin8000.owl.util.favouritesDataStore
 import kotlinx.coroutines.launch
 
 class FavouritesState(
-    val context: Context,
+    private val context: Context,
     val lifeCycleScope: LifecycleCoroutineScope,
     var favourites: MutableState<Set<String>>
 ) {
