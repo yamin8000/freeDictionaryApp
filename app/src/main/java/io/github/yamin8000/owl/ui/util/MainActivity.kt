@@ -31,6 +31,7 @@ import io.github.yamin8000.owl.content.AboutContent
 import io.github.yamin8000.owl.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.content.history.HistoryContent
 import io.github.yamin8000.owl.content.home.HomeContent
+import io.github.yamin8000.owl.content.settings.SettingsContent
 import io.github.yamin8000.owl.ui.util.navigation.Nav
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 
@@ -53,7 +54,8 @@ class MainActivity : ComponentActivity() {
                     searchTerm = it.arguments?.getString(Nav.Arguments.search),
                     onFavouritesClick = { navController.navigate(Nav.Routes.favourites) },
                     onHistoryClick = { navController.navigate(Nav.Routes.history) },
-                    onInfoClick = { navController.navigate(Nav.Routes.about) }
+                    onInfoClick = { navController.navigate(Nav.Routes.about) },
+                    onSettingsClick = { navController.navigate(Nav.Routes.settings) }
                 )
             }
 
@@ -69,6 +71,10 @@ class MainActivity : ComponentActivity() {
                 HistoryContent { history ->
                     navController.navigate("${Nav.Routes.home}/${history}")
                 }
+            }
+
+            composable(Nav.Routes.settings) {
+                SettingsContent()
             }
         }
     }

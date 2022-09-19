@@ -55,7 +55,8 @@ fun HomeContent(
     searchTerm: String?,
     onHistoryClick: () -> Unit,
     onFavouritesClick: () -> Unit,
-    onInfoClick: () -> Unit
+    onInfoClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Surface(
@@ -86,13 +87,7 @@ fun HomeContent(
                             homeState.searchForRandomWord()
                         }
                     },
-                    onSettingsClick = {
-                        Toast.makeText(
-                            homeState.context,
-                            homeState.context.getString(R.string.very_soon),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    onSettingsClick = onSettingsClick
                 )
             },
             floatingActionButton = {
@@ -173,5 +168,5 @@ private fun SearchFab(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { HomeContent(null, {}, {}, {}) }
+    PreviewTheme { HomeContent(null, {}, {}, {}, {}) }
 }
