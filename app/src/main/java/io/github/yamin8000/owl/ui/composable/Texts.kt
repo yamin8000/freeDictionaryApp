@@ -35,8 +35,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -107,6 +109,7 @@ fun CopyAbleRippleText(
 ) {
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val textCopied = stringResource(R.string.text_copied)
     Box(
         modifier = Modifier.combinedClickable(
@@ -114,6 +117,7 @@ fun CopyAbleRippleText(
             indication = rememberRipple(),
             onClick = onClick,
             onLongClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 clipboardManager.setText(AnnotatedString(text))
                 Toast.makeText(context, textCopied, Toast.LENGTH_SHORT).show()
             }

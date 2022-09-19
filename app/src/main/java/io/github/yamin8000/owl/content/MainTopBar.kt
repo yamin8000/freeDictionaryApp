@@ -48,31 +48,31 @@ fun MainTopBar(
             ClickableIcon(
                 iconPainter = painterResource(R.drawable.ic_history),
                 contentDescription = stringResource(R.string.search_history),
-                onClick = { onHistoryClick() },
+                onClick = onHistoryClick,
             )
 
             ClickableIcon(
                 iconPainter = painterResource(R.drawable.ic_favorites),
                 contentDescription = stringResource(R.string.favourites),
-                onClick = { onFavouritesClick() },
+                onClick = onFavouritesClick,
             )
 
             ClickableIcon(
                 iconPainter = painterResource(R.drawable.ic_casino),
                 contentDescription = stringResource(R.string.random_word),
-                onClick = { onRandomWordClick() },
+                onClick = onRandomWordClick,
             )
 
             ClickableIcon(
                 iconPainter = painterResource(R.drawable.ic_settings_applications),
                 contentDescription = stringResource(R.string.settings),
-                onClick = { onSettingsClick() }
+                onClick = onSettingsClick
             )
 
             ClickableIcon(
                 iconPainter = painterResource(R.drawable.ic_contact_support),
                 contentDescription = stringResource(R.string.about_app),
-                onClick = { onInfoClick() }
+                onClick = onInfoClick
             )
         }, navigationIcon = {
             Icon(

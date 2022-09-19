@@ -102,12 +102,14 @@ internal fun WordCard(
             Row {
                 ClickableIcon(
                     iconPainter = painterResource(id = R.drawable.ic_favorites),
-                    contentDescription = stringResource(id = R.string.favourites)
-                ) { onAddToFavourite() }
+                    contentDescription = stringResource(id = R.string.favourites),
+                    onClick = { onAddToFavourite() }
+                )
                 ClickableIcon(
                     iconPainter = painterResource(id = R.drawable.ic_share),
-                    contentDescription = stringResource(R.string.share)
-                ) { onShareWord() }
+                    contentDescription = stringResource(R.string.share),
+                    onClick = { onShareWord() }
+                )
             }
         }
     }

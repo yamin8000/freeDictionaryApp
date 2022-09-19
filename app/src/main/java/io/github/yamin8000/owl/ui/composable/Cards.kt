@@ -20,7 +20,6 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
@@ -28,8 +27,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -47,14 +47,14 @@ class DefinitionProvider : PreviewParameterProvider<Definition> {
     ).asSequence()
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun RemovableCard(
     @PreviewParameter(TextProvider::class)
     item: String,
-    onClick: () -> Unit = { },
-    onLongClick: (() -> Unit)? = null
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
     Card(
         shape = CutCornerShape(15.dp)
     ) {
@@ -70,7 +70,10 @@ fun RemovableCard(
                 )
             },
             onClick = onClick,
-            onLongClick = onLongClick
+            onLongClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onLongClick()
+            }
         )
     }
 }
