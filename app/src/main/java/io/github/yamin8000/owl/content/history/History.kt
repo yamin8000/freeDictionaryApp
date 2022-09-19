@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.history
+package io.github.yamin8000.owl.content.history
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*

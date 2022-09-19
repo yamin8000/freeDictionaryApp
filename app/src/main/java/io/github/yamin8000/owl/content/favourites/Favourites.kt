@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.favourites
+package io.github.yamin8000.owl.content.favourites
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*

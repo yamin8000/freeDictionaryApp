@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.home
+package io.github.yamin8000.owl.content.home
 
 import android.content.Context
 import android.content.Intent

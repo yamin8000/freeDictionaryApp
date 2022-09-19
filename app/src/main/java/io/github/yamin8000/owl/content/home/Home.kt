@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.home
+package io.github.yamin8000.owl.content.home
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.MainBottomBar
-import io.github.yamin8000.owl.ui.MainTopBar
+import io.github.yamin8000.owl.content.MainBottomBar
+import io.github.yamin8000.owl.content.MainTopBar
 import io.github.yamin8000.owl.ui.composable.DefinitionCard
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.WordCard

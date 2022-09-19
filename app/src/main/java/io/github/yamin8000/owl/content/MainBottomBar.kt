@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     MainBottomBar.kt Created by Yamin Siahmargooei at 2022/7/10
+ *     MainBottomBar.kt Created by Yamin Siahmargooei at 2022/9/19
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui
+package io.github.yamin8000.owl.content
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     FavouritesProvider.kt Created by Yamin Siahmargooei at 2022/8/21
+ *     HistoryState.kt Created by Yamin Siahmargooei at 2022/8/24
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.favourites
+package io.github.yamin8000.owl.content.history
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -32,44 +32,51 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
-import io.github.yamin8000.owl.util.favouritesDataStore
+import io.github.yamin8000.owl.util.historyDataStore
 import kotlinx.coroutines.launch
 
-class FavouritesState(
+class HistoryState(
     val context: Context,
     val lifeCycleScope: LifecycleCoroutineScope,
-    var favourites: MutableState<Set<String>>
+    var history: MutableState<Set<String>>
 ) {
 
     init {
-        lifeCycleScope.launch { getFavourites() }
+        lifeCycleScope.launch { getHistory() }
     }
 
-    private suspend fun getFavourites() {
-        context.favouritesDataStore.data.collect { preferences ->
-            val newSet = favourites.value.toMutableSet()
+    private suspend fun getHistory() {
+        context.historyDataStore.data.collect { preferences ->
+            val newSet = history.value.toMutableSet()
             preferences.asMap().forEach { entry ->
                 newSet.add(entry.value.toString())
             }
-            favourites.value = newSet
+            history.value = newSet
         }
     }
 
-    suspend fun removeFavourite(
-        favourite: String
+    suspend fun removeSingleHistory(
+        singleHistory: String
     ) {
-        context.favouritesDataStore.edit {
-            it.remove(stringPreferencesKey(favourite))
+        context.historyDataStore.edit {
+            it.remove(stringPreferencesKey(singleHistory))
         }
-        val newSet = favourites.value.toMutableSet()
-        newSet.remove(favourite)
-        favourites.value = newSet
+        val newSet = history.value.toMutableSet()
+        newSet.remove(singleHistory)
+        history.value = newSet
+    }
+
+    suspend fun removeAllHistory() {
+        context.historyDataStore.edit {
+            it.clear()
+        }
+        history.value = emptySet()
     }
 }
 
 @Composable
-fun rememberFavouritesState(
+fun rememberHistoryState(
     context: Context = LocalContext.current,
     lifeCycleScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
-    favourites: MutableState<Set<String>> = rememberSaveable { mutableStateOf(emptySet()) }
-) = remember(context) { FavouritesState(context, lifeCycleScope, favourites) }
+    history: MutableState<Set<String>> = rememberSaveable { mutableStateOf(emptySet()) }
+) = remember(context, lifeCycleScope, history) { HistoryState(context, lifeCycleScope, history) }

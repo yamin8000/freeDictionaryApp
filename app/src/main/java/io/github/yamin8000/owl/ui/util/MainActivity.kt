@@ -27,11 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.orhanobut.logger.Logger
-import io.github.yamin8000.owl.ui.AboutContent
-import io.github.yamin8000.owl.ui.favourites.FavouritesContent
-import io.github.yamin8000.owl.ui.history.HistoryContent
-import io.github.yamin8000.owl.ui.home.HomeContent
+import io.github.yamin8000.owl.content.AboutContent
+import io.github.yamin8000.owl.content.favourites.FavouritesContent
+import io.github.yamin8000.owl.content.history.HistoryContent
+import io.github.yamin8000.owl.content.home.HomeContent
 import io.github.yamin8000.owl.ui.util.navigation.Nav
 import io.github.yamin8000.owl.ui.util.theme.OwlTheme
 
