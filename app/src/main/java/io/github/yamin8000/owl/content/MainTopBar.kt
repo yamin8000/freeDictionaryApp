@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.content
 
+import android.content.res.Configuration
 import androidx.compose.material.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -30,49 +31,61 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
+import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun MainTopBar(
-    onHistoryClick: (() -> Unit)? = null,
-    onFavouritesClick: (() -> Unit)? = null,
-    onRandomWordClick: (() -> Unit)? = null,
-    onSettingsClick: (() -> Unit)? = null,
-    onInfoClick: (() -> Unit)? = null,
+    onHistoryClick: () -> Unit,
+    onFavouritesClick: () -> Unit,
+    onRandomWordClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onInfoClick: () -> Unit,
 ) {
     TopAppBar(
         title = {},
         actions = {
             ClickableIcon(
-                iconPainter = painterResource(id = R.drawable.ic_history),
-                contentDescription = stringResource(id = R.string.search_history),
-            ) { onHistoryClick?.invoke() }
+                iconPainter = painterResource(R.drawable.ic_history),
+                contentDescription = stringResource(R.string.search_history),
+                onClick = { onHistoryClick() },
+            )
 
             ClickableIcon(
-                iconPainter = painterResource(id = R.drawable.ic_favorites),
-                contentDescription = stringResource(id = R.string.favourites),
-            ) { onFavouritesClick?.invoke() }
+                iconPainter = painterResource(R.drawable.ic_favorites),
+                contentDescription = stringResource(R.string.favourites),
+                onClick = { onFavouritesClick() },
+            )
 
             ClickableIcon(
-                iconPainter = painterResource(id = R.drawable.ic_casino),
-                contentDescription = stringResource(id = R.string.random_word),
-            ) { onRandomWordClick?.invoke() }
+                iconPainter = painterResource(R.drawable.ic_casino),
+                contentDescription = stringResource(R.string.random_word),
+                onClick = { onRandomWordClick() },
+            )
 
             ClickableIcon(
-                iconPainter = painterResource(id = R.drawable.ic_settings_applications),
-                contentDescription = ""
-            ) { onSettingsClick?.invoke() }
+                iconPainter = painterResource(R.drawable.ic_settings_applications),
+                contentDescription = stringResource(R.string.settings),
+                onClick = { onSettingsClick() }
+            )
 
             ClickableIcon(
-                iconPainter = painterResource(id = R.drawable.ic_contact_support),
-                contentDescription = ""
-            ) { onInfoClick?.invoke() }
+                iconPainter = painterResource(R.drawable.ic_contact_support),
+                contentDescription = stringResource(R.string.about_app),
+                onClick = { onInfoClick() }
+            )
         }, navigationIcon = {
             Icon(
-                painterResource(R.drawable.ic_launcher_foreground),
-                "Owl",
+                painter = painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = stringResource(R.string.app_name),
                 tint = MaterialTheme.colorScheme.onSurface
             )
         })
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
+@Composable
+private fun Preview() {
+    PreviewTheme { MainTopBar({}, {}, {}, {}, {}) }
 }

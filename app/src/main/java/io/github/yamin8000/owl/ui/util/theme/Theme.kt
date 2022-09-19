@@ -97,6 +97,7 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun OwlTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
+    isPreviewing: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colors = if (isDarkTheme) {
@@ -105,18 +106,32 @@ fun OwlTheme(
         LightColors
     }
 
-    val activity = LocalView.current.context as Activity
-    SideEffect {
-        activity.window.statusBarColor = colors.surface.toArgb()
-        activity.window.navigationBarColor = colors.surface.toArgb()
-        val wic = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
-        wic.isAppearanceLightStatusBars = !isDarkTheme
-        wic.isAppearanceLightNavigationBars = !isDarkTheme
+    if (!isPreviewing) {
+        val activity = LocalView.current.context as Activity
+        SideEffect {
+            activity.window.statusBarColor = colors.surface.toArgb()
+            activity.window.navigationBarColor = colors.surface.toArgb()
+            val wic = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+            wic.isAppearanceLightStatusBars = !isDarkTheme
+            wic.isAppearanceLightNavigationBars = !isDarkTheme
+        }
     }
 
     MaterialTheme(
         colorScheme = colors,
         typography = AppTypography,
+        content = content
+    )
+}
+
+@Composable
+fun PreviewTheme(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    OwlTheme(
+        isDarkTheme = isDarkTheme,
+        isPreviewing = true,
         content = content
     )
 }

@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.content
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,17 +43,19 @@ import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.PersianText
+import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
 import io.github.yamin8000.owl.ui.util.theme.Samim
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun MainBottomBar(
-    onSearchTermChanged: ((String) -> Unit)? = null,
-    onSearch: ((String) -> Unit)? = null
+    onSearchTermChanged: (String) -> Unit,
+    onSearch: (String) -> Unit
 ) {
     var searchText by remember { mutableStateOf("") }
     TextField(
+        singleLine = true,
+        shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
@@ -72,8 +75,9 @@ fun MainBottomBar(
         leadingIcon = {
             ClickableIcon(
                 iconPainter = painterResource(id = R.drawable.ic_clear),
-                contentDescription = stringResource(R.string.delete)
-            ) { searchText = "" }
+                contentDescription = stringResource(R.string.delete),
+                onClick = { searchText = "" }
+            )
         },
         trailingIcon = {
             Icon(
@@ -82,19 +86,23 @@ fun MainBottomBar(
             )
         },
         value = searchText,
-        singleLine = true,
         onValueChange = {
             searchText = it
-            onSearchTermChanged?.invoke(searchText)
+            onSearchTermChanged(searchText)
         },
         textStyle = TextStyle(
             fontFamily = Samim,
             textAlign = TextAlign.Right,
             textDirection = TextDirection.Rtl
         ),
-        keyboardActions = KeyboardActions(onSearch = {
-            onSearch?.invoke(searchText)
-        }),
+        keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
     )
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
+@Composable
+private fun Preview() {
+    PreviewTheme { MainBottomBar({}, {}) }
 }

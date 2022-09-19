@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.content.history
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -34,6 +35,7 @@ import io.github.yamin8000.owl.ui.composable.EmptyListErrorText
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.RemovableCard
 import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
+import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -103,20 +105,25 @@ fun HistoryItem(
     )
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
-fun HistoryItemPreview() {
-    HistoryItem(history = "Owl", onClick = {}, onLongClick = {})
+private fun HistoryItemPreview() {
+    PreviewTheme { HistoryItem(history = "Owl", onClick = {}, onLongClick = {}) }
 }
 
-@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
-fun HistoryGridPreview() {
-    HistoryGrid(history = listOf("Owl", "Book", "test"), onItemClick = {}, onItemLongClick = {})
+private fun HistoryGridPreview() {
+    PreviewTheme {
+        HistoryGrid(history = listOf("Owl", "Book", "test"), onItemClick = {}, onItemLongClick = {})
+    }
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
-fun ContentPreview() {
-    HistoryContent {}
+private fun Preview() {
+    PreviewTheme { HistoryContent {} }
 }

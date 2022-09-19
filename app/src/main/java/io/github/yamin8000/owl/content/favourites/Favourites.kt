@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.content.favourites
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -36,6 +37,7 @@ import io.github.yamin8000.owl.ui.composable.EmptyListErrorText
 import io.github.yamin8000.owl.ui.composable.RemovableCard
 import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
 import io.github.yamin8000.owl.ui.composable.TextProvider
+import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -98,24 +100,29 @@ private fun FavouriteItem(
     )
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun FavouriteItemPreview() {
-    FavouriteItem(favourite = "Owl")
+    PreviewTheme { FavouriteItem("Owl") }
 }
 
-@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun FavouritesGridPreview() {
-    FavouritesGrid(
-        favourites = listOf("Owl", "Bird", "Android"),
-        onItemClick = {},
-        onItemLongClick = {}
-    )
+    PreviewTheme {
+        FavouritesGrid(
+            favourites = listOf("Owl", "Bird", "Android"),
+            onItemClick = {},
+            onItemLongClick = {}
+        )
+    }
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
-private fun ContentPreview() {
-    FavouritesContent { }
+private fun Preview() {
+    PreviewTheme { FavouritesContent {} }
 }
