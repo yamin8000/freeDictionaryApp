@@ -20,11 +20,10 @@
 
 package io.github.yamin8000.owl.content
 
-import android.content.res.Configuration
 import androidx.compose.material.Icon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,7 +32,7 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview
 @Composable
 fun MainTopBar(
     onHistoryClick: (() -> Unit)? = null,
@@ -42,7 +41,7 @@ fun MainTopBar(
     onSettingsClick: (() -> Unit)? = null,
     onInfoClick: (() -> Unit)? = null,
 ) {
-    SmallTopAppBar(
+    TopAppBar(
         title = {},
         actions = {
             ClickableIcon(
