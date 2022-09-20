@@ -25,6 +25,7 @@ plugins {
 }
 
 android {
+    namespace 'io.github.yamin8000.owl'
     compileSdk 33
 
     defaultConfig {
