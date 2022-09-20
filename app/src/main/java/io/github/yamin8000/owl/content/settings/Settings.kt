@@ -21,8 +21,6 @@
 package io.github.yamin8000.owl.content.settings
 
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -30,7 +28,7 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,16 +40,22 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
 import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
+import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsContent() {
+fun SettingsContent(
+    onThemeChanged: (ThemeSetting) -> Unit
+) {
+    val settingsState = rememberSettingsState()
+
     SurfaceWithTitle(
         title = stringResource(id = R.string.settings)
     ) {
-        var theme by remember { mutableStateOf(ThemeSetting.System) }
-        ThemeChanger(theme) {
-            theme = it
-            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+        ThemeChanger(settingsState.themeSetting.value) { newTheme ->
+            settingsState.coroutineScope.launch {
+                settingsState.updateThemeSetting(newTheme)
+            }
+            onThemeChanged(newTheme)
         }
     }
 }
@@ -113,5 +117,5 @@ fun ThemeChanger(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { SettingsContent() }
+    PreviewTheme { SettingsContent {} }
 }

@@ -32,7 +32,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Owl">
         <activity
-            android:name=".ui.util.MainActivity"
+            android:name=".content.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|locale|screenLayout|screenSize"
             android:exported="true"
             android:theme="@style/Theme.Owl">
