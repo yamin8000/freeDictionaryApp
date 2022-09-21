@@ -87,7 +87,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_libs_version"
     implementation 'androidx.activity:activity-compose:1.6.0'
     implementation "androidx.compose.material3:material3:1.0.0-beta03"
-    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta02"
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-beta03"
     //log/crash library
     implementation 'com.orhanobut:logger:2.2.0'
     //network
