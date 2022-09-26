@@ -35,18 +35,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.model.Definition
 
-class DefinitionProvider : PreviewParameterProvider<Definition> {
-    override val values: Sequence<Definition> = listOf(
-        Definition(
-            "noun",
-            "a word definition",
-            "some word in a sentence",
-            "",
-            "\uD83D\uDE02"
-        )
-    ).asSequence()
-}
-
 @Composable
 fun RemovableCard(
     @PreviewParameter(TextProvider::class)

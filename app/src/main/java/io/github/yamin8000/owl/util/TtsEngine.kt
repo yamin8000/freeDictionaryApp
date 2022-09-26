@@ -22,13 +22,13 @@ package io.github.yamin8000.owl.util
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
-import android.widget.Toast
-import com.orhanobut.logger.Logger
+import io.github.yamin8000.owl.R
 import java.util.*
 
 class TtsEngine(
     private val context: Context,
-    private val speakText: String = " "
+    private val speakText: String = "",
+    private val onError: (String) -> Unit
 ) {
 
     private lateinit var tts: TextToSpeech
@@ -39,16 +39,14 @@ class TtsEngine(
     init {
         tts = TextToSpeech(context) {
             if (it == TextToSpeech.SUCCESS) {
-                Logger.d("TTS init SUCCESS")
                 ttsLang = tts.setLanguage(Locale.US)
                 if (ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    languageNotSupported()
+                    onError(context.getString(R.string.tts_english_not_supported))
                     isTtsReady = false
                 }
             } else {
-                Logger.d("TTS init Failed!")
                 isTtsReady = false
-                //toast(context.getString(R.string.tts_init_failed))
+                onError(context.getString(R.string.tts_init_failed))
             }
             if (isTtsReady && speakText != "") speak(speakText)
         }
@@ -57,26 +55,7 @@ class TtsEngine(
     fun speak(text: String) {
         if (isTtsReady) {
             val result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
-            if (result == TextToSpeech.ERROR) ttsError()
-        } else ttsNotReady()
-    }
-
-    private fun ttsNotReady() {
-        //toast(context.getString(R.string.tts_not_ready))
-    }
-
-    private fun languageNotSupported() {
-        //toast(context.getString(R.string.tts_english_not_supported))
-    }
-
-    private fun ttsError() {
-        //toast(context.getString(R.string.tts_failed))
-    }
-
-    private fun toast(
-        text: String,
-        length: Int = Toast.LENGTH_SHORT
-    ) {
-        Toast.makeText(context, text, length).show()
+            if (result == TextToSpeech.ERROR) onError(context.getString(R.string.tts_failed))
+        } else onError(context.getString(R.string.tts_not_ready))
     }
 }

@@ -39,6 +39,7 @@ object APIs {
 
     interface NinjaAPI {
 
+        @Suppress("SpellCheckingInspection")
         @Headers(API_NINJA_KEY)
         @GET("randomword")
         suspend fun getRandomWord(): RandomWord

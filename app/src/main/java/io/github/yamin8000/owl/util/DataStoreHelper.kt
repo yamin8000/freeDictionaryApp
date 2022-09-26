@@ -28,6 +28,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
+@Suppress("unused")
 class DataStoreHelper(
     private val datastore: DataStore<Preferences>
 ) {

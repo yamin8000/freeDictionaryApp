@@ -97,11 +97,12 @@ internal fun WordCard(
                 TtsReadyComposable { ttsEngine ->
                     WordText(word.word, ttsEngine)
                 }
-                if (word.pronunciation != null)
+                if (word.pronunciation != null) {
                     PronunciationText(
                         word.pronunciation,
                         word.word
                     )
+                }
             }
             Row {
                 ClickableIcon(

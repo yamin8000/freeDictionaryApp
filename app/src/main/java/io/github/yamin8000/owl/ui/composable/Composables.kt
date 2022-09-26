@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -96,5 +97,11 @@ fun ClickableIcon(
 fun TtsReadyComposable(
     content: @Composable (TtsEngine) -> Unit
 ) {
-    content(TtsEngine(LocalContext.current))
+    val context = LocalContext.current
+    content(
+        TtsEngine(
+            context = LocalContext.current,
+            onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+        )
+    )
 }

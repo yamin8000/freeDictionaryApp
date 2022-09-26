@@ -35,7 +35,6 @@
     <string name="about_app">فرهنگ واژگان انگلیسی به انگلیسی جغد، برگرفته از فرهنگ واژگان</string>
     <string name="github_source">https://github.com/yamin8000/Owl2</string>
     <string name="owl_bot_link">https://owlbot.info</string>
-    <string name="very_soon">به زودی</string>
     <string name="added_to_favourites">به برگزیده‌ها اضافه شد</string>
     <string name="delete">پاک کردن</string>
     <string name="untracked_error">خطای پیش بینی نشده</string>
@@ -46,4 +45,8 @@
     <string name="list_empty">چیزی برای نمایش پیدا نشد</string>
     <string name="settings">تنظیمات</string>
     <string name="theme">زمینه</string>
+    <string name="tts_init_failed">خطا در راه اندازی سیستم تبدیل متن به گفتار</string>
+    <string name="tts_not_ready">سیستم تبدیل متن به گفتار آماده نیست، لطفا دوباره تلاش کنید.</string>
+    <string name="tts_failed">خطا در تبدیل متن به گفتار</string>
+    <string name="tts_english_not_supported">سیستم تبدیل متن به گفتار دستگاه شما از زبان انگلیسی پشتیبانی نمیکند</string>
 </resources>
