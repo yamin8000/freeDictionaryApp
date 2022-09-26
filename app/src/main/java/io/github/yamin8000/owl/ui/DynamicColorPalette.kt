@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     DynamicColorPallete.kt Created by Yamin Siahmargooei at 2022/9/26
+ *     DynamicColorPalette.kt Created by Yamin Siahmargooei at 2022/9/26
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
