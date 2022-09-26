@@ -24,7 +24,9 @@ more complex and had no benefits.
 
 ## Preview
 
-<img src="./screenshots/1.0.1/Screenshot_2022-08-24-02-51-48-048_io.github.yamin8000.owl.jpg" alt="preview" width="400"/>
+Dynamic Color | Dark/Light Theme
+:-----------:|:-------------:
+<img src="./screenshots/1.0.4/photo_2022-09-26_09-12-54.png" alt="preview" width="250"/>|<img src="./screenshots/1.0.4/photo_2022-09-26_09-12-55 (2).png" alt="preview" width="250"/>
 
 ## Compatibility
 
