@@ -29,22 +29,26 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Card
-import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Word
-import io.github.yamin8000.owl.ui.composable.*
+import io.github.yamin8000.owl.ui.DynamicThemePrimaryColorsFromImage
+import io.github.yamin8000.owl.ui.composable.ClickableIcon
+import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
+import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
+import io.github.yamin8000.owl.ui.composable.TtsReadyComposable
+import io.github.yamin8000.owl.ui.rememberDominantColorState
 import io.github.yamin8000.owl.util.TtsEngine
 
 @Composable
@@ -59,7 +63,7 @@ internal fun WordDefinitionsList(
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             items(searchResult) { definition ->
-                DefinitionCard(definition)
+                DynamicColorDefinitionCard(definition)
             }
         })
 }
@@ -191,13 +195,38 @@ internal fun WordTypeText(
 }
 
 @Composable
-internal fun DefinitionCard(
-    @PreviewParameter(DefinitionProvider::class)
+internal fun DynamicColorDefinitionCard(
     definition: Definition
+) {
+    val dominantColorState = rememberDominantColorState()
+    if (definition.imageUrl != null) {
+        DynamicThemePrimaryColorsFromImage(dominantColorState) {
+            LaunchedEffect(definition) {
+                dominantColorState.updateColorsFromImageUrl(definition.imageUrl)
+            }
+            DefinitionCard(
+                definition = definition,
+                cardColors = CardDefaults.cardColors(
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            )
+        }
+    } else {
+        dominantColorState.reset()
+        DefinitionCard(definition)
+    }
+}
+
+@Composable
+internal fun DefinitionCard(
+    definition: Definition,
+    cardColors: CardColors = CardDefaults.cardColors()
 ) {
     Card(
         shape = CutCornerShape(15.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        colors = cardColors
     ) {
         Column {
             Column(
@@ -214,13 +243,14 @@ internal fun DefinitionCard(
                         WordEmojiText(definition.emoji, ttsEngine)
                 }
             }
-            if (!definition.imageUrl.isNullOrBlank())
+            if (!definition.imageUrl.isNullOrBlank()) {
                 AsyncImage(
                     model = definition.imageUrl,
                     contentDescription = definition.definition,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillWidth
                 )
+            }
         }
     }
 }
