@@ -24,7 +24,7 @@ more complex and had no benefits.
 
 ## Preview
 
-|                                      Dynamic Color                                       |                                       Dark/Light Theme                                       |
+|                                  Dynamic Color Content                                   |                                       Dark/Light Theme                                       |
 |:----------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
 | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-54.png" alt="preview" width="250"/> | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-55 (2).png" alt="preview" width="250"/> |
 

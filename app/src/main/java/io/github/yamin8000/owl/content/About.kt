@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleText
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 
 @Composable
 fun AboutContent() {

@@ -37,8 +37,8 @@ import io.github.yamin8000.owl.content.history.HistoryContent
 import io.github.yamin8000.owl.content.home.HomeContent
 import io.github.yamin8000.owl.content.settings.SettingsContent
 import io.github.yamin8000.owl.content.settings.ThemeSetting
-import io.github.yamin8000.owl.ui.util.navigation.Nav
-import io.github.yamin8000.owl.ui.util.theme.OwlTheme
+import io.github.yamin8000.owl.ui.navigation.Nav
+import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
 
@@ -63,7 +63,8 @@ class MainActivity : ComponentActivity() {
         }
 
         OwlTheme(
-            isDarkTheme = isDarkTheme(theme, isSystemInDarkTheme())
+            isDarkTheme = isDarkTheme(theme, isSystemInDarkTheme()),
+            isDynamicColor = theme == ThemeSetting.System
         ) {
             val navController = rememberNavController()
             NavHost(

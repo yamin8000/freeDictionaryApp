@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.util.navigation
+package io.github.yamin8000.owl.ui.navigation
 
 object Nav {
     object Routes {

@@ -18,7 +18,7 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.util.theme
+package io.github.yamin8000.owl.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

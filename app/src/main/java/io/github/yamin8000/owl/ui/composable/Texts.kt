@@ -51,7 +51,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.util.theme.Samim
+import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.TtsEngine
 
 class TextProvider : PreviewParameterProvider<String> {

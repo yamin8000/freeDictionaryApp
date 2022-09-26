@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
-import io.github.yamin8000.owl.ui.util.theme.Samim
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.ui.theme.Samim
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

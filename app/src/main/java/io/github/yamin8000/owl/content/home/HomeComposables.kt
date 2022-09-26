@@ -43,12 +43,12 @@ import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Word
-import io.github.yamin8000.owl.ui.DynamicThemePrimaryColorsFromImage
+import io.github.yamin8000.owl.ui.util.DynamicThemePrimaryColorsFromImage
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.TtsReadyComposable
-import io.github.yamin8000.owl.ui.rememberDominantColorState
+import io.github.yamin8000.owl.ui.util.rememberDominantColorState
 import io.github.yamin8000.owl.util.TtsEngine
 
 @Composable

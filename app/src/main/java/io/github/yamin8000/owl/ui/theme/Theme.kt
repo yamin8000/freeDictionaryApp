@@ -18,16 +18,16 @@
  *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.util.theme
+package io.github.yamin8000.owl.ui.theme
 
 import android.app.Activity
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
@@ -98,12 +98,16 @@ private val DarkColors = darkColorScheme(
 fun OwlTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     isPreviewing: Boolean = false,
+    isDynamicColor: Boolean,
     content: @Composable () -> Unit
 ) {
-    val colors = if (isDarkTheme) {
-        DarkColors
-    } else {
-        LightColors
+    val isDynamicColorReadyDevice = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+    val colors = when {
+        isDynamicColorReadyDevice && isDarkTheme -> dynamicDarkColorScheme(LocalContext.current)
+        isDynamicColorReadyDevice && !isDarkTheme -> dynamicLightColorScheme(LocalContext.current)
+        isDarkTheme -> DarkColors
+        else -> LightColors
     }
 
     if (!isPreviewing) {
@@ -132,6 +136,7 @@ fun PreviewTheme(
     OwlTheme(
         isDarkTheme = isDarkTheme,
         isPreviewing = true,
+        isDynamicColor = false,
         content = content
     )
 }

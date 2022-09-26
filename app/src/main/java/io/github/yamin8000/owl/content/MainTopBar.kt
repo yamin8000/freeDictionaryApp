@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
-import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

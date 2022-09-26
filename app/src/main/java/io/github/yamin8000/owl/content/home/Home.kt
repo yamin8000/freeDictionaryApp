@@ -45,7 +45,7 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.MainBottomBar
 import io.github.yamin8000.owl.content.MainTopBar
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.util.LockScreenOrientation
 import kotlinx.coroutines.launch
 

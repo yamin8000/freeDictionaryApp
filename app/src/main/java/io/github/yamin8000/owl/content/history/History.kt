@@ -35,7 +35,7 @@ import io.github.yamin8000.owl.ui.composable.EmptyListErrorText
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.RemovableCard
 import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
-import io.github.yamin8000.owl.ui.util.theme.PreviewTheme
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import kotlinx.coroutines.launch
 
 @Composable
