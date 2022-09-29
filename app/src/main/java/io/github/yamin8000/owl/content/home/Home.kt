@@ -121,6 +121,8 @@ fun HomeContent(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    if (homeState.isSearching.value)
+                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                     MainBottomBar(
                         onSearchTermChanged = { homeState.searchText = it },
                         onSearch = {
@@ -137,8 +139,6 @@ fun HomeContent(
                     modifier = Modifier.padding(contentPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (homeState.isSearching.value)
-                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                     val addedToFavourites = stringResource(id = R.string.added_to_favourites)
                     homeState.rawWordSearchBody.value?.let { word ->
                         WordCard(
