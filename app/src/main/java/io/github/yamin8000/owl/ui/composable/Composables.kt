@@ -22,13 +22,12 @@ package io.github.yamin8000.owl.ui.composable
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -37,6 +36,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.util.TtsEngine
+
+@Composable
+fun MySnackbar(
+    modifier: Modifier = Modifier,
+    action: @Composable (() -> Unit)? = null,
+    dismissAction: @Composable (() -> Unit)? = null,
+    actionOnNewLine: Boolean = false,
+    containerColor: Color = SnackbarDefaults.color,
+    contentColor: Color = SnackbarDefaults.contentColor,
+    actionContentColor: Color = SnackbarDefaults.actionContentColor,
+    dismissActionContentColor: Color = SnackbarDefaults.dismissActionContentColor,
+    content: @Composable () -> Unit
+) {
+    Snackbar(
+        modifier = modifier
+            .padding(vertical = 32.dp, horizontal = 16.dp)
+            .padding(WindowInsets.ime.asPaddingValues()),
+        action = action,
+        dismissAction = dismissAction,
+        actionOnNewLine = actionOnNewLine,
+        shape = RoundedCornerShape(10.dp),
+        containerColor = containerColor,
+        contentColor = contentColor,
+        actionContentColor = actionContentColor,
+        dismissActionContentColor = dismissActionContentColor,
+        content = content
+    )
+}
 
 @Composable
 fun SurfaceWithTitle(

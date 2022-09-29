@@ -24,6 +24,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -59,15 +60,13 @@ class HomeState(
     var searchText: String,
     var rawWordSearchBody: MutableState<Word?>,
     var searchResult: MutableState<List<Definition>>,
-    var errorMessage: MutableState<String>,
     val context: Context,
     val isSharing: MutableState<Boolean>
 ) {
+    val snackbarHostState: SnackbarHostState = SnackbarHostState()
+
     val coroutineScope = lifecycleOwner.lifecycleScope
     private val lifeCycleScopeContext = coroutineScope.coroutineContext
-
-    val isShowingError: Boolean
-        get() = errorMessage.value.isNotBlank()
 
     val floatingActionButtonVisibility: Boolean
         get() = !listState.isScrollInProgress
@@ -76,17 +75,18 @@ class HomeState(
         get() = searchResult.value.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
 
     suspend fun searchForRandomWord() {
-        reset()
+        isSearching.value = true
+        focusManager.clearFocus()
         val randomWord = withContext(lifeCycleScopeContext) {
             try {
                 getNewRandomWord()
             } catch (e: HttpException) {
                 Logger.d(e.stackTraceToString())
-                errorMessage.value = getErrorMessage(e.code(), context)
+                snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
                 null
             } catch (e: Exception) {
                 Logger.d(e.stackTraceToString())
-                errorMessage.value = getErrorMessage(999, context)
+                snackbarHostState.showSnackbar(getErrorMessage(999, context))
                 null
             }
         }
@@ -99,21 +99,23 @@ class HomeState(
     private suspend fun searchForDefinitionRequest(
         searchTerm: String
     ): Word? {
-        reset()
+        isSearching.value = true
         searchText = searchTerm
         val body = withContext(lifeCycleScopeContext) {
             try {
                 Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
             } catch (e: HttpException) {
                 Logger.d(e.stackTraceToString())
-                errorMessage.value = getErrorMessage(e.code(), context)
+                snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
                 null
             } catch (e: Exception) {
                 Logger.d(e.stackTraceToString())
-                errorMessage.value = getErrorMessage(999, context)
+                snackbarHostState.showSnackbar(getErrorMessage(999, context))
                 null
             }
         }
+        if (body != null)
+            focusManager.clearFocus()
         isSearching.value = false
         return body
     }
@@ -122,12 +124,12 @@ class HomeState(
         if (searchText.isNotBlank()) {
             searchForDefinition()
             addSearchTextToHistory()
-        } else errorMessage.value = getErrorMessage(998, context)
+        } else snackbarHostState.showSnackbar(getErrorMessage(998, context))
     }
 
     private suspend fun searchForRandomWordDefinition() {
         if (searchText.isNotBlank()) searchForDefinition()
-        else errorMessage.value = getErrorMessage(998, context)
+        else snackbarHostState.showSnackbar(getErrorMessage(998, context))
     }
 
     private suspend fun addSearchTextToHistory() {
@@ -146,12 +148,6 @@ class HomeState(
 
     private suspend fun getNewRandomWord(): RandomWord {
         return Web.ninjaApiRetrofit.getAPI<APIs.NinjaAPI>().getRandomWord()
-    }
-
-    private fun reset() {
-        focusManager.clearFocus()
-        isSearching.value = true
-        errorMessage.value = ""
     }
 
     suspend fun addToFavourite(
@@ -236,7 +232,6 @@ fun rememberHomeState(
     searchText: String = rememberSaveable { mutableStateOf("").value },
     rawWordSearchBody: MutableState<Word?> = rememberSaveable { mutableStateOf(null) },
     searchResult: MutableState<List<Definition>> = rememberSaveable { mutableStateOf(emptyList()) },
-    errorMessage: MutableState<String> = rememberSaveable { mutableStateOf("") },
     context: Context = LocalContext.current,
     isSharing: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) = remember(
@@ -247,7 +242,6 @@ fun rememberHomeState(
     searchText,
     rawWordSearchBody,
     searchResult,
-    errorMessage,
     context,
     isSharing
 ) {
@@ -259,7 +253,6 @@ fun rememberHomeState(
         searchText,
         rawWordSearchBody,
         searchResult,
-        errorMessage,
         context,
         isSharing
     )

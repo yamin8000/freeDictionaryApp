@@ -28,6 +28,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,12 +39,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.MainBottomBar
 import io.github.yamin8000.owl.content.MainTopBar
+import io.github.yamin8000.owl.ui.composable.MySnackbar
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.util.LockScreenOrientation
@@ -77,6 +80,17 @@ fun HomeContent(
             homeState.handleShareIntent()
 
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(homeState.snackbarHostState) { data ->
+                    MySnackbar {
+                        PersianText(
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            text = data.visuals.message
+                        )
+                    }
+                }
+            },
             topBar = {
                 MainTopBar(
                     onHistoryClick = onHistoryClick,
@@ -104,14 +118,9 @@ fun HomeContent(
                 }
             },
             bottomBar = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    if (homeState.isShowingError)
-                        PersianText(
-                            homeState.errorMessage.value,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    if (homeState.isSearching.value)
-                        CircularProgressIndicator()
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     MainBottomBar(
                         onSearchTermChanged = { homeState.searchText = it },
                         onSearch = {
@@ -122,30 +131,36 @@ fun HomeContent(
                         }
                     )
                 }
-            }) { contentPadding ->
-            Column(
-                modifier = Modifier.padding(contentPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val addedToFavourites = stringResource(id = R.string.added_to_favourites)
-                homeState.rawWordSearchBody.value?.let { word ->
-                    WordCard(
-                        word,
-                        onShareWord = { homeState.isSharing.value = true },
-                        onAddToFavourite = {
-                            homeState.coroutineScope.launch {
-                                homeState.addToFavourite(word.word)
-                            }
-                            Toast.makeText(homeState.context, addedToFavourites, Toast.LENGTH_SHORT)
-                                .show()
-                        },
-                        onClick = {}
-                    )
-                }
+            },
+            content = { contentPadding ->
+                Column(
+                    modifier = Modifier.padding(contentPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (homeState.isSearching.value)
+                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    val addedToFavourites = stringResource(id = R.string.added_to_favourites)
+                    homeState.rawWordSearchBody.value?.let { word ->
+                        WordCard(
+                            word,
+                            onShareWord = { homeState.isSharing.value = true },
+                            onAddToFavourite = {
+                                homeState.coroutineScope.launch {
+                                    homeState.addToFavourite(word.word)
+                                }
+                                Toast.makeText(
+                                    homeState.context,
+                                    addedToFavourites,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onClick = {}
+                        )
+                    }
 
-                WordDefinitionsList(homeState.listState, homeState.searchResult.value)
-            }
-        }
+                    WordDefinitionsList(homeState.listState, homeState.searchResult.value)
+                }
+            })
     }
 }
 
