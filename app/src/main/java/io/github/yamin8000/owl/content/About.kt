@@ -28,6 +28,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -39,8 +40,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.CopyAbleRippleText
 import io.github.yamin8000.owl.ui.composable.PersianText
+import io.github.yamin8000.owl.ui.composable.Ripple
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 
 @Composable
@@ -74,18 +75,28 @@ fun AboutContent() {
                     stringResource(id = R.string.license_header),
                     modifier = Modifier.fillMaxWidth()
                 )
-                CopyAbleRippleText(
-                    text = sourceUri,
-                    textDecoration = TextDecoration.Underline
-                ) { uriHandler.openUri(sourceUri) }
+                Ripple(
+                    onClick = { uriHandler.openUri(sourceUri) },
+                    content = {
+                        Text(
+                            text = sourceUri,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    }
+                )
                 PersianText(
                     stringResource(id = R.string.about_app),
                     modifier = Modifier.fillMaxWidth()
                 )
-                CopyAbleRippleText(
-                    text = owlBotUri,
-                    textDecoration = TextDecoration.Underline
-                ) { uriHandler.openUri(owlBotUri) }
+                Ripple(
+                    onClick = { uriHandler.openUri(owlBotUri) },
+                    content = {
+                        Text(
+                            text = owlBotUri,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    }
+                )
             }
         }
     }

@@ -31,9 +31,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import io.github.yamin8000.owl.model.Definition
 
 @Composable
 fun RemovableCard(
@@ -46,7 +44,7 @@ fun RemovableCard(
     Card(
         shape = CutCornerShape(15.dp)
     ) {
-        RippleText(
+        Ripple(
             modifier = Modifier.padding(8.dp),
             content = {
                 Text(

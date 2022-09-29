@@ -25,6 +25,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -34,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -104,11 +106,11 @@ fun PersianText(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RippleText(
+fun Ripple(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
     onClick: () -> Unit,
-    onLongClick: (() -> Unit)? = null
+    onLongClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -117,10 +119,9 @@ fun RippleText(
                 indication = rememberRipple(),
                 onClick = onClick,
                 onLongClick = onLongClick
-            )
-    ) {
-        content()
-    }
+            ),
+        content = { content() }
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -130,28 +131,34 @@ fun CopyAbleRippleText(
     textDecoration: TextDecoration = TextDecoration.None,
     onClick: () -> Unit
 ) {
-    val clipboardManager = LocalClipboardManager.current
-    val context = LocalContext.current
-    val haptic = LocalHapticFeedback.current
     val textCopied = stringResource(R.string.text_copied)
+    val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
+    val haptic = LocalHapticFeedback.current
+
     Box(
-        modifier = Modifier.combinedClickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = rememberRipple(),
-            onClick = onClick,
-            onLongClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                clipboardManager.setText(AnnotatedString(text))
-                Toast.makeText(context, textCopied, Toast.LENGTH_SHORT).show()
-            }
-        )
-    ) {
-        Text(
-            text = text,
-            textDecoration = textDecoration,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-    }
+        modifier = Modifier
+            .clip(CutCornerShape(15.dp))
+            .combinedClickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(),
+                onClick = onClick,
+                onLongClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    clipboardManager.setText(AnnotatedString(text))
+                    Toast
+                        .makeText(context, textCopied, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            ),
+        content = {
+            Text(
+                text = text,
+                textDecoration = textDecoration,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+    )
 }
 
 @Composable
@@ -162,11 +169,15 @@ fun CopyAbleRippleTextWithIcon(
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(iconPainter, text)
-        CopyAbleRippleText(text, onClick = onClick)
-    }
+        verticalAlignment = Alignment.CenterVertically,
+        content = {
+            Icon(iconPainter, text)
+            CopyAbleRippleText(
+                text = text,
+                onClick = onClick
+            )
+        }
+    )
 }
 
 @Composable
@@ -175,9 +186,11 @@ fun SpeakableRippleTextWithIcon(
     iconPainter: Painter,
     ttsEngine: TtsEngine
 ) {
-    CopyAbleRippleTextWithIcon(text, iconPainter) {
-        ttsEngine.speak(text)
-    }
+    CopyAbleRippleTextWithIcon(
+        text = text,
+        iconPainter = iconPainter,
+        onClick = { ttsEngine.speak(text) }
+    )
 }
 
 @Composable
