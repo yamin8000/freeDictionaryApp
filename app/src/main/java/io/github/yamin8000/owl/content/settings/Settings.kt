@@ -21,6 +21,7 @@
 package io.github.yamin8000.owl.content.settings
 
 import android.content.res.Configuration
+import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,7 +71,7 @@ fun ThemeChanger(
         shape = CutCornerShape(15.dp)
     ) {
         Column(
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -109,8 +111,18 @@ fun ThemeChanger(
                     }
                 }
             }
+            if (currentTheme == ThemeSetting.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                DynamicThemeNotice()
         }
     }
+}
+
+@Composable
+fun DynamicThemeNotice() {
+    PersianText(
+        text = stringResource(R.string.dynamic_theme_notice),
+        textAlign = TextAlign.Justify
+    )
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
