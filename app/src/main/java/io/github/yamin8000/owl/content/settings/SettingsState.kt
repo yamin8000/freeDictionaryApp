@@ -30,7 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
-import io.github.yamin8000.owl.content.settings
+import io.github.yamin8000.owl.content.settingsDataStore
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class SettingsState(
     val coroutineScope: LifecycleCoroutineScope,
     val themeSetting: MutableState<ThemeSetting>
 ) {
-    private val dataStore = DataStoreHelper(context.settings)
+    private val dataStore = DataStoreHelper(context.settingsDataStore)
 
     init {
         coroutineScope.launch {

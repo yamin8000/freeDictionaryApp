@@ -42,7 +42,9 @@ import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
 
-val Context.settings: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val Context.historyDataStore: DataStore<Preferences> by preferencesDataStore(name = "history")
+val Context.favouritesDataStore: DataStore<Preferences> by preferencesDataStore(name = "favourites")
 
 class MainActivity : ComponentActivity() {
 
@@ -56,7 +58,7 @@ class MainActivity : ComponentActivity() {
         var theme by remember { mutableStateOf(ThemeSetting.System) }
 
         LaunchedEffect(Unit) {
-            val dataStore = DataStoreHelper(settings)
+            val dataStore = DataStoreHelper(settingsDataStore)
             theme = ThemeSetting.valueOf(
                 dataStore.getString(Constants.theme) ?: ThemeSetting.System.name
             )

@@ -38,16 +38,15 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.orhanobut.logger.Logger
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.content.favouritesDataStore
+import io.github.yamin8000.owl.content.historyDataStore
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.RandomWord
 import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
-import io.github.yamin8000.owl.util.favouritesDataStore
-import io.github.yamin8000.owl.util.historyDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -81,11 +80,9 @@ class HomeState(
             try {
                 getNewRandomWord()
             } catch (e: HttpException) {
-                Logger.d(e.stackTraceToString())
                 snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
                 null
             } catch (e: Exception) {
-                Logger.d(e.stackTraceToString())
                 snackbarHostState.showSnackbar(getErrorMessage(999, context))
                 null
             }
@@ -105,11 +102,9 @@ class HomeState(
             try {
                 Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
             } catch (e: HttpException) {
-                Logger.d(e.stackTraceToString())
                 snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
                 null
             } catch (e: Exception) {
-                Logger.d(e.stackTraceToString())
                 snackbarHostState.showSnackbar(getErrorMessage(999, context))
                 null
             }

@@ -32,7 +32,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
-import io.github.yamin8000.owl.util.historyDataStore
+import io.github.yamin8000.owl.content.historyDataStore
 import kotlinx.coroutines.launch
 
 class HistoryState(
