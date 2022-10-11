@@ -24,7 +24,7 @@ more complex and had no benefits.
 
 ## Preview
 
-|                        DarkLight Theme with Dynamic Color Content                        |                                       Dark/Light Theme                                       |
+|                       Dark/Light Theme with Dynamic Color Content                        |                                       Dark/Light Theme                                       |
 |:----------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
 | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-54.png" alt="preview" width="250"/> | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-55 (2).png" alt="preview" width="250"/> |
 
@@ -52,6 +52,8 @@ Just use the search input to search the word.
 
 ## Changelog
 
+- **1.0.5** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.5)
+- **1.0.4** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.4)
 - **1.0.3** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.3)
 - **1.0.2** Bug fix
 - **1.0.1** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.1)
