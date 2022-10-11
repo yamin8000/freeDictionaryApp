@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 
 val md_theme_light_primary = Color(0xFFBB0055)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
-val md_theme_light_primaryContainer = Color(0xFFFFD9DF)
+val md_theme_light_primaryContainer = Color(0xFFFFC4CE)
 val md_theme_light_onPrimaryContainer = Color(0xFF3F0018)
 val md_theme_light_secondary = Color(0xFF75565C)
 val md_theme_light_onSecondary = Color(0xFFFFFFFF)
