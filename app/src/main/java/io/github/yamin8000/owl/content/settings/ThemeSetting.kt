@@ -21,11 +21,13 @@
 package io.github.yamin8000.owl.content.settings
 
 import android.os.Parcelable
+import androidx.annotation.StringRes
+import io.github.yamin8000.owl.R
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 enum class ThemeSetting(
-    val persianName: String
+    @StringRes val persianNameStringResource: Int
 ) : Parcelable {
-    Dark("تاریک"), Light("روشن"), System("هماهنگ سیستم")
+    Dark(R.string.theme_dark), Light(R.string.theme_light), System(R.string.theme_system);
 }

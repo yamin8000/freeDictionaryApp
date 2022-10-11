@@ -86,7 +86,7 @@ fun ThemeChanger(
                     .selectableGroup()
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 themes.forEach { theme ->
                     Row(
@@ -100,13 +100,13 @@ fun ThemeChanger(
                             )
                     ) {
                         PersianText(
-                            text = theme.persianName,
+                            text = stringResource(theme.persianNameStringResource),
                             modifier = Modifier.padding(vertical = 16.dp)
                         )
                         RadioButton(
                             selected = (theme == currentTheme),
                             onClick = null,
-                            modifier = Modifier.padding(horizontal = 8.dp)
+                            modifier = Modifier.padding(start = 8.dp)
                         )
                     }
                 }

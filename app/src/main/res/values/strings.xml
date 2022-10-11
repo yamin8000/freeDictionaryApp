@@ -50,4 +50,7 @@
     <string name="tts_failed">خطا در تبدیل متن به گفتار</string>
     <string name="tts_english_not_supported">سیستم تبدیل متن به گفتار دستگاه شما از زبان انگلیسی پشتیبانی نمیکند</string>
     <string name="dynamic_theme_notice">در نسخه های اندروید 12 به بعد زمینه برنامه بر اساس رنگ قالب تصویر پس زمینه گوشی شما تعیین می شود</string>
+    <string name="theme_system">هماهنگ سیستم</string>
+    <string name="theme_light">روشن</string>
+    <string name="theme_dark">تاریک</string>
 </resources>
