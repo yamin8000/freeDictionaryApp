@@ -22,19 +22,27 @@ package io.github.yamin8000.owl.content.settings
 
 import android.content.res.Configuration
 import android.os.Build
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
@@ -84,18 +92,37 @@ fun TtsLanguagesCard(
                 columnModifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.tts_language)
             ) {
-                if (tts.availableLanguages?.isEmpty() != true && currentLanguage != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    IconButton(
+                        onClick = {},
+                        content = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrow_upward),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .rotate(90f),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    )
 
-                    val longestText = tts.availableLanguages.map { it.displayName }
-                        .maxBy { it.length }
+                    PersianText(text = "Current")
+                }
+                if (tts.availableLanguages?.isEmpty() != true && currentLanguage != null) {
+                    val localeWithLongestText =
+                        tts.availableLanguages.maxBy { it.displayName.length }
 
                     SubcomposeLayout { constraints ->
                         val width = constraints.maxWidth / 2
 
                         val height = subcompose("viewToMeasure") {
                             TtsLanguageItem(
-                                displayName = longestText,
-                                modifier = Modifier.width(width.toDp())
+                                locale = localeWithLongestText,
+                                modifier = Modifier.width(width.toDp()),
+                                onClick = {}
                             )
                         }.first().measure(Constraints()).height.toDp()
 
@@ -107,8 +134,9 @@ fun TtsLanguagesCard(
                                 content = {
                                     items(tts.availableLanguages.toList()) { item ->
                                         TtsLanguageItem(
-                                            displayName = item.displayName,
-                                            modifier = Modifier.requiredHeight(height * 1.25f)
+                                            locale = item,
+                                            modifier = Modifier.requiredHeight(height * 1.25f),
+                                            onClick = onLanguageItemClick
                                         )
                                     }
                                 }
@@ -126,18 +154,22 @@ fun TtsLanguagesCard(
 @Composable
 fun TtsLanguageItem(
     modifier: Modifier = Modifier,
-    displayName: String
+    locale: Locale,
+    onClick: (Locale) -> Unit
 ) {
     OutlinedCard(
-        modifier = modifier
+        modifier = modifier.clickable(
+            interactionSource = MutableInteractionSource(),
+            indication = LocalIndication.current,
+            onClick = { onClick(locale) }
+        )
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            //modifier = Modifier.aspectRatio(1f)
         ) {
             PersianText(
-                text = displayName,
+                text = locale.displayName,
                 modifier = Modifier.padding(16.dp)
             )
         }
@@ -194,13 +226,6 @@ fun DynamicThemeNotice() {
         text = stringResource(R.string.dynamic_theme_notice),
         textAlign = TextAlign.Justify
     )
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Composable
-private fun LanguageItemPreview() {
-    PreviewTheme { TtsLanguageItem(displayName = Locale.US.displayName) }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
