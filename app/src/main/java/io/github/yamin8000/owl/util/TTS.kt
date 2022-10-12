@@ -1,6 +1,6 @@
 /*
  *     Owl: an android app for Owlbot Dictionary API
- *     TtsEngine.kt Created by Yamin Siahmargooei at 2022/1/21
+ *     TTS.kt Created by Yamin Siahmargooei at 2022/10/12
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
@@ -22,41 +22,27 @@ package io.github.yamin8000.owl.util
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
-import io.github.yamin8000.owl.R
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.*
+import kotlin.coroutines.resume
 
-class TtsEngine(
+class TTS(
     private val context: Context,
     private val locale: Locale = Locale.US,
-    private val onError: (String) -> Unit
 ) {
     private lateinit var tts: TextToSpeech
     private var ttsLang: Int = 0
 
-    private var isTtsReady = false
-
-    init {
-        tts = TextToSpeech(context) {
-            if (it == TextToSpeech.SUCCESS) {
-                ttsLang = tts.setLanguage(locale)
-                isTtsReady = true
-                if (ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    onError(context.getString(R.string.tts_english_not_supported))
-                    isTtsReady = false
-                }
-            } else {
-                isTtsReady = false
-                onError(context.getString(R.string.tts_init_failed))
+    suspend fun getTts(): TextToSpeech? {
+        return suspendCancellableCoroutine { continuation ->
+            tts = TextToSpeech(context) {
+                if (it == TextToSpeech.SUCCESS) {
+                    ttsLang = tts.setLanguage(locale)
+                    if (ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        continuation.resume(null)
+                    } else continuation.resume(tts)
+                } else continuation.resume(null)
             }
         }
-    }
-
-    fun speak(
-        text: String
-    ) {
-        if (isTtsReady) {
-            val result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
-            if (result == TextToSpeech.ERROR) onError(context.getString(R.string.tts_failed))
-        } else onError(context.getString(R.string.tts_not_ready))
     }
 }
