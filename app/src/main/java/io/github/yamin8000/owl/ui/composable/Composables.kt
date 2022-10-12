@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.TtsEngine
+import io.github.yamin8000.owl.util.findActivity
 
 @Composable
 fun MySnackbar(
@@ -145,4 +146,18 @@ fun TtsAwareComposable(
     LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
     if (tts.value != null) tts.value?.let { content(it) }
     else errorContent?.invoke()
+}
+
+@Composable
+fun LockScreenOrientation(orientation: Int) {
+    val context = LocalContext.current
+    DisposableEffect(Unit) {
+        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
+        val originalOrientation = activity.requestedOrientation
+        activity.requestedOrientation = orientation
+        onDispose {
+            // restore original orientation when view disappears
+            activity.requestedOrientation = originalOrientation
+        }
+    }
 }

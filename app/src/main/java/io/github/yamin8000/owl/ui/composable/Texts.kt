@@ -20,7 +20,6 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -62,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.TtsEngine
+import io.github.yamin8000.owl.util.getCurrentLocale
 
 class TextProvider : PreviewParameterProvider<String> {
     override val values = listOf("سلام", "یمین").asSequence()
@@ -88,9 +88,7 @@ fun PersianText(
 ) {
     var localStyle = style
     var localFontFamily = fontFamily
-    val currentLocale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        LocalContext.current.resources.configuration.locales.get(0)
-    } else LocalContext.current.resources.configuration.locale
+    val currentLocale = getCurrentLocale(LocalContext.current)
     if (currentLocale.language == Locale("fa").language) {
         localFontFamily = Samim
         localStyle = LocalTextStyle.current.copy(textDirection = TextDirection.Rtl)

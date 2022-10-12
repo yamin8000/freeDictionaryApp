@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.content
 
+import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,10 +32,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +49,8 @@ import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.ui.theme.Samim
+import io.github.yamin8000.owl.util.getCurrentLocale
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,14 +96,26 @@ fun MainBottomBar(
             searchText = it
             onSearchTermChanged(searchText)
         },
-        textStyle = TextStyle(
+        textStyle = getTextStyleBasedOnLocale(LocalContext.current),
+        keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search,
+            keyboardType = KeyboardType.Text,
+            capitalization = KeyboardCapitalization.Words
+        )
+    )
+}
+
+private fun getTextStyleBasedOnLocale(
+    context: Context
+): TextStyle {
+    return if (getCurrentLocale(context).language == Locale("fa").language) {
+        TextStyle(
             fontFamily = Samim,
             textAlign = TextAlign.Right,
             textDirection = TextDirection.Rtl
-        ),
-        keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search)
-    )
+        )
+    } else TextStyle()
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
