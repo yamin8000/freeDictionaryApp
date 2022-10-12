@@ -22,9 +22,7 @@ package io.github.yamin8000.owl.content
 
 import android.content.res.Configuration
 import androidx.compose.material.Icon
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,6 +34,7 @@ import io.github.yamin8000.owl.ui.theme.PreviewTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
     onHistoryClick: () -> Unit,
     onFavouritesClick: () -> Unit,
     onRandomWordClick: () -> Unit,
@@ -43,6 +42,7 @@ fun MainTopBar(
     onInfoClick: () -> Unit,
 ) {
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = {},
         actions = {
             ClickableIcon(
@@ -83,9 +83,10 @@ fun MainTopBar(
         })
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { MainTopBar({}, {}, {}, {}, {}) }
+    PreviewTheme { MainTopBar(TopAppBarDefaults.enterAlwaysScrollBehavior(), {}, {}, {}, {}, {}) }
 }

@@ -27,9 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TextField
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,55 +53,63 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainBottomBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    isSearching: Boolean,
     onSearchTermChanged: (String) -> Unit,
     onSearch: (String) -> Unit
 ) {
-    var searchText by remember { mutableStateOf("") }
-    TextField(
-        singleLine = true,
-        shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        label = {
-            PersianText(
-                stringResource(R.string.search),
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        placeholder = {
-            PersianText(
-                text = stringResource(id = R.string.search_hint),
-                modifier = Modifier.fillMaxWidth(),
-                fontSize = 12.sp
-            )
-        },
-        leadingIcon = {
-            ClickableIcon(
-                iconPainter = painterResource(id = R.drawable.ic_clear),
-                contentDescription = stringResource(R.string.delete),
-                onClick = { searchText = "" }
-            )
-        },
-        trailingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = stringResource(R.string.search)
-            )
-        },
-        value = searchText,
-        onValueChange = {
-            searchText = it
-            onSearchTermChanged(searchText)
-        },
-        textStyle = getTextStyleBasedOnLocale(LocalContext.current),
-        keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search,
-            keyboardType = KeyboardType.Text,
-            capitalization = KeyboardCapitalization.Words
+    BottomAppBar {
+        var searchText by remember { mutableStateOf("") }
+        TextField(
+            singleLine = true,
+            shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, 0.dp, 16.dp, 16.dp),
+            label = {
+                PersianText(
+                    stringResource(R.string.search),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            placeholder = {
+                PersianText(
+                    text = stringResource(id = R.string.search_hint),
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 12.sp
+                )
+            },
+            leadingIcon = {
+                ClickableIcon(
+                    iconPainter = painterResource(id = R.drawable.ic_clear),
+                    contentDescription = stringResource(R.string.delete),
+                    onClick = { searchText = "" }
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_search),
+                    contentDescription = stringResource(R.string.search)
+                )
+            },
+            value = searchText,
+            onValueChange = {
+                searchText = it
+                onSearchTermChanged(searchText)
+            },
+            textStyle = getTextStyleBasedOnLocale(LocalContext.current),
+            keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search,
+                keyboardType = KeyboardType.Text,
+                capitalization = KeyboardCapitalization.Words
+            ),
+            supportingText = {
+                if (isSearching)
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
         )
-    )
+    }
 }
 
 private fun getTextStyleBasedOnLocale(
@@ -118,9 +124,10 @@ private fun getTextStyleBasedOnLocale(
     } else TextStyle()
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { MainBottomBar({}, {}) }
+    PreviewTheme { MainBottomBar(TopAppBarDefaults.enterAlwaysScrollBehavior(), true, {}, {}) }
 }

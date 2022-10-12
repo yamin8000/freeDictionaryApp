@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,7 +80,10 @@ fun HomeContent(
         if (homeState.searchResult.value.isNotEmpty() && homeState.rawWordSearchBody.value != null && homeState.isSharing.value)
             homeState.handleShareIntent()
 
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
         Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             snackbarHost = {
                 SnackbarHost(homeState.snackbarHostState) { data ->
                     MySnackbar {
@@ -93,6 +97,7 @@ fun HomeContent(
             },
             topBar = {
                 MainTopBar(
+                    scrollBehavior = scrollBehavior,
                     onHistoryClick = onHistoryClick,
                     onFavouritesClick = onFavouritesClick,
                     onInfoClick = onInfoClick,
@@ -118,21 +123,17 @@ fun HomeContent(
                 }
             },
             bottomBar = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (homeState.isSearching.value)
-                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                    MainBottomBar(
-                        onSearchTermChanged = { homeState.searchText = it },
-                        onSearch = {
-                            homeState.searchText = it
-                            homeState.lifecycleOwner.lifecycleScope.launch {
-                                homeState.searchForDefinitionHandler()
-                            }
+                MainBottomBar(
+                    scrollBehavior = scrollBehavior,
+                    isSearching = homeState.isSearching.value,
+                    onSearchTermChanged = { homeState.searchText = it },
+                    onSearch = {
+                        homeState.searchText = it
+                        homeState.lifecycleOwner.lifecycleScope.launch {
+                            homeState.searchForDefinitionHandler()
                         }
-                    )
-                }
+                    }
+                )
             },
             content = { contentPadding ->
                 Column(
