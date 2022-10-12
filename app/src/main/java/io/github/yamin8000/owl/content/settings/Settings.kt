@@ -31,7 +31,6 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,7 +66,7 @@ fun SettingsContent(
 
         TtsLanguagesCard(
             currentLanguage = Locale.US,
-            onLanguageChange = {
+            onLanguageItemClick = {
 
             }
         )
@@ -77,7 +76,7 @@ fun SettingsContent(
 @Composable
 fun TtsLanguagesCard(
     currentLanguage: Locale?,
-    onLanguageChange: (Locale) -> Unit
+    onLanguageItemClick: (Locale) -> Unit
 ) {
     TtsAwareComposable(
         content = { tts ->
@@ -137,7 +136,7 @@ fun TtsLanguageItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             //modifier = Modifier.aspectRatio(1f)
         ) {
-            Text(
+            PersianText(
                 text = displayName,
                 modifier = Modifier.padding(16.dp)
             )

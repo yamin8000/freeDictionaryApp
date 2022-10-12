@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -49,6 +50,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextDirection
@@ -73,7 +75,7 @@ fun PersianText(
     fontSize: TextUnit = 14.sp,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
-    fontFamily: FontFamily = Samim,
+    fontFamily: FontFamily? = null,
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
@@ -82,8 +84,17 @@ fun PersianText(
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current.copy(textDirection = TextDirection.Rtl)
+    style: TextStyle = LocalTextStyle.current
 ) {
+    var localStyle = style
+    var localFontFamily = fontFamily
+    val currentLocale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        LocalContext.current.resources.configuration.locales.get(0)
+    } else LocalContext.current.resources.configuration.locale
+    if (currentLocale.language == Locale("fa").language) {
+        localFontFamily = Samim
+        localStyle = LocalTextStyle.current.copy(textDirection = TextDirection.Rtl)
+    }
     Text(
         text,
         modifier,
@@ -91,7 +102,7 @@ fun PersianText(
         fontSize,
         fontStyle,
         fontWeight,
-        fontFamily,
+        localFontFamily,
         letterSpacing,
         textDecoration,
         textAlign,
@@ -100,7 +111,7 @@ fun PersianText(
         softWrap,
         maxLines,
         onTextLayout,
-        style
+        localStyle
     )
 }
 

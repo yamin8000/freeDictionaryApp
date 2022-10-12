@@ -19,39 +19,39 @@
   -->
 
 <resources>
-    <string name="app_name">جغدک</string>
-    <string name="search">جستجو</string>
-    <string name="search_hint">واژه‌ای برای جستجو بنویسید</string>
-    <string name="favourites">واژه‌های برگزیده</string>
-    <string name="search_history">جستجوهای پیشین</string>
-    <string name="random_word">واژه تصادفی</string>
-    <string name="general_net_error">خطا در برقراری ارتباط با سرور برنامه</string>
-    <string name="api_throttled">سرور برنامه تحت فشار است، لطفا چند دقیقه دیگر تلاش کنید</string>
-    <string name="definition_not_found">توضیحی برای این کلمه یافت نشد</string>
-    <string name="api_authorization_error">خطای احراز هویت با سرور برنامه</string>
-    <string name="text_copied">متن کپی شد</string>
-    <string name="license_header">این یک برنامه آزاد طبق پروانه گنو است که توضیحات بیشتر آن در ادامه آورده شده است</string>
-    <string name="gplv3_image_description">لوگو پروانه برنامه GPLv3</string>
-    <string name="about_app">فرهنگ واژگان انگلیسی به انگلیسی جغد، برگرفته از فرهنگ واژگان</string>
-    <string name="github_source">https://github.com/yamin8000/Owl2</string>
-    <string name="owl_bot_link">https://owlbot.info</string>
-    <string name="added_to_favourites">به برگزیده‌ها اضافه شد</string>
-    <string name="delete">پاک کردن</string>
-    <string name="untracked_error">خطای پیش بینی نشده</string>
-    <string name="no_search_term_entered">عبارتی وارد نشده</string>
-    <string name="share">اشتراک گذاری</string>
-    <string name="this_text_generated_using_owl_fa">این متن توسط برنامه جغدک تولید شده</string>
-    <string name="remove_history">پاک کردن همه</string>
-    <string name="list_empty">چیزی برای نمایش پیدا نشد</string>
-    <string name="settings">تنظیمات</string>
-    <string name="theme">زمینه</string>
-    <string name="tts_init_failed">خطا در راه اندازی سیستم تبدیل متن به گفتار</string>
-    <string name="tts_not_ready">سیستم تبدیل متن به گفتار آماده نیست، لطفا دوباره تلاش کنید.</string>
-    <string name="tts_failed">خطا در تبدیل متن به گفتار</string>
-    <string name="tts_english_not_supported">سیستم تبدیل متن به گفتار دستگاه شما از زبان انگلیسی پشتیبانی نمیکند</string>
-    <string name="dynamic_theme_notice">در نسخه های اندروید 12 به بعد زمینه برنامه بر اساس رنگ قالب تصویر پس زمینه گوشی شما تعیین می شود</string>
-    <string name="theme_system">هماهنگ سیستم</string>
-    <string name="theme_light">روشن</string>
-    <string name="theme_dark">تاریک</string>
+    <string name="app_name">Owl</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Enter a word to search</string>
+    <string name="favourites">Favourite Words</string>
+    <string name="search_history">Search History</string>
+    <string name="random_word">Random Word</string>
+    <string name="general_net_error">No connection to server.</string>
+    <string name="api_throttled">Server is busy, try again!</string>
+    <string name="definition_not_found">No definition for the word found.</string>
+    <string name="api_authorization_error">Authentication Error</string>
+    <string name="text_copied">Text copied.</string>
+    <string name="license_header">This is a free application under GNU license, see more:</string>
+    <string name="gplv3_image_description">GPLv3 License Logo</string>
+    <string name="about_app">English to English Dictionary, based on:</string>
+    <string name="github_source" translatable="false">https://github.com/yamin8000/Owl2</string>
+    <string name="owl_bot_link" translatable="false">https://owlbot.info</string>
+    <string name="added_to_favourites">Added to favourites</string>
+    <string name="delete">Clear</string>
+    <string name="untracked_error">Unexpected error!</string>
+    <string name="no_search_term_entered">Nothing is entered.</string>
+    <string name="share">Share</string>
+    <string name="this_text_generated_using_owl_fa">This text is generated using Owl app</string>
+    <string name="remove_history">Clear All</string>
+    <string name="list_empty">Nothing to show!</string>
+    <string name="settings">Settings</string>
+    <string name="theme">Theme</string>
+    <string name="tts_init_failed">TTS initialization failed!</string>
+    <string name="tts_not_ready">TTS is not ready, try again!</string>
+    <string name="tts_failed">TTS Failed!</string>
+    <string name="tts_english_not_supported">TTS engine for English US is not supported on your device.</string>
+    <string name="dynamic_theme_notice">On Android 12+ your app theme colors are based on your home screen background</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
     <string name="tts_language">Text-to-Speech Language</string>
 </resources>

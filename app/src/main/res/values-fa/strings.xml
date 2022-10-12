@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~     Owl: an android app for Owlbot Dictionary API
+  ~     strings.xml Created by Yamin Siahmargooei at 2022/10/12
+  ~     This file is part of Owl.
+  ~     Copyright (C) 2022  Yamin Siahmargooei
+  ~
+  ~     Owl is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     Owl is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name">جغدک</string>
+    <string name="search">جستجو</string>
+    <string name="search_hint">واژه‌ای برای جستجو بنویسید</string>
+    <string name="favourites">واژه‌های برگزیده</string>
+    <string name="search_history">جستجوهای پیشین</string>
+    <string name="random_word">واژه تصادفی</string>
+    <string name="general_net_error">خطا در برقراری ارتباط با سرور برنامه</string>
+    <string name="api_throttled">سرور برنامه تحت فشار است، لطفا چند دقیقه دیگر تلاش کنید</string>
+    <string name="definition_not_found">توضیحی برای این کلمه یافت نشد</string>
+    <string name="api_authorization_error">خطای احراز هویت با سرور برنامه</string>
+    <string name="text_copied">متن کپی شد</string>
+    <string name="license_header">این یک برنامه آزاد طبق پروانه گنو است که توضیحات بیشتر آن در ادامه آورده شده است</string>
+    <string name="gplv3_image_description">لوگو پروانه برنامه GPLv3</string>
+    <string name="about_app">فرهنگ واژگان انگلیسی به انگلیسی جغد، برگرفته از فرهنگ واژگان</string>
+    <string name="added_to_favourites">به برگزیده‌ها اضافه شد</string>
+    <string name="delete">پاک کردن</string>
+    <string name="untracked_error">خطای پیش بینی نشده</string>
+    <string name="no_search_term_entered">عبارتی وارد نشده</string>
+    <string name="share">اشتراک گذاری</string>
+    <string name="this_text_generated_using_owl_fa">این متن توسط برنامه جغدک تولید شده</string>
+    <string name="remove_history">پاک کردن همه</string>
+    <string name="list_empty">چیزی برای نمایش پیدا نشد</string>
+    <string name="settings">تنظیمات</string>
+    <string name="theme">زمینه</string>
+    <string name="tts_init_failed">خطا در راه اندازی سیستم تبدیل متن به گفتار</string>
+    <string name="tts_not_ready">سیستم تبدیل متن به گفتار آماده نیست، لطفا دوباره تلاش کنید.</string>
+    <string name="tts_failed">خطا در تبدیل متن به گفتار</string>
+    <string name="tts_english_not_supported">سیستم تبدیل متن به گفتار دستگاه شما از زبان انگلیسی پشتیبانی نمیکند</string>
+    <string name="dynamic_theme_notice">در نسخه های اندروید 12 به بعد زمینه برنامه بر اساس رنگ قالب تصویر پس زمینه گوشی شما تعیین می شود</string>
+    <string name="theme_system">هماهنگ سیستم</string>
+    <string name="theme_light">روشن</string>
+    <string name="theme_dark">تاریک</string>
+    <string name="tts_language">زبان متن به گفتار</string>
+</resources>
