@@ -53,7 +53,6 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainBottomBar(
-    scrollBehavior: TopAppBarScrollBehavior,
     isSearching: Boolean,
     onSearchTermChanged: (String) -> Unit,
     onSearch: (String) -> Unit
@@ -65,7 +64,7 @@ fun MainBottomBar(
             shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp, 0.dp, 16.dp, 16.dp),
+                .padding(16.dp, 0.dp, 16.dp, 0.dp),
             label = {
                 PersianText(
                     stringResource(R.string.search),
@@ -124,10 +123,9 @@ private fun getTextStyleBasedOnLocale(
     } else TextStyle()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { MainBottomBar(TopAppBarDefaults.enterAlwaysScrollBehavior(), true, {}, {}) }
+    PreviewTheme { MainBottomBar(true, {}) {} }
 }

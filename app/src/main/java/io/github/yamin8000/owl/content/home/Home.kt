@@ -124,16 +124,18 @@ fun HomeContent(
             },
             bottomBar = {
                 MainBottomBar(
-                    scrollBehavior = scrollBehavior,
                     isSearching = homeState.isSearching.value,
-                    onSearchTermChanged = { homeState.searchText = it },
-                    onSearch = {
+                    onSearchTermChanged = {
                         homeState.searchText = it
-                        homeState.lifecycleOwner.lifecycleScope.launch {
-                            homeState.searchForDefinitionHandler()
-                        }
+                        if (homeState.isWordSelectedFromKeyboardSuggestions)
+                            homeState.coroutineScope.launch { homeState.searchForDefinitionHandler() }
                     }
-                )
+                ) {
+                    homeState.searchText = it
+                    homeState.lifecycleOwner.lifecycleScope.launch {
+                        homeState.searchForDefinitionHandler()
+                    }
+                }
             },
             content = { contentPadding ->
                 Column(

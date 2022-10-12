@@ -73,6 +73,9 @@ class HomeState(
     val isFirstTimeOpening: Boolean
         get() = searchResult.value.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
 
+    val isWordSelectedFromKeyboardSuggestions: Boolean
+        get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
+
     suspend fun searchForRandomWord() {
         isSearching.value = true
         focusManager.clearFocus()
