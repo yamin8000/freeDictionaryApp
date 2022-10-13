@@ -56,7 +56,7 @@ fun MySnackbar(
 ) {
     Snackbar(
         modifier = modifier
-            .padding(vertical = 32.dp, horizontal = 16.dp)
+            .padding(vertical = 16.dp, horizontal = 16.dp)
             .padding(WindowInsets.ime.asPaddingValues()),
         action = action,
         dismissAction = dismissAction,

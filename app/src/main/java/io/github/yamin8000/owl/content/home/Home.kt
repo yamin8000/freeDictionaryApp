@@ -22,7 +22,7 @@ package io.github.yamin8000.owl.content.home
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +32,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,7 +73,7 @@ fun HomeContent(
             homeState.searchText = searchTerm
         LaunchedEffect(Unit) {
             if (homeState.isFirstTimeOpening)
-                homeState.searchForRandomWord()
+                homeState.searchText = "Owl"
             if (homeState.searchText.isNotBlank())
                 homeState.searchForDefinition()
         }
@@ -80,7 +84,10 @@ fun HomeContent(
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
         Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            containerColor = Color.Transparent,
+            modifier = Modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .background(background()),
             snackbarHost = {
                 SnackbarHost(homeState.snackbarHostState) { data ->
                     MySnackbar {
@@ -135,12 +142,8 @@ fun HomeContent(
                             onAddToFavourite = {
                                 homeState.coroutineScope.launch {
                                     homeState.addToFavourite(word.word)
+                                    homeState.snackbarHostState.showSnackbar(addedToFavourites)
                                 }
-                                Toast.makeText(
-                                    homeState.context,
-                                    addedToFavourites,
-                                    Toast.LENGTH_SHORT
-                                ).show()
                             }
                         )
                     }
@@ -149,6 +152,23 @@ fun HomeContent(
                 }
             })
     }
+}
+
+@Composable
+private fun background(): Brush {
+    val density = LocalDensity.current.density
+    val background = MaterialTheme.colorScheme.background
+    return Brush.sweepGradient(
+        center = Offset(0f, 0f),
+        colors = listOf(
+            background,
+            background.copy(
+                red = background.red * 0.5f,
+                blue = background.blue * 0.5f,
+                green = background.green * 0.5f
+            )
+        )
+    )
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
