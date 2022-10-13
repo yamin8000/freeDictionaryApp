@@ -21,7 +21,7 @@
 package io.github.yamin8000.owl.util
 
 object Constants {
-    const val LOG_TAG = "<-->"
     const val IMAGE_URL = "image_url"
     const val theme = "theme"
+    const val tts_lang = "tts_lang"
 }

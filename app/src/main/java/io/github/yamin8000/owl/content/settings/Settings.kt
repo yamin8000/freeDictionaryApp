@@ -31,24 +31,19 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.RadioButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.SettingsItemCard
@@ -63,6 +58,7 @@ fun SettingsContent(
     onThemeChanged: (ThemeSetting) -> Unit
 ) {
     val settingsState = rememberSettingsState()
+    val scope = LocalLifecycleOwner.current.lifecycleScope
 
     SurfaceWithTitle(
         title = stringResource(id = R.string.settings)
@@ -72,10 +68,13 @@ fun SettingsContent(
             onThemeChanged(newTheme)
         }
 
-        TtsLanguagesCard(
-            currentLanguage = Locale.US,
-            onLanguageItemClick = {
+        val locale = if (settingsState.ttsLang.value.isEmpty())
+            Locale.US else Locale.forLanguageTag(settingsState.ttsLang.value)
 
+        TtsLanguagesCard(
+            currentLocale = locale,
+            onLanguageItemClick = {
+                scope.launch { settingsState.updateTtsLang(it.toLanguageTag()) }
             }
         )
     }
@@ -83,7 +82,7 @@ fun SettingsContent(
 
 @Composable
 fun TtsLanguagesCard(
-    currentLanguage: Locale?,
+    currentLocale: Locale?,
     onLanguageItemClick: (Locale) -> Unit
 ) {
     TtsAwareComposable(
@@ -92,28 +91,11 @@ fun TtsLanguagesCard(
                 columnModifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.tts_language)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    IconButton(
-                        onClick = {},
-                        content = {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_arrow_upward),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .rotate(90f),
-                                tint = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
-                    )
-
-                    PersianText(text = "Current")
-                }
-                if (tts.availableLanguages?.isEmpty() != true && currentLanguage != null) {
+                val englishLanguages =
+                    tts.availableLanguages.filter { it.language == Locale.ENGLISH.language }
+                if (englishLanguages.isNotEmpty() && currentLocale != null) {
                     val localeWithLongestText =
-                        tts.availableLanguages.maxBy { it.displayName.length }
+                        englishLanguages.maxBy { it.displayName.length }
 
                     SubcomposeLayout { constraints ->
                         val width = constraints.maxWidth / 2
@@ -132,10 +114,11 @@ fun TtsLanguagesCard(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
                                 content = {
-                                    items(tts.availableLanguages.toList()) { item ->
+                                    items(englishLanguages) { item ->
                                         TtsLanguageItem(
                                             locale = item,
                                             modifier = Modifier.requiredHeight(height * 1.25f),
+                                            isSelected = item.toLanguageTag() == currentLocale.toLanguageTag(),
                                             onClick = onLanguageItemClick
                                         )
                                     }
@@ -155,14 +138,21 @@ fun TtsLanguagesCard(
 fun TtsLanguageItem(
     modifier: Modifier = Modifier,
     locale: Locale,
+    isSelected: Boolean = false,
     onClick: (Locale) -> Unit
 ) {
+    val colors =
+        if (isSelected) CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        else CardDefaults.outlinedCardColors()
     OutlinedCard(
         modifier = modifier.clickable(
             interactionSource = MutableInteractionSource(),
             indication = LocalIndication.current,
-            onClick = { onClick(locale) }
-        )
+            onClick = {
+                onClick(locale)
+            },
+        ),
+        colors = colors
     ) {
         Column(
             verticalArrangement = Arrangement.Center,

@@ -38,7 +38,8 @@ import kotlinx.coroutines.launch
 class SettingsState(
     context: Context,
     val coroutineScope: LifecycleCoroutineScope,
-    val themeSetting: MutableState<ThemeSetting>
+    val themeSetting: MutableState<ThemeSetting>,
+    var ttsLang: MutableState<String>
 ) {
     private val dataStore = DataStoreHelper(context.settingsDataStore)
 
@@ -47,6 +48,16 @@ class SettingsState(
             themeSetting.value = ThemeSetting.valueOf(
                 dataStore.getString(Constants.theme) ?: ThemeSetting.System.name
             )
+            ttsLang.value = dataStore.getString(Constants.tts_lang) ?: ""
+        }
+    }
+
+    suspend fun updateTtsLang(
+        newTtsLang: String
+    ) {
+        ttsLang.value = newTtsLang
+        coroutineScope.launch {
+            dataStore.setString(Constants.tts_lang, newTtsLang)
         }
     }
 
@@ -64,7 +75,8 @@ class SettingsState(
 fun rememberSettingsState(
     context: Context = LocalContext.current,
     coroutineScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
-    themeSetting: MutableState<ThemeSetting> = rememberSaveable { mutableStateOf(ThemeSetting.System) }
-) = remember(context, themeSetting, coroutineScope) {
-    SettingsState(context, coroutineScope, themeSetting)
+    themeSetting: MutableState<ThemeSetting> = rememberSaveable { mutableStateOf(ThemeSetting.System) },
+    ttsLang: MutableState<String> = rememberSaveable { mutableStateOf("") }
+) = remember(context, themeSetting, coroutineScope, ttsLang) {
+    SettingsState(context, coroutineScope, themeSetting, ttsLang)
 }
