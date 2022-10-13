@@ -21,6 +21,7 @@
 package io.github.yamin8000.owl.ui.composable
 
 import android.speech.tts.TextToSpeech
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -28,7 +29,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.findActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
@@ -108,35 +110,31 @@ fun ClickableIcon(
     contentDescription: String,
     onClick: () -> Unit
 ) {
-    ClickableIcon(
-        modifier = modifier,
-        onClick = onClick,
-        icon = {
-            Icon(
-                imageVector = imageVector,
-                contentDescription = contentDescription
-            )
-        }
-    )
-}
+    val localContentColor = LocalContentColor.current
+    val primary = MaterialTheme.colorScheme.primary
+    val tint = remember { mutableStateOf(localContentColor) }
+    val scope = rememberCoroutineScope()
 
-@Composable
-fun ClickableIcon(
-    modifier: Modifier = Modifier,
-    iconPainter: Painter,
-    contentDescription: String,
-    onClick: () -> Unit
-) {
-    ClickableIcon(
-        modifier = modifier,
-        onClick = onClick,
-        icon = {
-            Icon(
-                painter = iconPainter,
-                contentDescription = contentDescription
-            )
-        }
-    )
+    Crossfade(targetState = tint.value) {
+        ClickableIcon(
+            modifier = modifier,
+            onClick = {
+                onClick()
+                tint.value = primary
+                scope.launch {
+                    delay(500)
+                    tint.value = localContentColor
+                }
+            },
+            icon = {
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = contentDescription,
+                    tint = it
+                )
+            }
+        )
+    }
 }
 
 @Composable
