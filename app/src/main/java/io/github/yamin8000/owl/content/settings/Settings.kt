@@ -82,10 +82,11 @@ fun SettingsContent(
 
 @Composable
 fun TtsLanguagesCard(
-    currentLocale: Locale?,
+    currentLocale: Locale,
     onLanguageItemClick: (Locale) -> Unit
 ) {
     TtsAwareComposable(
+        ttsLanguageLocale = currentLocale,
         content = { tts ->
             SettingsItemCard(
                 columnModifier = Modifier.fillMaxWidth(),
@@ -93,7 +94,7 @@ fun TtsLanguagesCard(
             ) {
                 val englishLanguages =
                     tts.availableLanguages.filter { it.language == Locale.ENGLISH.language }
-                if (englishLanguages.isNotEmpty() && currentLocale != null) {
+                if (englishLanguages.isNotEmpty()) {
                     val localeWithLongestText =
                         englishLanguages.maxBy { it.displayName.length }
 

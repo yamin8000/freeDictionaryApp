@@ -52,6 +52,7 @@ import io.github.yamin8000.owl.ui.composable.MySnackbar
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import kotlinx.coroutines.launch
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +68,9 @@ fun HomeContent(
         modifier = Modifier.fillMaxSize()
     ) {
         val homeState = rememberHomeState()
+
+        val locale = if (homeState.ttsLang.value.isEmpty())
+            Locale.US else Locale.forLanguageTag(homeState.ttsLang.value)
 
         if (searchTerm != null)
             homeState.searchText = searchTerm
@@ -145,6 +149,7 @@ fun HomeContent(
                     val addedToFavourites = stringResource(id = R.string.added_to_favourites)
                     homeState.rawWordSearchBody.value?.let { word ->
                         WordCard(
+                            locale,
                             word,
                             onShareWord = { homeState.isSharing.value = true },
                             onAddToFavourite = {
@@ -161,7 +166,7 @@ fun HomeContent(
                         )
                     }
 
-                    WordDefinitionsList(homeState.listState, homeState.searchResult.value)
+                    WordDefinitionsList(locale, homeState.listState, homeState.searchResult.value)
                 }
             })
     }

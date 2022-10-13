@@ -34,6 +34,7 @@ import io.github.yamin8000.owl.content.settingsDataStore
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
 import kotlinx.coroutines.launch
+import java.util.*
 
 class SettingsState(
     context: Context,
@@ -48,7 +49,7 @@ class SettingsState(
             themeSetting.value = ThemeSetting.valueOf(
                 dataStore.getString(Constants.theme) ?: ThemeSetting.System.name
             )
-            ttsLang.value = dataStore.getString(Constants.tts_lang) ?: ""
+            ttsLang.value = dataStore.getString(Constants.tts_lang) ?: Locale.US.toLanguageTag()
         }
     }
 
@@ -76,7 +77,7 @@ fun rememberSettingsState(
     context: Context = LocalContext.current,
     coroutineScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
     themeSetting: MutableState<ThemeSetting> = rememberSaveable { mutableStateOf(ThemeSetting.System) },
-    ttsLang: MutableState<String> = rememberSaveable { mutableStateOf("") }
+    ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) }
 ) = remember(context, themeSetting, coroutineScope, ttsLang) {
     SettingsState(context, coroutineScope, themeSetting, ttsLang)
 }

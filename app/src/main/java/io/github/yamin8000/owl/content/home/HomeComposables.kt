@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.content.home
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -46,13 +47,15 @@ import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
-import io.github.yamin8000.owl.ui.composable.TtsReadyComposable
+import io.github.yamin8000.owl.ui.composable.TtsAwareComposable
 import io.github.yamin8000.owl.ui.util.DynamicThemePrimaryColorsFromImage
 import io.github.yamin8000.owl.ui.util.rememberDominantColorState
-import io.github.yamin8000.owl.util.TtsEngine
+import io.github.yamin8000.owl.util.speak
+import java.util.*
 
 @Composable
 internal fun WordDefinitionsList(
+    locale: Locale,
     listState: LazyListState,
     searchResult: List<Definition>
 ) {
@@ -63,7 +66,7 @@ internal fun WordDefinitionsList(
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             items(searchResult) { definition ->
-                DynamicColorDefinitionCard(definition)
+                DynamicColorDefinitionCard(locale, definition)
             }
         })
 }
@@ -71,6 +74,7 @@ internal fun WordDefinitionsList(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun WordCard(
+    locale: Locale,
     word: Word,
     onClick: () -> Unit,
     onAddToFavourite: () -> Unit,
@@ -94,11 +98,12 @@ internal fun WordCard(
                 modifier = Modifier.padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                TtsReadyComposable { ttsEngine ->
-                    WordText(word.word, ttsEngine)
-                }
+                TtsAwareComposable(ttsLanguageLocale = locale, content = {
+                    WordText(word.word, it)
+                })
                 if (word.pronunciation != null) {
                     PronunciationText(
+                        locale,
                         word.pronunciation,
                         word.word
                     )
@@ -123,7 +128,7 @@ internal fun WordCard(
 @Composable
 internal fun WordText(
     word: String,
-    ttsEngine: TtsEngine
+    ttsEngine: TextToSpeech
 ) {
     SpeakableRippleTextWithIcon(
         word,
@@ -134,22 +139,26 @@ internal fun WordText(
 
 @Composable
 internal fun PronunciationText(
+    locale: Locale,
     pronunciation: String,
     word: String
 ) {
-    TtsReadyComposable { ttsEngine ->
-        CopyAbleRippleTextWithIcon(
-            text = pronunciation,
-            iconPainter = painterResource(id = R.drawable.ic_person_voice),
-            onClick = { ttsEngine.speak(word) }
-        )
-    }
+    TtsAwareComposable(
+        ttsLanguageLocale = locale,
+        content = { ttsEngine ->
+            CopyAbleRippleTextWithIcon(
+                text = pronunciation,
+                iconPainter = painterResource(id = R.drawable.ic_person_voice),
+                onClick = { ttsEngine.speak(word) }
+            )
+        }
+    )
 }
 
 @Composable
 internal fun WordEmojiText(
     emoji: String,
-    ttsEngine: TtsEngine
+    ttsEngine: TextToSpeech
 ) {
     SpeakableRippleTextWithIcon(
         emoji,
@@ -161,7 +170,7 @@ internal fun WordEmojiText(
 @Composable
 internal fun WordExampleText(
     example: String,
-    ttsEngine: TtsEngine
+    ttsEngine: TextToSpeech
 ) {
     SpeakableRippleTextWithIcon(
         example,
@@ -173,7 +182,7 @@ internal fun WordExampleText(
 @Composable
 internal fun WordDefinitionText(
     definition: String,
-    ttsEngine: TtsEngine
+    ttsEngine: TextToSpeech
 ) {
     SpeakableRippleTextWithIcon(
         definition,
@@ -185,7 +194,7 @@ internal fun WordDefinitionText(
 @Composable
 internal fun WordTypeText(
     type: String,
-    ttsEngine: TtsEngine
+    ttsEngine: TextToSpeech
 ) {
     SpeakableRippleTextWithIcon(
         type,
@@ -196,6 +205,7 @@ internal fun WordTypeText(
 
 @Composable
 internal fun DynamicColorDefinitionCard(
+    locale: Locale,
     definition: Definition
 ) {
     val dominantColorState = rememberDominantColorState()
@@ -205,6 +215,7 @@ internal fun DynamicColorDefinitionCard(
                 dominantColorState.updateColorsFromImageUrl(definition.imageUrl)
             }
             DefinitionCard(
+                locale,
                 definition = definition,
                 cardColors = CardDefaults.cardColors(
                     contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -214,12 +225,13 @@ internal fun DynamicColorDefinitionCard(
         }
     } else {
         dominantColorState.reset()
-        DefinitionCard(definition)
+        DefinitionCard(locale, definition)
     }
 }
 
 @Composable
 internal fun DefinitionCard(
+    locale: Locale,
     definition: Definition,
     cardColors: CardColors = CardDefaults.cardColors()
 ) {
@@ -233,15 +245,18 @@ internal fun DefinitionCard(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                TtsReadyComposable { ttsEngine ->
-                    if (definition.type != null)
-                        WordTypeText(definition.type, ttsEngine)
-                    WordDefinitionText(definition.definition, ttsEngine)
-                    if (definition.example != null)
-                        WordExampleText(definition.example, ttsEngine)
-                    if (definition.emoji != null)
-                        WordEmojiText(definition.emoji, ttsEngine)
-                }
+                TtsAwareComposable(
+                    ttsLanguageLocale = locale,
+                    content = { ttsEngine ->
+                        if (definition.type != null)
+                            WordTypeText(definition.type, ttsEngine)
+                        WordDefinitionText(definition.definition, ttsEngine)
+                        if (definition.example != null)
+                            WordExampleText(definition.example, ttsEngine)
+                        if (definition.emoji != null)
+                            WordEmojiText(definition.emoji, ttsEngine)
+                    }
+                )
             }
             if (!definition.imageUrl.isNullOrBlank()) {
                 AsyncImage(

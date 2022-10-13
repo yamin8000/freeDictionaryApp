@@ -24,6 +24,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
+import android.speech.tts.TextToSpeech
 import java.util.*
 
 fun Context.findActivity(): Activity? = when (this) {
@@ -38,4 +39,10 @@ fun getCurrentLocale(
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         context.resources.configuration.locales.get(0)
     } else context.resources.configuration.locale
+}
+
+fun TextToSpeech.speak(
+    text: String
+) {
+    speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
 }

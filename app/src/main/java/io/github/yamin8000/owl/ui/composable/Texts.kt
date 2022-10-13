@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -60,8 +61,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.Samim
-import io.github.yamin8000.owl.util.TtsEngine
 import io.github.yamin8000.owl.util.getCurrentLocale
+import io.github.yamin8000.owl.util.speak
 
 class TextProvider : PreviewParameterProvider<String> {
     override val values = listOf("سلام", "یمین").asSequence()
@@ -193,7 +194,7 @@ fun CopyAbleRippleTextWithIcon(
 fun SpeakableRippleTextWithIcon(
     text: String,
     iconPainter: Painter,
-    ttsEngine: TtsEngine
+    ttsEngine: TextToSpeech
 ) {
     CopyAbleRippleTextWithIcon(
         text = text,

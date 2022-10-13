@@ -41,15 +41,20 @@ import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.favouritesDataStore
 import io.github.yamin8000.owl.content.historyDataStore
+import io.github.yamin8000.owl.content.settingsDataStore
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.RandomWord
 import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
+import io.github.yamin8000.owl.util.Constants
+import io.github.yamin8000.owl.util.DataStoreHelper
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.util.*
 
 class HomeState(
     val listState: LazyListState,
@@ -60,12 +65,21 @@ class HomeState(
     var rawWordSearchBody: MutableState<Word?>,
     var searchResult: MutableState<List<Definition>>,
     val context: Context,
-    val isSharing: MutableState<Boolean>
+    val isSharing: MutableState<Boolean>,
+    var ttsLang: MutableState<String>
 ) {
-    val snackbarHostState: SnackbarHostState = SnackbarHostState()
-
     val coroutineScope = lifecycleOwner.lifecycleScope
     private val lifeCycleScopeContext = coroutineScope.coroutineContext
+
+    private val dataStore = DataStoreHelper(context.settingsDataStore)
+
+    init {
+        coroutineScope.launch {
+            ttsLang.value = dataStore.getString(Constants.tts_lang) ?: Locale.US.toLanguageTag()
+        }
+    }
+
+    val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
     val floatingActionButtonVisibility: Boolean
         get() = !listState.isScrollInProgress
@@ -231,7 +245,8 @@ fun rememberHomeState(
     rawWordSearchBody: MutableState<Word?> = rememberSaveable { mutableStateOf(null) },
     searchResult: MutableState<List<Definition>> = rememberSaveable { mutableStateOf(emptyList()) },
     context: Context = LocalContext.current,
-    isSharing: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
+    isSharing: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
+    ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) }
 ) = remember(
     listState,
     isSearching,
@@ -241,7 +256,8 @@ fun rememberHomeState(
     rawWordSearchBody,
     searchResult,
     context,
-    isSharing
+    isSharing,
+    ttsLang
 ) {
     HomeState(
         listState,
@@ -252,6 +268,7 @@ fun rememberHomeState(
         rawWordSearchBody,
         searchResult,
         context,
-        isSharing
+        isSharing,
+        ttsLang
     )
 }

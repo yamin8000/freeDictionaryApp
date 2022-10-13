@@ -21,7 +21,6 @@
 package io.github.yamin8000.owl.ui.composable
 
 import android.speech.tts.TextToSpeech
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -37,8 +36,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.util.TTS
-import io.github.yamin8000.owl.util.TtsEngine
 import io.github.yamin8000.owl.util.findActivity
+import java.util.*
 
 @Composable
 fun MySnackbar(
@@ -123,7 +122,7 @@ fun ClickableIcon(
     }
 }
 
-@Composable
+/*@Composable
 fun TtsReadyComposable(
     content: @Composable (TtsEngine) -> Unit
 ) {
@@ -134,14 +133,15 @@ fun TtsReadyComposable(
             onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
         )
     )
-}
+}*/
 
 @Composable
 fun TtsAwareComposable(
+    ttsLanguageLocale: Locale = Locale.US,
     content: @Composable (TextToSpeech) -> Unit,
     errorContent: @Composable (() -> Unit)? = null
 ) {
-    val ttsHelper = TTS(LocalContext.current)
+    val ttsHelper = TTS(LocalContext.current, ttsLanguageLocale)
     val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
     LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
     if (tts.value != null) tts.value?.let { content(it) }
