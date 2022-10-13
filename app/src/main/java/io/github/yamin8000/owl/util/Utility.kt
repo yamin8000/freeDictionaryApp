@@ -33,6 +33,7 @@ fun Context.findActivity(): Activity? = when (this) {
     else -> null
 }
 
+@Suppress("DEPRECATION")
 fun getCurrentLocale(
     context: Context
 ): Locale {

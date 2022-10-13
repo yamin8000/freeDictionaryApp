@@ -23,16 +23,10 @@ package io.github.yamin8000.owl.content.home
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,7 +36,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.MainBottomBar
@@ -113,19 +106,6 @@ fun HomeContent(
                     onSettingsClick = onSettingsClick
                 )
             },
-            floatingActionButton = {
-                AnimatedVisibility(
-                    visible = homeState.floatingActionButtonVisibility,
-                    enter = slideInHorizontally { it * 2 },
-                    exit = slideOutHorizontally { it * 2 }
-                ) {
-                    SearchFab {
-                        homeState.coroutineScope.launch {
-                            homeState.searchForDefinitionHandler()
-                        }
-                    }
-                }
-            },
             bottomBar = {
                 MainBottomBar(
                     isSearching = homeState.isSearching.value,
@@ -169,21 +149,6 @@ fun HomeContent(
                 }
             })
     }
-}
-
-@Composable
-private fun SearchFab(
-    onClick: () -> Unit
-) {
-    FloatingActionButton(
-        onClick = onClick,
-        shape = CutCornerShape(10.dp),
-        content = {
-            Icon(
-                Icons.Filled.Search,
-                stringResource(id = R.string.search)
-            )
-        })
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

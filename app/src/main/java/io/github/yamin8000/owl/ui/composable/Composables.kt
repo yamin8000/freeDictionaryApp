@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -103,37 +104,57 @@ fun SurfaceWithTitle(
 @Composable
 fun ClickableIcon(
     modifier: Modifier = Modifier,
+    imageVector: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit
+) {
+    ClickableIcon(
+        modifier = modifier,
+        onClick = onClick,
+        icon = {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = contentDescription
+            )
+        }
+    )
+}
+
+@Composable
+fun ClickableIcon(
+    modifier: Modifier = Modifier,
     iconPainter: Painter,
     contentDescription: String,
+    onClick: () -> Unit
+) {
+    ClickableIcon(
+        modifier = modifier,
+        onClick = onClick,
+        icon = {
+            Icon(
+                painter = iconPainter,
+                contentDescription = contentDescription
+            )
+        }
+    )
+}
+
+@Composable
+fun ClickableIcon(
+    modifier: Modifier = Modifier,
+    icon: @Composable () -> Unit,
     onClick: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
     IconButton(
         modifier = modifier,
+        content = icon,
         onClick = {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             onClick()
         }
-    ) {
-        Icon(
-            painter = iconPainter,
-            contentDescription = contentDescription
-        )
-    }
-}
-
-/*@Composable
-fun TtsReadyComposable(
-    content: @Composable (TtsEngine) -> Unit
-) {
-    val context = LocalContext.current
-    content(
-        TtsEngine(
-            context = LocalContext.current,
-            onError = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
-        )
     )
-}*/
+}
 
 @Composable
 fun TtsAwareComposable(

@@ -27,11 +27,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Clear
+import androidx.compose.material.icons.twotone.Search
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -80,15 +85,16 @@ fun MainBottomBar(
             },
             leadingIcon = {
                 ClickableIcon(
-                    iconPainter = painterResource(id = R.drawable.ic_clear),
+                    imageVector = Icons.TwoTone.Clear,
                     contentDescription = stringResource(R.string.delete),
                     onClick = { searchText = "" }
                 )
             },
             trailingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_search),
-                    contentDescription = stringResource(R.string.search)
+                ClickableIcon(
+                    imageVector = Icons.TwoTone.Search,
+                    contentDescription = stringResource(R.string.search),
+                    onClick = { onSearch(searchText) }
                 )
             },
             value = searchText,

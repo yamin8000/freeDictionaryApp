@@ -22,6 +22,8 @@ package io.github.yamin8000.owl.content
 
 import android.content.res.Configuration
 import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
@@ -46,31 +48,31 @@ fun MainTopBar(
         title = {},
         actions = {
             ClickableIcon(
-                iconPainter = painterResource(R.drawable.ic_history),
+                imageVector = Icons.TwoTone.History,
                 contentDescription = stringResource(R.string.search_history),
                 onClick = onHistoryClick,
             )
 
             ClickableIcon(
-                iconPainter = painterResource(R.drawable.ic_favorites),
+                imageVector = Icons.TwoTone.Favorite,
                 contentDescription = stringResource(R.string.favourites),
                 onClick = onFavouritesClick,
             )
 
             ClickableIcon(
-                iconPainter = painterResource(R.drawable.ic_casino),
+                imageVector = Icons.TwoTone.Casino,
                 contentDescription = stringResource(R.string.random_word),
                 onClick = onRandomWordClick,
             )
 
             ClickableIcon(
-                iconPainter = painterResource(R.drawable.ic_settings_applications),
+                imageVector = Icons.TwoTone.Settings,
                 contentDescription = stringResource(R.string.settings),
                 onClick = onSettingsClick
             )
 
             ClickableIcon(
-                iconPainter = painterResource(R.drawable.ic_contact_support),
+                imageVector = Icons.TwoTone.Info,
                 contentDescription = stringResource(R.string.about_app),
                 onClick = onInfoClick
             )

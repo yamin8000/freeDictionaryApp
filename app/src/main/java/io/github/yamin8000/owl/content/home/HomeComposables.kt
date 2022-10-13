@@ -28,6 +28,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -36,7 +38,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -108,12 +109,12 @@ internal fun WordCard(
             }
             Row {
                 ClickableIcon(
-                    iconPainter = painterResource(id = R.drawable.ic_favorites),
+                    imageVector = Icons.TwoTone.Favorite,
                     contentDescription = stringResource(id = R.string.favourites),
                     onClick = { onAddToFavourite() }
                 )
                 ClickableIcon(
-                    iconPainter = painterResource(id = R.drawable.ic_share),
+                    imageVector = Icons.TwoTone.Share,
                     contentDescription = stringResource(R.string.share),
                     onClick = { onShareWord() }
                 )
@@ -129,7 +130,7 @@ internal fun WordText(
 ) {
     SpeakableRippleTextWithIcon(
         word,
-        painterResource(id = R.drawable.ic_form_text),
+        Icons.TwoTone.ShortText,
         ttsEngine
     )
 }
@@ -140,12 +141,13 @@ internal fun PronunciationText(
     pronunciation: String,
     word: String
 ) {
+
     TtsAwareComposable(
         ttsLanguageLocale = locale,
         content = { ttsEngine ->
             CopyAbleRippleTextWithIcon(
                 text = pronunciation,
-                iconPainter = painterResource(id = R.drawable.ic_person_voice),
+                imageVector = Icons.TwoTone.RecordVoiceOver,
                 onClick = { ttsEngine.speak(word) }
             )
         }
@@ -157,9 +159,10 @@ internal fun WordEmojiText(
     emoji: String,
     ttsEngine: TextToSpeech
 ) {
+    Icons.TwoTone
     SpeakableRippleTextWithIcon(
         emoji,
-        painterResource(id = R.drawable.ic_emoji_symbols),
+        Icons.TwoTone.EmojiEmotions,
         ttsEngine
     )
 }
@@ -171,7 +174,7 @@ internal fun WordExampleText(
 ) {
     SpeakableRippleTextWithIcon(
         example,
-        painterResource(id = R.drawable.ic_text_snippet),
+        Icons.TwoTone.TextSnippet,
         ttsEngine
     )
 }
@@ -183,7 +186,7 @@ internal fun WordDefinitionText(
 ) {
     SpeakableRippleTextWithIcon(
         definition,
-        painterResource(id = R.drawable.ic_short_text),
+        Icons.TwoTone.ShortText,
         ttsEngine
     )
 }
@@ -195,7 +198,7 @@ internal fun WordTypeText(
 ) {
     SpeakableRippleTextWithIcon(
         type,
-        painterResource(id = R.drawable.ic_category),
+        Icons.TwoTone.Category,
         ttsEngine
     )
 }

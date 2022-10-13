@@ -20,7 +20,9 @@
 
 package io.github.yamin8000.owl.util
 
+@Suppress("unused")
 object Constants {
+    const val log_tag = "<==>"
     const val IMAGE_URL = "image_url"
     const val theme = "theme"
     const val tts_lang = "tts_lang"

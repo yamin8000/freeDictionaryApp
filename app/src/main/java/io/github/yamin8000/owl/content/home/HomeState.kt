@@ -25,10 +25,7 @@ import android.content.Intent
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
@@ -81,8 +78,8 @@ class HomeState(
 
     val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
-    val floatingActionButtonVisibility: Boolean
-        get() = !listState.isScrollInProgress
+    val floatingActionButtonVisibility: State<Boolean>
+        @Composable get() = remember { derivedStateOf { !listState.isScrollInProgress } }
 
     val isFirstTimeOpening: Boolean
         get() = searchResult.value.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
