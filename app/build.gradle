@@ -90,8 +90,9 @@ dependencies {
     implementation "androidx.compose.material3:material3:1.0.0-rc01"
     implementation "androidx.compose.material3:material3-window-size-class:1.0.0-rc01"
     //network
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
     //coil
     def coil_version = "2.2.2"
     implementation("io.coil-kt:coil:$coil_version")

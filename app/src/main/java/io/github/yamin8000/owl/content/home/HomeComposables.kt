@@ -21,8 +21,7 @@
 package io.github.yamin8000.owl.content.home
 
 import android.speech.tts.TextToSpeech
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -71,22 +70,20 @@ internal fun WordDefinitionsList(
         })
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun WordCard(
     locale: Locale,
     word: Word,
-    onClick: () -> Unit,
     onAddToFavourite: () -> Unit,
     onShareWord: () -> Unit
 ) {
     OutlinedCard(
         shape = CutCornerShape(15.dp),
         modifier = Modifier
-            .combinedClickable(
+            .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
-                onClick = onClick
+                onClick = { }
             )
     ) {
         Column(

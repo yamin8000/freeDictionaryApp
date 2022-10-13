@@ -161,8 +161,7 @@ fun HomeContent(
                                     addedToFavourites,
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            },
-                            onClick = {}
+                            }
                         )
                     }
 

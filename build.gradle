@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        compose_libs_version = '1.2.1'
-        compose_compiler_version = '1.2.0'
+        compose_libs_version = '1.3.0-rc01'
+        compose_compiler_version = '1.3.2'
     }
 }/*
  *     Owl: an android app for Owlbot Dictionary API
@@ -27,7 +27,7 @@ buildscript {
 plugins {
     id 'com.android.application' version '7.3.0' apply false
     id 'com.android.library' version '7.3.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
 }
 
 task clean(type: Delete) {
