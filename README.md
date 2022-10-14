@@ -53,7 +53,7 @@ Just use the search input to search the word.
 ## Changelog
 
 <details>
-<summary>**1.x.x**</summary>
+<summary>1.x.x</summary>
 
 - **1.0.5** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.5)
 - **1.0.4** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.4)
