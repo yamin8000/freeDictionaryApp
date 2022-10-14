@@ -41,6 +41,10 @@ import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
+import io.github.yamin8000.owl.util.log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 val Context.historyDataStore: DataStore<Preferences> by preferencesDataStore(name = "history")
@@ -48,21 +52,24 @@ val Context.favouritesDataStore: DataStore<Preferences> by preferencesDataStore(
 
 class MainActivity : ComponentActivity() {
 
+    private val scope = CoroutineScope(Dispatchers.Main)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MainContent() }
+        scope.launch {
+            val theme = getCurrentTheme()
+            setContent { MainContent(theme) }
+        }
     }
 
     @Composable
-    private fun MainContent() {
-        var theme by remember { mutableStateOf(ThemeSetting.System) }
+    private fun MainContent(
+        currentTheme: ThemeSetting
+    ) {
+        "main".log()
+        var theme by remember { mutableStateOf(currentTheme) }
 
-        LaunchedEffect(Unit) {
-            val dataStore = DataStoreHelper(settingsDataStore)
-            theme = ThemeSetting.valueOf(
-                dataStore.getString(Constants.theme) ?: ThemeSetting.System.name
-            )
-        }
+        LaunchedEffect(Unit) { theme = getCurrentTheme() }
 
         OwlTheme(
             isDarkTheme = isDarkTheme(theme, isSystemInDarkTheme()),
@@ -110,6 +117,10 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private suspend fun getCurrentTheme() = ThemeSetting.valueOf(
+        DataStoreHelper(settingsDataStore).getString(Constants.theme) ?: ThemeSetting.System.name
+    )
 
     private fun isDarkTheme(
         themeSetting: ThemeSetting,

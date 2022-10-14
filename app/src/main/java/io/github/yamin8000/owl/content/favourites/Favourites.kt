@@ -31,13 +31,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.EmptyListErrorText
 import io.github.yamin8000.owl.ui.composable.RemovableCard
 import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
-import io.github.yamin8000.owl.ui.composable.TextProvider
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.launch
@@ -47,6 +45,7 @@ fun FavouritesContent(
     onFavouritesItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
+    "recompose content".log()
     val favouritesState = rememberFavouritesState()
 
     SurfaceWithTitle(
@@ -73,6 +72,7 @@ fun FavouritesGrid(
     onItemClick: (String) -> Unit,
     onItemLongClick: (String) -> Unit
 ) {
+    "recompose grid".log()
     val gridColumns = rememberSaveable { if (favourites.size == 1) 1 else 2 }
     LazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),
@@ -92,7 +92,6 @@ fun FavouritesGrid(
 
 @Composable
 private fun FavouriteItem(
-    @PreviewParameter(TextProvider::class)
     favourite: String,
     onClick: (String) -> Unit,
     onLongClick: () -> Unit
