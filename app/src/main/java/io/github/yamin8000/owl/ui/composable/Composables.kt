@@ -21,7 +21,6 @@
 package io.github.yamin8000.owl.ui.composable
 
 import android.speech.tts.TextToSpeech
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -38,8 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.findActivity
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
@@ -110,31 +107,16 @@ fun ClickableIcon(
     contentDescription: String,
     onClick: () -> Unit
 ) {
-    val localContentColor = LocalContentColor.current
-    val primary = MaterialTheme.colorScheme.primary
-    val tint = remember { mutableStateOf(localContentColor) }
-    val scope = rememberCoroutineScope()
-
-    Crossfade(targetState = tint.value) {
-        ClickableIcon(
-            modifier = modifier,
-            onClick = {
-                onClick()
-                tint.value = primary
-                scope.launch {
-                    delay(500)
-                    tint.value = localContentColor
-                }
-            },
-            icon = {
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = contentDescription,
-                    tint = it
-                )
-            }
-        )
-    }
+    ClickableIcon(
+        modifier = modifier,
+        onClick = onClick,
+        icon = {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = contentDescription,
+            )
+        }
+    )
 }
 
 @Composable
