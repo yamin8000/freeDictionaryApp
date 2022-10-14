@@ -25,6 +25,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
 import android.speech.tts.TextToSpeech
+import android.util.Log
+import io.github.yamin8000.owl.BuildConfig
 import java.util.*
 
 fun Context.findActivity(): Activity? = when (this) {
@@ -46,4 +48,10 @@ fun TextToSpeech.speak(
     text: String
 ) {
     speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+}
+
+@Suppress("unused")
+fun String.log() {
+    if (BuildConfig.DEBUG)
+        Log.d(Constants.log_tag, this)
 }

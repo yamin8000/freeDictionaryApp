@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +39,7 @@ import io.github.yamin8000.owl.ui.composable.RemovableCard
 import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
 import io.github.yamin8000.owl.ui.composable.TextProvider
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.launch
 
 @Composable
@@ -71,7 +73,7 @@ fun FavouritesGrid(
     onItemClick: (String) -> Unit,
     onItemLongClick: (String) -> Unit
 ) {
-    val gridColumns = if (favourites.size == 1) 1 else 2
+    val gridColumns = rememberSaveable { if (favourites.size == 1) 1 else 2 }
     LazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -92,13 +94,14 @@ fun FavouritesGrid(
 private fun FavouriteItem(
     @PreviewParameter(TextProvider::class)
     favourite: String,
-    onClick: ((String) -> Unit)? = null,
-    onLongClick: (() -> Unit)? = null
+    onClick: (String) -> Unit,
+    onLongClick: () -> Unit
 ) {
+    "recompose $favourite".log()
     RemovableCard(
         item = favourite,
-        onClick = { onClick?.invoke(favourite) },
-        onLongClick = { onLongClick?.invoke() }
+        onClick = { onClick(favourite) },
+        onLongClick = onLongClick
     )
 }
 
@@ -106,7 +109,13 @@ private fun FavouriteItem(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun FavouriteItemPreview() {
-    PreviewTheme { FavouriteItem("Owl") }
+    PreviewTheme {
+        FavouriteItem(
+            favourite = "Owl",
+            onClick = {},
+            onLongClick = {}
+        )
+    }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

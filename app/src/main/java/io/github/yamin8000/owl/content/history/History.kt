@@ -77,7 +77,7 @@ fun HistoryGrid(
     ) {
         items(history) {
             HistoryItem(
-                it,
+                history = it,
                 onClick = onItemClick,
                 onLongClick = onItemLongClick
             )
@@ -87,11 +87,10 @@ fun HistoryGrid(
 
 @Composable
 private fun RemoveAlHistoryButton(historyState: HistoryState) {
-    Button(onClick = {
-        historyState.lifeCycleScope.launch { historyState.removeAllHistory() }
-    }) {
-        PersianText(text = stringResource(R.string.remove_history))
-    }
+    Button(
+        onClick = { historyState.lifeCycleScope.launch { historyState.removeAllHistory() } },
+        content = { PersianText(text = stringResource(R.string.remove_history)) }
+    )
 }
 
 @Composable
