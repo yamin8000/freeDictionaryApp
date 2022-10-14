@@ -40,12 +40,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HistoryContent(
-    onHistoryItemClick: (String) -> Unit
+    onHistoryItemClick: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
     val historyState = rememberHistoryState()
 
     SurfaceWithTitle(
-        title = stringResource(R.string.search_history)
+        title = stringResource(R.string.search_history),
+        onBackClick = onBackClick
     ) {
         if (historyState.history.value.isNotEmpty()) {
             RemoveAlHistoryButton(historyState)
@@ -125,5 +127,10 @@ private fun HistoryGridPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { HistoryContent {} }
+    PreviewTheme {
+        HistoryContent(
+            onHistoryItemClick = {},
+            onBackClick = {}
+        )
+    }
 }

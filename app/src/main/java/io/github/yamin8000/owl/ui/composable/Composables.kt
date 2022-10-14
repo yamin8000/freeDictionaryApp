@@ -23,6 +23,8 @@ package io.github.yamin8000.owl.ui.composable
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -71,6 +73,7 @@ fun MySnackbar(
 fun SurfaceWithTitle(
     title: String,
     modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
     Surface(
@@ -86,14 +89,23 @@ fun SurfaceWithTitle(
             OutlinedCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                PersianText(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    text = title,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    PersianText(
+                        modifier = Modifier.padding(8.dp),
+                        text = title,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    ClickableIcon(
+                        imageVector = Icons.TwoTone.ArrowBack,
+                        contentDescription = "",
+                        onClick = { onBackClick?.invoke() }
+                    )
+                }
             }
             content()
         }

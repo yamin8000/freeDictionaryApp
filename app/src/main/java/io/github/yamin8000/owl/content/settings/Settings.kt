@@ -55,13 +55,15 @@ import java.util.*
 
 @Composable
 fun SettingsContent(
-    onThemeChanged: (ThemeSetting) -> Unit
+    onThemeChanged: (ThemeSetting) -> Unit,
+    onBackClick: () -> Unit
 ) {
     val settingsState = rememberSettingsState()
     val scope = LocalLifecycleOwner.current.lifecycleScope
 
     SurfaceWithTitle(
-        title = stringResource(id = R.string.settings)
+        title = stringResource(id = R.string.settings),
+        onBackClick = onBackClick
     ) {
         ThemeChanger(settingsState.themeSetting.value) { newTheme ->
             settingsState.coroutineScope.launch { settingsState.updateThemeSetting(newTheme) }
@@ -223,5 +225,10 @@ fun DynamicThemeNotice() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { SettingsContent {} }
+    PreviewTheme {
+        SettingsContent(
+            onThemeChanged = {},
+            onBackClick = {}
+        )
+    }
 }

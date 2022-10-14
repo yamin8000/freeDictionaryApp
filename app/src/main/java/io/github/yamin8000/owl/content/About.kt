@@ -23,11 +23,13 @@ package io.github.yamin8000.owl.content
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -42,12 +44,16 @@ import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.Ripple
+import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 
 @Composable
-fun AboutContent() {
-    Surface(
-        modifier = Modifier.fillMaxSize()
+fun AboutContent(
+    onBackClick: () -> Unit
+) {
+    SurfaceWithTitle(
+        title = stringResource(R.string.about),
+        onBackClick = onBackClick
     ) {
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -106,5 +112,5 @@ fun AboutContent() {
 @Preview(uiMode = UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { AboutContent() }
+    PreviewTheme { AboutContent {} }
 }

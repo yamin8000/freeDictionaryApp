@@ -42,12 +42,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun FavouritesContent(
-    onFavouritesItemClick: (String) -> Unit
+    onFavouritesItemClick: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
     val favouritesState = rememberFavouritesState()
 
     SurfaceWithTitle(
-        title = stringResource(R.string.favourites)
+        title = stringResource(R.string.favourites),
+        onBackClick = onBackClick
     ) {
         if (favouritesState.favourites.value.isNotEmpty()) {
             FavouritesGrid(
@@ -124,5 +126,10 @@ private fun FavouritesGridPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { FavouritesContent {} }
+    PreviewTheme {
+        FavouritesContent(
+            onFavouritesItemClick = {},
+            onBackClick = {}
+        )
+    }
 }

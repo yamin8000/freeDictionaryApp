@@ -83,22 +83,29 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                composable(Nav.Routes.about) { AboutContent() }
+                composable(Nav.Routes.about) {
+                    AboutContent { navController.popBackStack() }
+                }
 
                 composable(Nav.Routes.favourites) {
-                    FavouritesContent { favourite ->
-                        navController.navigate("${Nav.Routes.home}/${favourite}")
-                    }
+                    FavouritesContent(
+                        onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.home}/${favourite}") },
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
 
                 composable(Nav.Routes.history) {
-                    HistoryContent { history ->
-                        navController.navigate("${Nav.Routes.home}/${history}")
-                    }
+                    HistoryContent(
+                        onHistoryItemClick = { history -> navController.navigate("${Nav.Routes.home}/${history}") },
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
 
                 composable(Nav.Routes.settings) {
-                    SettingsContent { newTheme -> theme = newTheme }
+                    SettingsContent(
+                        onThemeChanged = { newTheme -> theme = newTheme },
+                        onBackClick = { navController.popBackStack() }
+                    )
                 }
             }
         }
