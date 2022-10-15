@@ -50,6 +50,7 @@ import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
+import io.github.yamin8000.owl.util.ImmutableHolder
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,7 +64,7 @@ class HomeState(
     private val focusManager: FocusManager,
     var searchText: String,
     var rawWordSearchBody: MutableState<Word?>,
-    var searchResult: MutableState<List<Definition>>,
+    var searchResult: MutableState<ImmutableHolder<List<Definition>>>,
     val context: Context,
     val isSharing: MutableState<Boolean>,
     var ttsLang: MutableState<String>
@@ -82,7 +83,7 @@ class HomeState(
     val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
     val isFirstTimeOpening: Boolean
-        get() = searchResult.value.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
+        get() = searchResult.value.value.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
 
     val isWordSelectedFromKeyboardSuggestions: Boolean
         get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
@@ -151,8 +152,9 @@ class HomeState(
         rawWordSearchBody.value = withContext(lifeCycleScopeContext) {
             searchForDefinitionRequest(searchText)
         }
-        searchResult.value = rawWordSearchBody.value?.definitions ?: listOf()
-        searchResult.value = searchResult.value.sortedByDescending { it.imageUrl }
+        searchResult.value = ImmutableHolder(rawWordSearchBody.value?.definitions ?: listOf())
+        searchResult.value =
+            ImmutableHolder(searchResult.value.value.sortedByDescending { it.imageUrl })
     }
 
     private suspend fun getNewRandomWord(): RandomWord {
@@ -202,8 +204,8 @@ class HomeState(
         append("Pronunciation(IPA): ")
         append(rawWordSearchBody.value?.pronunciation ?: "-")
         append("\n\n")
-        searchResult.value.forEachIndexed { index, item ->
-            if (searchResult.value.size > 1)
+        searchResult.value.value.forEachIndexed { index, item ->
+            if (searchResult.value.value.size > 1)
                 append("${index + 1})\n")
             append("Definition: ${item.definition}\n\n")
             item.type?.let { append("Type: $it\n\n") }
@@ -240,7 +242,9 @@ fun rememberHomeState(
     focusManager: FocusManager = LocalFocusManager.current,
     searchText: String = rememberSaveable { mutableStateOf("").value },
     rawWordSearchBody: MutableState<Word?> = rememberSaveable { mutableStateOf(null) },
-    searchResult: MutableState<List<Definition>> = rememberSaveable { mutableStateOf(emptyList()) },
+    searchResult: MutableState<ImmutableHolder<List<Definition>>> = remember {
+        mutableStateOf(ImmutableHolder(emptyList()))
+    },
     context: Context = LocalContext.current,
     isSharing: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
     ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) }

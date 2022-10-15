@@ -49,14 +49,14 @@ import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.TtsAwareComposable
 import io.github.yamin8000.owl.ui.util.DynamicThemePrimaryColorsFromImage
 import io.github.yamin8000.owl.ui.util.rememberDominantColorState
+import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.speak
 
 @Composable
 internal fun WordDefinitionsList(
     localeTag: String,
     listState: LazyListState,
-    //unstable
-    searchResult: List<Definition>
+    searchResult: ImmutableHolder<List<Definition>>
 ) {
     LazyColumn(
         modifier = Modifier.padding(16.dp),
@@ -64,7 +64,7 @@ internal fun WordDefinitionsList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            items(searchResult) { definition ->
+            items(searchResult.value) { definition ->
                 key(definition.hashCode()) {
                     DynamicColorDefinitionCard(localeTag, definition)
                 }
@@ -243,18 +243,13 @@ internal fun DefinitionCard(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                TtsAwareComposable(
-                    ttsLanguageLocaleTag = localeTag,
-                    content = { ttsEngine ->
-                        if (definition.type != null)
-                            WordTypeText(definition.type, localeTag)
-                        WordDefinitionText(definition.definition, localeTag)
-                        if (definition.example != null)
-                            WordExampleText(definition.example, localeTag)
-                        if (definition.emoji != null)
-                            WordEmojiText(definition.emoji, localeTag)
-                    }
-                )
+                if (definition.type != null)
+                    WordTypeText(definition.type, localeTag)
+                WordDefinitionText(definition.definition, localeTag)
+                if (definition.example != null)
+                    WordExampleText(definition.example, localeTag)
+                if (definition.emoji != null)
+                    WordEmojiText(definition.emoji, localeTag)
             }
             if (!definition.imageUrl.isNullOrBlank()) {
                 AsyncImage(

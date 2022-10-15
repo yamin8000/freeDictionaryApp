@@ -26,6 +26,8 @@ import android.content.ContextWrapper
 import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import io.github.yamin8000.owl.BuildConfig
 import java.util.*
 
@@ -54,4 +56,14 @@ fun TextToSpeech.speak(
 fun String.log() {
     if (BuildConfig.DEBUG)
         Log.d(Constants.log_tag, this)
+}
+
+@Stable
+class StableHolder<T>(val item: T) {
+    operator fun component1(): T = item
+}
+
+@Immutable
+class ImmutableHolder<T>(val value: T) {
+    operator fun component1(): T = value
 }

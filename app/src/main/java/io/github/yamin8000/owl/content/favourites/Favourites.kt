@@ -73,7 +73,6 @@ fun FavouritesGrid(
     onItemClick: (String) -> Unit,
     onItemLongClick: (String) -> Unit
 ) {
-    "recompose grid".log()
     val gridColumns = rememberSaveable { if (favourites.size == 1) 1 else 2 }
     LazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),

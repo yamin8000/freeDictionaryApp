@@ -21,10 +21,12 @@
 package io.github.yamin8000.owl.model
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import com.squareup.moshi.Json
 import io.github.yamin8000.owl.util.Constants.IMAGE_URL
 import kotlinx.parcelize.Parcelize
 
+@Immutable
 @Parcelize
 data class Definition(
     val type: String?,
