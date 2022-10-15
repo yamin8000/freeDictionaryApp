@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -123,16 +124,19 @@ fun HomeContent(
                 }
             },
             content = { contentPadding ->
+                val onShareWord = remember { { homeState.isSharing.value = true } }
+
                 Column(
                     modifier = Modifier.padding(contentPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val addedToFavourites = stringResource(id = R.string.added_to_favourites)
+                    val addedToFavourites = stringResource(R.string.added_to_favourites)
                     homeState.rawWordSearchBody.value?.let { word ->
                         WordCard(
                             locale,
-                            word,
-                            onShareWord = { homeState.isSharing.value = true },
+                            word.word,
+                            word.pronunciation,
+                            onShareWord = onShareWord,
                             onAddToFavourite = {
                                 homeState.coroutineScope.launch {
                                     homeState.addToFavourite(word.word)

@@ -21,7 +21,7 @@
 package io.github.yamin8000.owl.content.home
 
 import android.speech.tts.TextToSpeech
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
-import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
@@ -77,17 +76,17 @@ internal fun WordDefinitionsList(
 @Composable
 internal fun WordCard(
     locale: Locale,
-    word: Word,
+    word: String,
+    pronunciation: String?,
     onAddToFavourite: () -> Unit,
     onShareWord: () -> Unit
 ) {
     OutlinedCard(
         shape = CutCornerShape(15.dp),
         modifier = Modifier
-            .clickable(
+            .indication(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
-                onClick = { }
             )
     ) {
         Column(
@@ -99,27 +98,28 @@ internal fun WordCard(
                 modifier = Modifier.padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                TtsAwareComposable(ttsLanguageLocale = locale, content = {
-                    WordText(word.word, it)
-                })
-                if (word.pronunciation != null) {
+                TtsAwareComposable(
+                    ttsLanguageLocale = locale,
+                    content = { WordText(word, it) }
+                )
+                if (pronunciation != null) {
                     PronunciationText(
                         locale,
-                        word.pronunciation,
-                        word.word
+                        pronunciation,
+                        word
                     )
                 }
             }
             Row {
                 ClickableIcon(
                     imageVector = Icons.TwoTone.Favorite,
-                    contentDescription = stringResource(id = R.string.favourites),
-                    onClick = { onAddToFavourite() }
+                    contentDescription = stringResource(R.string.favourites),
+                    onClick = onAddToFavourite
                 )
                 ClickableIcon(
                     imageVector = Icons.TwoTone.Share,
                     contentDescription = stringResource(R.string.share),
-                    onClick = { onShareWord() }
+                    onClick = onShareWord
                 )
             }
         }
@@ -144,7 +144,6 @@ internal fun PronunciationText(
     pronunciation: String,
     word: String
 ) {
-
     TtsAwareComposable(
         ttsLanguageLocale = locale,
         content = { ttsEngine ->
