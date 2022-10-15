@@ -50,7 +50,9 @@ fun HistoryContent(
         onBackClick = onBackClick
     ) {
         if (historyState.history.value.isNotEmpty()) {
-            RemoveAlHistoryButton(historyState)
+            RemoveAlHistoryButton {
+                historyState.lifeCycleScope.launch { historyState.removeAllHistory() }
+            }
             HistoryGrid(
                 history = historyState.history.value.toList(),
                 onItemClick = onHistoryItemClick,
@@ -66,6 +68,7 @@ fun HistoryContent(
 
 @Composable
 fun HistoryGrid(
+    //unstable
     history: List<String>,
     onItemClick: (String) -> Unit,
     onItemLongClick: (String) -> Unit
@@ -86,9 +89,11 @@ fun HistoryGrid(
 }
 
 @Composable
-private fun RemoveAlHistoryButton(historyState: HistoryState) {
+private fun RemoveAlHistoryButton(
+    onRemoveAllClick: () -> Unit
+) {
     Button(
-        onClick = { historyState.lifeCycleScope.launch { historyState.removeAllHistory() } },
+        onClick = onRemoveAllClick,
         content = { PersianText(text = stringResource(R.string.remove_history)) }
     )
 }

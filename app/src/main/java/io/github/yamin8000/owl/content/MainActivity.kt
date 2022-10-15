@@ -41,7 +41,6 @@ import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
-import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,73 +61,70 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Composable
-    private fun MainContent(
-        currentTheme: ThemeSetting
-    ) {
-        "main".log()
-        var theme by remember { mutableStateOf(currentTheme) }
-
-        LaunchedEffect(Unit) { theme = getCurrentTheme() }
-
-        OwlTheme(
-            isDarkTheme = isDarkTheme(theme, isSystemInDarkTheme()),
-            isDynamicColor = theme == ThemeSetting.System
-        ) {
-            val navController = rememberNavController()
-            NavHost(
-                navController = navController,
-                startDestination = "${Nav.Routes.home}/{${Nav.Arguments.search}}"
-            ) {
-                composable("${Nav.Routes.home}/{${Nav.Arguments.search}}") {
-                    HomeContent(
-                        searchTerm = it.arguments?.getString(Nav.Arguments.search),
-                        onFavouritesClick = { navController.navigate(Nav.Routes.favourites) },
-                        onHistoryClick = { navController.navigate(Nav.Routes.history) },
-                        onInfoClick = { navController.navigate(Nav.Routes.about) },
-                        onSettingsClick = { navController.navigate(Nav.Routes.settings) }
-                    )
-                }
-
-                composable(Nav.Routes.about) {
-                    AboutContent { navController.popBackStack() }
-                }
-
-                composable(Nav.Routes.favourites) {
-                    FavouritesContent(
-                        onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.home}/${favourite}") },
-                        onBackClick = { navController.popBackStack() }
-                    )
-                }
-
-                composable(Nav.Routes.history) {
-                    HistoryContent(
-                        onHistoryItemClick = { history -> navController.navigate("${Nav.Routes.home}/${history}") },
-                        onBackClick = { navController.popBackStack() }
-                    )
-                }
-
-                composable(Nav.Routes.settings) {
-                    SettingsContent(
-                        onThemeChanged = { newTheme -> theme = newTheme },
-                        onBackClick = { navController.popBackStack() }
-                    )
-                }
-            }
-        }
-    }
-
     private suspend fun getCurrentTheme() = ThemeSetting.valueOf(
         DataStoreHelper(settingsDataStore).getString(Constants.theme) ?: ThemeSetting.System.name
     )
+}
 
-    private fun isDarkTheme(
-        themeSetting: ThemeSetting,
-        isSystemInDarkTheme: Boolean
-    ): Boolean {
-        if (themeSetting == ThemeSetting.Light) return false
-        if (themeSetting == ThemeSetting.System) return isSystemInDarkTheme
-        if (themeSetting == ThemeSetting.Dark) return true
-        return false
+@Composable
+private fun MainContent(
+    currentTheme: ThemeSetting
+) {
+    var theme by remember { mutableStateOf(currentTheme) }
+
+    OwlTheme(
+        isDarkTheme = isDarkTheme(theme, isSystemInDarkTheme()),
+        isDynamicColor = theme == ThemeSetting.System
+    ) {
+        val navController = rememberNavController()
+        NavHost(
+            navController = navController,
+            startDestination = "${Nav.Routes.home}/{${Nav.Arguments.search}}"
+        ) {
+            composable("${Nav.Routes.home}/{${Nav.Arguments.search}}") {
+                HomeContent(
+                    searchTerm = it.arguments?.getString(Nav.Arguments.search),
+                    onFavouritesClick = { navController.navigate(Nav.Routes.favourites) },
+                    onHistoryClick = { navController.navigate(Nav.Routes.history) },
+                    onInfoClick = { navController.navigate(Nav.Routes.about) },
+                    onSettingsClick = { navController.navigate(Nav.Routes.settings) }
+                )
+            }
+
+            composable(Nav.Routes.about) {
+                AboutContent { navController.popBackStack() }
+            }
+
+            composable(Nav.Routes.favourites) {
+                FavouritesContent(
+                    onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.home}/${favourite}") },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            composable(Nav.Routes.history) {
+                HistoryContent(
+                    onHistoryItemClick = { history -> navController.navigate("${Nav.Routes.home}/${history}") },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            composable(Nav.Routes.settings) {
+                SettingsContent(
+                    onThemeChanged = { newTheme -> theme = newTheme },
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+        }
     }
+}
+
+private fun isDarkTheme(
+    themeSetting: ThemeSetting,
+    isSystemInDarkTheme: Boolean
+): Boolean {
+    if (themeSetting == ThemeSetting.Light) return false
+    if (themeSetting == ThemeSetting.System) return isSystemInDarkTheme
+    if (themeSetting == ThemeSetting.Dark) return true
+    return false
 }

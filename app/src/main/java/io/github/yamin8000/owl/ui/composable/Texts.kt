@@ -20,7 +20,6 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -194,12 +193,17 @@ fun CopyAbleRippleTextWithIcon(
 fun SpeakableRippleTextWithIcon(
     text: String,
     imageVector: ImageVector,
-    ttsEngine: TextToSpeech
+    localeTag: String
 ) {
-    CopyAbleRippleTextWithIcon(
-        text = text,
-        imageVector = imageVector,
-        onClick = { ttsEngine.speak(text) }
+    TtsAwareComposable(
+        ttsLanguageLocaleTag = localeTag,
+        content = {
+            CopyAbleRippleTextWithIcon(
+                text = text,
+                imageVector = imageVector,
+                onClick = { it.speak(text) }
+            )
+        }
     )
 }
 

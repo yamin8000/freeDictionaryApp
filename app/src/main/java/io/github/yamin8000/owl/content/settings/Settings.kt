@@ -74,9 +74,9 @@ fun SettingsContent(
             Locale.US else Locale.forLanguageTag(settingsState.ttsLang.value)
 
         TtsLanguagesCard(
-            currentLocale = locale,
+            currentLocaleTag = locale.toLanguageTag(),
             onLanguageItemClick = {
-                scope.launch { settingsState.updateTtsLang(it.toLanguageTag()) }
+                scope.launch { settingsState.updateTtsLang(it) }
             }
         )
     }
@@ -84,11 +84,11 @@ fun SettingsContent(
 
 @Composable
 fun TtsLanguagesCard(
-    currentLocale: Locale,
-    onLanguageItemClick: (Locale) -> Unit
+    currentLocaleTag: String,
+    onLanguageItemClick: (String) -> Unit
 ) {
     TtsAwareComposable(
-        ttsLanguageLocale = currentLocale,
+        ttsLanguageLocaleTag = currentLocaleTag,
         content = { tts ->
             SettingsItemCard(
                 columnModifier = Modifier.fillMaxWidth(),
@@ -105,7 +105,7 @@ fun TtsLanguagesCard(
 
                         val height = subcompose("viewToMeasure") {
                             TtsLanguageItem(
-                                locale = localeWithLongestText,
+                                localeTag = localeWithLongestText.toLanguageTag(),
                                 modifier = Modifier.width(width.toDp()),
                                 onClick = {}
                             )
@@ -119,9 +119,9 @@ fun TtsLanguagesCard(
                                 content = {
                                     items(englishLanguages) { item ->
                                         TtsLanguageItem(
-                                            locale = item,
+                                            localeTag = item.toLanguageTag(),
                                             modifier = Modifier.requiredHeight(height * 1.25f),
-                                            isSelected = item.toLanguageTag() == currentLocale.toLanguageTag(),
+                                            isSelected = item.toLanguageTag() == currentLocaleTag,
                                             onClick = onLanguageItemClick
                                         )
                                     }
@@ -140,9 +140,9 @@ fun TtsLanguagesCard(
 @Composable
 fun TtsLanguageItem(
     modifier: Modifier = Modifier,
-    locale: Locale,
+    localeTag: String,
     isSelected: Boolean = false,
-    onClick: (Locale) -> Unit
+    onClick: (String) -> Unit
 ) {
     val colors =
         if (isSelected) CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
@@ -152,7 +152,7 @@ fun TtsLanguageItem(
             interactionSource = MutableInteractionSource(),
             indication = LocalIndication.current,
             onClick = {
-                onClick(locale)
+                onClick(localeTag)
             },
         ),
         colors = colors
@@ -162,7 +162,7 @@ fun TtsLanguageItem(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PersianText(
-                text = locale.displayName,
+                text = Locale.forLanguageTag(localeTag).displayName,
                 modifier = Modifier.padding(16.dp)
             )
         }

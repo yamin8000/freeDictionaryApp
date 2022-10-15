@@ -103,7 +103,7 @@ fun SurfaceWithTitle(
                     ClickableIcon(
                         imageVector = Icons.TwoTone.ArrowBack,
                         contentDescription = "",
-                        onClick = { onBackClick?.invoke() }
+                        onClick = { onBackClick() }
                     )
                 }
             }
@@ -150,11 +150,11 @@ fun ClickableIcon(
 
 @Composable
 fun TtsAwareComposable(
-    ttsLanguageLocale: Locale = Locale.US,
+    ttsLanguageLocaleTag: String = Locale.US.toLanguageTag(),
     content: @Composable (TextToSpeech) -> Unit,
     errorContent: @Composable (() -> Unit)? = null
 ) {
-    val ttsHelper = TTS(LocalContext.current, ttsLanguageLocale)
+    val ttsHelper = TTS(LocalContext.current, Locale.forLanguageTag(ttsLanguageLocaleTag))
     val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
     LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
     if (tts.value != null) tts.value?.let { content(it) }

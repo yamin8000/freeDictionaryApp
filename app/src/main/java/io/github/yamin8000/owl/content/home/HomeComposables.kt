@@ -20,7 +20,6 @@
 
 package io.github.yamin8000.owl.content.home
 
-import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -51,12 +50,12 @@ import io.github.yamin8000.owl.ui.composable.TtsAwareComposable
 import io.github.yamin8000.owl.ui.util.DynamicThemePrimaryColorsFromImage
 import io.github.yamin8000.owl.ui.util.rememberDominantColorState
 import io.github.yamin8000.owl.util.speak
-import java.util.*
 
 @Composable
 internal fun WordDefinitionsList(
-    locale: Locale,
+    localeTag: String,
     listState: LazyListState,
+    //unstable
     searchResult: List<Definition>
 ) {
     LazyColumn(
@@ -67,7 +66,7 @@ internal fun WordDefinitionsList(
         content = {
             items(searchResult) { definition ->
                 key(definition.hashCode()) {
-                    DynamicColorDefinitionCard(locale, definition)
+                    DynamicColorDefinitionCard(localeTag, definition)
                 }
             }
         })
@@ -75,7 +74,7 @@ internal fun WordDefinitionsList(
 
 @Composable
 internal fun WordCard(
-    locale: Locale,
+    localeTag: String,
     word: String,
     pronunciation: String?,
     onAddToFavourite: () -> Unit,
@@ -98,13 +97,10 @@ internal fun WordCard(
                 modifier = Modifier.padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                TtsAwareComposable(
-                    ttsLanguageLocale = locale,
-                    content = { WordText(word, it) }
-                )
+                WordText(word, localeTag)
                 if (pronunciation != null) {
                     PronunciationText(
-                        locale,
+                        localeTag,
                         pronunciation,
                         word
                     )
@@ -129,23 +125,23 @@ internal fun WordCard(
 @Composable
 internal fun WordText(
     word: String,
-    ttsEngine: TextToSpeech
+    localeTag: String
 ) {
     SpeakableRippleTextWithIcon(
         word,
         Icons.TwoTone.ShortText,
-        ttsEngine
+        localeTag
     )
 }
 
 @Composable
 internal fun PronunciationText(
-    locale: Locale,
+    localeTag: String,
     pronunciation: String,
     word: String
 ) {
     TtsAwareComposable(
-        ttsLanguageLocale = locale,
+        ttsLanguageLocaleTag = localeTag,
         content = { ttsEngine ->
             CopyAbleRippleTextWithIcon(
                 text = pronunciation,
@@ -159,55 +155,55 @@ internal fun PronunciationText(
 @Composable
 internal fun WordEmojiText(
     emoji: String,
-    ttsEngine: TextToSpeech
+    localeTag: String
 ) {
     Icons.TwoTone
     SpeakableRippleTextWithIcon(
         emoji,
         Icons.TwoTone.EmojiEmotions,
-        ttsEngine
+        localeTag
     )
 }
 
 @Composable
 internal fun WordExampleText(
     example: String,
-    ttsEngine: TextToSpeech
+    localeTag: String
 ) {
     SpeakableRippleTextWithIcon(
         example,
         Icons.TwoTone.TextSnippet,
-        ttsEngine
+        localeTag
     )
 }
 
 @Composable
 internal fun WordDefinitionText(
     definition: String,
-    ttsEngine: TextToSpeech
+    localeTag: String
 ) {
     SpeakableRippleTextWithIcon(
         definition,
         Icons.TwoTone.ShortText,
-        ttsEngine
+        localeTag
     )
 }
 
 @Composable
 internal fun WordTypeText(
     type: String,
-    ttsEngine: TextToSpeech
+    localeTag: String
 ) {
     SpeakableRippleTextWithIcon(
         type,
         Icons.TwoTone.Category,
-        ttsEngine
+        localeTag
     )
 }
 
 @Composable
 internal fun DynamicColorDefinitionCard(
-    locale: Locale,
+    localeTag: String,
     definition: Definition
 ) {
     val dominantColorState = rememberDominantColorState()
@@ -217,7 +213,7 @@ internal fun DynamicColorDefinitionCard(
                 dominantColorState.updateColorsFromImageUrl(definition.imageUrl)
             }
             DefinitionCard(
-                locale,
+                localeTag,
                 definition = definition,
                 cardColors = CardDefaults.cardColors(
                     contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -227,13 +223,13 @@ internal fun DynamicColorDefinitionCard(
         }
     } else {
         dominantColorState.reset()
-        DefinitionCard(locale, definition)
+        DefinitionCard(localeTag, definition)
     }
 }
 
 @Composable
 internal fun DefinitionCard(
-    locale: Locale,
+    localeTag: String,
     definition: Definition,
     cardColors: CardColors = CardDefaults.cardColors()
 ) {
@@ -248,15 +244,15 @@ internal fun DefinitionCard(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 TtsAwareComposable(
-                    ttsLanguageLocale = locale,
+                    ttsLanguageLocaleTag = localeTag,
                     content = { ttsEngine ->
                         if (definition.type != null)
-                            WordTypeText(definition.type, ttsEngine)
-                        WordDefinitionText(definition.definition, ttsEngine)
+                            WordTypeText(definition.type, localeTag)
+                        WordDefinitionText(definition.definition, localeTag)
                         if (definition.example != null)
-                            WordExampleText(definition.example, ttsEngine)
+                            WordExampleText(definition.example, localeTag)
                         if (definition.emoji != null)
-                            WordEmojiText(definition.emoji, ttsEngine)
+                            WordEmojiText(definition.emoji, localeTag)
                     }
                 )
             }

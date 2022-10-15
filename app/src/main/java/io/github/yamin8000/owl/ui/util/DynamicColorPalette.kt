@@ -41,8 +41,8 @@ import kotlinx.coroutines.withContext
 @Composable
 fun rememberDominantColorState(
     context: Context = LocalContext.current,
-    defaultColor: Color = MaterialTheme.colorScheme.primary,
-    defaultOnColor: Color = MaterialTheme.colorScheme.onPrimary,
+    defaultColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    defaultOnColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     cacheSize: Int = 12,
     isColorValid: (Color) -> Boolean = { true }
 ): DominantColorState = remember {

@@ -133,7 +133,7 @@ fun HomeContent(
                     val addedToFavourites = stringResource(R.string.added_to_favourites)
                     homeState.rawWordSearchBody.value?.let { word ->
                         WordCard(
-                            locale,
+                            locale.toLanguageTag(),
                             word.word,
                             word.pronunciation,
                             onShareWord = onShareWord,
@@ -146,7 +146,11 @@ fun HomeContent(
                         )
                     }
 
-                    WordDefinitionsList(locale, homeState.listState, homeState.searchResult.value)
+                    WordDefinitionsList(
+                        locale.toLanguageTag(),
+                        homeState.listState,
+                        homeState.searchResult.value
+                    )
                 }
             })
     }
