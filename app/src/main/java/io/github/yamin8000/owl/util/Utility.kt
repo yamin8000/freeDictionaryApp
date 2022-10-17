@@ -28,7 +28,9 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.saveable.Saver
 import io.github.yamin8000.owl.BuildConfig
+import io.github.yamin8000.owl.model.Definition
 import java.util.*
 
 fun Context.findActivity(): Activity? = when (this) {
@@ -64,6 +66,11 @@ class StableHolder<T>(val item: T) {
 }
 
 @Immutable
-class ImmutableHolder<T>(val value: T) {
-    operator fun component1(): T = value
+class ImmutableHolder<T>(val item: T) {
+    operator fun component1(): T = item
 }
+
+val DefinitionListSaver = Saver<ImmutableHolder<List<Definition>>, List<Definition>>(
+    save = { it.item },
+    restore = { ImmutableHolder(it) }
+)

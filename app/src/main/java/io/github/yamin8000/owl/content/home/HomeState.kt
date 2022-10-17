@@ -50,6 +50,7 @@ import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
+import io.github.yamin8000.owl.util.DefinitionListSaver
 import io.github.yamin8000.owl.util.ImmutableHolder
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -83,7 +84,7 @@ class HomeState(
     val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
     val isFirstTimeOpening: Boolean
-        get() = searchResult.value.value.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
+        get() = searchResult.value.item.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
 
     val isWordSelectedFromKeyboardSuggestions: Boolean
         get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
@@ -154,7 +155,7 @@ class HomeState(
         }
         searchResult.value = ImmutableHolder(rawWordSearchBody.value?.definitions ?: listOf())
         searchResult.value =
-            ImmutableHolder(searchResult.value.value.sortedByDescending { it.imageUrl })
+            ImmutableHolder(searchResult.value.item.sortedByDescending { it.imageUrl })
     }
 
     private suspend fun getNewRandomWord(): RandomWord {
@@ -204,8 +205,8 @@ class HomeState(
         append("Pronunciation(IPA): ")
         append(rawWordSearchBody.value?.pronunciation ?: "-")
         append("\n\n")
-        searchResult.value.value.forEachIndexed { index, item ->
-            if (searchResult.value.value.size > 1)
+        searchResult.value.item.forEachIndexed { index, item ->
+            if (searchResult.value.item.size > 1)
                 append("${index + 1})\n")
             append("Definition: ${item.definition}\n\n")
             item.type?.let { append("Type: $it\n\n") }
@@ -242,7 +243,7 @@ fun rememberHomeState(
     focusManager: FocusManager = LocalFocusManager.current,
     searchText: String = rememberSaveable { mutableStateOf("").value },
     rawWordSearchBody: MutableState<Word?> = rememberSaveable { mutableStateOf(null) },
-    searchResult: MutableState<ImmutableHolder<List<Definition>>> = remember {
+    searchResult: MutableState<ImmutableHolder<List<Definition>>> = rememberSaveable(stateSaver = DefinitionListSaver) {
         mutableStateOf(ImmutableHolder(emptyList()))
     },
     context: Context = LocalContext.current,

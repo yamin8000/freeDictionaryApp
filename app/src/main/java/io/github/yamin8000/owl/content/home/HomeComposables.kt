@@ -64,7 +64,7 @@ internal fun WordDefinitionsList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
-            items(searchResult.value) { definition ->
+            items(searchResult.item) { definition ->
                 key(definition.hashCode()) {
                     DynamicColorDefinitionCard(localeTag, definition)
                 }

@@ -75,7 +75,7 @@ fun HomeContent(
                 homeState.searchForDefinition()
         }
 
-        if (homeState.searchResult.value.value.isNotEmpty() && homeState.rawWordSearchBody.value != null && homeState.isSharing.value)
+        if (homeState.searchResult.value.item.isNotEmpty() && homeState.rawWordSearchBody.value != null && homeState.isSharing.value)
             homeState.handleShareIntent()
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
