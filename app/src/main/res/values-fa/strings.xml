@@ -25,7 +25,7 @@
     <string name="favourites">واژه‌های برگزیده</string>
     <string name="search_history">جستجوهای پیشین</string>
     <string name="random_word">واژه تصادفی</string>
-    <string name="general_net_error">خطا در برقراری ارتباط با سرور برنامه</string>
+    <string name="general_net_error">خطا در برقراری ارتباط با اینترنت، خطا ممکن است به خاطر محدودیت های اینترنت باشد</string>
     <string name="api_throttled">سرور برنامه تحت فشار است، لطفا چند دقیقه دیگر تلاش کنید</string>
     <string name="definition_not_found">توضیحی برای این کلمه یافت نشد</string>
     <string name="api_authorization_error">خطای احراز هویت با سرور برنامه</string>

@@ -25,7 +25,7 @@
     <string name="favourites">Favourite Words</string>
     <string name="search_history">Search History</string>
     <string name="random_word">Random Word</string>
-    <string name="general_net_error">No connection to server.</string>
+    <string name="general_net_error">No connection to server. Connection could be stopped due to Internet Restrictions</string>
     <string name="api_throttled">Server is busy, try again!</string>
     <string name="definition_not_found">No definition for the word found.</string>
     <string name="api_authorization_error">Authentication Error</string>
