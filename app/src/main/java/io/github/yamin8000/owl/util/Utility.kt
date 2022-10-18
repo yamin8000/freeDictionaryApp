@@ -70,7 +70,9 @@ class ImmutableHolder<T>(val item: T) {
     operator fun component1(): T = item
 }
 
-val DefinitionListSaver = Saver<ImmutableHolder<List<Definition>>, List<Definition>>(
+val DefinitionListSaver = getImmutableHolderSaver<List<Definition>>()
+
+fun <T : Any> getImmutableHolderSaver(): Saver<ImmutableHolder<T>, T> = Saver(
     save = { it.item },
     restore = { ImmutableHolder(it) }
 )
