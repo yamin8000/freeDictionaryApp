@@ -48,28 +48,29 @@ import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
-import io.github.yamin8000.owl.util.Constants
-import io.github.yamin8000.owl.util.DataStoreHelper
-import io.github.yamin8000.owl.util.DefinitionListSaver
-import io.github.yamin8000.owl.util.ImmutableHolder
+import io.github.yamin8000.owl.util.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.io.File
 import java.util.*
 
 class HomeState(
     val listState: LazyListState,
-    var isSearching: MutableState<Boolean>,
+    val isSearching: MutableState<Boolean>,
     val lifecycleOwner: LifecycleOwner,
     private val focusManager: FocusManager,
     var searchText: String,
-    var rawWordSearchBody: MutableState<Word?>,
-    var searchResult: MutableState<ImmutableHolder<List<Definition>>>,
+    val rawWordSearchBody: MutableState<Word?>,
+    val searchResult: MutableState<ImmutableHolder<List<Definition>>>,
     val context: Context,
     val isSharing: MutableState<Boolean>,
-    var ttsLang: MutableState<String>
+    val ttsLang: MutableState<String>,
+    val searchSuggestions: MutableState<ImmutableHolder<List<String>>>
 ) {
+    private val autoCompleteHelper = AutoCompleteHelper(context)
+
     val coroutineScope = lifecycleOwner.lifecycleScope
     private val lifeCycleScopeContext = coroutineScope.coroutineContext
 
@@ -156,6 +157,41 @@ class HomeState(
         searchResult.value = ImmutableHolder(rawWordSearchBody.value?.definitions ?: listOf())
         searchResult.value =
             ImmutableHolder(searchResult.value.item.sortedByDescending { it.imageUrl })
+        clearSuggestions()
+
+        if (rawWordSearchBody.value != null)
+            rawWordSearchBody.value?.let { addDataToWordsCache(it) }
+    }
+
+    private fun addDataToWordsCache(
+        word: Word
+    ) {
+        val file = File(context.cacheDir, "words.txt")
+        val oldData =
+            if (file.exists()) file.readText().split(',').filter { it.isNotBlank() }.toSet()
+            else setOf()
+
+        var data = mutableSetOf<String>()
+        word.definitions.map { it.definition }.forEach {
+            data.addAll(it.split(Regex("\\s+")))
+        }
+        word.definitions.map { it.example }.forEach {
+            if (it != null) data.addAll(it.split(Regex("\\s+")))
+        }
+
+        if (!oldData.contains(word.word))
+            data.add(word.word)
+        data = data.asSequence()
+            .map { it.lowercase() }
+            .map { it.replace(Regex("[,]|[.]|[?]|[!]|[(]|[)]"), "") }
+            .filter { it !in oldData }.toMutableSet()
+
+        data.forEach { item ->
+            if (item.isNotBlank()) {
+                file.appendText(",")
+                file.appendText(item)
+            }
+        }
     }
 
     private suspend fun getNewRandomWord(): RandomWord {
@@ -221,6 +257,20 @@ class HomeState(
         append("\nThis text is extracted from Owlbot Dictionary.\n")
         append(context.getString(R.string.owl_bot_link))
     }
+
+    fun handleSuggestions() {
+        clearSuggestions()
+        if (searchText.length >= Constants.DEFAULT_N_GRAM_SIZE) {
+            searchSuggestions.value = ImmutableHolder(
+                autoCompleteHelper.suggestTermsForSearch(searchText.lowercase())
+                    .take(Constants.DEFAULT_N_GRAM_SIZE * 3)
+            )
+        }
+    }
+
+    fun clearSuggestions() {
+        searchSuggestions.value = ImmutableHolder(listOf())
+    }
 }
 
 private fun getErrorMessage(
@@ -248,7 +298,10 @@ fun rememberHomeState(
     },
     context: Context = LocalContext.current,
     isSharing: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
-    ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) }
+    ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) },
+    searchSuggestions: MutableState<ImmutableHolder<List<String>>> = rememberSaveable(stateSaver = getImmutableHolderSaver()) {
+        mutableStateOf(ImmutableHolder(emptyList()))
+    }
 ) = remember(
     listState,
     isSearching,
@@ -259,7 +312,8 @@ fun rememberHomeState(
     searchResult,
     context,
     isSharing,
-    ttsLang
+    ttsLang,
+    searchSuggestions
 ) {
     HomeState(
         listState,
@@ -271,6 +325,7 @@ fun rememberHomeState(
         searchResult,
         context,
         isSharing,
-        ttsLang
+        ttsLang,
+        searchSuggestions
     )
 }

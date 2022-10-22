@@ -61,22 +61,22 @@ fun HomeContent(
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        val homeState = rememberHomeState()
+        val state = rememberHomeState()
 
-        val locale = if (homeState.ttsLang.value.isEmpty())
-            Locale.US else Locale.forLanguageTag(homeState.ttsLang.value)
+        val locale = if (state.ttsLang.value.isEmpty())
+            Locale.US else Locale.forLanguageTag(state.ttsLang.value)
 
         if (searchTerm != null)
-            homeState.searchText = searchTerm
+            state.searchText = searchTerm
         LaunchedEffect(Unit) {
-            if (homeState.isFirstTimeOpening)
-                homeState.searchText = "Owl"
-            if (homeState.searchText.isNotBlank())
-                homeState.searchForDefinition()
+            if (state.isFirstTimeOpening)
+                state.searchText = "Owl"
+            if (state.searchText.isNotBlank())
+                state.searchForDefinition()
         }
 
-        if (homeState.searchResult.value.item.isNotEmpty() && homeState.rawWordSearchBody.value != null && homeState.isSharing.value)
-            homeState.handleShareIntent()
+        if (state.searchResult.value.item.isNotEmpty() && state.rawWordSearchBody.value != null && state.isSharing.value)
+            state.handleShareIntent()
 
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -84,7 +84,7 @@ fun HomeContent(
             containerColor = Color.Transparent,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             snackbarHost = {
-                SnackbarHost(homeState.snackbarHostState) { data ->
+                SnackbarHost(state.snackbarHostState) { data ->
                     MySnackbar {
                         PersianText(
                             modifier = Modifier.fillMaxWidth(),
@@ -101,8 +101,8 @@ fun HomeContent(
                     onFavouritesClick = onFavouritesClick,
                     onInfoClick = onInfoClick,
                     onRandomWordClick = {
-                        homeState.lifecycleOwner.lifecycleScope.launch {
-                            homeState.searchForRandomWord()
+                        state.lifecycleOwner.lifecycleScope.launch {
+                            state.searchForRandomWord()
                         }
                     },
                     onSettingsClick = onSettingsClick
@@ -110,37 +110,44 @@ fun HomeContent(
             },
             bottomBar = {
                 MainBottomBar(
-                    isSearching = homeState.isSearching.value,
+                    suggestions = state.searchSuggestions.value,
+                    isSearching = state.isSearching.value,
                     onSearchTermChanged = {
-                        homeState.searchText = it
-                        if (homeState.isWordSelectedFromKeyboardSuggestions)
-                            homeState.coroutineScope.launch { homeState.searchForDefinitionHandler() }
+                        state.searchText = it
+                        state.handleSuggestions()
+                        if (state.isWordSelectedFromKeyboardSuggestions) {
+                            state.coroutineScope.launch { state.searchForDefinitionHandler() }
+                            state.clearSuggestions()
+                        }
+                    },
+                    onSuggestionClick = {
+                        state.searchText = it
+                        state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                    },
+                    onSearch = {
+                        state.searchText = it
+                        state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
                     }
-                ) {
-                    homeState.searchText = it
-                    homeState.lifecycleOwner.lifecycleScope.launch {
-                        homeState.searchForDefinitionHandler()
-                    }
-                }
+                )
             },
             content = { contentPadding ->
-                val onShareWord = remember { { homeState.isSharing.value = true } }
+                val onShareWord = remember { { state.isSharing.value = true } }
 
                 Column(
                     modifier = Modifier.padding(contentPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val addedToFavourites = stringResource(R.string.added_to_favourites)
-                    homeState.rawWordSearchBody.value?.let { word ->
+                    state.rawWordSearchBody.value?.let { word ->
                         WordCard(
                             locale.toLanguageTag(),
                             word.word,
                             word.pronunciation,
                             onShareWord = onShareWord,
                             onAddToFavourite = {
-                                homeState.coroutineScope.launch {
-                                    homeState.addToFavourite(word.word)
-                                    homeState.snackbarHostState.showSnackbar(addedToFavourites)
+                                state.coroutineScope.launch {
+                                    state.addToFavourite(word.word)
+                                    state.snackbarHostState.showSnackbar(addedToFavourites)
                                 }
                             }
                         )
@@ -148,8 +155,8 @@ fun HomeContent(
 
                     WordDefinitionsList(
                         locale.toLanguageTag(),
-                        homeState.listState,
-                        homeState.searchResult.value
+                        state.listState,
+                        state.searchResult.value
                     )
                 }
             })

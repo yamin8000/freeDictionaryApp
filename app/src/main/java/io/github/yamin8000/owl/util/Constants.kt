@@ -26,4 +26,5 @@ object Constants {
     const val IMAGE_URL = "image_url"
     const val theme = "theme"
     const val tts_lang = "tts_lang"
+    const val DEFAULT_N_GRAM_SIZE = 3
 }
