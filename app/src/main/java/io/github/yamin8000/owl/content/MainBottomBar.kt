@@ -60,15 +60,14 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainBottomBar(
+    isEnabled: Boolean,
     suggestions: ImmutableHolder<List<String>>,
     onSuggestionClick: (String) -> Unit,
     isSearching: Boolean,
     onSearchTermChanged: (String) -> Unit,
     onSearch: (String) -> Unit
 ) {
-    Column(
-
-    ) {
+    Column {
         if (suggestions.item.isNotEmpty()) {
             LazyRow(
                 modifier = Modifier.padding(8.dp),
@@ -85,6 +84,7 @@ fun MainBottomBar(
         BottomAppBar {
             var searchText by remember { mutableStateOf("") }
             TextField(
+                enabled = isEnabled,
                 singleLine = true,
                 shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
                 modifier = Modifier
@@ -154,5 +154,5 @@ private fun getTextStyleBasedOnLocale(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { MainBottomBar(ImmutableHolder(listOf()), {}, true, {}) {} }
+    PreviewTheme { MainBottomBar(true, ImmutableHolder(listOf()), {}, true, {}) {} }
 }

@@ -67,22 +67,23 @@ class HomeState(
     val context: Context,
     val isSharing: MutableState<Boolean>,
     val ttsLang: MutableState<String>,
-    val searchSuggestions: MutableState<ImmutableHolder<List<String>>>
+    val searchSuggestions: MutableState<ImmutableHolder<List<String>>>,
+    val isOnline: MutableState<Boolean>
 ) {
     private val autoCompleteHelper = AutoCompleteHelper(context)
 
-    val coroutineScope = lifecycleOwner.lifecycleScope
-    private val lifeCycleScopeContext = coroutineScope.coroutineContext
+    val scope = lifecycleOwner.lifecycleScope
+    private val lifeCycleContext = scope.coroutineContext
 
     private val dataStore = DataStoreHelper(context.settingsDataStore)
 
+    val snackbarHostState: SnackbarHostState = SnackbarHostState()
+
     init {
-        coroutineScope.launch {
+        scope.launch {
             ttsLang.value = dataStore.getString(Constants.tts_lang) ?: Locale.US.toLanguageTag()
         }
     }
-
-    val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
     val isFirstTimeOpening: Boolean
         get() = searchResult.value.item.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
@@ -93,7 +94,7 @@ class HomeState(
     suspend fun searchForRandomWord() {
         isSearching.value = true
         focusManager.clearFocus()
-        val randomWord = withContext(lifeCycleScopeContext) {
+        val randomWord = withContext(lifeCycleContext) {
             try {
                 getNewRandomWord()
             } catch (e: HttpException) {
@@ -102,12 +103,14 @@ class HomeState(
             } catch (e: Exception) {
                 snackbarHostState.showSnackbar(getErrorMessage(999, context))
                 null
+            } finally {
+                isSearching.value = false
             }
         }
         isSearching.value = false
         searchText = randomWord?.word ?: ""
         if (searchText.isNotBlank())
-            withContext(lifeCycleScopeContext) { searchForRandomWordDefinition() }
+            withContext(lifeCycleContext) { searchForRandomWordDefinition() }
     }
 
     private suspend fun searchForDefinitionRequest(
@@ -115,7 +118,7 @@ class HomeState(
     ): Word? {
         isSearching.value = true
         searchText = searchTerm
-        val body = withContext(lifeCycleScopeContext) {
+        val body = withContext(lifeCycleContext) {
             try {
                 Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
             } catch (e: HttpException) {
@@ -124,6 +127,8 @@ class HomeState(
             } catch (e: Exception) {
                 snackbarHostState.showSnackbar(getErrorMessage(999, context))
                 null
+            } finally {
+                isSearching.value = false
             }
         }
         if (body != null)
@@ -151,7 +156,7 @@ class HomeState(
     }
 
     suspend fun searchForDefinition() {
-        rawWordSearchBody.value = withContext(lifeCycleScopeContext) {
+        rawWordSearchBody.value = withContext(lifeCycleContext) {
             searchForDefinitionRequest(searchText)
         }
         searchResult.value = ImmutableHolder(rawWordSearchBody.value?.definitions ?: listOf())
@@ -201,7 +206,7 @@ class HomeState(
     suspend fun addToFavourite(
         favouriteWord: String
     ) {
-        val wordInDataStore = withContext(lifeCycleScopeContext) {
+        val wordInDataStore = withContext(lifeCycleContext) {
             findWordInDataStore(favouriteWord)
         }
         if (wordInDataStore == null) addFavouriteWordToDataStore(favouriteWord)
@@ -301,7 +306,8 @@ fun rememberHomeState(
     ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) },
     searchSuggestions: MutableState<ImmutableHolder<List<String>>> = rememberSaveable(stateSaver = getImmutableHolderSaver()) {
         mutableStateOf(ImmutableHolder(emptyList()))
-    }
+    },
+    isOnline: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) = remember(
     listState,
     isSearching,
@@ -313,7 +319,8 @@ fun rememberHomeState(
     context,
     isSharing,
     ttsLang,
-    searchSuggestions
+    searchSuggestions,
+    isOnline
 ) {
     HomeState(
         listState,
@@ -326,6 +333,7 @@ fun rememberHomeState(
         context,
         isSharing,
         ttsLang,
-        searchSuggestions
+        searchSuggestions,
+        isOnline
     )
 }

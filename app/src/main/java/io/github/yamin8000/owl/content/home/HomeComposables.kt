@@ -56,7 +56,8 @@ import io.github.yamin8000.owl.util.speak
 internal fun WordDefinitionsList(
     localeTag: String,
     listState: LazyListState,
-    searchResult: ImmutableHolder<List<Definition>>
+    searchResult: ImmutableHolder<List<Definition>>,
+    onWordChipClick: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.padding(16.dp),
@@ -66,7 +67,11 @@ internal fun WordDefinitionsList(
         content = {
             items(searchResult.item) { definition ->
                 key(definition.hashCode()) {
-                    DynamicColorDefinitionCard(localeTag, definition)
+                    DynamicColorDefinitionCard(
+                        localeTag,
+                        definition,
+                        onWordChipClick = onWordChipClick
+                    )
                 }
             }
         })
@@ -168,43 +173,50 @@ internal fun WordEmojiText(
 @Composable
 internal fun WordExampleText(
     example: String,
-    localeTag: String
+    localeTag: String,
+    onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
         example,
         Icons.TwoTone.TextSnippet,
-        localeTag
+        localeTag,
+        onDoubleClick = onDoubleClick
     )
 }
 
 @Composable
 internal fun WordDefinitionText(
     definition: String,
-    localeTag: String
+    localeTag: String,
+    onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
         definition,
         Icons.TwoTone.ShortText,
-        localeTag
+        localeTag,
+        onDoubleClick = onDoubleClick
     )
 }
 
 @Composable
 internal fun WordTypeText(
     type: String,
-    localeTag: String
+    localeTag: String,
+    onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
         type,
         Icons.TwoTone.Category,
-        localeTag
+        localeTag,
+        onDoubleClick = onDoubleClick
     )
 }
 
 @Composable
 internal fun DynamicColorDefinitionCard(
     localeTag: String,
-    definition: Definition
+    definition: Definition,
+    onWordChipClick: (String) -> Unit
 ) {
     val dominantColorState = rememberDominantColorState()
     if (definition.imageUrl != null) {
@@ -218,12 +230,17 @@ internal fun DynamicColorDefinitionCard(
                 cardColors = CardDefaults.cardColors(
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                     containerColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                onWordChipClick = onWordChipClick
             )
         }
     } else {
         dominantColorState.reset()
-        DefinitionCard(localeTag, definition)
+        DefinitionCard(
+            localeTag,
+            definition,
+            onWordChipClick = onWordChipClick
+        )
     }
 }
 
@@ -231,7 +248,8 @@ internal fun DynamicColorDefinitionCard(
 internal fun DefinitionCard(
     localeTag: String,
     definition: Definition,
-    cardColors: CardColors = CardDefaults.cardColors()
+    cardColors: CardColors = CardDefaults.cardColors(),
+    onWordChipClick: (String) -> Unit
 ) {
     Card(
         shape = CutCornerShape(15.dp),
@@ -243,11 +261,25 @@ internal fun DefinitionCard(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (definition.type != null)
-                    WordTypeText(definition.type, localeTag)
-                WordDefinitionText(definition.definition, localeTag)
-                if (definition.example != null)
-                    WordExampleText(definition.example, localeTag)
+                if (definition.type != null) {
+                    WordTypeText(
+                        definition.type,
+                        localeTag,
+                        onDoubleClick = onWordChipClick
+                    )
+                }
+                WordDefinitionText(
+                    definition.definition,
+                    localeTag,
+                    onDoubleClick = onWordChipClick
+                )
+                if (definition.example != null) {
+                    WordExampleText(
+                        definition.example,
+                        localeTag,
+                        onDoubleClick = onWordChipClick
+                    )
+                }
                 if (definition.emoji != null)
                     WordEmojiText(definition.emoji, localeTag)
             }

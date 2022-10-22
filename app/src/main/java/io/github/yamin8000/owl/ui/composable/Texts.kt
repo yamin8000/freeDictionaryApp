@@ -25,14 +25,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +56,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.getCurrentLocale
@@ -128,17 +128,20 @@ fun Ripple(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CopyAbleRippleText(
     text: String,
     textDecoration: TextDecoration = TextDecoration.None,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDoubleClick: ((String) -> Unit)? = null
 ) {
     val textCopied = stringResource(R.string.text_copied)
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
     val haptic = LocalHapticFeedback.current
+
+    var isDialogShown by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -153,7 +156,8 @@ fun CopyAbleRippleText(
                     Toast
                         .makeText(context, textCopied, Toast.LENGTH_SHORT)
                         .show()
-                }
+                },
+                onDoubleClick = { isDialogShown = true }
             ),
         content = {
             Text(
@@ -163,13 +167,48 @@ fun CopyAbleRippleText(
             )
         }
     )
+    if (isDialogShown) {
+        Dialog(
+            onDismissRequest = { isDialogShown = false },
+            content = {
+                Surface {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.padding(8.dp),
+                        content = {
+                            items(text.split(Regex("\\s+"))) {
+                                ElevatedSuggestionChip(
+                                    onClick = {
+                                        onDoubleClick?.invoke(it)
+                                        isDialogShown = false
+                                    },
+                                    label = {
+                                        Text(
+                                            text = it.replace(Regex("\\W+"), ""),
+                                            modifier = Modifier
+                                                .padding(8.dp)
+                                                .fillMaxSize(),
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        )
+    }
 }
 
 @Composable
 fun CopyAbleRippleTextWithIcon(
     text: String,
     imageVector: ImageVector,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDoubleClick: ((String) -> Unit)? = null
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -178,7 +217,8 @@ fun CopyAbleRippleTextWithIcon(
             Icon(imageVector, text)
             CopyAbleRippleText(
                 text = text,
-                onClick = onClick
+                onClick = onClick,
+                onDoubleClick = onDoubleClick
             )
         }
     )
@@ -188,7 +228,8 @@ fun CopyAbleRippleTextWithIcon(
 fun SpeakableRippleTextWithIcon(
     text: String,
     imageVector: ImageVector,
-    localeTag: String
+    localeTag: String,
+    onDoubleClick: ((String) -> Unit)? = null
 ) {
     TtsAwareComposable(
         ttsLanguageLocaleTag = localeTag,
@@ -196,7 +237,8 @@ fun SpeakableRippleTextWithIcon(
             CopyAbleRippleTextWithIcon(
                 text = text,
                 imageVector = imageVector,
-                onClick = { it.speak(text) }
+                onClick = { it.speak(text) },
+                onDoubleClick = onDoubleClick
             )
         }
     )

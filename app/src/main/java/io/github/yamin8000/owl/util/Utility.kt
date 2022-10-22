@@ -76,3 +76,17 @@ fun <T : Any> getImmutableHolderSaver(): Saver<ImmutableHolder<T>, T> = Saver(
     save = { it.item },
     restore = { ImmutableHolder(it) }
 )
+
+fun isOnline(
+    host: String = Constants.DNS1
+): Boolean {
+    val runtime = Runtime.getRuntime()
+    return try {
+        val process = runtime.exec("/system/bin/ping -c 1 $host")
+        val exitValue = process.waitFor()
+        exitValue == 0
+    } catch (e: Exception) {
+        if (host == Constants.DNS1) isOnline(Constants.DNS2)
+        else false
+    }
+}

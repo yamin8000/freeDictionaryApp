@@ -110,13 +110,14 @@ fun HomeContent(
             },
             bottomBar = {
                 MainBottomBar(
+                    isEnabled = true,
                     suggestions = state.searchSuggestions.value,
                     isSearching = state.isSearching.value,
                     onSearchTermChanged = {
                         state.searchText = it
                         state.handleSuggestions()
                         if (state.isWordSelectedFromKeyboardSuggestions) {
-                            state.coroutineScope.launch { state.searchForDefinitionHandler() }
+                            state.scope.launch { state.searchForDefinitionHandler() }
                             state.clearSuggestions()
                         }
                     },
@@ -145,7 +146,7 @@ fun HomeContent(
                             word.pronunciation,
                             onShareWord = onShareWord,
                             onAddToFavourite = {
-                                state.coroutineScope.launch {
+                                state.scope.launch {
                                     state.addToFavourite(word.word)
                                     state.snackbarHostState.showSnackbar(addedToFavourites)
                                 }
@@ -156,7 +157,11 @@ fun HomeContent(
                     WordDefinitionsList(
                         locale.toLanguageTag(),
                         state.listState,
-                        state.searchResult.value
+                        state.searchResult.value,
+                        onWordChipClick = {
+                            state.searchText = it
+                            state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                        }
                     )
                 }
             })
