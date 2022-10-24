@@ -98,7 +98,7 @@ dependencies {
     implementation("io.coil-kt:coil:$coil_version")
     implementation("io.coil-kt:coil-compose:$coil_version")
     //navigation
-    def nav_version = "2.5.2"
+    def nav_version = "2.5.3"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
