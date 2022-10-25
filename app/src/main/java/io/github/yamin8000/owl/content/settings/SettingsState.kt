@@ -47,9 +47,9 @@ class SettingsState(
     init {
         coroutineScope.launch {
             themeSetting.value = ThemeSetting.valueOf(
-                dataStore.getString(Constants.theme) ?: ThemeSetting.System.name
+                dataStore.getString(Constants.THEME) ?: ThemeSetting.System.name
             )
-            ttsLang.value = dataStore.getString(Constants.tts_lang) ?: Locale.US.toLanguageTag()
+            ttsLang.value = dataStore.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
         }
     }
 
@@ -58,7 +58,7 @@ class SettingsState(
     ) {
         ttsLang.value = newTtsLang
         coroutineScope.launch {
-            dataStore.setString(Constants.tts_lang, newTtsLang)
+            dataStore.setString(Constants.TTS_LANG, newTtsLang)
         }
     }
 
@@ -67,7 +67,7 @@ class SettingsState(
     ) {
         themeSetting.value = newTheme
         coroutineScope.launch {
-            dataStore.setString(Constants.theme, newTheme.name)
+            dataStore.setString(Constants.THEME, newTheme.name)
         }
     }
 }

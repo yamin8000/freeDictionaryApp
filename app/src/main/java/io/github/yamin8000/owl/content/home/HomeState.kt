@@ -49,6 +49,7 @@ import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
 import io.github.yamin8000.owl.util.*
+import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -81,7 +82,7 @@ class HomeState(
 
     init {
         scope.launch {
-            ttsLang.value = dataStore.getString(Constants.tts_lang) ?: Locale.US.toLanguageTag()
+            ttsLang.value = dataStore.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
         }
     }
 
@@ -171,10 +172,8 @@ class HomeState(
     private fun addDataToWordsCache(
         word: Word
     ) {
-        val file = File(context.cacheDir, "words.txt")
-        val oldData =
-            if (file.exists()) file.readText().split(',').filter { it.isNotBlank() }.toSet()
-            else setOf()
+        val file = File(context.cacheDir, Constants.WORDS_TEXT_FILE)
+        val oldData = readSavedWordsFromFile(file)
 
         var data = mutableSetOf<String>()
         word.definitions.map { it.definition }.forEach {
@@ -186,17 +185,37 @@ class HomeState(
 
         if (!oldData.contains(word.word))
             data.add(word.word)
-        data = data.asSequence()
-            .map { it.lowercase() }
-            .map { it.replace(Regex("[,]|[.]|[?]|[!]|[(]|[)]"), "") }
-            .filter { it !in oldData }.toMutableSet()
 
+        data = sanitizeWords(data, oldData)
+
+        addWordsToFileCache(data, file)
+    }
+
+    private fun addWordsToFileCache(
+        data: MutableSet<String>,
+        file: File
+    ) {
         data.forEach { item ->
             if (item.isNotBlank()) {
                 file.appendText(",")
                 file.appendText(item)
             }
         }
+    }
+
+    private fun sanitizeWords(
+        data: Set<String>,
+        oldData: Set<String>
+    ): MutableSet<String> {
+        return data.asSequence()
+            .map { it.lowercase() }
+            .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
+            .filter { it !in oldData }.toMutableSet()
+    }
+
+    private fun readSavedWordsFromFile(file: File): Set<String> {
+        return if (file.exists()) file.readText().split(',').filter { it.isNotBlank() }.toSet()
+        else setOf()
     }
 
     private suspend fun getNewRandomWord(): RandomWord {
@@ -266,9 +285,10 @@ class HomeState(
     fun handleSuggestions() {
         clearSuggestions()
         if (searchText.length >= Constants.DEFAULT_N_GRAM_SIZE) {
+            val suggestions = autoCompleteHelper.suggestTermsForSearch(searchText)
+            suggestions.joinToString().log()
             searchSuggestions.value = ImmutableHolder(
-                autoCompleteHelper.suggestTermsForSearch(searchText.lowercase())
-                    .take(Constants.DEFAULT_N_GRAM_SIZE * 3)
+                suggestions.take(Constants.DEFAULT_N_GRAM_SIZE * 3)
             )
         }
     }

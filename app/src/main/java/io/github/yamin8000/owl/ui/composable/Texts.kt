@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.Samim
+import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import io.github.yamin8000.owl.util.getCurrentLocale
 import io.github.yamin8000.owl.util.speak
 
@@ -186,7 +187,7 @@ fun CopyAbleRippleText(
                                     },
                                     label = {
                                         Text(
-                                            text = it.replace(Regex("\\W+"), ""),
+                                            text = it.replace(NOT_WORD_CHARS_REGEX, ""),
                                             modifier = Modifier
                                                 .padding(8.dp)
                                                 .fillMaxSize(),

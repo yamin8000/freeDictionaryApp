@@ -57,7 +57,7 @@ fun TextToSpeech.speak(
 @Suppress("unused")
 fun String.log() {
     if (BuildConfig.DEBUG)
-        Log.d(Constants.log_tag, this)
+        Log.d(Constants.LOG_TAG, this)
 }
 
 @Stable

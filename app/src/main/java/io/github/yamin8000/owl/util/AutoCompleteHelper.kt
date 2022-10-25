@@ -24,6 +24,7 @@ import android.content.Context
 import android.content.res.Resources.NotFoundException
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.util.Constants.DEFAULT_N_GRAM_SIZE
+import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -36,12 +37,21 @@ class AutoCompleteHelper(
     private var data = setOf<String>()
 
     init {
-        val searchData = getOldSearchData()
-        data = getBasic2000Data().plus(userData).plus(searchData).toSet()
+        data = getBasic2000Data().plus(userData).plus(getOldSearchData()).toSet()
+    }
+
+    private fun getBasic2000Data() = try {
+        context.resources.openRawResource(R.raw.basic2000)
+            .bufferedReader()
+            .use { it.readText() }
+            .split(',')
+            .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
+    } catch (e: NotFoundException) {
+        listOf()
     }
 
     private fun getOldSearchData(): List<String> {
-        val searchDataFile = File(context.cacheDir, "words.txt")
+        val searchDataFile = File(context.cacheDir, Constants.WORDS_TEXT_FILE)
         var searchData = listOf<String>()
         if (searchDataFile.exists()) {
             searchData = searchDataFile
@@ -52,30 +62,21 @@ class AutoCompleteHelper(
         return searchData
     }
 
-    private fun getBasic2000Data() = try {
-        context.resources.openRawResource(R.raw.basic2000)
-            .bufferedReader()
-            .use { it.readText() }
-            .split(',')
-    } catch (e: NotFoundException) {
-        listOf()
-    }
-
     fun suggestTermsForSearch(
         searchTerm: String
     ): List<String> {
         data = data.plus(getOldSearchData())
-        val nGramSize = nGramSizeProvider(searchTerm)
-        if (data.contains(searchTerm)) return listOf(searchTerm)
-        val userSearchTermGrams = searchTerm.windowed(nGramSize)
-        var suggestions = mutableSetOf<String>()
-        userSearchTermGrams.forEach {
-            suggestions.addAll(data.filter { word -> word.contains(it) })
+
+        val term = searchTerm.lowercase().replace(NOT_WORD_CHARS_REGEX, "")
+        val nGramSize = nGramSizeProvider(term)
+        if (data.contains(term)) return listOf(term)
+        val searchTermGrams = term.windowed(nGramSize)
+        val suggestions = buildSet {
+            searchTermGrams.forEach { gram ->
+                addAll(data.filter { word -> word.contains(gram) })
+            }
         }
-        suggestions = suggestions.filter {
-            it.windowed(nGramSize).union(userSearchTermGrams).size > nGramSize / 2
-        }.toMutableSet()
-        return sortSuggestions(suggestions, searchTerm)
+        return sortSuggestions(suggestions, term)
     }
 
     private fun sortSuggestions(
@@ -83,31 +84,38 @@ class AutoCompleteHelper(
         searchTerm: String
     ): List<String> {
         val nGramSize = nGramSizeProvider(searchTerm)
-        return if (suggestions.isNotEmpty() && suggestions.size > 1) {
-            val rankedSuggestions = mutableListOf<Pair<Int, String>>()
-            suggestions.forEach { suggestion ->
-                val rank = suggestion.windowed(nGramSize)
-                    .intersect(suggestions.toSet())
-                    .size
-                rankedSuggestions.add(rank to suggestion)
+        if (suggestions.isNotEmpty() && suggestions.size > 1) {
+            val searchTermGrams = searchTerm.windowed(nGramSize)
+            val rankedSuggestions = buildList {
+                suggestions.forEach { suggestion ->
+                    val rank = suggestion.windowed(nGramSize)
+                        .intersect(searchTermGrams.toSet())
+                        .size
+                    add(rank to suggestion)
+                }
             }
-            rankedSuggestions.asSequence()
+            return rankedSuggestions.asSequence()
+                .map {
+                    if (it.second.startsWith(searchTerm.take(nGramSize)))
+                        it.first + 1 to it.second
+                    else it.first to it.second
+                }
+                .sortedBy { abs(it.second.length - searchTerm.length) }
+                .sortedByDescending {
+                    it.second.startsWith(searchTerm.take(nGramSize)) ||
+                            it.second.endsWith(searchTerm.takeLast(nGramSize))
+                }
                 .sortedByDescending { it.first }
                 .map { it.second }
-                .sortedBy { abs(it.length - searchTerm.length) }
-                .sortedByDescending {
-                    it.startsWith(searchTerm.take(nGramSize)) ||
-                            it.endsWith(searchTerm.takeLast(nGramSize))
-                }
                 .toList()
-        } else suggestions.toList()
+        } else return suggestions.toList()
     }
 
     private fun nGramSizeProvider(
         searchTerm: String
     ): Int {
         return if (searchTerm.length > DEFAULT_N_GRAM_SIZE) {
-            val size = ceil(searchTerm.length.toFloat() / DEFAULT_N_GRAM_SIZE / 2).roundToInt()
+            val size = ceil(searchTerm.length.toFloat() / DEFAULT_N_GRAM_SIZE).roundToInt()
             if (size < DEFAULT_N_GRAM_SIZE) DEFAULT_N_GRAM_SIZE
             else size
         } else DEFAULT_N_GRAM_SIZE

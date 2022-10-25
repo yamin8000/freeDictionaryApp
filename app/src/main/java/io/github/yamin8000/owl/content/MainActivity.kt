@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private suspend fun getCurrentTheme() = ThemeSetting.valueOf(
-        DataStoreHelper(settingsDataStore).getString(Constants.theme) ?: ThemeSetting.System.name
+        DataStoreHelper(settingsDataStore).getString(Constants.THEME) ?: ThemeSetting.System.name
     )
 }
 
