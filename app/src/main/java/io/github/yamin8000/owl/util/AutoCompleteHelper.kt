@@ -50,16 +50,19 @@ class AutoCompleteHelper(
         listOf()
     }
 
-    private fun getOldSearchData(): List<String> {
+    private fun getOldSearchData() = try {
         val searchDataFile = File(context.cacheDir, Constants.WORDS_TEXT_FILE)
-        var searchData = listOf<String>()
         if (searchDataFile.exists()) {
-            searchData = searchDataFile
-                .readText()
+            searchDataFile.readText()
                 .split(',')
                 .filter { it.isNotBlank() }
-        }
-        return searchData
+        } else listOf()
+    } catch (e: NullPointerException) {
+        e.stackTraceToString().log()
+        listOf()
+    } catch (e: SecurityException) {
+        e.stackTraceToString().log()
+        listOf()
     }
 
     fun suggestTermsForSearch(
@@ -95,11 +98,6 @@ class AutoCompleteHelper(
                 }
             }
             return rankedSuggestions.asSequence()
-                .map {
-                    if (it.second.startsWith(searchTerm.take(nGramSize)))
-                        it.first + 1 to it.second
-                    else it.first to it.second
-                }
                 .sortedBy { abs(it.second.length - searchTerm.length) }
                 .sortedByDescending {
                     it.second.startsWith(searchTerm.take(nGramSize)) ||
