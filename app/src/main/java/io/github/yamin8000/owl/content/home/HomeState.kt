@@ -327,7 +327,7 @@ fun rememberHomeState(
     searchSuggestions: MutableState<ImmutableHolder<List<String>>> = rememberSaveable(stateSaver = getImmutableHolderSaver()) {
         mutableStateOf(ImmutableHolder(emptyList()))
     },
-    isOnline: MutableState<Boolean> = remember { mutableStateOf(false) }
+    isOnline: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) = remember(
     listState,
     isSearching,

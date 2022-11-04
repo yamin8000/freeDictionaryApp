@@ -20,6 +20,7 @@
 
 package io.github.yamin8000.owl.content.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -31,15 +32,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
@@ -225,20 +225,20 @@ internal fun DynamicColorDefinitionCard(
                 dominantColorState.updateColorsFromImageUrl(definition.imageUrl)
             }
             DefinitionCard(
-                localeTag,
+                localeTag = localeTag,
                 definition = definition,
+                onWordChipClick = onWordChipClick,
                 cardColors = CardDefaults.cardColors(
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                     containerColor = MaterialTheme.colorScheme.primary
-                ),
-                onWordChipClick = onWordChipClick
+                )
             )
         }
     } else {
         dominantColorState.reset()
         DefinitionCard(
-            localeTag,
-            definition,
+            localeTag = localeTag,
+            definition = definition,
             onWordChipClick = onWordChipClick
         )
     }
@@ -251,6 +251,25 @@ internal fun DefinitionCard(
     cardColors: CardColors = CardDefaults.cardColors(),
     onWordChipClick: (String) -> Unit
 ) {
+    var dialogVisibility by rememberSaveable { mutableStateOf(false) }
+    if (dialogVisibility) {
+        Dialog(
+            onDismissRequest = { dialogVisibility = false },
+            content = {
+                Surface(
+                    modifier = Modifier.wrapContentSize()
+                ) {
+                    if (!definition.imageUrl.isNullOrBlank()) {
+                        DefinitionImage(
+                            url = definition.imageUrl,
+                            content = definition.definition
+                        )
+                    }
+                }
+            }
+        )
+    }
+
     Card(
         shape = CutCornerShape(15.dp),
         modifier = Modifier.fillMaxWidth(),
@@ -284,13 +303,28 @@ internal fun DefinitionCard(
                     WordEmojiText(definition.emoji, localeTag)
             }
             if (!definition.imageUrl.isNullOrBlank()) {
-                AsyncImage(
-                    model = definition.imageUrl,
-                    contentDescription = definition.definition,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillWidth
+                DefinitionImage(
+                    url = definition.imageUrl,
+                    content = definition.definition,
+                    onClick = { dialogVisibility = true }
                 )
             }
         }
     }
+}
+
+@Composable
+internal fun DefinitionImage(
+    url: String,
+    content: String,
+    onClick: (() -> Unit)? = null
+) {
+    AsyncImage(
+        model = url,
+        contentDescription = content,
+        contentScale = ContentScale.FillWidth,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick?.invoke() }
+    )
 }

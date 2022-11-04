@@ -22,6 +22,7 @@ package io.github.yamin8000.owl.content.home
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -114,6 +115,7 @@ fun HomeContent(
             },
             bottomBar = {
                 MainBottomBar(
+                    searchTerm = searchTerm,
                     isEnabled = state.isOnline.value,
                     suggestions = state.searchSuggestions.value,
                     isSearching = state.isSearching.value,
@@ -142,7 +144,7 @@ fun HomeContent(
                     modifier = Modifier.padding(contentPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (!state.isOnline.value) {
+                    AnimatedVisibility(!state.isOnline.value) {
                         PersianText(
                             text = stringResource(R.string.general_net_error),
                             modifier = Modifier.padding(16.dp),

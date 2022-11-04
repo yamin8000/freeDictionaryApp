@@ -37,6 +37,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.yamin8000.owl.util.Constants.DNS_SERVERS
+import io.github.yamin8000.owl.util.Constants.INTERNET_CHECK_DELAY
 import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.findActivity
 import kotlinx.coroutines.Dispatchers
@@ -166,8 +168,8 @@ fun TtsAwareComposable(
 
 @Composable
 fun InternetAwareComposable(
-    dnsServers: List<String> = listOf("8.8.8.8", "1.1.1.1", "4.2.2.4"),
-    delay: Long = 5000L,
+    dnsServers: List<String> = DNS_SERVERS,
+    delay: Long = INTERNET_CHECK_DELAY,
     successContent: (@Composable () -> Unit)? = null,
     errorContent: (@Composable () -> Unit)? = null,
     onlineChanged: ((Boolean) -> Unit)? = null

@@ -60,6 +60,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainBottomBar(
+    searchTerm: String?,
     isEnabled: Boolean,
     suggestions: ImmutableHolder<List<String>>,
     onSuggestionClick: (String) -> Unit,
@@ -67,6 +68,7 @@ fun MainBottomBar(
     onSearchTermChanged: (String) -> Unit,
     onSearch: (String) -> Unit
 ) {
+    var searchText by remember { mutableStateOf(searchTerm ?: "") }
     Column {
         if (suggestions.item.isNotEmpty()) {
             LazyRow(
@@ -75,14 +77,16 @@ fun MainBottomBar(
             ) {
                 items(suggestions.item) {
                     ElevatedSuggestionChip(
-                        onClick = { onSuggestionClick(it) },
-                        label = { Text(it) }
+                        label = { Text(it) },
+                        onClick = {
+                            onSuggestionClick(it)
+                            searchText = it
+                        }
                     )
                 }
             }
         }
         BottomAppBar {
-            var searchText by remember { mutableStateOf("") }
             TextField(
                 enabled = isEnabled,
                 singleLine = true,
@@ -154,5 +158,5 @@ private fun getTextStyleBasedOnLocale(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { MainBottomBar(true, ImmutableHolder(listOf()), {}, true, {}) {} }
+    PreviewTheme { MainBottomBar(null, true, ImmutableHolder(listOf()), {}, true, {}) {} }
 }
