@@ -39,6 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.findActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.util.*
 
 @Composable
@@ -158,6 +161,38 @@ fun TtsAwareComposable(
     val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
     LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
     if (tts.value != null) tts.value?.let { content(it) }
+    else errorContent?.invoke()
+}
+
+@Composable
+fun InternetAwareComposable(
+    dnsServers: List<String> = listOf("8.8.8.8", "1.1.1.1", "4.2.2.4"),
+    delay: Long = 5000L,
+    successContent: (@Composable () -> Unit)? = null,
+    errorContent: (@Composable () -> Unit)? = null,
+    onlineChanged: ((Boolean) -> Unit)? = null
+) {
+    suspend fun dnsAccessible(
+        dnsServer: String
+    ): Boolean {
+        return try {
+            withContext(Dispatchers.IO) {
+                Runtime.getRuntime().exec("/system/bin/ping -c 1 $dnsServer").waitFor()
+            } == 0
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    var isOnline by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            isOnline = dnsServers.any { dnsAccessible(it) }
+            onlineChanged?.invoke(isOnline)
+            delay(delay)
+        }
+    }
+    if (isOnline) successContent?.invoke()
     else errorContent?.invoke()
 }
 

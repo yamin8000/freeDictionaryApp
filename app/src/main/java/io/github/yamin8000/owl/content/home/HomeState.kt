@@ -68,7 +68,8 @@ class HomeState(
     val context: Context,
     val isSharing: MutableState<Boolean>,
     val ttsLang: MutableState<String>,
-    val searchSuggestions: MutableState<ImmutableHolder<List<String>>>
+    val searchSuggestions: MutableState<ImmutableHolder<List<String>>>,
+    val isOnline: MutableState<Boolean>
 ) {
     private val autoCompleteHelper = AutoCompleteHelper(context)
 
@@ -325,7 +326,8 @@ fun rememberHomeState(
     ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) },
     searchSuggestions: MutableState<ImmutableHolder<List<String>>> = rememberSaveable(stateSaver = getImmutableHolderSaver()) {
         mutableStateOf(ImmutableHolder(emptyList()))
-    }
+    },
+    isOnline: MutableState<Boolean> = remember { mutableStateOf(false) }
 ) = remember(
     listState,
     isSearching,
@@ -337,7 +339,8 @@ fun rememberHomeState(
     context,
     isSharing,
     ttsLang,
-    searchSuggestions
+    searchSuggestions,
+    isOnline
 ) {
     HomeState(
         listState,
@@ -350,6 +353,7 @@ fun rememberHomeState(
         context,
         isSharing,
         ttsLang,
-        searchSuggestions
+        searchSuggestions,
+        isOnline
     )
 }

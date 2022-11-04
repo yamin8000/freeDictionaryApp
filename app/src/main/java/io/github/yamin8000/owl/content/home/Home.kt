@@ -37,10 +37,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.MainBottomBar
 import io.github.yamin8000.owl.content.MainTopBar
+import io.github.yamin8000.owl.ui.composable.InternetAwareComposable
 import io.github.yamin8000.owl.ui.composable.LockScreenOrientation
 import io.github.yamin8000.owl.ui.composable.MySnackbar
 import io.github.yamin8000.owl.ui.composable.PersianText
@@ -63,12 +65,14 @@ fun HomeContent(
     ) {
         val state = rememberHomeState()
 
+        InternetAwareComposable { state.isOnline.value = it }
+
         val locale = if (state.ttsLang.value.isEmpty())
             Locale.US else Locale.forLanguageTag(state.ttsLang.value)
 
         if (searchTerm != null)
             state.searchText = searchTerm
-        LaunchedEffect(Unit) {
+        LaunchedEffect(state.isOnline.value) {
             if (state.isFirstTimeOpening)
                 state.searchText = "Owl"
             if (state.searchText.isNotBlank())
@@ -110,7 +114,7 @@ fun HomeContent(
             },
             bottomBar = {
                 MainBottomBar(
-                    isEnabled = true,
+                    isEnabled = state.isOnline.value,
                     suggestions = state.searchSuggestions.value,
                     isSearching = state.isSearching.value,
                     onSearchTermChanged = {
@@ -138,6 +142,14 @@ fun HomeContent(
                     modifier = Modifier.padding(contentPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    if (!state.isOnline.value) {
+                        PersianText(
+                            text = stringResource(R.string.general_net_error),
+                            modifier = Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+
                     val addedToFavourites = stringResource(R.string.added_to_favourites)
                     state.rawWordSearchBody.value?.let { word ->
                         WordCard(
