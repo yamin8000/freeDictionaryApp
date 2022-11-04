@@ -20,17 +20,13 @@
 
 package io.github.yamin8000.owl.util
 
-@Suppress("unused")
 object Constants {
     const val WORDS_TEXT_FILE = "words.txt"
-    const val DNS1 = "8.8.8.8"
-    const val DNS2 = "1.1.1.1"
     const val LOG_TAG = "<==>"
     const val IMAGE_URL = "image_url"
     const val THEME = "theme"
     const val TTS_LANG = "tts_lang"
     const val DEFAULT_N_GRAM_SIZE = 3
-    const val INTERNET_CHECK_DELAY = 5000L
 
     val NOT_WORD_CHARS_REGEX = Regex("\\W+")
 }
