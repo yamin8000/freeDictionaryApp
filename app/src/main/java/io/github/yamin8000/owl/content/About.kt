@@ -23,15 +23,13 @@ package io.github.yamin8000.owl.content
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -41,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.Ripple
@@ -57,53 +56,63 @@ fun AboutContent(
     ) {
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             val uriHandler = LocalUriHandler.current
             val sourceUri = stringResource(R.string.github_source)
             val owlBotUri = stringResource(R.string.owl_bot_link)
-            Image(
-                painterResource(id = R.drawable.ic_gplv3),
-                stringResource(id = R.string.gplv3_image_description),
-                modifier = Modifier
-                    .padding(32.dp)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.FillWidth,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+            val licenseUri = stringResource(R.string.license_link)
+            Ripple(
+                onClick = { uriHandler.openUri(licenseUri) },
+                content = {
+                    Image(
+                        painterResource(id = R.drawable.ic_gplv3),
+                        stringResource(id = R.string.gplv3_image_description),
+                        modifier = Modifier
+                            .padding(32.dp)
+                            .fillMaxWidth(),
+                        contentScale = ContentScale.FillWidth,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                    )
+                }
             )
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 PersianText(
-                    stringResource(id = R.string.license_header),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Ripple(
-                    onClick = { uriHandler.openUri(sourceUri) },
-                    content = {
-                        Text(
-                            text = sourceUri,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    }
+                    text = stringResource(R.string.version_name)
                 )
                 PersianText(
-                    stringResource(id = R.string.about_app),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Ripple(
-                    onClick = { uriHandler.openUri(owlBotUri) },
-                    content = {
-                        Text(
-                            text = owlBotUri,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    }
+                    text = BuildConfig.VERSION_NAME
                 )
             }
+            PersianText(
+                stringResource(id = R.string.license_header),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Ripple(
+                onClick = { uriHandler.openUri(sourceUri) },
+                content = {
+                    Text(
+                        text = sourceUri,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
+            )
+            PersianText(
+                stringResource(id = R.string.about_app),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Ripple(
+                onClick = { uriHandler.openUri(owlBotUri) },
+                content = {
+                    Text(
+                        text = owlBotUri,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
+            )
         }
     }
 }

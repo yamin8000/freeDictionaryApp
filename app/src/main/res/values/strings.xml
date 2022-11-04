@@ -34,6 +34,7 @@
     <string name="gplv3_image_description">GPLv3 License Logo</string>
     <string name="about_app">English to English Dictionary, based on:</string>
     <string name="github_source" translatable="false">https://github.com/yamin8000/Owl2</string>
+    <string name="license_link" translatable="false">https://raw.githubusercontent.com/yamin8000/Owl2/master/LICENSE</string>
     <string name="owl_bot_link" translatable="false">https://owlbot.info</string>
     <string name="added_to_favourites">Added to favourites</string>
     <string name="delete">Clear</string>
@@ -55,4 +56,5 @@
     <string name="theme_dark">Dark</string>
     <string name="tts_language">Text-to-Speech Language</string>
     <string name="about">About</string>
+    <string name="version_name">Version</string>
 </resources>
