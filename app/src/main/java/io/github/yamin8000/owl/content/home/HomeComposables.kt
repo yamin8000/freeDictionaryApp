@@ -252,34 +252,22 @@ internal fun DefinitionCard(
     onWordChipClick: (String) -> Unit
 ) {
     var dialogVisibility by rememberSaveable { mutableStateOf(false) }
-    if (dialogVisibility) {
-        Dialog(
-            onDismissRequest = { dialogVisibility = false },
-            content = {
-                Surface(
-                    modifier = Modifier.wrapContentSize()
-                ) {
-                    if (!definition.imageUrl.isNullOrBlank()) {
-                        DefinitionImage(
-                            url = definition.imageUrl,
-                            content = definition.definition
-                        )
-                    }
-                }
-            }
-        )
-    }
+
+    ImageDialog(
+        definition = definition,
+        dialogVisibility = dialogVisibility,
+        dialogVisibilityChange = { dialogVisibility = it }
+    )
 
     Card(
         shape = CutCornerShape(15.dp),
         modifier = Modifier.fillMaxWidth(),
         colors = cardColors
     ) {
-        Column {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            content = {
                 if (definition.type != null) {
                     WordTypeText(
                         definition.type,
@@ -302,29 +290,57 @@ internal fun DefinitionCard(
                 if (definition.emoji != null)
                     WordEmojiText(definition.emoji, localeTag)
             }
-            if (!definition.imageUrl.isNullOrBlank()) {
-                DefinitionImage(
-                    url = definition.imageUrl,
-                    content = definition.definition,
-                    onClick = { dialogVisibility = true }
+        )
+        DefinitionImage(
+            enabled = !definition.imageUrl.isNullOrBlank(),
+            url = definition.imageUrl,
+            content = definition.definition,
+            onClick = { dialogVisibility = true }
+        )
+    }
+}
+
+@Composable
+private fun ImageDialog(
+    dialogVisibility: Boolean,
+    dialogVisibilityChange: (Boolean) -> Unit,
+    definition: Definition
+) {
+    if (dialogVisibility) {
+        Dialog(
+            onDismissRequest = { dialogVisibilityChange(false) },
+            content = {
+                Surface(
+                    modifier = Modifier.wrapContentSize(),
+                    shape = CutCornerShape(15.dp),
+                    content = {
+                        DefinitionImage(
+                            enabled = !definition.imageUrl.isNullOrBlank(),
+                            url = definition.imageUrl,
+                            content = definition.definition
+                        )
+                    }
                 )
             }
-        }
+        )
     }
 }
 
 @Composable
 internal fun DefinitionImage(
-    url: String,
+    enabled: Boolean,
+    url: String?,
     content: String,
     onClick: (() -> Unit)? = null
 ) {
-    AsyncImage(
-        model = url,
-        contentDescription = content,
-        contentScale = ContentScale.FillWidth,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick?.invoke() }
-    )
+    if (enabled) {
+        AsyncImage(
+            model = url,
+            contentDescription = content,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick?.invoke() }
+        )
+    }
 }

@@ -58,27 +58,33 @@ fun SettingsContent(
     onThemeChanged: (ThemeSetting) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val settingsState = rememberSettingsState()
+    val state = rememberSettingsState()
     val scope = LocalLifecycleOwner.current.lifecycleScope
 
     SurfaceWithTitle(
         title = stringResource(id = R.string.settings),
         onBackClick = onBackClick
     ) {
-        ThemeChanger(settingsState.themeSetting.value) { newTheme ->
-            settingsState.coroutineScope.launch { settingsState.updateThemeSetting(newTheme) }
+        ThemeChanger(state.themeSetting.value) { newTheme ->
+            state.coroutineScope.launch { state.updateThemeSetting(newTheme) }
             onThemeChanged(newTheme)
         }
 
-        val locale = if (settingsState.ttsLang.value.isEmpty())
-            Locale.US else Locale.forLanguageTag(settingsState.ttsLang.value)
+        val locale = if (state.ttsLang.value.isEmpty())
+            Locale.US else Locale.forLanguageTag(state.ttsLang.value)
 
         TtsLanguagesCard(
             currentLocaleTag = locale.toLanguageTag(),
             onLanguageItemClick = {
-                scope.launch { settingsState.updateTtsLang(it) }
+                scope.launch {
+                    state.updateTtsLang(it)
+
+                }
             }
         )
+        TtsAwareComposable {
+
+        }
     }
 }
 

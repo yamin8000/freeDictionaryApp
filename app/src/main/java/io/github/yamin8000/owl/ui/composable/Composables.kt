@@ -156,8 +156,8 @@ fun ClickableIcon(
 @Composable
 fun TtsAwareComposable(
     ttsLanguageLocaleTag: String = Locale.US.toLanguageTag(),
-    content: @Composable (TextToSpeech) -> Unit,
-    errorContent: @Composable (() -> Unit)? = null
+    errorContent: @Composable (() -> Unit)? = null,
+    content: @Composable (TextToSpeech) -> Unit
 ) {
     val ttsHelper = TTS(LocalContext.current, Locale.forLanguageTag(ttsLanguageLocaleTag))
     val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
