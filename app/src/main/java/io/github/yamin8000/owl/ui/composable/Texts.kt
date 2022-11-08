@@ -172,7 +172,9 @@ fun CopyAbleRippleText(
         Dialog(
             onDismissRequest = { isDialogShown = false },
             content = {
-                Surface {
+                Surface(
+                    shape = CutCornerShape(15.dp)
+                ) {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -207,6 +209,7 @@ fun CopyAbleRippleText(
 @Composable
 fun CopyAbleRippleTextWithIcon(
     text: String,
+    title: String,
     imageVector: ImageVector,
     onClick: () -> Unit,
     onDoubleClick: ((String) -> Unit)? = null
@@ -215,7 +218,17 @@ fun CopyAbleRippleTextWithIcon(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         content = {
-            Icon(imageVector, text)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth(0.25f)
+            ) {
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = text
+                )
+                PersianText(text = title)
+            }
             CopyAbleRippleText(
                 text = text,
                 onClick = onClick,
@@ -228,6 +241,7 @@ fun CopyAbleRippleTextWithIcon(
 @Composable
 fun SpeakableRippleTextWithIcon(
     text: String,
+    title: String,
     imageVector: ImageVector,
     localeTag: String,
     onDoubleClick: ((String) -> Unit)? = null
@@ -237,6 +251,7 @@ fun SpeakableRippleTextWithIcon(
         content = {
             CopyAbleRippleTextWithIcon(
                 text = text,
+                title = title,
                 imageVector = imageVector,
                 onClick = { it.speak(text) },
                 onDoubleClick = onDoubleClick

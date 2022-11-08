@@ -54,4 +54,10 @@
     <string name="tts_language">زبان متن به گفتار</string>
     <string name="about">درباره</string>
     <string name="version_name">نگارش</string>
+    <string name="pronunciation">تلفظ</string>
+    <string name="word">واژه</string>
+    <string name="emoji">اموجی</string>
+    <string name="example">نمونه</string>
+    <string name="definition">معنی</string>
+    <string name="type">نوع</string>
 </resources>

@@ -57,4 +57,10 @@
     <string name="tts_language">Text-to-Speech Language</string>
     <string name="about">About</string>
     <string name="version_name">Version</string>
+    <string name="pronunciation">Pronunciation</string>
+    <string name="word">Word</string>
+    <string name="emoji">Emoji</string>
+    <string name="example">Example</string>
+    <string name="definition">Definition</string>
+    <string name="type">Type</string>
 </resources>

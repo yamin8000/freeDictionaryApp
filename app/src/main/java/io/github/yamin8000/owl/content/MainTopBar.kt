@@ -21,15 +21,14 @@
 package io.github.yamin8000.owl.content
 
 import android.content.res.Configuration
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.ui.composable.AnimatedAppIcon
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 
@@ -45,7 +44,7 @@ fun MainTopBar(
 ) {
     TopAppBar(
         scrollBehavior = scrollBehavior,
-        title = {},
+        title = { AnimatedAppIcon() },
         actions = {
             ClickableIcon(
                 imageVector = Icons.TwoTone.History,
@@ -76,13 +75,8 @@ fun MainTopBar(
                 contentDescription = stringResource(R.string.about_app),
                 onClick = onInfoClick
             )
-        }, navigationIcon = {
-            Icon(
-                painter = painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = stringResource(R.string.app_name),
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        })
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

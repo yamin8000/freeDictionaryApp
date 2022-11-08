@@ -22,7 +22,7 @@ package io.github.yamin8000.owl.content.home
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -105,12 +105,8 @@ fun HomeContent(
                     onHistoryClick = onHistoryClick,
                     onFavouritesClick = onFavouritesClick,
                     onInfoClick = onInfoClick,
-                    onRandomWordClick = {
-                        state.lifecycleOwner.lifecycleScope.launch {
-                            state.searchForRandomWord()
-                        }
-                    },
-                    onSettingsClick = onSettingsClick
+                    onSettingsClick = onSettingsClick,
+                    onRandomWordClick = { state.scope.launch { state.searchForRandomWord() } }
                 )
             },
             bottomBar = {
@@ -144,7 +140,11 @@ fun HomeContent(
                     modifier = Modifier.padding(contentPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    AnimatedVisibility(!state.isOnline.value) {
+                    AnimatedVisibility(
+                        visible = !state.isOnline.value,
+                        enter = slideInVertically(),
+                        exit = slideOutVertically()
+                    ) {
                         PersianText(
                             text = stringResource(R.string.general_net_error),
                             modifier = Modifier.padding(16.dp),

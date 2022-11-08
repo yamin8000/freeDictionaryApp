@@ -62,7 +62,7 @@ internal fun WordDefinitionsList(
     LazyColumn(
         modifier = Modifier.padding(16.dp),
         state = listState,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             items(searchResult.item) { definition ->
@@ -95,21 +95,16 @@ internal fun WordCard(
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                WordText(word, localeTag)
-                if (pronunciation != null) {
-                    PronunciationText(
-                        localeTag,
-                        pronunciation,
-                        word
-                    )
-                }
+            WordText(word, localeTag)
+            if (pronunciation != null) {
+                PronunciationText(
+                    localeTag,
+                    pronunciation,
+                    word
+                )
             }
             Row {
                 ClickableIcon(
@@ -133,9 +128,10 @@ internal fun WordText(
     localeTag: String
 ) {
     SpeakableRippleTextWithIcon(
-        word,
-        Icons.TwoTone.ShortText,
-        localeTag
+        text = word,
+        title = stringResource(R.string.word),
+        imageVector = Icons.TwoTone.ShortText,
+        localeTag = localeTag
     )
 }
 
@@ -150,6 +146,7 @@ internal fun PronunciationText(
         content = { ttsEngine ->
             CopyAbleRippleTextWithIcon(
                 text = pronunciation,
+                title = stringResource(R.string.pronunciation),
                 imageVector = Icons.TwoTone.RecordVoiceOver,
                 onClick = { ttsEngine.speak(word) }
             )
@@ -164,7 +161,8 @@ internal fun WordEmojiText(
 ) {
     Icons.TwoTone
     SpeakableRippleTextWithIcon(
-        emoji,
+        text = emoji,
+        title = stringResource(R.string.emoji),
         Icons.TwoTone.EmojiEmotions,
         localeTag
     )
@@ -177,7 +175,8 @@ internal fun WordExampleText(
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
-        example,
+        text = example,
+        title = stringResource(R.string.example),
         Icons.TwoTone.TextSnippet,
         localeTag,
         onDoubleClick = onDoubleClick
@@ -191,7 +190,8 @@ internal fun WordDefinitionText(
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
-        definition,
+        text = definition,
+        title = stringResource(R.string.definition),
         Icons.TwoTone.ShortText,
         localeTag,
         onDoubleClick = onDoubleClick
@@ -205,7 +205,8 @@ internal fun WordTypeText(
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
-        type,
+        text = type,
+        title = stringResource(R.string.type),
         Icons.TwoTone.Category,
         localeTag,
         onDoubleClick = onDoubleClick
