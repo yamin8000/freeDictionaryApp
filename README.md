@@ -1,12 +1,9 @@
 # Owl2
 
-🦉 **Owl2/جغدک** is a simple android application for **OwlBot dictionary**. (a reincarnation
-of https://github.com/yamin8000/Owl)
+🦉 **Owl2/جغدک** is a simple android application for **OwlBot dictionary**.  
+a reincarnation of https://github.com/yamin8000/Owl
 
 Owl2 is the first project in that I used **Jetpack Compose UI** and **Material3** color system.
-Currently, Google's recommendation is to use MVVM architecture. But I didn't feel it necessary to
-use MVVM architecture because this project was simple, and adding such an architecture would make it
-more complex and had no benefits.
 
 ---
 
@@ -27,6 +24,8 @@ more complex and had no benefits.
 |                       Dark/Light Theme with Dynamic Color Content                        |                                       Dark/Light Theme                                       |
 |:----------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
 | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-54.png" alt="preview" width="250"/> | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-55 (2).png" alt="preview" width="250"/> |
+
+More screenshots [here](./screenshots).
 
 ## Compatibility
 
@@ -55,6 +54,7 @@ Just use the search input to search the word.
 <details>
 <summary>1.x.x</summary>
 
+- **1.0.7** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.7)
 - **1.0.6** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.6)
 - **1.0.5** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.5)
 - **1.0.4** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.4)
