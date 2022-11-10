@@ -31,5 +31,5 @@ object Constants {
     val NOT_WORD_CHARS_REGEX = Regex("\\W+")
 
     const val INTERNET_CHECK_DELAY = 3000L
-    val DNS_SERVERS = listOf("8.8.8.8", "1.1.1.1", "4.2.2.4")
+    val DNS_SERVERS = listOf("8.8.8.8", "8.8.4.4", "1.1.1.1", "4.2.2.4")
 }

@@ -176,14 +176,12 @@ fun InternetAwareComposable(
 ) {
     suspend fun dnsAccessible(
         dnsServer: String
-    ): Boolean {
-        return try {
-            withContext(Dispatchers.IO) {
-                Runtime.getRuntime().exec("/system/bin/ping -c 1 $dnsServer").waitFor()
-            } == 0
-        } catch (e: Exception) {
-            false
-        }
+    ) = try {
+        withContext(Dispatchers.IO) {
+            Runtime.getRuntime().exec("/system/bin/ping -c 1 $dnsServer").waitFor()
+        } == 0
+    } catch (e: Exception) {
+        false
     }
 
     var isOnline by remember { mutableStateOf(false) }
