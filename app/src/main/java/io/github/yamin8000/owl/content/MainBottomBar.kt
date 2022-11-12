@@ -61,7 +61,6 @@ import java.util.*
 @Composable
 fun MainBottomBar(
     searchTerm: String?,
-    isEnabled: Boolean,
     suggestions: ImmutableHolder<List<String>>,
     onSuggestionClick: (String) -> Unit,
     isSearching: Boolean,
@@ -88,7 +87,6 @@ fun MainBottomBar(
         }
         BottomAppBar {
             TextField(
-                enabled = isEnabled,
                 singleLine = true,
                 shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
                 modifier = Modifier
@@ -102,7 +100,7 @@ fun MainBottomBar(
                 },
                 placeholder = {
                     PersianText(
-                        text = stringResource(id = R.string.search_hint),
+                        text = stringResource(R.string.search_hint),
                         modifier = Modifier.fillMaxWidth(),
                         fontSize = 12.sp
                     )
@@ -158,5 +156,5 @@ private fun getTextStyleBasedOnLocale(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 @Composable
 private fun Preview() {
-    PreviewTheme { MainBottomBar(null, true, ImmutableHolder(listOf()), {}, true, {}) {} }
+    PreviewTheme { MainBottomBar(null, ImmutableHolder(listOf()), {}, true, {}) {} }
 }

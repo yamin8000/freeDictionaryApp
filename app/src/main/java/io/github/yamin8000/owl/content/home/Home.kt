@@ -112,7 +112,6 @@ fun HomeContent(
             bottomBar = {
                 MainBottomBar(
                     searchTerm = searchTerm,
-                    isEnabled = state.isOnline.value,
                     suggestions = state.searchSuggestions.value,
                     isSearching = state.isSearching.value,
                     onSearchTermChanged = {
