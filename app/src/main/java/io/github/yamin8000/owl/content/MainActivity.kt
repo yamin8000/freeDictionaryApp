@@ -20,11 +20,16 @@
 
 package io.github.yamin8000.owl.content
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -53,12 +58,32 @@ class MainActivity : ComponentActivity() {
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @ExperimentalMaterial3Api
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         scope.launch {
+            val shareData = handleShareData()
             val theme = getCurrentTheme()
-            setContent { MainContent(theme) }
+            setContent { Scaffold { MainContent(theme, shareData) } }
         }
+    }
+
+    private fun handleShareData(): String? {
+        return if (intent.type == "text/plain") {
+            when (intent.action) {
+                Intent.ACTION_TRANSLATE, Intent.ACTION_DEFINE, Intent.ACTION_SEND -> {
+                    intent.getStringExtra(Intent.EXTRA_TEXT)
+                }
+                Intent.ACTION_PROCESS_TEXT -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
+                    else null
+                }
+                else -> null
+            }
+        } else null
     }
 
     private suspend fun getCurrentTheme() = ThemeSetting.valueOf(
@@ -68,7 +93,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MainContent(
-    currentTheme: ThemeSetting
+    currentTheme: ThemeSetting,
+    shareData: String?
 ) {
     var theme by remember { mutableStateOf(currentTheme) }
 
@@ -76,14 +102,17 @@ private fun MainContent(
         isDarkTheme = isDarkTheme(theme, isSystemInDarkTheme()),
         isDynamicColor = theme == ThemeSetting.System
     ) {
+
         val navController = rememberNavController()
         NavHost(
             navController = navController,
             startDestination = "${Nav.Routes.home}/{${Nav.Arguments.search}}"
         ) {
             composable("${Nav.Routes.home}/{${Nav.Arguments.search}}") {
+                var searchTerm = it.arguments?.getString(Nav.Arguments.search)
+                if (searchTerm == null && shareData != null) searchTerm = shareData.toString()
                 HomeContent(
-                    searchTerm = it.arguments?.getString(Nav.Arguments.search),
+                    searchTerm = searchTerm,
                     onFavouritesClick = { navController.navigate(Nav.Routes.favourites) },
                     onHistoryClick = { navController.navigate(Nav.Routes.history) },
                     onInfoClick = { navController.navigate(Nav.Routes.about) },
