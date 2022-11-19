@@ -37,7 +37,7 @@ Just use the search input to search the word.
 
 ## Download
 
-- GitHub releases: [here](https://github.com/yamin8000/Owl2/releases)
+- ~~GitHub releases: [here](https://github.com/yamin8000/Owl2/releases)~~
 - Bazaar: [here](https://cafebazaar.ir/app/io.github.yamin8000.owl)
 
 ## Features
