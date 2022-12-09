@@ -51,19 +51,7 @@ Just use the search input to search the word.
 
 ## Changelog
 
-<details>
-<summary>1.x.x</summary>
-
-- **1.0.7** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.7)
-- **1.0.6** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.6)
-- **1.0.5** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.5)
-- **1.0.4** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.4)
-- **1.0.3** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.3)
-- **1.0.2** Bug fix
-- **1.0.1** [Changelogs](https://github.com/yamin8000/Owl2/releases/tag/1.0.1)
-- **1.0.0** First release
-
-</details>
+[Changelogs](/CHANGELOG.md)
 
 ## License
 
