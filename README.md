@@ -47,6 +47,7 @@ Just use the search input to search the word.
 - Emoji of the word if available
 - Picture of the word if available
 - Pronunciation of the word, both IPA text and audio using TTS
+- Save searched data for offline uses
 
 ## License
 

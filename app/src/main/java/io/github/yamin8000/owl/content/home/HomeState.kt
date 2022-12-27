@@ -332,10 +332,12 @@ class HomeState(
         }
         trim()
         append("\n\n")
-        append(context.getString(R.string.this_text_generated_using_owl_fa))
-        append("\nThis text is generated using Owl app.\n")
+        append(context.getString(R.string.this_text_generated_using_owl))
+        append("\n")
         append(context.getString(R.string.github_source))
-        append("\nThis text is extracted from Owlbot Dictionary.\n")
+        append("\n")
+        append(context.getString(R.string.this_text_extracted_from_owlbot))
+        append("\n")
         append(context.getString(R.string.owl_bot_link))
     }
 

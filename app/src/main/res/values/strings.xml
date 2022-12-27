@@ -41,7 +41,7 @@
     <string name="untracked_error">Unexpected error!</string>
     <string name="no_search_term_entered">Nothing is entered.</string>
     <string name="share">Share</string>
-    <string name="this_text_generated_using_owl_fa">This text is generated using Owl app</string>
+    <string name="this_text_generated_using_owl">This text is generated using Owl app</string>
     <string name="remove_history">Clear All</string>
     <string name="list_empty">Nothing to show!</string>
     <string name="settings">Settings</string>
@@ -63,4 +63,5 @@
     <string name="example">Example</string>
     <string name="definition">Definition</string>
     <string name="type">Type</string>
+    <string name="this_text_extracted_from_owlbot" translatable="false">This text is extracted from Owlbot Dictionary.</string>
 </resources>
