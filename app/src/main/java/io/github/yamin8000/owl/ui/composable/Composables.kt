@@ -37,6 +37,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.*
+import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.util.Constants.DNS_SERVERS
 import io.github.yamin8000.owl.util.Constants.INTERNET_CHECK_DELAY
 import io.github.yamin8000.owl.util.TTS
@@ -45,6 +47,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.util.*
+
+@Composable
+fun EmptyList() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+    )
+}
 
 @Composable
 fun MySnackbar(

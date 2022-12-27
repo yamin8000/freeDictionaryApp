@@ -43,10 +43,7 @@ import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.MainBottomBar
 import io.github.yamin8000.owl.content.MainTopBar
-import io.github.yamin8000.owl.ui.composable.InternetAwareComposable
-import io.github.yamin8000.owl.ui.composable.LockScreenOrientation
-import io.github.yamin8000.owl.ui.composable.MySnackbar
-import io.github.yamin8000.owl.ui.composable.PersianText
+import io.github.yamin8000.owl.ui.composable.*
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import kotlinx.coroutines.launch
 import java.util.*
@@ -153,30 +150,32 @@ fun HomeContent(
 
                     val addedToFavourites = stringResource(R.string.added_to_favourites)
 
-                    state.rawWordSearchBody.value?.let { word ->
-                        WordCard(
-                            locale.toLanguageTag(),
-                            word.word,
-                            word.pronunciation,
-                            onShareWord = onShareWord,
-                            onAddToFavourite = {
-                                state.scope.launch {
-                                    state.addToFavourite(word.word)
-                                    state.snackbarHostState.showSnackbar(addedToFavourites)
+                    if (state.rawWordSearchBody.value != null || state.searchResult.value.item.isNotEmpty()) {
+                        state.rawWordSearchBody.value?.let { word ->
+                            WordCard(
+                                locale.toLanguageTag(),
+                                word.word,
+                                word.pronunciation,
+                                onShareWord = onShareWord,
+                                onAddToFavourite = {
+                                    state.scope.launch {
+                                        state.addToFavourite(word.word)
+                                        state.snackbarHostState.showSnackbar(addedToFavourites)
+                                    }
                                 }
+                            )
+                        }
+
+                        WordDefinitionsList(
+                            locale.toLanguageTag(),
+                            state.listState,
+                            state.searchResult.value,
+                            onWordChipClick = {
+                                state.searchText = it
+                                state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
                             }
                         )
-                    }
-
-                    WordDefinitionsList(
-                        locale.toLanguageTag(),
-                        state.listState,
-                        state.searchResult.value,
-                        onWordChipClick = {
-                            state.searchText = it
-                            state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
-                        }
-                    )
+                    } else EmptyList()
                 }
             })
     }
