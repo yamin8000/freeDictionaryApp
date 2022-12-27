@@ -20,8 +20,11 @@
 
 package io.github.yamin8000.owl.util
 
+import io.github.yamin8000.owl.db.AppDatabase
+
 object Constants {
-    const val WORDS_TEXT_FILE = "words.txt"
+    lateinit var db: AppDatabase
+
     const val LOG_TAG = "<==>"
     const val IMAGE_URL = "image_url"
     const val THEME = "theme"

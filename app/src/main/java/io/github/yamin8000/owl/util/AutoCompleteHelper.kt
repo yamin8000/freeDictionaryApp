@@ -25,19 +25,23 @@ import android.content.res.Resources.NotFoundException
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.util.Constants.DEFAULT_N_GRAM_SIZE
 import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
-import java.io.File
+import io.github.yamin8000.owl.util.Constants.db
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 class AutoCompleteHelper(
     private val context: Context,
+    coroutineScope: CoroutineScope,
     userData: List<String> = listOf()
 ) {
     private var data = setOf<String>()
 
     init {
-        data = getBasic2000Data().plus(userData).plus(getOldSearchData()).toSet()
+        data = getBasic2000Data().plus(userData).toSet()
+        coroutineScope.launch { data = data.plus(getOldSearchData()) }
     }
 
     private fun getBasic2000Data() = try {
@@ -50,22 +54,7 @@ class AutoCompleteHelper(
         listOf()
     }
 
-    private fun getOldSearchData() = try {
-        val searchDataFile = File(context.cacheDir, Constants.WORDS_TEXT_FILE)
-        if (searchDataFile.exists()) {
-            searchDataFile.readText()
-                .split(',')
-                .filter { it.isNotBlank() }
-        } else listOf()
-    } catch (e: NullPointerException) {
-        e.stackTraceToString().log()
-        listOf()
-    } catch (e: SecurityException) {
-        e.stackTraceToString().log()
-        listOf()
-    }
-
-    fun suggestTermsForSearch(
+    suspend fun suggestTermsForSearch(
         searchTerm: String
     ): List<String> {
         data = data.plus(getOldSearchData())
@@ -118,4 +107,6 @@ class AutoCompleteHelper(
             else size
         } else DEFAULT_N_GRAM_SIZE
     }
+
+    private suspend fun getOldSearchData() = db.wordDao().getAll().map { it.word }
 }

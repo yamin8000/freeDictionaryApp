@@ -37,14 +37,17 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import io.github.yamin8000.owl.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.content.history.HistoryContent
 import io.github.yamin8000.owl.content.home.HomeContent
 import io.github.yamin8000.owl.content.settings.SettingsContent
 import io.github.yamin8000.owl.content.settings.ThemeSetting
+import io.github.yamin8000.owl.db.AppDatabase
 import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
+import io.github.yamin8000.owl.util.Constants.db
 import io.github.yamin8000.owl.util.DataStoreHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -64,11 +67,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         scope.launch {
+            db = createDb()
             val shareData = handleShareData()
             val theme = getCurrentTheme()
             setContent { Scaffold { MainContent(theme, shareData) } }
         }
     }
+
+    private fun createDb() = Room.databaseBuilder(
+        this,
+        AppDatabase::class.java,
+        "db"
+    ).build()
 
     private fun handleShareData(): String? {
         return if (intent.type == "text/plain") {

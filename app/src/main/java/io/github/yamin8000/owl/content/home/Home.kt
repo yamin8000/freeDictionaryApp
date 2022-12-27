@@ -116,7 +116,7 @@ fun HomeContent(
                     isSearching = state.isSearching.value,
                     onSearchTermChanged = {
                         state.searchText = it
-                        state.handleSuggestions()
+                        state.scope.launch { state.handleSuggestions() }
                         if (state.isWordSelectedFromKeyboardSuggestions) {
                             state.scope.launch { state.searchForDefinitionHandler() }
                             state.clearSuggestions()

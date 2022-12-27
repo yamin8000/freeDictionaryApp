@@ -42,6 +42,8 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.favouritesDataStore
 import io.github.yamin8000.owl.content.historyDataStore
 import io.github.yamin8000.owl.content.settingsDataStore
+import io.github.yamin8000.owl.db.entity.DefinitionEntity
+import io.github.yamin8000.owl.db.entity.WordEntity
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.RandomWord
 import io.github.yamin8000.owl.model.Word
@@ -50,11 +52,11 @@ import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
 import io.github.yamin8000.owl.util.*
 import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
+import io.github.yamin8000.owl.util.Constants.db
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import java.io.File
 import java.util.*
 
 class HomeState(
@@ -71,14 +73,15 @@ class HomeState(
     val searchSuggestions: MutableState<ImmutableHolder<List<String>>>,
     val isOnline: MutableState<Boolean>
 ) {
-    private val autoCompleteHelper = AutoCompleteHelper(context)
-
     val scope = lifecycleOwner.lifecycleScope
-    private val lifeCycleContext = scope.coroutineContext
-
-    private val dataStore = DataStoreHelper(context.settingsDataStore)
 
     val snackbarHostState: SnackbarHostState = SnackbarHostState()
+
+    private val lifeCycleContext = scope.coroutineContext
+
+    private val autoCompleteHelper = AutoCompleteHelper(context, scope)
+
+    private val dataStore = DataStoreHelper(context.settingsDataStore)
 
     init {
         scope.launch {
@@ -165,57 +168,81 @@ class HomeState(
             ImmutableHolder(searchResult.value.item.sortedByDescending { it.imageUrl })
         clearSuggestions()
 
-        if (rawWordSearchBody.value != null)
-            rawWordSearchBody.value?.let { addDataToWordsCache(it) }
-    }
-
-    private fun addDataToWordsCache(
-        word: Word
-    ) {
-        val file = File(context.cacheDir, Constants.WORDS_TEXT_FILE)
-        val oldData = readSavedWordsFromFile(file)
-
-        var data = mutableSetOf<String>()
-        word.definitions.map { it.definition }.forEach {
-            data.addAll(it.split(Regex("\\s+")))
-        }
-        word.definitions.map { it.example }.forEach {
-            if (it != null) data.addAll(it.split(Regex("\\s+")))
-        }
-
-        if (!oldData.contains(word.word))
-            data.add(word.word)
-
-        data = sanitizeWords(data, oldData)
-
-        addWordsToFileCache(data, file)
-    }
-
-    private fun addWordsToFileCache(
-        data: MutableSet<String>,
-        file: File
-    ) {
-        data.forEach { item ->
-            if (item.isNotBlank()) {
-                file.appendText(",")
-                file.appendText(item)
+        if (rawWordSearchBody.value != null) {
+            rawWordSearchBody.value?.let {
+                addWordToDatabase(it)
+                handleWordCacheableData(it)
             }
         }
     }
 
+    private suspend fun addWordToDatabase(
+        word: Word
+    ) {
+        val wordDao = db.wordDao()
+        val definitionDao = db.definitionDao()
+
+        val cachedWord = wordDao.getByParam("word", word.word).firstOrNull()
+        if (cachedWord == null) {
+            val wordId = wordDao.insert(WordEntity(word.word, word.pronunciation))
+            definitionDao.insertAll(
+                word.definitions.map {
+                    DefinitionEntity(
+                        type = it.type,
+                        definition = it.definition,
+                        example = it.example,
+                        imageUrl = it.imageUrl,
+                        emoji = it.emoji,
+                        wordId = wordId
+                    )
+                }
+            )
+        }
+    }
+
+    private suspend fun handleWordCacheableData(
+        word: Word
+    ) {
+        val wordDao = db.wordDao()
+
+        val oldData = wordDao.getAll().map { it.word }.toSet()
+        var newData = extractDataFromWordDefinitions(word.definitions)
+
+        if (oldData.contains(word.word).not())
+            newData.add(word.word)
+
+        newData = sanitizeWords(newData)
+
+        addWordDataToCache(newData)
+    }
+
+    private suspend fun addWordDataToCache(
+        newData: MutableSet<String>
+    ) {
+        val wordDao = db.wordDao()
+
+        newData.forEach { item ->
+            val temp = wordDao.getByParam("word", item).firstOrNull()
+            if (temp == null)
+                wordDao.insert(WordEntity(item))
+        }
+    }
+
+    private fun extractDataFromWordDefinitions(
+        definitions: List<Definition>
+    ) = definitions.asSequence()
+        .flatMap { listOf(it.definition, it.example) }
+        .mapNotNull { it?.split(Regex("\\s+")) }
+        .flatten()
+        .toMutableSet()
+
     private fun sanitizeWords(
-        data: Set<String>,
-        oldData: Set<String>
+        data: Set<String>
     ): MutableSet<String> {
         return data.asSequence()
             .map { it.lowercase() }
             .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
-            .filter { it !in oldData }.toMutableSet()
-    }
-
-    private fun readSavedWordsFromFile(file: File): Set<String> {
-        return if (file.exists()) file.readText().split(',').filter { it.isNotBlank() }.toSet()
-        else setOf()
+            .toMutableSet()
     }
 
     private suspend fun getNewRandomWord(): RandomWord {
@@ -282,7 +309,7 @@ class HomeState(
         append(context.getString(R.string.owl_bot_link))
     }
 
-    fun handleSuggestions() {
+    suspend fun handleSuggestions() {
         clearSuggestions()
         if (searchText.length >= Constants.DEFAULT_N_GRAM_SIZE) {
             val suggestions = autoCompleteHelper.suggestTermsForSearch(searchText)

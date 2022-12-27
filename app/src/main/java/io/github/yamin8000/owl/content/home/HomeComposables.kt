@@ -62,7 +62,7 @@ internal fun WordDefinitionsList(
     LazyColumn(
         modifier = Modifier.padding(16.dp),
         state = listState,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             items(searchResult.item) { definition ->
