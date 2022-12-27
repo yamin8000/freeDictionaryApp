@@ -127,10 +127,12 @@ class HomeState(
                 Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
             } catch (e: HttpException) {
                 snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
-                null
+                val cache = searchForDefinitionUsingCache(searchTerm)
+                cache
             } catch (e: Exception) {
                 snackbarHostState.showSnackbar(getErrorMessage(999, context))
-                null
+                val cache = searchForDefinitionUsingCache(searchTerm)
+                cache
             } finally {
                 isSearching.value = false
             }
@@ -176,15 +178,43 @@ class HomeState(
         }
     }
 
+    private suspend fun searchForDefinitionUsingCache(
+        searchTerm: String
+    ): Word? {
+        val word = db.wordDao().getByParam("word", searchTerm.trim().lowercase()).firstOrNull()
+        if (word == null) return null
+        else {
+            val definitions = db.definitionDao().getByParam("wordId", word.id)
+            return Word(
+                word.word,
+                word.pronunciation,
+                definitions.map {
+                    Definition(
+                        type = it.type,
+                        definition = it.definition,
+                        example = it.example,
+                        imageUrl = it.imageUrl,
+                        emoji = it.emoji
+                    )
+                }
+            )
+        }
+    }
+
     private suspend fun addWordToDatabase(
         word: Word
     ) {
         val wordDao = db.wordDao()
         val definitionDao = db.definitionDao()
 
-        val cachedWord = wordDao.getByParam("word", word.word).firstOrNull()
+        val cachedWord = wordDao.getByParam("word", word.word.trim().lowercase()).firstOrNull()
         if (cachedWord == null) {
-            val wordId = wordDao.insert(WordEntity(word.word, word.pronunciation))
+            val wordId = wordDao.insert(
+                WordEntity(
+                    word.word.trim().lowercase(),
+                    word.pronunciation?.trim()?.lowercase()
+                )
+            )
             definitionDao.insertAll(
                 word.definitions.map {
                     DefinitionEntity(
@@ -222,9 +252,9 @@ class HomeState(
         val wordDao = db.wordDao()
 
         newData.forEach { item ->
-            val temp = wordDao.getByParam("word", item).firstOrNull()
+            val temp = wordDao.getByParam("word", item.trim().lowercase()).firstOrNull()
             if (temp == null)
-                wordDao.insert(WordEntity(item))
+                wordDao.insert(WordEntity(item.trim().lowercase()))
         }
     }
 

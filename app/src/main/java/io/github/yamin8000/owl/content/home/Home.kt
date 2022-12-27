@@ -152,6 +152,7 @@ fun HomeContent(
                     }
 
                     val addedToFavourites = stringResource(R.string.added_to_favourites)
+
                     state.rawWordSearchBody.value?.let { word ->
                         WordCard(
                             locale.toLanguageTag(),

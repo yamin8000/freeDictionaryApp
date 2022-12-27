@@ -74,7 +74,7 @@ abstract class BaseDao<T>(tableName: String) {
 
     suspend fun <P> getByParam(
         param: String, value: P
-    ) = getByParam(SimpleSQLiteQuery("$baseWhereQuery '$param'='$value'"))
+    ) = getByParam(SimpleSQLiteQuery("$baseWhereQuery $param='$value'"))
 
     suspend fun getByParams(
         paramPair: Pair<String, *>,
