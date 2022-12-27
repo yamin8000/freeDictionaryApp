@@ -14,7 +14,6 @@ Owl2 is the first project in that I used **Jetpack Compose UI** and **Material3*
 |  💻  |         [**Usage**](#Usage)         |
 |  📩  |      [**Download**](#Download)      |
 |  📋  |      [**Features**](#Features)      |
-|  🧾  |     [**Changelog**](#Changelog)     |
 |  ⚖️  |       [**License**](#License)       |
 
 ---
@@ -23,7 +22,7 @@ Owl2 is the first project in that I used **Jetpack Compose UI** and **Material3*
 
 |                       Dark/Light Theme with Dynamic Color Content                        |                                       Dark/Light Theme                                       |
 |:----------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
-| <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-54.png" alt="preview" width="250"/> | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-55 (2).png" alt="preview" width="250"/> |
+| <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-54.png" alt="preview" width="225"/> | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-55 (2).png" alt="preview" width="225"/> |
 
 More screenshots [here](./screenshots).
 
@@ -48,10 +47,6 @@ Just use the search input to search the word.
 - Emoji of the word if available
 - Picture of the word if available
 - Pronunciation of the word, both IPA text and audio using TTS
-
-## Changelog
-
-[Changelogs](/CHANGELOG.md)
 
 ## License
 
