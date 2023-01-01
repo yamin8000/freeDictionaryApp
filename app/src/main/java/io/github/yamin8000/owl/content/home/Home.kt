@@ -153,9 +153,9 @@ fun HomeContent(
                     if (state.rawWordSearchBody.value != null || state.searchResult.value.item.isNotEmpty()) {
                         state.rawWordSearchBody.value?.let { word ->
                             WordCard(
-                                locale.toLanguageTag(),
-                                word.word,
-                                word.pronunciation,
+                                localeTag = locale.toLanguageTag(),
+                                word = word.word,
+                                pronunciation = word.pronunciation,
                                 onShareWord = onShareWord,
                                 onAddToFavourite = {
                                     state.scope.launch {
@@ -167,9 +167,10 @@ fun HomeContent(
                         }
 
                         WordDefinitionsList(
-                            locale.toLanguageTag(),
-                            state.listState,
-                            state.searchResult.value,
+                            word = state.rawWordSearchBody.value?.word ?: "",
+                            localeTag = locale.toLanguageTag(),
+                            listState = state.listState,
+                            searchResult = state.searchResult.value,
                             onWordChipClick = {
                                 state.searchText = it
                                 state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }

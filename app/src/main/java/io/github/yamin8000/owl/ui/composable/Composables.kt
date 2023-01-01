@@ -21,10 +21,14 @@
 package io.github.yamin8000.owl.ui.composable
 
 import android.speech.tts.TextToSpeech
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,6 +51,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.util.*
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun Ripple(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit = {}
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    Box(
+        content = { content() },
+        modifier = modifier
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = rememberRipple(),
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
+    )
+}
 
 @Composable
 fun EmptyList() {

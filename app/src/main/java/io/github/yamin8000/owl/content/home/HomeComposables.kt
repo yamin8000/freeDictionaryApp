@@ -43,10 +43,7 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
-import io.github.yamin8000.owl.ui.composable.ClickableIcon
-import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
-import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
-import io.github.yamin8000.owl.ui.composable.TtsAwareComposable
+import io.github.yamin8000.owl.ui.composable.*
 import io.github.yamin8000.owl.ui.util.DynamicThemePrimaryColorsFromImage
 import io.github.yamin8000.owl.ui.util.rememberDominantColorState
 import io.github.yamin8000.owl.util.ImmutableHolder
@@ -54,6 +51,7 @@ import io.github.yamin8000.owl.util.speak
 
 @Composable
 internal fun WordDefinitionsList(
+    word: String,
     localeTag: String,
     listState: LazyListState,
     searchResult: ImmutableHolder<List<Definition>>,
@@ -68,6 +66,7 @@ internal fun WordDefinitionsList(
             items(searchResult.item) { definition ->
                 key(definition.hashCode()) {
                     DynamicColorDefinitionCard(
+                        word,
                         localeTag,
                         definition,
                         onWordChipClick = onWordChipClick
@@ -170,30 +169,34 @@ internal fun WordEmojiText(
 
 @Composable
 internal fun WordExampleText(
+    word: String,
     example: String,
     localeTag: String,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
+        content = { HighlightText(fullText = example, highlightedText = word) },
         text = example,
         title = stringResource(R.string.example),
-        Icons.TwoTone.TextSnippet,
-        localeTag,
+        imageVector = Icons.TwoTone.TextSnippet,
+        localeTag = localeTag,
         onDoubleClick = onDoubleClick
     )
 }
 
 @Composable
 internal fun WordDefinitionText(
+    word: String,
     definition: String,
     localeTag: String,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
+        content = { HighlightText(fullText = definition, highlightedText = word) },
         text = definition,
         title = stringResource(R.string.definition),
-        Icons.TwoTone.ShortText,
-        localeTag,
+        imageVector = Icons.TwoTone.ShortText,
+        localeTag = localeTag,
         onDoubleClick = onDoubleClick
     )
 }
@@ -215,6 +218,7 @@ internal fun WordTypeText(
 
 @Composable
 internal fun DynamicColorDefinitionCard(
+    word: String,
     localeTag: String,
     definition: Definition,
     onWordChipClick: (String) -> Unit
@@ -226,6 +230,7 @@ internal fun DynamicColorDefinitionCard(
                 dominantColorState.updateColorsFromImageUrl(definition.imageUrl)
             }
             DefinitionCard(
+                word = word,
                 localeTag = localeTag,
                 definition = definition,
                 onWordChipClick = onWordChipClick,
@@ -238,6 +243,7 @@ internal fun DynamicColorDefinitionCard(
     } else {
         dominantColorState.reset()
         DefinitionCard(
+            word = word,
             localeTag = localeTag,
             definition = definition,
             onWordChipClick = onWordChipClick
@@ -247,6 +253,7 @@ internal fun DynamicColorDefinitionCard(
 
 @Composable
 internal fun DefinitionCard(
+    word: String,
     localeTag: String,
     definition: Definition,
     cardColors: CardColors = CardDefaults.cardColors(),
@@ -277,14 +284,16 @@ internal fun DefinitionCard(
                     )
                 }
                 WordDefinitionText(
+                    word,
                     definition.definition,
                     localeTag,
                     onDoubleClick = onWordChipClick
                 )
                 if (definition.example != null) {
                     WordExampleText(
-                        definition.example,
-                        localeTag,
+                        word = word,
+                        example = definition.example,
+                        localeTag = localeTag,
                         onDoubleClick = onWordChipClick
                     )
                 }

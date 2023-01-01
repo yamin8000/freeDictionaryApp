@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
+import io.github.yamin8000.owl.ui.composable.HighlightText
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.ui.theme.Samim
@@ -76,7 +77,7 @@ fun MainBottomBar(
             ) {
                 items(suggestions.item) {
                     ElevatedSuggestionChip(
-                        label = { Text(it) },
+                        label = { HighlightText(it, searchText) },
                         onClick = {
                             onSuggestionClick(it)
                             searchText = it

@@ -42,9 +42,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -62,6 +60,27 @@ import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import io.github.yamin8000.owl.util.getCurrentLocale
 import io.github.yamin8000.owl.util.speak
+
+@Composable
+fun HighlightText(
+    fullText: String,
+    highlightedText: String,
+    highlightedTextStyle: SpanStyle = SpanStyle(
+        fontWeight = FontWeight.ExtraBold,
+        textDecoration = TextDecoration.Underline
+    )
+) {
+    if (highlightedText.isNotBlank() && fullText.contains(highlightedText, true)) {
+        val start = fullText.indexOf(highlightedText, 0, true)
+        val end = start + highlightedText.length
+        Text(
+            buildAnnotatedString {
+                append(fullText)
+                addStyle(highlightedTextStyle, start, end)
+            }
+        )
+    } else Text(fullText)
+}
 
 @Composable
 fun PersianText(
@@ -109,32 +128,12 @@ fun PersianText(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun Ripple(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit = {}
-) {
-    Box(
-        modifier = modifier
-            .combinedClickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(),
-                onClick = onClick,
-                onLongClick = onLongClick
-            ),
-        content = { content() }
-    )
-}
-
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CopyAbleRippleText(
     text: String,
-    textDecoration: TextDecoration = TextDecoration.None,
     onClick: () -> Unit,
+    content: @Composable (() -> Unit)? = null,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     val textCopied = stringResource(R.string.text_copied)
@@ -145,28 +144,27 @@ fun CopyAbleRippleText(
     var isDialogShown by remember { mutableStateOf(false) }
 
     Box(
+        content = {
+            Box(
+                modifier = Modifier.padding(8.dp),
+                content = { content?.invoke() ?: Text(text) }
+            )
+        },
         modifier = Modifier
             .clip(CutCornerShape(15.dp))
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
                 onClick = onClick,
+                onDoubleClick = { isDialogShown = true },
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     clipboardManager.setText(AnnotatedString(text))
                     Toast
                         .makeText(context, textCopied, Toast.LENGTH_SHORT)
                         .show()
-                },
-                onDoubleClick = { isDialogShown = true }
-            ),
-        content = {
-            Text(
-                text = text,
-                textDecoration = textDecoration,
-                modifier = Modifier.padding(8.dp)
+                }
             )
-        }
     )
     if (isDialogShown) {
         Dialog(
@@ -212,6 +210,7 @@ fun CopyAbleRippleTextWithIcon(
     title: String,
     imageVector: ImageVector,
     onClick: () -> Unit,
+    content: @Composable (() -> Unit)? = null,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     Row(
@@ -227,10 +226,11 @@ fun CopyAbleRippleTextWithIcon(
                     imageVector = imageVector,
                     contentDescription = text
                 )
-                PersianText(text = title)
+                PersianText(title)
             }
             CopyAbleRippleText(
                 text = text,
+                content = content,
                 onClick = onClick,
                 onDoubleClick = onDoubleClick
             )
@@ -244,6 +244,7 @@ fun SpeakableRippleTextWithIcon(
     title: String,
     imageVector: ImageVector,
     localeTag: String,
+    content: @Composable (() -> Unit)? = null,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     TtsAwareComposable(
@@ -251,6 +252,7 @@ fun SpeakableRippleTextWithIcon(
         content = {
             CopyAbleRippleTextWithIcon(
                 text = text,
+                content = content,
                 title = title,
                 imageVector = imageVector,
                 onClick = { it.speak(text) },
