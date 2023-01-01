@@ -21,6 +21,8 @@
 package io.github.yamin8000.owl.ui.composable
 
 import android.speech.tts.TextToSpeech
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -158,6 +160,13 @@ fun SurfaceWithTitle(
     }
 }
 
+enum class IconClickState {
+    Clicked,
+    Normal;
+
+    fun flip() = if (this == Clicked) Normal else Clicked
+}
+
 @Composable
 fun ClickableIcon(
     modifier: Modifier = Modifier,
@@ -165,13 +174,52 @@ fun ClickableIcon(
     contentDescription: String,
     onClick: () -> Unit
 ) {
+    val defaultSize = imageVector.defaultHeight
+
+    var currentState by remember { mutableStateOf(IconClickState.Normal) }
+    val transition = updateTransition(currentState, label = "")
+
+    val tint by transition.animateColor(
+        label = ""
+    ) {
+        when (it) {
+            IconClickState.Normal -> LocalContentColor.current
+            IconClickState.Clicked -> MaterialTheme.colorScheme.primary
+        }
+    }
+
+    val size by transition.animateDp(
+        label = ""
+    ) {
+        when (it) {
+            IconClickState.Normal -> defaultSize
+            IconClickState.Clicked -> (defaultSize.value * 1.25).dp
+        }
+    }
+
+    var isAnimating by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isAnimating) {
+        if (isAnimating) {
+            currentState = currentState.flip()
+            delay(300)
+            currentState = currentState.flip()
+        }
+        isAnimating = false
+    }
+
     ClickableIcon(
         modifier = modifier,
-        onClick = onClick,
+        onClick = {
+            onClick()
+            isAnimating = true
+        },
         icon = {
             Icon(
                 imageVector = imageVector,
                 contentDescription = contentDescription,
+                modifier = Modifier.size(size),
+                tint = tint
             )
         }
     )
