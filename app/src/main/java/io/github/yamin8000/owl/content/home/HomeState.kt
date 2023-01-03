@@ -127,11 +127,11 @@ class HomeState(
                 Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
             } catch (e: HttpException) {
                 snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
-                val cache = searchForDefinitionUsingCache(searchTerm)
+                val cache = checkIfDefinitionIsCached(searchTerm)
                 cache
             } catch (e: Exception) {
                 snackbarHostState.showSnackbar(getErrorMessage(999, context))
-                val cache = searchForDefinitionUsingCache(searchTerm)
+                val cache = checkIfDefinitionIsCached(searchTerm)
                 cache
             } finally {
                 isSearching.value = false
@@ -178,27 +178,31 @@ class HomeState(
         }
     }
 
-    private suspend fun searchForDefinitionUsingCache(
+    private suspend fun checkIfDefinitionIsCached(
         searchTerm: String
     ): Word? {
         val word = db.wordDao().getByParam("word", searchTerm.trim().lowercase()).firstOrNull()
-        if (word == null) return null
-        else {
-            val definitions = db.definitionDao().getByParam("wordId", word.id)
-            return Word(
-                word.word,
-                word.pronunciation,
-                definitions.map {
-                    Definition(
-                        type = it.type,
-                        definition = it.definition,
-                        example = it.example,
-                        imageUrl = it.imageUrl,
-                        emoji = it.emoji
-                    )
-                }
-            )
-        }
+        return if (word != null) retrieveCachedWordData(word) else null
+    }
+
+    private suspend fun retrieveCachedWordData(
+        word: WordEntity
+    ): Word? {
+        val definitions = db.definitionDao().getByParam("wordId", word.id)
+        if (definitions.isEmpty()) return null
+        return Word(
+            word.word,
+            word.pronunciation,
+            definitions.map {
+                Definition(
+                    type = it.type,
+                    definition = it.definition,
+                    example = it.example,
+                    imageUrl = it.imageUrl,
+                    emoji = it.emoji
+                )
+            }
+        )
     }
 
     private suspend fun addWordToDatabase(
