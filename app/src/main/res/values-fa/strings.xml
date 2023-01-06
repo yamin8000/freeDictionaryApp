@@ -60,4 +60,6 @@
     <string name="example">نمونه</string>
     <string name="definition">معنی</string>
     <string name="type">نوع</string>
+    <string name="general">عمومی</string>
+    <string name="vibrate_on_scroll">لرزش در زمان پیمایش لیست</string>
 </resources>

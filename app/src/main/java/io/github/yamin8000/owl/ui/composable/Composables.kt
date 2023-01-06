@@ -24,6 +24,7 @@ import android.speech.tts.TextToSpeech
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +42,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,6 +57,40 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.util.*
 
+@Composable
+fun SwitchWithText(
+    caption: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    val hapticFeedback = LocalHapticFeedback.current
+    val internalChecked = rememberSaveable { mutableStateOf(checked) }
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+            .clickable(
+                role = Role.Switch,
+                onClick = {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                    internalChecked.value = !internalChecked.value
+                    onCheckedChange(internalChecked.value)
+                }
+            ),
+        content = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Switch(
+                    checked = checked,
+                    onCheckedChange = null
+                )
+                PersianText(caption)
+            }
+        }
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

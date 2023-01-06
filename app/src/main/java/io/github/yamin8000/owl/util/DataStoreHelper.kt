@@ -21,10 +21,7 @@
 package io.github.yamin8000.owl.util
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
@@ -60,6 +57,21 @@ class DataStoreHelper(
     ) {
         datastore.edit {
             it[intPreferencesKey(key)] = value
+        }
+    }
+
+    suspend fun getBool(
+        key: String
+    ) = datastore.data.map {
+        it[booleanPreferencesKey(key)]
+    }.firstOrNull()
+
+    suspend fun setBool(
+        key: String,
+        value: Boolean
+    ) {
+        datastore.edit {
+            it[booleanPreferencesKey(key)] = value
         }
     }
 }

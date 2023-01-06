@@ -24,11 +24,13 @@ import io.github.yamin8000.owl.db.AppDatabase
 
 object Constants {
     lateinit var db: AppDatabase
-
     const val LOG_TAG = "<==>"
+
     const val IMAGE_URL = "image_url"
     const val THEME = "theme"
     const val TTS_LANG = "tts_lang"
+    const val IS_VIBRATING = "is_vibrating"
+
     const val DEFAULT_N_GRAM_SIZE = 3
 
     val NOT_WORD_CHARS_REGEX = Regex("\\W+")

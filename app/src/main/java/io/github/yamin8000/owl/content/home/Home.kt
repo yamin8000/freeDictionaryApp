@@ -65,7 +65,7 @@ fun HomeContent(
     ) {
         val state = rememberHomeState()
 
-        if (state.listState.isScrollInProgress)
+        if (state.listState.isScrollInProgress && state.isVibrating.value)
             LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
 
         InternetAwareComposable { state.isOnline.value = it }

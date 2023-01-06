@@ -38,18 +38,20 @@ import java.util.*
 
 class SettingsState(
     context: Context,
-    val coroutineScope: LifecycleCoroutineScope,
+    val scope: LifecycleCoroutineScope,
     val themeSetting: MutableState<ThemeSetting>,
-    var ttsLang: MutableState<String>
+    var ttsLang: MutableState<String>,
+    val isVibrating: MutableState<Boolean>
 ) {
     private val dataStore = DataStoreHelper(context.settingsDataStore)
 
     init {
-        coroutineScope.launch {
+        scope.launch {
             themeSetting.value = ThemeSetting.valueOf(
                 dataStore.getString(Constants.THEME) ?: ThemeSetting.System.name
             )
             ttsLang.value = dataStore.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
+            isVibrating.value = dataStore.getBool(Constants.IS_VIBRATING) ?: true
         }
     }
 
@@ -57,18 +59,21 @@ class SettingsState(
         newTtsLang: String
     ) {
         ttsLang.value = newTtsLang
-        coroutineScope.launch {
-            dataStore.setString(Constants.TTS_LANG, newTtsLang)
-        }
+        scope.launch { dataStore.setString(Constants.TTS_LANG, newTtsLang) }
     }
 
     suspend fun updateThemeSetting(
         newTheme: ThemeSetting
     ) {
         themeSetting.value = newTheme
-        coroutineScope.launch {
-            dataStore.setString(Constants.THEME, newTheme.name)
-        }
+        scope.launch { dataStore.setString(Constants.THEME, newTheme.name) }
+    }
+
+    suspend fun updateVibrationSetting(
+        newVibrationSetting: Boolean
+    ) {
+        isVibrating.value = newVibrationSetting
+        scope.launch { dataStore.setBool(Constants.IS_VIBRATING, newVibrationSetting) }
     }
 }
 
@@ -77,7 +82,8 @@ fun rememberSettingsState(
     context: Context = LocalContext.current,
     coroutineScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
     themeSetting: MutableState<ThemeSetting> = rememberSaveable { mutableStateOf(ThemeSetting.System) },
-    ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) }
-) = remember(context, themeSetting, coroutineScope, ttsLang) {
-    SettingsState(context, coroutineScope, themeSetting, ttsLang)
+    ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) },
+    isVibrating: MutableState<Boolean> = rememberSaveable { mutableStateOf(true) }
+) = remember(context, themeSetting, coroutineScope, ttsLang, isVibrating) {
+    SettingsState(context, coroutineScope, themeSetting, ttsLang, isVibrating)
 }

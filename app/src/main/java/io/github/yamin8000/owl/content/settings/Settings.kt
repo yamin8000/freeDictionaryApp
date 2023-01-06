@@ -45,10 +45,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.composable.SettingsItemCard
-import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
-import io.github.yamin8000.owl.ui.composable.TtsAwareComposable
+import io.github.yamin8000.owl.ui.composable.*
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import kotlinx.coroutines.launch
 import java.util.*
@@ -65,8 +62,13 @@ fun SettingsContent(
         title = stringResource(id = R.string.settings),
         onBackClick = onBackClick
     ) {
+        GeneralSettings(
+            isVibrationOn = state.isVibrating.value,
+            isVibrationOnChange = { state.scope.launch { state.updateVibrationSetting(it) } }
+        )
+
         ThemeChanger(state.themeSetting.value) { newTheme ->
-            state.coroutineScope.launch { state.updateThemeSetting(newTheme) }
+            state.scope.launch { state.updateThemeSetting(newTheme) }
             onThemeChanged(newTheme)
         }
 
@@ -75,17 +77,26 @@ fun SettingsContent(
 
         TtsLanguagesCard(
             currentLocaleTag = locale.toLanguageTag(),
-            onLanguageItemClick = {
-                scope.launch {
-                    state.updateTtsLang(it)
-
-                }
-            }
+            onLanguageItemClick = { scope.launch { state.updateTtsLang(it) } }
         )
-        TtsAwareComposable {
-
-        }
     }
+}
+
+@Composable
+fun GeneralSettings(
+    isVibrationOn: Boolean,
+    isVibrationOnChange: (Boolean) -> Unit
+) {
+    SettingsItemCard(
+        title = stringResource(R.string.general),
+        content = {
+            SwitchWithText(
+                caption = stringResource(R.string.vibrate_on_scroll),
+                checked = isVibrationOn,
+                onCheckedChange = isVibrationOnChange
+            )
+        }
+    )
 }
 
 @Composable

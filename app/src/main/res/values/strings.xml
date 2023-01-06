@@ -64,4 +64,6 @@
     <string name="definition">Definition</string>
     <string name="type">Type</string>
     <string name="this_text_extracted_from_owlbot" translatable="false">This text is extracted from Owlbot Dictionary.</string>
+    <string name="general">General</string>
+    <string name="vibrate_on_scroll">Vibrate on scroll</string>
 </resources>

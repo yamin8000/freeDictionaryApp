@@ -71,7 +71,8 @@ class HomeState(
     val isSharing: MutableState<Boolean>,
     val ttsLang: MutableState<String>,
     val searchSuggestions: MutableState<ImmutableHolder<List<String>>>,
-    val isOnline: MutableState<Boolean>
+    val isOnline: MutableState<Boolean>,
+    val isVibrating: MutableState<Boolean>
 ) {
     val scope = lifecycleOwner.lifecycleScope
 
@@ -86,6 +87,7 @@ class HomeState(
     init {
         scope.launch {
             ttsLang.value = dataStore.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
+            isVibrating.value = dataStore.getBool(Constants.IS_VIBRATING) ?: true
         }
     }
 
@@ -390,7 +392,8 @@ fun rememberHomeState(
     searchSuggestions: MutableState<ImmutableHolder<List<String>>> = rememberSaveable(stateSaver = getImmutableHolderSaver()) {
         mutableStateOf(ImmutableHolder(emptyList()))
     },
-    isOnline: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
+    isOnline: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
+    isVibrating: MutableState<Boolean> = rememberSaveable { mutableStateOf(true) }
 ) = remember(
     listState,
     isSearching,
@@ -403,7 +406,8 @@ fun rememberHomeState(
     isSharing,
     ttsLang,
     searchSuggestions,
-    isOnline
+    isOnline,
+    isVibrating
 ) {
     HomeState(
         listState,
@@ -417,6 +421,7 @@ fun rememberHomeState(
         isSharing,
         ttsLang,
         searchSuggestions,
-        isOnline
+        isOnline,
+        isVibrating
     )
 }
