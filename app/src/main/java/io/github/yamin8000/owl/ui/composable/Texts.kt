@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import io.github.yamin8000.owl.util.getCurrentLocale
@@ -151,7 +152,7 @@ fun CopyAbleRippleText(
             )
         },
         modifier = Modifier
-            .clip(CutCornerShape(15.dp))
+            .clip(DefaultCutShape)
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
@@ -247,7 +248,7 @@ fun SpeakableRippleTextWithIcon(
     content: @Composable (() -> Unit)? = null,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
-    TtsAwareComposable(
+    TtsAwareContent(
         ttsLanguageLocaleTag = localeTag,
         content = {
             CopyAbleRippleTextWithIcon(

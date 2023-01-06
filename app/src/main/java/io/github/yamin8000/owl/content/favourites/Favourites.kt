@@ -20,65 +20,63 @@
 
 package io.github.yamin8000.owl.content.favourites
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.EmptyListErrorText
+import io.github.yamin8000.owl.ui.composable.EmptyList
 import io.github.yamin8000.owl.ui.composable.RemovableCard
-import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
-import io.github.yamin8000.owl.ui.theme.PreviewTheme
-import io.github.yamin8000.owl.util.log
+import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
+import io.github.yamin8000.owl.util.list.ListSatiation
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavouritesContent(
     onFavouritesItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    "recompose content".log()
-    val favouritesState = rememberFavouritesState()
+    val state = rememberFavouritesState()
 
-    SurfaceWithTitle(
+    ScaffoldWithTitle(
         title = stringResource(R.string.favourites),
         onBackClick = onBackClick
     ) {
-        if (favouritesState.favourites.value.isNotEmpty()) {
-            FavouritesGrid(
-                favourites = favouritesState.favourites.value.toList(),
-                onItemClick = onFavouritesItemClick,
-                onItemLongClick = { favourite ->
-                    favouritesState.lifeCycleScope.launch {
-                        favouritesState.removeFavourite(favourite)
+        when (state.listSatiation) {
+            ListSatiation.Empty -> EmptyList()
+            ListSatiation.Partial -> {
+                FavouritesGrid(
+                    favourites = state.favourites.value.toList(),
+                    onItemClick = onFavouritesItemClick,
+                    onItemLongClick = { favourite ->
+                        state.scope.launch { state.removeFavourite(favourite) }
                     }
-                }
-            )
-        } else EmptyListErrorText()
+                )
+            }
+        }
     }
 }
 
 @Composable
 fun FavouritesGrid(
-    //unstable
     favourites: List<String>,
     onItemClick: (String) -> Unit,
     onItemLongClick: (String) -> Unit
 ) {
-    val gridColumns = rememberSaveable { if (favourites.size == 1) 1 else 2 }
+    val span = rememberSaveable { if (favourites.size == 1) 1 else 2 }
     LazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        columns = GridCells.Fixed(gridColumns)
+        columns = GridCells.Fixed(span)
     ) {
         items(favourites) { favourite ->
             FavouriteItem(
@@ -96,48 +94,9 @@ private fun FavouriteItem(
     onClick: (String) -> Unit,
     onLongClick: () -> Unit
 ) {
-    "recompose $favourite".log()
     RemovableCard(
         item = favourite,
         onClick = { onClick(favourite) },
         onLongClick = onLongClick
     )
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Composable
-private fun FavouriteItemPreview() {
-    PreviewTheme {
-        FavouriteItem(
-            favourite = "Owl",
-            onClick = {},
-            onLongClick = {}
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Composable
-private fun FavouritesGridPreview() {
-    PreviewTheme {
-        FavouritesGrid(
-            favourites = listOf("Owl", "Bird", "Android"),
-            onItemClick = {},
-            onItemLongClick = {}
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Composable
-private fun Preview() {
-    PreviewTheme {
-        FavouritesContent(
-            onFavouritesItemClick = {},
-            onBackClick = {}
-        )
-    }
 }

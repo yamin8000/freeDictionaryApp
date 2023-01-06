@@ -288,9 +288,7 @@ class HomeState(
     suspend fun addToFavourite(
         favouriteWord: String
     ) {
-        val wordInDataStore = withContext(lifeCycleContext) {
-            findWordInDataStore(favouriteWord)
-        }
+        val wordInDataStore = withContext(lifeCycleContext) { findWordInDataStore(favouriteWord) }
         if (wordInDataStore == null) addFavouriteWordToDataStore(favouriteWord)
     }
 
@@ -307,19 +305,6 @@ class HomeState(
     ) = getFavourites()[stringPreferencesKey(favouriteWord)]
 
     private suspend fun getFavourites() = context.favouritesDataStore.data.first()
-
-    fun handleShareIntent() {
-        isSharing.value = false
-        val text = createShareText()
-
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, text)
-            type = "text/plain"
-        }
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        context.startActivity(shareIntent)
-    }
 
     private fun createShareText() = buildString {
         append("Word: ")
@@ -347,6 +332,31 @@ class HomeState(
         append(context.getString(R.string.owl_bot_link))
     }
 
+    private fun getErrorMessage(
+        code: Int,
+        context: Context
+    ) = when (code) {
+        401 -> context.getString(R.string.api_authorization_error)
+        404 -> context.getString(R.string.definition_not_found)
+        429 -> context.getString(R.string.api_throttled)
+        998 -> context.getString(R.string.no_search_term_entered)
+        999 -> context.getString(R.string.untracked_error)
+        else -> context.getString(R.string.general_net_error)
+    }
+
+    fun handleShareIntent() {
+        isSharing.value = false
+        val text = createShareText()
+
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, text)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
+    }
+
     suspend fun handleSuggestions() {
         clearSuggestions()
         if (searchText.length >= Constants.DEFAULT_N_GRAM_SIZE) {
@@ -361,18 +371,6 @@ class HomeState(
     fun clearSuggestions() {
         searchSuggestions.value = ImmutableHolder(listOf())
     }
-}
-
-private fun getErrorMessage(
-    code: Int,
-    context: Context
-) = when (code) {
-    401 -> context.getString(R.string.api_authorization_error)
-    404 -> context.getString(R.string.definition_not_found)
-    429 -> context.getString(R.string.api_throttled)
-    998 -> context.getString(R.string.no_search_term_entered)
-    999 -> context.getString(R.string.untracked_error)
-    else -> context.getString(R.string.general_net_error)
 }
 
 @Composable

@@ -59,21 +59,21 @@ class SettingsState(
         newTtsLang: String
     ) {
         ttsLang.value = newTtsLang
-        scope.launch { dataStore.setString(Constants.TTS_LANG, newTtsLang) }
+        dataStore.setString(Constants.TTS_LANG, newTtsLang)
     }
 
     suspend fun updateThemeSetting(
         newTheme: ThemeSetting
     ) {
         themeSetting.value = newTheme
-        scope.launch { dataStore.setString(Constants.THEME, newTheme.name) }
+        dataStore.setString(Constants.THEME, newTheme.name)
     }
 
     suspend fun updateVibrationSetting(
         newVibrationSetting: Boolean
     ) {
         isVibrating.value = newVibrationSetting
-        scope.launch { dataStore.setBool(Constants.IS_VIBRATING, newVibrationSetting) }
+        dataStore.setBool(Constants.IS_VIBRATING, newVibrationSetting)
     }
 }
 

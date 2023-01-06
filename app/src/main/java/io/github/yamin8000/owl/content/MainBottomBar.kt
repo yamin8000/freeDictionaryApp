@@ -56,6 +56,7 @@ import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getCurrentLocale
+import kotlinx.coroutines.delay
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +87,8 @@ fun MainBottomBar(
                 }
             }
         }
+        if (isSearching)
+            RainbowLinearProgress()
         BottomAppBar {
             TextField(
                 singleLine = true,
@@ -133,12 +136,32 @@ fun MainBottomBar(
                     capitalization = KeyboardCapitalization.Words
                 ),
                 supportingText = {
-                    if (isSearching)
-                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+
                 }
             )
         }
     }
+}
+
+@Composable
+private fun RainbowLinearProgress() {
+    fun randomBeam(): Int = (16..255).random()
+    val colors = buildList {
+        repeat((5..10).random()) {
+            add(androidx.compose.ui.graphics.Color(randomBeam(), randomBeam(), randomBeam()))
+        }
+    }
+    var color by remember { mutableStateOf(colors.first()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            color = colors.random()
+            delay(250)
+        }
+    }
+    LinearProgressIndicator(
+        modifier = Modifier.fillMaxWidth(),
+        color = color
+    )
 }
 
 private fun getTextStyleBasedOnLocale(

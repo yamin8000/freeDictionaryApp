@@ -23,67 +23,61 @@ package io.github.yamin8000.owl.content.history
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.EmptyListErrorText
-import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.composable.RemovableCard
-import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
+import io.github.yamin8000.owl.ui.composable.*
+import io.github.yamin8000.owl.ui.navigation.Nav.Routes.history
+import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.util.list.ListSatiation
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryContent(
     onHistoryItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val historyState = rememberHistoryState()
+    val state = rememberHistoryState()
 
-    SurfaceWithTitle(
+    ScaffoldWithTitle(
         title = stringResource(R.string.search_history),
         onBackClick = onBackClick
     ) {
-        if (historyState.history.value.isNotEmpty()) {
-            RemoveAlHistoryButton {
-                historyState.lifeCycleScope.launch { historyState.removeAllHistory() }
-            }
-            HistoryGrid(
-                history = historyState.history.value.toList(),
-                onItemClick = onHistoryItemClick,
-                onItemLongClick = { history ->
-                    historyState.lifeCycleScope.launch {
-                        historyState.removeSingleHistory(history)
+        when (state.listSatiation) {
+            ListSatiation.Empty -> EmptyList()
+            ListSatiation.Partial -> {
+                val list = state.history.value.toList()
+                LazyVerticalGrid(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    columns = GridCells.Fixed(2)
+                ) {
+                    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+                        RemoveAlHistoryButton {
+                            state.lifeCycleScope.launch { state.removeAllHistory() }
+                        }
+                    }
+                    items(span = { GridItemSpan(1) }, count = list.size) {
+                        HistoryItem(
+                            history = list[it],
+                            onClick = onHistoryItemClick,
+                            onLongClick = {
+                                state.lifeCycleScope.launch {
+                                    state.removeSingleHistory(history)
+                                }
+                            }
+                        )
                     }
                 }
-            )
-        } else EmptyListErrorText()
-    }
-}
-
-@Composable
-fun HistoryGrid(
-    //unstable
-    history: List<String>,
-    onItemClick: (String) -> Unit,
-    onItemLongClick: (String) -> Unit
-) {
-    LazyVerticalGrid(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        columns = GridCells.Fixed(2)
-    ) {
-        items(history) {
-            HistoryItem(
-                history = it,
-                onClick = onItemClick,
-                onLongClick = onItemLongClick
-            )
+            }
         }
     }
 }
@@ -94,6 +88,7 @@ private fun RemoveAlHistoryButton(
 ) {
     Button(
         onClick = onRemoveAllClick,
+        shape = DefaultCutShape,
         content = { PersianText(text = stringResource(R.string.remove_history)) }
     )
 }
@@ -116,15 +111,6 @@ fun HistoryItem(
 @Composable
 private fun HistoryItemPreview() {
     PreviewTheme { HistoryItem(history = "Owl", onClick = {}, onLongClick = {}) }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Composable
-private fun HistoryGridPreview() {
-    PreviewTheme {
-        HistoryGrid(history = listOf("Owl", "Book", "test"), onItemClick = {}, onItemLongClick = {})
-    }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

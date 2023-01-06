@@ -26,6 +26,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,14 +44,15 @@ import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.Ripple
-import io.github.yamin8000.owl.ui.composable.SurfaceWithTitle
+import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutContent(
     onBackClick: () -> Unit
 ) {
-    SurfaceWithTitle(
+    ScaffoldWithTitle(
         title = stringResource(R.string.about),
         onBackClick = onBackClick
     ) {

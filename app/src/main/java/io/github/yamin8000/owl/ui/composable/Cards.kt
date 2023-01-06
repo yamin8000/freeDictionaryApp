@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 
 @Composable
 fun SettingsItemCard(
@@ -41,23 +42,26 @@ fun SettingsItemCard(
     title: String,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Card(
-        modifier = modifier,
-        shape = CutCornerShape(15.dp)
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            modifier = columnModifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            content = {
-                PersianText(
-                    text = title,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                content()
-            }
+        PersianText(
+            text = title,
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.primary
         )
+        Card(
+            modifier = modifier,
+            shape = DefaultCutShape
+        ) {
+            Column(
+                modifier = columnModifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                content = { content() }
+            )
+        }
     }
 }
 
@@ -69,7 +73,7 @@ fun RemovableCard(
 ) {
     val haptic = LocalHapticFeedback.current
     Card(
-        shape = CutCornerShape(15.dp)
+        shape = DefaultCutShape
     ) {
         Ripple(
             modifier = Modifier.padding(8.dp),

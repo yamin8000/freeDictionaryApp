@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
@@ -154,47 +155,53 @@ fun MySnackbar(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SurfaceWithTitle(
+fun ScaffoldWithTitle(
     title: String,
     modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     onBackClick: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable BoxScope.() -> Unit
 ) {
-    Surface(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            OutlinedCard(
-                modifier = Modifier.fillMaxWidth()
+    Scaffold(
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            Surface(
+                shadowElevation = 8.dp
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    PersianText(
-                        modifier = Modifier.padding(8.dp),
-                        text = title,
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    ClickableIcon(
-                        imageVector = Icons.TwoTone.ArrowBack,
-                        contentDescription = "",
-                        onClick = { onBackClick() }
-                    )
-                }
+                TopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    title = {
+                        PersianText(
+                            modifier = Modifier.padding(8.dp),
+                            text = title,
+                            fontSize = 20.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    },
+                    actions = {
+                        ClickableIcon(
+                            imageVector = Icons.TwoTone.ArrowBack,
+                            contentDescription = "",
+                            onClick = { onBackClick() }
+                        )
+                    }
+                )
             }
-            content()
+        },
+        content = {
+            Box(
+                modifier = Modifier
+                    .padding(it)
+                    .padding(16.dp)
+                    .fillMaxHeight(),
+                content = { content() }
+            )
         }
-    }
+    )
 }
 
 enum class IconClickState {
@@ -280,16 +287,25 @@ fun ClickableIcon(
 }
 
 @Composable
-fun TtsAwareComposable(
+fun TtsAwareContent(
     ttsLanguageLocaleTag: String = Locale.US.toLanguageTag(),
-    errorContent: @Composable (() -> Unit)? = null,
     content: @Composable (TextToSpeech) -> Unit
 ) {
     val ttsHelper = TTS(LocalContext.current, Locale.forLanguageTag(ttsLanguageLocaleTag))
     val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
     LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
     if (tts.value != null) tts.value?.let { content(it) }
-    else errorContent?.invoke()
+}
+
+@Composable
+fun TtsAwareFeature(
+    ttsLanguageLocaleTag: String = Locale.US.toLanguageTag(),
+    onTtsReady: (TextToSpeech) -> Unit
+) {
+    val ttsHelper = TTS(LocalContext.current, Locale.forLanguageTag(ttsLanguageLocaleTag))
+    val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
+    LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
+    if (tts.value != null) tts.value?.let { onTtsReady(it) }
 }
 
 @Composable

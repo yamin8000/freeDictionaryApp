@@ -33,6 +33,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.content.historyDataStore
+import io.github.yamin8000.owl.util.list.ListSatiation
 import kotlinx.coroutines.launch
 
 class HistoryState(
@@ -42,15 +43,21 @@ class HistoryState(
 ) {
 
     init {
-        lifeCycleScope.launch { getHistory() }
+        lifeCycleScope.launch { fetchHistory() }
     }
 
-    private suspend fun getHistory() {
+    val listSatiation: ListSatiation
+        get() {
+            return when (history.value.size) {
+                0 -> ListSatiation.Empty
+                else -> ListSatiation.Partial
+            }
+        }
+
+    private suspend fun fetchHistory() {
         context.historyDataStore.data.collect { preferences ->
             val newSet = history.value.toMutableSet()
-            preferences.asMap().forEach { entry ->
-                newSet.add(entry.value.toString())
-            }
+            preferences.asMap().forEach { entry -> newSet.add(entry.value.toString()) }
             history.value = newSet
         }
     }
@@ -58,18 +65,14 @@ class HistoryState(
     suspend fun removeSingleHistory(
         singleHistory: String
     ) {
-        context.historyDataStore.edit {
-            it.remove(stringPreferencesKey(singleHistory))
-        }
+        context.historyDataStore.edit { it.remove(stringPreferencesKey(singleHistory)) }
         val newSet = history.value.toMutableSet()
         newSet.remove(singleHistory)
         history.value = newSet
     }
 
     suspend fun removeAllHistory() {
-        context.historyDataStore.edit {
-            it.clear()
-        }
+        context.historyDataStore.edit { it.clear() }
         history.value = emptySet()
     }
 }

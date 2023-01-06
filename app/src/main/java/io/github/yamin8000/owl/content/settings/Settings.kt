@@ -22,34 +22,35 @@ package io.github.yamin8000.owl.content.settings
 
 import android.content.res.Configuration
 import android.os.Build
+import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.*
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.util.speak
 import kotlinx.coroutines.launch
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsContent(
     onThemeChanged: (ThemeSetting) -> Unit,
@@ -58,100 +59,79 @@ fun SettingsContent(
     val state = rememberSettingsState()
     val scope = LocalLifecycleOwner.current.lifecycleScope
 
-    SurfaceWithTitle(
+    var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
+    var textToSpeech: TextToSpeech? by remember { mutableStateOf(null) }
+
+    TtsAwareFeature(
+        ttsLanguageLocaleTag = state.ttsLang.value,
+        onTtsReady = { tts ->
+            textToSpeech = tts
+            englishLanguages = tts.availableLanguages.filter {
+                it.language == Locale.ENGLISH.language
+            }
+        }
+    )
+
+    ScaffoldWithTitle(
         title = stringResource(id = R.string.settings),
         onBackClick = onBackClick
     ) {
-        GeneralSettings(
-            isVibrationOn = state.isVibrating.value,
-            isVibrationOnChange = { state.scope.launch { state.updateVibrationSetting(it) } }
-        )
-
-        ThemeChanger(state.themeSetting.value) { newTheme ->
-            state.scope.launch { state.updateThemeSetting(newTheme) }
-            onThemeChanged(newTheme)
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item {
+                GeneralSettings(
+                    isVibrating = state.isVibrating.value,
+                    isVibratingChange = { state.scope.launch { state.updateVibrationSetting(it) } }
+                )
+            }
+            item {
+                ThemeChanger(state.themeSetting.value) { newTheme ->
+                    state.scope.launch { state.updateThemeSetting(newTheme) }
+                    onThemeChanged(newTheme)
+                }
+            }
+            item {
+                PersianText(
+                    text = stringResource(R.string.tts_language),
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            items(englishLanguages) {
+                TtsLanguageItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    localeTag = it.toLanguageTag(),
+                    isSelected = it.toLanguageTag() == state.ttsLang.value,
+                    onClick = { tag ->
+                        scope.launch {
+                            state.updateTtsLang(tag)
+                            textToSpeech?.speak(Locale.forLanguageTag(tag).displayName)
+                        }
+                    }
+                )
+            }
         }
-
-        val locale = if (state.ttsLang.value.isEmpty())
-            Locale.US else Locale.forLanguageTag(state.ttsLang.value)
-
-        TtsLanguagesCard(
-            currentLocaleTag = locale.toLanguageTag(),
-            onLanguageItemClick = { scope.launch { state.updateTtsLang(it) } }
-        )
     }
 }
 
 @Composable
 fun GeneralSettings(
-    isVibrationOn: Boolean,
-    isVibrationOnChange: (Boolean) -> Unit
+    isVibrating: Boolean,
+    isVibratingChange: (Boolean) -> Unit
 ) {
     SettingsItemCard(
+        modifier = Modifier.fillMaxWidth(),
         title = stringResource(R.string.general),
         content = {
             SwitchWithText(
                 caption = stringResource(R.string.vibrate_on_scroll),
-                checked = isVibrationOn,
-                onCheckedChange = isVibrationOnChange
+                checked = isVibrating,
+                onCheckedChange = isVibratingChange
             )
         }
     )
-}
-
-@Composable
-fun TtsLanguagesCard(
-    currentLocaleTag: String,
-    onLanguageItemClick: (String) -> Unit
-) {
-    TtsAwareComposable(
-        ttsLanguageLocaleTag = currentLocaleTag,
-        content = { tts ->
-            SettingsItemCard(
-                columnModifier = Modifier.fillMaxWidth(),
-                title = stringResource(R.string.tts_language)
-            ) {
-                val englishLanguages =
-                    tts.availableLanguages.filter { it.language == Locale.ENGLISH.language }
-                if (englishLanguages.isNotEmpty()) {
-                    val localeWithLongestText =
-                        englishLanguages.maxBy { it.displayName.length }
-
-                    SubcomposeLayout { constraints ->
-                        val width = constraints.maxWidth / 2
-
-                        val height = subcompose("viewToMeasure") {
-                            TtsLanguageItem(
-                                localeTag = localeWithLongestText.toLanguageTag(),
-                                modifier = Modifier.width(width.toDp()),
-                                onClick = {}
-                            )
-                        }.first().measure(Constraints()).height.toDp()
-
-                        val content = subcompose("content") {
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalArrangement = Arrangement.spacedBy(4.dp),
-                                content = {
-                                    items(englishLanguages) { item ->
-                                        TtsLanguageItem(
-                                            localeTag = item.toLanguageTag(),
-                                            modifier = Modifier.requiredHeight(height * 1.25f),
-                                            isSelected = item.toLanguageTag() == currentLocaleTag,
-                                            onClick = onLanguageItemClick
-                                        )
-                                    }
-                                }
-                            )
-                        }.first().measure(constraints)
-                        layout(content.width, content.height) {
-                            content.place(0, 0)
-                        }
-                    }
-                } else CircularProgressIndicator()
-            }
-        })
 }
 
 @Composable
@@ -168,9 +148,7 @@ fun TtsLanguageItem(
         modifier = modifier.clickable(
             interactionSource = MutableInteractionSource(),
             indication = LocalIndication.current,
-            onClick = {
-                onClick(localeTag)
-            },
+            onClick = { onClick(localeTag) },
         ),
         colors = colors
     ) {

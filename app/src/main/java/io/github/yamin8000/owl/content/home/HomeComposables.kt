@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.*
 import androidx.compose.material.ripple.rememberRipple
@@ -44,6 +43,7 @@ import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.ui.composable.*
+import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.util.DynamicThemePrimaryColorsFromImage
 import io.github.yamin8000.owl.ui.util.rememberDominantColorState
 import io.github.yamin8000.owl.util.ImmutableHolder
@@ -85,7 +85,7 @@ internal fun WordCard(
     onShareWord: () -> Unit
 ) {
     OutlinedCard(
-        shape = CutCornerShape(15.dp),
+        shape = DefaultCutShape,
         modifier = Modifier
             .indication(
                 interactionSource = remember { MutableInteractionSource() },
@@ -100,9 +100,9 @@ internal fun WordCard(
             WordText(word, localeTag)
             if (pronunciation != null) {
                 PronunciationText(
-                    localeTag,
-                    pronunciation,
-                    word
+                    localeTag = localeTag,
+                    pronunciation = pronunciation,
+                    word = word
                 )
             }
             Row {
@@ -140,7 +140,7 @@ internal fun PronunciationText(
     pronunciation: String,
     word: String
 ) {
-    TtsAwareComposable(
+    TtsAwareContent(
         ttsLanguageLocaleTag = localeTag,
         content = { ttsEngine ->
             CopyAbleRippleTextWithIcon(
@@ -158,11 +158,10 @@ internal fun WordEmojiText(
     emoji: String,
     localeTag: String
 ) {
-    Icons.TwoTone
     SpeakableRippleTextWithIcon(
         text = emoji,
         title = stringResource(R.string.emoji),
-        Icons.TwoTone.EmojiEmotions,
+        imageVector = Icons.TwoTone.EmojiEmotions,
         localeTag
     )
 }
@@ -268,7 +267,7 @@ internal fun DefinitionCard(
     )
 
     Card(
-        shape = CutCornerShape(15.dp),
+        shape = DefaultCutShape,
         modifier = Modifier.fillMaxWidth(),
         colors = cardColors
     ) {
@@ -322,7 +321,7 @@ private fun ImageDialog(
             content = {
                 Surface(
                     modifier = Modifier.wrapContentSize(),
-                    shape = CutCornerShape(15.dp),
+                    shape = DefaultCutShape,
                     content = {
                         DefinitionImage(
                             enabled = !definition.imageUrl.isNullOrBlank(),

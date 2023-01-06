@@ -27,6 +27,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.AnimatedAppIcon
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
@@ -42,41 +43,45 @@ fun MainTopBar(
     onSettingsClick: () -> Unit,
     onInfoClick: () -> Unit,
 ) {
-    TopAppBar(
-        scrollBehavior = scrollBehavior,
-        title = { AnimatedAppIcon() },
-        actions = {
-            ClickableIcon(
-                imageVector = Icons.TwoTone.History,
-                contentDescription = stringResource(R.string.search_history),
-                onClick = onHistoryClick,
-            )
+    Surface(
+        shadowElevation = 8.dp
+    ) {
+        TopAppBar(
+            scrollBehavior = scrollBehavior,
+            title = { AnimatedAppIcon() },
+            actions = {
+                ClickableIcon(
+                    imageVector = Icons.TwoTone.History,
+                    contentDescription = stringResource(R.string.search_history),
+                    onClick = onHistoryClick,
+                )
 
-            ClickableIcon(
-                imageVector = Icons.TwoTone.Favorite,
-                contentDescription = stringResource(R.string.favourites),
-                onClick = onFavouritesClick,
-            )
+                ClickableIcon(
+                    imageVector = Icons.TwoTone.Favorite,
+                    contentDescription = stringResource(R.string.favourites),
+                    onClick = onFavouritesClick,
+                )
 
-            ClickableIcon(
-                imageVector = Icons.TwoTone.Casino,
-                contentDescription = stringResource(R.string.random_word),
-                onClick = onRandomWordClick,
-            )
+                ClickableIcon(
+                    imageVector = Icons.TwoTone.Casino,
+                    contentDescription = stringResource(R.string.random_word),
+                    onClick = onRandomWordClick,
+                )
 
-            ClickableIcon(
-                imageVector = Icons.TwoTone.Settings,
-                contentDescription = stringResource(R.string.settings),
-                onClick = onSettingsClick
-            )
+                ClickableIcon(
+                    imageVector = Icons.TwoTone.Settings,
+                    contentDescription = stringResource(R.string.settings),
+                    onClick = onSettingsClick
+                )
 
-            ClickableIcon(
-                imageVector = Icons.TwoTone.Info,
-                contentDescription = stringResource(R.string.about_app),
-                onClick = onInfoClick
-            )
-        }
-    )
+                ClickableIcon(
+                    imageVector = Icons.TwoTone.Info,
+                    contentDescription = stringResource(R.string.about_app),
+                    onClick = onInfoClick
+                )
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -30,10 +30,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -88,7 +86,6 @@ fun HomeContent(
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
         Scaffold(
-            containerColor = Color.Transparent,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             snackbarHost = {
                 SnackbarHost(state.snackbarHostState) { data ->
@@ -135,16 +132,16 @@ fun HomeContent(
                 )
             },
             content = { contentPadding ->
-                val onShareWord = remember { { state.isSharing.value = true } }
-
                 Column(
-                    modifier = Modifier.padding(contentPadding),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(contentPadding)
+                        .padding(top = 8.dp)
                 ) {
                     AnimatedVisibility(
                         visible = !state.isOnline.value,
-                        enter = slideInVertically(),
-                        exit = slideOutVertically()
+                        enter = slideInVertically() + fadeIn(),
+                        exit = slideOutVertically() + fadeOut()
                     ) {
                         PersianText(
                             text = stringResource(R.string.general_net_error),
@@ -161,7 +158,7 @@ fun HomeContent(
                                 localeTag = locale.toLanguageTag(),
                                 word = word.word,
                                 pronunciation = word.pronunciation,
-                                onShareWord = onShareWord,
+                                onShareWord = { state.isSharing.value = true },
                                 onAddToFavourite = {
                                     state.scope.launch {
                                         state.addToFavourite(word.word)

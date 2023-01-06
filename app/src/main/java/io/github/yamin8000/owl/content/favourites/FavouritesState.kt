@@ -33,24 +33,31 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.content.favouritesDataStore
+import io.github.yamin8000.owl.util.list.ListSatiation
 import kotlinx.coroutines.launch
 
 class FavouritesState(
     private val context: Context,
-    val lifeCycleScope: LifecycleCoroutineScope,
+    val scope: LifecycleCoroutineScope,
     var favourites: MutableState<Set<String>>
 ) {
 
     init {
-        lifeCycleScope.launch { getFavourites() }
+        scope.launch { fetchFavourites() }
     }
 
-    private suspend fun getFavourites() {
+    val listSatiation: ListSatiation
+        get() {
+            return when (favourites.value.size) {
+                0 -> ListSatiation.Empty
+                else -> ListSatiation.Partial
+            }
+        }
+
+    private suspend fun fetchFavourites() {
         context.favouritesDataStore.data.collect { preferences ->
             val newSet = favourites.value.toMutableSet()
-            preferences.asMap().forEach { entry ->
-                newSet.add(entry.value.toString())
-            }
+            preferences.asMap().forEach { entry -> newSet.add(entry.value.toString()) }
             favourites.value = newSet
         }
     }
@@ -58,9 +65,7 @@ class FavouritesState(
     suspend fun removeFavourite(
         favourite: String
     ) {
-        context.favouritesDataStore.edit {
-            it.remove(stringPreferencesKey(favourite))
-        }
+        context.favouritesDataStore.edit { it.remove(stringPreferencesKey(favourite)) }
         val newSet = favourites.value.toMutableSet()
         newSet.remove(favourite)
         favourites.value = newSet
