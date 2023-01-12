@@ -20,6 +20,8 @@ Owl2 is the first project in that I used **Jetpack Compose UI** and **Material3*
 
 ## Preview
 
+Featured on [TechDoc](https://www.youtube.com/watch?v=vlf0jEFHR74&t=59s)  
+
 |                       Dark/Light Theme with Dynamic Color Content                        |                                       Dark/Light Theme                                       |
 |:----------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
 | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-54.png" alt="preview" width="225"/> | <img src="./screenshots/1.0.4/photo_2022-09-26_09-12-55 (2).png" alt="preview" width="225"/> |
