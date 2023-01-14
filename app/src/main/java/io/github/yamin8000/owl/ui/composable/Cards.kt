@@ -21,7 +21,6 @@
 package io.github.yamin8000.owl.ui.composable
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,7 +43,7 @@ fun SettingsItemCard(
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
     ) {
         PersianText(
             text = title,
@@ -77,6 +76,11 @@ fun RemovableCard(
     ) {
         Ripple(
             modifier = Modifier.padding(8.dp),
+            onClick = onClick,
+            onLongClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onLongClick()
+            },
             content = {
                 Text(
                     text = item,
@@ -85,11 +89,6 @@ fun RemovableCard(
                         .padding(16.dp)
                         .fillMaxWidth()
                 )
-            },
-            onClick = onClick,
-            onLongClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                onLongClick()
             }
         )
     }

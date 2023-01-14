@@ -24,6 +24,7 @@ import android.speech.tts.TextToSpeech
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,6 +32,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
+import androidx.compose.material.icons.twotone.ArrowDropDownCircle
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -59,6 +61,40 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 @Composable
+fun SettingsItem(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    content: @Composable RowScope.() -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    Box(
+        modifier = modifier.clickable(
+            interactionSource = interactionSource,
+            indication = LocalIndication.current,
+            onClick = onClick,
+        ),
+        content = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    content = content
+                )
+                Icon(
+                    imageVector = Icons.TwoTone.ArrowDropDownCircle,
+                    contentDescription = ""
+                )
+            }
+        }
+    )
+}
+
+@Composable
 fun SwitchWithText(
     caption: String,
     checked: Boolean,
@@ -68,7 +104,7 @@ fun SwitchWithText(
     val internalChecked = rememberSaveable { mutableStateOf(checked) }
     Box(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(4.dp)
             .clickable(
                 role = Role.Switch,
                 onClick = {
@@ -83,11 +119,11 @@ fun SwitchWithText(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                PersianText(caption)
                 Switch(
                     checked = checked,
                     onCheckedChange = null
                 )
-                PersianText(caption)
             }
         }
     )
@@ -176,7 +212,6 @@ fun ScaffoldWithTitle(
                     scrollBehavior = scrollBehavior,
                     title = {
                         PersianText(
-                            modifier = Modifier.padding(8.dp),
                             text = title,
                             fontSize = 20.sp,
                             textAlign = TextAlign.Center
@@ -196,7 +231,7 @@ fun ScaffoldWithTitle(
             Box(
                 modifier = Modifier
                     .padding(it)
-                    .padding(16.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 4.dp)
                     .fillMaxHeight(),
                 content = { content() }
             )

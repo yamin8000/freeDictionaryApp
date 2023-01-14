@@ -172,7 +172,7 @@ fun CopyAbleRippleText(
             onDismissRequest = { isDialogShown = false },
             content = {
                 Surface(
-                    shape = CutCornerShape(15.dp)
+                    shape = DefaultCutShape
                 ) {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),

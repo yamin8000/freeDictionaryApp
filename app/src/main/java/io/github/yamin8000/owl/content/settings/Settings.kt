@@ -31,6 +31,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.DisplaySettings
+import androidx.compose.material.icons.twotone.Language
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -41,10 +44,10 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.*
+import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.util.speak
 import kotlinx.coroutines.launch
@@ -87,24 +90,16 @@ fun SettingsContent(
                 )
             }
             item {
-                ThemeChanger(state.themeSetting.value) { newTheme ->
+                ThemeSetting(state.themeSetting.value) { newTheme ->
                     state.scope.launch { state.updateThemeSetting(newTheme) }
                     onThemeChanged(newTheme)
                 }
             }
             item {
-                PersianText(
-                    text = stringResource(R.string.tts_language),
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-            items(englishLanguages) {
-                TtsLanguageItem(
-                    modifier = Modifier.fillMaxWidth(),
-                    localeTag = it.toLanguageTag(),
-                    isSelected = it.toLanguageTag() == state.ttsLang.value,
-                    onClick = { tag ->
+                TtsLanguageSetting(
+                    languages = englishLanguages,
+                    currentTtsTag = state.ttsLang.value,
+                    onTtsTagChanged = { tag ->
                         scope.launch {
                             state.updateTtsLang(tag)
                             textToSpeech?.speak(Locale.forLanguageTag(tag).displayName)
@@ -117,6 +112,68 @@ fun SettingsContent(
 }
 
 @Composable
+fun TtsLanguageSetting(
+    currentTtsTag: String,
+    languages: List<Locale>,
+    onTtsTagChanged: (String) -> Unit
+) {
+    var isDialogShown by remember { mutableStateOf(false) }
+
+    if (isDialogShown) {
+        TtsLanguagesDialog(
+            languages = languages,
+            onLanguageSelected = onTtsTagChanged,
+            onDismiss = { isDialogShown = false }
+        )
+    }
+
+    SettingsItemCard(
+        title = stringResource(R.string.tts_language),
+        content = {
+            SettingsItem(
+                onClick = { isDialogShown = true },
+                content = {
+                    Icon(imageVector = Icons.TwoTone.Language, contentDescription = null)
+                    PersianText(Locale.forLanguageTag(currentTtsTag).displayName)
+                }
+            )
+        }
+    )
+}
+
+@Composable
+fun TtsLanguagesDialog(
+    languages: List<Locale>,
+    onLanguageSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { PersianText(stringResource(R.string.tts_language)) },
+        icon = { Icon(imageVector = Icons.TwoTone.Language, contentDescription = null) },
+        confirmButton = {/*ignored*/ },
+        text = {
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                content = {
+                    items(languages) {
+                        TtsLanguageItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            localeTag = it.toLanguageTag(),
+                            onClick = { tag ->
+                                onLanguageSelected(tag)
+                                onDismiss()
+                            }
+                        )
+                    }
+                }
+            )
+        }
+    )
+}
+
+@Composable
 fun GeneralSettings(
     isVibrating: Boolean,
     isVibratingChange: (Boolean) -> Unit
@@ -125,11 +182,17 @@ fun GeneralSettings(
         modifier = Modifier.fillMaxWidth(),
         title = stringResource(R.string.general),
         content = {
-            SwitchWithText(
-                caption = stringResource(R.string.vibrate_on_scroll),
-                checked = isVibrating,
-                onCheckedChange = isVibratingChange
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(imageVector = Icons.TwoTone.Language, contentDescription = null)
+                SwitchWithText(
+                    caption = stringResource(R.string.vibrate_on_scroll),
+                    checked = isVibrating,
+                    onCheckedChange = isVibratingChange
+                )
+            }
         }
     )
 }
@@ -138,19 +201,15 @@ fun GeneralSettings(
 fun TtsLanguageItem(
     modifier: Modifier = Modifier,
     localeTag: String,
-    isSelected: Boolean = false,
-    onClick: (String) -> Unit
+    onClick: ((String) -> Unit)? = null
 ) {
-    val colors =
-        if (isSelected) CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-        else CardDefaults.outlinedCardColors()
     OutlinedCard(
+        shape = DefaultCutShape,
         modifier = modifier.clickable(
             interactionSource = MutableInteractionSource(),
             indication = LocalIndication.current,
-            onClick = { onClick(localeTag) },
-        ),
-        colors = colors
+            onClick = { onClick?.invoke(localeTag) },
+        )
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -165,47 +224,90 @@ fun TtsLanguageItem(
 }
 
 @Composable
-fun ThemeChanger(
+fun ThemeSetting(
     currentTheme: ThemeSetting,
     onCurrentThemeChange: (ThemeSetting) -> Unit
 ) {
+    var isShowingThemeDialog by remember { mutableStateOf(false) }
+
     SettingsItemCard(
         title = stringResource(R.string.theme)
     ) {
-        val themes = ThemeSetting.values()
-        Row(
-            modifier = Modifier
-                .selectableGroup()
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            themes.forEach { theme ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    modifier = Modifier
-                        .selectable(
-                            selected = (theme == currentTheme),
-                            onClick = { onCurrentThemeChange(theme) },
-                            role = Role.RadioButton
-                        )
-                ) {
-                    PersianText(
-                        text = stringResource(theme.persianNameStringResource),
-                        modifier = Modifier.padding(vertical = 16.dp)
-                    )
-                    RadioButton(
-                        selected = (theme == currentTheme),
-                        onClick = null,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
-            }
+        if (isShowingThemeDialog) {
+            ThemeChangerDialog(
+                currentTheme = currentTheme,
+                onCurrentThemeChange = onCurrentThemeChange,
+                onDismiss = { isShowingThemeDialog = false }
+            )
         }
+        SettingsItem(
+            onClick = { isShowingThemeDialog = true },
+            content = {
+                Icon(
+                    imageVector = Icons.TwoTone.DisplaySettings,
+                    contentDescription = ""
+                )
+                PersianText(
+                    text = stringResource(currentTheme.persianNameStringResource),
+                    modifier = Modifier.padding()
+                )
+            }
+        )
         if (currentTheme == ThemeSetting.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             DynamicThemeNotice()
     }
+}
+
+@Composable
+fun ThemeChangerDialog(
+    currentTheme: ThemeSetting,
+    onCurrentThemeChange: (ThemeSetting) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val themes = remember { ThemeSetting.values() }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = { /*ignored*/ },
+        title = { PersianText(stringResource(R.string.theme)) },
+        icon = { Icon(imageVector = Icons.TwoTone.DisplaySettings, contentDescription = null) },
+        text = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .selectableGroup()
+                    .fillMaxWidth()
+            ) {
+                themes.forEach { theme ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.Start),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (theme == currentTheme),
+                                role = Role.RadioButton,
+                                onClick = {
+                                    onCurrentThemeChange(theme)
+                                    onDismiss()
+                                }
+                            )
+                    ) {
+                        RadioButton(
+                            selected = (theme == currentTheme),
+                            onClick = null,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                        PersianText(
+                            text = stringResource(theme.persianNameStringResource),
+                            modifier = Modifier.padding(vertical = 16.dp)
+                        )
+                    }
+                }
+            }
+        }
+    )
 }
 
 @Composable
