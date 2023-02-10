@@ -245,7 +245,7 @@ fun ThemeSetting(
             content = {
                 Icon(
                     imageVector = Icons.TwoTone.DisplaySettings,
-                    contentDescription = ""
+                    contentDescription = stringResource(R.string.theme)
                 )
                 PersianText(
                     text = stringResource(currentTheme.persianNameStringResource),
