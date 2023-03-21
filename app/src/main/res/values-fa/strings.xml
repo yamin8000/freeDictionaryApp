@@ -40,13 +40,8 @@
     <string name="share">اشتراک گذاری</string>
     <string name="this_text_generated_using_owl">این متن توسط برنامه جغدک تولید شده</string>
     <string name="remove_history">پاک کردن همه</string>
-    <string name="list_empty">چیزی برای نمایش پیدا نشد</string>
     <string name="settings">تنظیمات</string>
     <string name="theme">زمینه</string>
-    <string name="tts_init_failed">خطا در راه اندازی سیستم تبدیل متن به گفتار</string>
-    <string name="tts_not_ready">سیستم تبدیل متن به گفتار آماده نیست، لطفا دوباره تلاش کنید.</string>
-    <string name="tts_failed">خطا در تبدیل متن به گفتار</string>
-    <string name="tts_english_not_supported">سیستم تبدیل متن به گفتار دستگاه شما از زبان انگلیسی پشتیبانی نمیکند</string>
     <string name="dynamic_theme_notice">در نسخه های اندروید 12 به بعد زمینه برنامه بر اساس رنگ قالب تصویر پس زمینه گوشی شما تعیین می شود</string>
     <string name="theme_system">هماهنگ سیستم</string>
     <string name="theme_light">روشن</string>

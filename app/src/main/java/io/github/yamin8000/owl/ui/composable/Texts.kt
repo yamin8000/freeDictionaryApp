@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -260,17 +259,5 @@ fun SpeakableRippleTextWithIcon(
                 onDoubleClick = onDoubleClick
             )
         }
-    )
-}
-
-@Composable
-fun EmptyListErrorText() {
-    PersianText(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        text = stringResource(R.string.list_empty),
-        color = MaterialTheme.colorScheme.error,
-        textAlign = TextAlign.Center
     )
 }

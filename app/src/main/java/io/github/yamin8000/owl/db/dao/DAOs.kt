@@ -1,7 +1,7 @@
 /*
  *     Owl/Owl.app.main
- *     Daos.kt Copyrighted by Yamin Siahmargooei at 2022/12/27
- *     Daos.kt Last modified at 2022/12/27
+ *     DAOs.kt Copyrighted by Yamin Siahmargooei at 2022/12/27
+ *     DAOs.kt Last modified at 2022/12/27
  *     This file is part of Owl/Owl.app.main.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *

@@ -43,13 +43,8 @@
     <string name="share">Share</string>
     <string name="this_text_generated_using_owl">This text is generated using Owl app</string>
     <string name="remove_history">Clear All</string>
-    <string name="list_empty">Nothing to show!</string>
     <string name="settings">Settings</string>
     <string name="theme">Theme</string>
-    <string name="tts_init_failed">TTS initialization failed!</string>
-    <string name="tts_not_ready">TTS is not ready, try again!</string>
-    <string name="tts_failed">TTS Failed!</string>
-    <string name="tts_english_not_supported">TTS engine for English US is not supported on your device.</string>
     <string name="dynamic_theme_notice">On Android 12+ your app theme colors are based on your home screen background</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>

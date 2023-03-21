@@ -24,7 +24,6 @@ package io.github.yamin8000.owl.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import io.github.yamin8000.owl.db.dao.DAOs
-import io.github.yamin8000.owl.db.dao.RelativeDao
 import io.github.yamin8000.owl.db.entity.DefinitionEntity
 import io.github.yamin8000.owl.db.entity.WordEntity
 
@@ -35,5 +34,4 @@ import io.github.yamin8000.owl.db.entity.WordEntity
 abstract class AppDatabase : RoomDatabase() {
     abstract fun wordDao(): DAOs.WordDao
     abstract fun definitionDao(): DAOs.DefinitionDao
-    abstract fun relativeDao(): RelativeDao
 }
