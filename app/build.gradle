@@ -107,7 +107,7 @@ dependencies {
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     //room
-    def room_version = "2.5.0"
+    def room_version = "2.5.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
