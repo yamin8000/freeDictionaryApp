@@ -47,11 +47,9 @@ class HistoryState(
     }
 
     val listSatiation: ListSatiation
-        get() {
-            return when (history.value.size) {
-                0 -> ListSatiation.Empty
-                else -> ListSatiation.Partial
-            }
+        get() = when (history.value.size) {
+            0 -> ListSatiation.Empty
+            else -> ListSatiation.Partial
         }
 
     private suspend fun fetchHistory() {

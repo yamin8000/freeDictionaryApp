@@ -61,4 +61,6 @@
     <string name="this_text_extracted_from_owlbot" translatable="false">This text is extracted from Owlbot Dictionary.</string>
     <string name="general">General</string>
     <string name="vibrate_on_scroll">Vibrate on scroll</string>
+    <string name="cancel">Cancel</string>
+    <string name="already_added_to_favourites">This word is already added to the favoutites.</string>
 </resources>

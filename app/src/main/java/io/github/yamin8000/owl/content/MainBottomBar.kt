@@ -21,7 +21,7 @@
 package io.github.yamin8000.owl.content
 
 import android.content.Context
-import android.content.res.Configuration
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +34,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Clear
 import androidx.compose.material.icons.twotone.Search
+import androidx.compose.material.icons.twotone.Stop
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -45,14 +46,12 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.HighlightText
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getCurrentLocale
@@ -67,7 +66,8 @@ fun MainBottomBar(
     onSuggestionClick: (String) -> Unit,
     isSearching: Boolean,
     onSearchTermChanged: (String) -> Unit,
-    onSearch: (String) -> Unit
+    onSearch: (String) -> Unit,
+    onCancel: () -> Unit
 ) {
     var searchText by remember { mutableStateOf(searchTerm ?: "") }
     Column {
@@ -89,56 +89,72 @@ fun MainBottomBar(
         }
         if (isSearching)
             RainbowLinearProgress()
-        BottomAppBar {
-            TextField(
-                singleLine = true,
-                shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 0.dp, 16.dp, 0.dp),
-                label = {
-                    PersianText(
-                        stringResource(R.string.search),
-                        modifier = Modifier.fillMaxWidth()
+        Crossfade(isSearching) { target ->
+            if (target) {
+                BottomAppBar(
+                    floatingActionButton = {
+                        FloatingActionButton(
+                            onClick = onCancel,
+                            content = {
+                                Icon(
+                                    imageVector = Icons.TwoTone.Stop,
+                                    contentDescription = stringResource(R.string.cancel)
+                                )
+                            }
+                        )
+                    },
+                    actions = {}
+                )
+            } else {
+                BottomAppBar {
+                    TextField(
+                        singleLine = true,
+                        shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                        label = {
+                            PersianText(
+                                stringResource(R.string.search),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        },
+                        placeholder = {
+                            PersianText(
+                                text = stringResource(R.string.search_hint),
+                                modifier = Modifier.fillMaxWidth(),
+                                fontSize = 12.sp
+                            )
+                        },
+                        leadingIcon = {
+                            ClickableIcon(
+                                imageVector = Icons.TwoTone.Clear,
+                                contentDescription = stringResource(R.string.delete),
+                                onClick = { searchText = "" }
+                            )
+                        },
+                        trailingIcon = {
+                            ClickableIcon(
+                                imageVector = Icons.TwoTone.Search,
+                                contentDescription = stringResource(R.string.search),
+                                onClick = { onSearch(searchText) }
+                            )
+                        },
+                        value = searchText,
+                        onValueChange = {
+                            searchText = it
+                            onSearchTermChanged(searchText)
+                        },
+                        textStyle = getTextStyleBasedOnLocale(LocalContext.current),
+                        keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Search,
+                            keyboardType = KeyboardType.Text,
+                            capitalization = KeyboardCapitalization.Words
+                        )
                     )
-                },
-                placeholder = {
-                    PersianText(
-                        text = stringResource(R.string.search_hint),
-                        modifier = Modifier.fillMaxWidth(),
-                        fontSize = 12.sp
-                    )
-                },
-                leadingIcon = {
-                    ClickableIcon(
-                        imageVector = Icons.TwoTone.Clear,
-                        contentDescription = stringResource(R.string.delete),
-                        onClick = { searchText = "" }
-                    )
-                },
-                trailingIcon = {
-                    ClickableIcon(
-                        imageVector = Icons.TwoTone.Search,
-                        contentDescription = stringResource(R.string.search),
-                        onClick = { onSearch(searchText) }
-                    )
-                },
-                value = searchText,
-                onValueChange = {
-                    searchText = it
-                    onSearchTermChanged(searchText)
-                },
-                textStyle = getTextStyleBasedOnLocale(LocalContext.current),
-                keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Search,
-                    keyboardType = KeyboardType.Text,
-                    capitalization = KeyboardCapitalization.Words
-                ),
-                supportingText = {
-
                 }
-            )
+            }
         }
     }
 }
@@ -174,11 +190,4 @@ private fun getTextStyleBasedOnLocale(
             textDirection = TextDirection.Rtl
         )
     } else TextStyle()
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Composable
-private fun Preview() {
-    PreviewTheme { MainBottomBar(null, ImmutableHolder(listOf()), {}, true, {}) {} }
 }

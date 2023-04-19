@@ -22,14 +22,14 @@ package io.github.yamin8000.owl.ui.navigation
 
 object Nav {
     object Routes {
-        const val home = "home"
-        const val history = "history"
-        const val settings = "settings"
-        const val about = "about"
-        const val favourites = "favourites"
+        data object Home
+        data object History
+        data object Settings
+        data object About
+        data object Favourites
     }
 
     object Arguments {
-        const val search = "search"
+        data object Search
     }
 }

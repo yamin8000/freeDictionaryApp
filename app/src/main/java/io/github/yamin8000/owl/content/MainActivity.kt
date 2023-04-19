@@ -86,11 +86,13 @@ class MainActivity : ComponentActivity() {
                 Intent.ACTION_TRANSLATE, Intent.ACTION_DEFINE, Intent.ACTION_SEND -> {
                     intent.getStringExtra(Intent.EXTRA_TEXT)
                 }
+
                 Intent.ACTION_PROCESS_TEXT -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                         intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
                     else null
                 }
+
                 else -> null
             }
         } else null
@@ -116,39 +118,39 @@ private fun MainContent(
         val navController = rememberNavController()
         NavHost(
             navController = navController,
-            startDestination = "${Nav.Routes.home}/{${Nav.Arguments.search}}"
+            startDestination = "${Nav.Routes.Home}/{${Nav.Arguments.Search}}"
         ) {
-            composable("${Nav.Routes.home}/{${Nav.Arguments.search}}") {
-                var searchTerm = it.arguments?.getString(Nav.Arguments.search)
+            composable("${Nav.Routes.Home}/{${Nav.Arguments.Search}}") {
+                var searchTerm = it.arguments?.getString(Nav.Arguments.Search.toString())
                 if (searchTerm == null && shareData != null) searchTerm = shareData.toString()
                 HomeContent(
                     searchTerm = searchTerm,
-                    onFavouritesClick = { navController.navigate(Nav.Routes.favourites) },
-                    onHistoryClick = { navController.navigate(Nav.Routes.history) },
-                    onInfoClick = { navController.navigate(Nav.Routes.about) },
-                    onSettingsClick = { navController.navigate(Nav.Routes.settings) }
+                    onFavouritesClick = { navController.navigate(Nav.Routes.Favourites.toString()) },
+                    onHistoryClick = { navController.navigate(Nav.Routes.History.toString()) },
+                    onInfoClick = { navController.navigate(Nav.Routes.About.toString()) },
+                    onSettingsClick = { navController.navigate(Nav.Routes.Settings.toString()) }
                 )
             }
 
-            composable(Nav.Routes.about) {
+            composable(Nav.Routes.About.toString()) {
                 AboutContent { navController.popBackStack() }
             }
 
-            composable(Nav.Routes.favourites) {
+            composable(Nav.Routes.Favourites.toString()) {
                 FavouritesContent(
-                    onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.home}/${favourite}") },
+                    onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.Home}/${favourite}") },
                     onBackClick = { navController.popBackStack() }
                 )
             }
 
-            composable(Nav.Routes.history) {
+            composable(Nav.Routes.History.toString()) {
                 HistoryContent(
-                    onHistoryItemClick = { history -> navController.navigate("${Nav.Routes.home}/${history}") },
+                    onHistoryItemClick = { history -> navController.navigate("${Nav.Routes.Home}/${history}") },
                     onBackClick = { navController.popBackStack() }
                 )
             }
 
-            composable(Nav.Routes.settings) {
+            composable(Nav.Routes.Settings.toString()) {
                 SettingsContent(
                     onThemeChanged = { newTheme -> theme = newTheme },
                     onBackClick = { navController.popBackStack() }

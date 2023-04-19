@@ -20,7 +20,6 @@
 
 package io.github.yamin8000.owl.content.settings
 
-import android.content.res.Configuration
 import android.os.Build
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.LocalIndication
@@ -42,13 +41,11 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.*
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.util.speak
 import kotlinx.coroutines.launch
 import java.util.*
@@ -310,16 +307,4 @@ fun DynamicThemeNotice() {
         text = stringResource(R.string.dynamic_theme_notice),
         textAlign = TextAlign.Justify
     )
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Composable
-private fun Preview() {
-    PreviewTheme {
-        SettingsContent(
-            onThemeChanged = {},
-            onBackClick = {}
-        )
-    }
 }

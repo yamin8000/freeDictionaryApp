@@ -21,7 +21,6 @@
 package io.github.yamin8000.owl.content.home
 
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,14 +36,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.MainBottomBar
 import io.github.yamin8000.owl.content.MainTopBar
 import io.github.yamin8000.owl.ui.composable.*
-import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -105,7 +102,7 @@ fun HomeContent(
                     onFavouritesClick = onFavouritesClick,
                     onInfoClick = onInfoClick,
                     onSettingsClick = onSettingsClick,
-                    onRandomWordClick = { state.scope.launch { state.searchForRandomWord() } }
+                    onRandomWordClick = { state.searchForRandomWord() }
                 )
             },
             bottomBar = {
@@ -128,7 +125,8 @@ fun HomeContent(
                     onSearch = {
                         state.searchText = it
                         state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
-                    }
+                    },
+                    onCancel = { state.cancel() }
                 )
             },
             content = { contentPadding ->
@@ -182,11 +180,4 @@ fun HomeContent(
                 }
             })
     }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-@Composable
-private fun Preview() {
-    PreviewTheme { HomeContent(null, {}, {}, {}, {}) }
 }

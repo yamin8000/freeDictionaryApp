@@ -59,6 +59,8 @@ import io.github.yamin8000.owl.util.DefinitionListSaver
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getImmutableHolderSaver
 import io.github.yamin8000.owl.util.log
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -84,11 +86,15 @@ class HomeState(
 
     val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
+    private val alreadyAddedToFavourites = context.getString(R.string.already_added_to_favourites)
+
     private val lifeCycleContext = scope.coroutineContext
 
     private val autoCompleteHelper = AutoCompleteHelper(context, scope)
 
     private val dataStore = DataStoreHelper(context.settingsDataStore)
+
+    private var job: Job? = null
 
     init {
         scope.launch {
@@ -103,11 +109,11 @@ class HomeState(
     val isWordSelectedFromKeyboardSuggestions: Boolean
         get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
 
-    suspend fun searchForRandomWord() {
-        isSearching.value = true
-        focusManager.clearFocus()
-        val randomWord = withContext(lifeCycleContext) {
-            try {
+    fun searchForRandomWord() {
+        job = scope.launch {
+            isSearching.value = true
+            focusManager.clearFocus()
+            val randomWord = try {
                 getNewRandomWord()
             } catch (e: HttpException) {
                 snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
@@ -118,11 +124,11 @@ class HomeState(
             } finally {
                 isSearching.value = false
             }
+            isSearching.value = false
+            searchText = randomWord?.word ?: ""
+            if (searchText.isNotBlank())
+                withContext(lifeCycleContext) { searchForRandomWordDefinition() }
         }
-        isSearching.value = false
-        searchText = randomWord?.word ?: ""
-        if (searchText.isNotBlank())
-            withContext(lifeCycleContext) { searchForRandomWordDefinition() }
     }
 
     private suspend fun searchForDefinitionRequest(
@@ -130,20 +136,20 @@ class HomeState(
     ): Word? {
         isSearching.value = true
         searchText = searchTerm
-        val body = withContext(lifeCycleContext) {
-            try {
-                Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
-            } catch (e: HttpException) {
-                snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
-                val cache = checkIfDefinitionIsCached(searchTerm)
-                cache
-            } catch (e: Exception) {
-                snackbarHostState.showSnackbar(getErrorMessage(999, context))
-                val cache = checkIfDefinitionIsCached(searchTerm)
-                cache
-            } finally {
-                isSearching.value = false
-            }
+        val body = try {
+            Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
+        } catch (e: HttpException) {
+            snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
+            val cache = checkIfDefinitionIsCached(searchTerm)
+            cache
+        } catch (e: CancellationException) {
+            null
+        } catch (e: Exception) {
+            snackbarHostState.showSnackbar(getErrorMessage(999, context))
+            val cache = checkIfDefinitionIsCached(searchTerm)
+            cache
+        } finally {
+            isSearching.value = false
         }
         if (body != null)
             focusManager.clearFocus()
@@ -169,19 +175,20 @@ class HomeState(
         }
     }
 
-    suspend fun searchForDefinition() {
-        rawWordSearchBody.value = withContext(lifeCycleContext) {
-            searchForDefinitionRequest(searchText)
-        }
-        searchResult.value = ImmutableHolder(rawWordSearchBody.value?.definitions ?: listOf())
-        searchResult.value =
-            ImmutableHolder(searchResult.value.item.sortedByDescending { it.imageUrl })
-        clearSuggestions()
+    fun searchForDefinition() {
+        job = scope.launch {
+            rawWordSearchBody.value = searchForDefinitionRequest(searchText)
+            searchResult.value = ImmutableHolder(rawWordSearchBody.value?.definitions ?: listOf())
+            searchResult.value = ImmutableHolder(
+                searchResult.value.item.sortedByDescending { it.imageUrl }
+            )
+            clearSuggestions()
 
-        if (rawWordSearchBody.value != null) {
-            rawWordSearchBody.value?.let {
-                addWordToDatabase(it)
-                handleWordCacheableData(it)
+            if (rawWordSearchBody.value != null) {
+                rawWordSearchBody.value?.let {
+                    addWordToDatabase(it)
+                    handleWordCacheableData(it)
+                }
             }
         }
     }
@@ -294,8 +301,9 @@ class HomeState(
     suspend fun addToFavourite(
         favouriteWord: String
     ) {
-        val wordInDataStore = withContext(lifeCycleContext) { findWordInDataStore(favouriteWord) }
+        val wordInDataStore = findWordInDataStore(favouriteWord)
         if (wordInDataStore == null) addFavouriteWordToDataStore(favouriteWord)
+        else snackbarHostState.showSnackbar(alreadyAddedToFavourites)
     }
 
     private suspend fun addFavouriteWordToDataStore(
@@ -376,6 +384,11 @@ class HomeState(
 
     fun clearSuggestions() {
         searchSuggestions.value = ImmutableHolder(listOf())
+    }
+
+    fun cancel() {
+        job?.cancel()
+        isSearching.value = false
     }
 }
 
