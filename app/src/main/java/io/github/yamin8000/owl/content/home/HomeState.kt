@@ -63,7 +63,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.util.Locale
 
@@ -87,8 +86,6 @@ class HomeState(
     val snackbarHostState: SnackbarHostState = SnackbarHostState()
 
     private val alreadyAddedToFavourites = context.getString(R.string.already_added_to_favourites)
-
-    private val lifeCycleContext = scope.coroutineContext
 
     private val autoCompleteHelper = AutoCompleteHelper(context, scope)
 
@@ -127,7 +124,7 @@ class HomeState(
             isSearching.value = false
             searchText = randomWord?.word ?: ""
             if (searchText.isNotBlank())
-                withContext(lifeCycleContext) { searchForRandomWordDefinition() }
+                searchForRandomWordDefinition()
         }
     }
 
