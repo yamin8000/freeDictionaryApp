@@ -129,7 +129,7 @@ fun MainBottomBar(
                         leadingIcon = {
                             ClickableIcon(
                                 imageVector = Icons.TwoTone.Clear,
-                                contentDescription = stringResource(R.string.delete),
+                                contentDescription = stringResource(R.string.clear),
                                 onClick = { searchText = "" }
                             )
                         },

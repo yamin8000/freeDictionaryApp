@@ -37,12 +37,12 @@
     <string name="license_link" translatable="false">https://raw.githubusercontent.com/yamin8000/Owl2/master/LICENSE</string>
     <string name="owl_bot_link" translatable="false">https://owlbot.info</string>
     <string name="added_to_favourites">Added to favourites</string>
-    <string name="delete">Clear</string>
+    <string name="clear">Clear</string>
     <string name="untracked_error">Unexpected error!</string>
     <string name="no_search_term_entered">Nothing is entered.</string>
     <string name="share">Share</string>
     <string name="this_text_generated_using_owl">This text is generated using Owl app</string>
-    <string name="remove_history">Clear All</string>
+    <string name="clear_all">Clear All</string>
     <string name="settings">Settings</string>
     <string name="theme">Theme</string>
     <string name="dynamic_theme_notice">On Android 12+ your app theme colors are based on your home screen background</string>
@@ -62,5 +62,6 @@
     <string name="general">General</string>
     <string name="vibrate_on_scroll">Vibrate on scroll</string>
     <string name="cancel">Cancel</string>
-    <string name="already_added_to_favourites">This word is already added to the favoutites.</string>
+    <string name="already_added_to_favourites">This word is already added to the favorites.</string>
+    <string name="delete">Delete</string>
 </resources>

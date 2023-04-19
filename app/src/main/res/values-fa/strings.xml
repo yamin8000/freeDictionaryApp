@@ -34,12 +34,12 @@
     <string name="gplv3_image_description">لوگو پروانه برنامه GPLv3</string>
     <string name="about_app">فرهنگ واژگان انگلیسی به انگلیسی جغد، برگرفته از فرهنگ واژگان</string>
     <string name="added_to_favourites">به برگزیده‌ها اضافه شد</string>
-    <string name="delete">پاک کردن</string>
+    <string name="clear">پاک کردن</string>
     <string name="untracked_error">خطای پیش بینی نشده</string>
     <string name="no_search_term_entered">عبارتی وارد نشده</string>
     <string name="share">اشتراک گذاری</string>
     <string name="this_text_generated_using_owl">این متن توسط برنامه جغدک تولید شده</string>
-    <string name="remove_history">پاک کردن همه</string>
+    <string name="clear_all">پاک کردن همه</string>
     <string name="settings">تنظیمات</string>
     <string name="theme">زمینه</string>
     <string name="dynamic_theme_notice">در نسخه های اندروید 12 به بعد زمینه برنامه بر اساس رنگ قالب تصویر پس زمینه گوشی شما تعیین می شود</string>
@@ -59,4 +59,5 @@
     <string name="vibrate_on_scroll">لرزش در زمان پیمایش لیست</string>
     <string name="cancel">لغو</string>
     <string name="already_added_to_favourites">این واژه پیش از این به برگزیده‌ها اضافه شده است.</string>
+    <string name="delete">پاک کردن</string>
 </resources>

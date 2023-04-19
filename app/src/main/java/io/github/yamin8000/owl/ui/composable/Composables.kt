@@ -33,6 +33,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.ArrowDropDownCircle
+import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -45,6 +46,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -385,4 +387,29 @@ fun LockScreenOrientation(orientation: Int) {
             activity.requestedOrientation = originalOrientation
         }
     }
+}
+
+@Composable
+fun DeleteMenu(
+    expanded: Boolean,
+    onDismiss: () -> Unit,
+    onDelete: () -> Unit
+) {
+    val delete = stringResource(R.string.delete)
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismiss,
+        content = {
+            DropdownMenuItem(
+                onClick = onDelete,
+                text = { PersianText(delete) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.TwoTone.Delete,
+                        contentDescription = delete
+                    )
+                }
+            )
+        }
+    )
 }

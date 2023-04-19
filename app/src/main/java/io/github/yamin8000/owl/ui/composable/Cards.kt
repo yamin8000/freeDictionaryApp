@@ -20,11 +20,19 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -70,6 +78,7 @@ fun RemovableCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
+    var isMenuExpanded by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
     Card(
         shape = DefaultCutShape
@@ -77,10 +86,7 @@ fun RemovableCard(
         Ripple(
             modifier = Modifier.padding(8.dp),
             onClick = onClick,
-            onLongClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                onLongClick()
-            },
+            onLongClick = { isMenuExpanded = true },
             content = {
                 Text(
                     text = item,
@@ -89,6 +95,15 @@ fun RemovableCard(
                         .padding(16.dp)
                         .fillMaxWidth()
                 )
+            }
+        )
+        DeleteMenu(
+            expanded = isMenuExpanded,
+            onDismiss = { isMenuExpanded = false },
+            onDelete = {
+                isMenuExpanded = false
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onLongClick()
             }
         )
     }
