@@ -22,8 +22,8 @@ package io.github.yamin8000.owl.content.home
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -50,17 +50,23 @@ import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
-import io.github.yamin8000.owl.util.*
+import io.github.yamin8000.owl.util.AutoCompleteHelper
+import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import io.github.yamin8000.owl.util.Constants.db
+import io.github.yamin8000.owl.util.DataStoreHelper
+import io.github.yamin8000.owl.util.DefinitionListSaver
+import io.github.yamin8000.owl.util.ImmutableHolder
+import io.github.yamin8000.owl.util.getImmutableHolderSaver
+import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import java.util.*
+import java.util.Locale
 
 class HomeState(
-    val listState: LazyListState,
+    val listState: ScrollState,
     val isSearching: MutableState<Boolean>,
     val lifecycleOwner: LifecycleOwner,
     private val focusManager: FocusManager,
@@ -375,7 +381,7 @@ class HomeState(
 
 @Composable
 fun rememberHomeState(
-    listState: LazyListState = rememberLazyListState(),
+    listState: ScrollState = rememberScrollState(),
     isSearching: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     focusManager: FocusManager = LocalFocusManager.current,

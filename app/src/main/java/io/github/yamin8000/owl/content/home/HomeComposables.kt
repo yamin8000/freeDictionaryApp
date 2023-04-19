@@ -20,19 +20,39 @@
 
 package io.github.yamin8000.owl.content.home
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.*
+import androidx.compose.material.icons.twotone.Category
+import androidx.compose.material.icons.twotone.EmojiEmotions
+import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material.icons.twotone.RecordVoiceOver
+import androidx.compose.material.icons.twotone.Share
+import androidx.compose.material.icons.twotone.ShortText
+import androidx.compose.material.icons.twotone.TextSnippet
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -42,7 +62,11 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
-import io.github.yamin8000.owl.ui.composable.*
+import io.github.yamin8000.owl.ui.composable.ClickableIcon
+import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
+import io.github.yamin8000.owl.ui.composable.HighlightText
+import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
+import io.github.yamin8000.owl.ui.composable.TtsAwareContent
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.util.DynamicThemePrimaryColorsFromImage
 import io.github.yamin8000.owl.ui.util.rememberDominantColorState
@@ -53,27 +77,27 @@ import io.github.yamin8000.owl.util.speak
 internal fun WordDefinitionsList(
     word: String,
     localeTag: String,
-    listState: LazyListState,
+    listState: ScrollState,
     searchResult: ImmutableHolder<List<Definition>>,
     onWordChipClick: (String) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier.padding(16.dp),
-        state = listState,
+    Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .verticalScroll(listState)
+            .padding(16.dp),
         content = {
-            items(searchResult.item) { definition ->
-                key(definition.hashCode()) {
-                    DynamicColorDefinitionCard(
-                        word,
-                        localeTag,
-                        definition,
-                        onWordChipClick = onWordChipClick
-                    )
-                }
+            searchResult.item.forEach { definition ->
+                DynamicColorDefinitionCard(
+                    word,
+                    localeTag,
+                    definition,
+                    onWordChipClick = onWordChipClick
+                )
             }
-        })
+        }
+    )
 }
 
 @Composable
