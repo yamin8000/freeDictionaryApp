@@ -79,34 +79,28 @@ fun SettingsContent(
         title = stringResource(id = R.string.settings),
         onBackClick = onBackClick
     ) {
-        LazyColumn(
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            item {
-                GeneralSettings(
-                    isVibrating = state.isVibrating.value,
-                    isVibratingChange = { state.scope.launch { state.updateVibrationSetting(it) } }
-                )
+            GeneralSettings(
+                isVibrating = state.isVibrating.value,
+                isVibratingChange = { state.scope.launch { state.updateVibrationSetting(it) } }
+            )
+            ThemeSetting(state.themeSetting.value) { newTheme ->
+                state.scope.launch { state.updateThemeSetting(newTheme) }
+                onThemeChanged(newTheme)
             }
-            item {
-                ThemeSetting(state.themeSetting.value) { newTheme ->
-                    state.scope.launch { state.updateThemeSetting(newTheme) }
-                    onThemeChanged(newTheme)
-                }
-            }
-            item {
-                TtsLanguageSetting(
-                    languages = englishLanguages,
-                    currentTtsTag = state.ttsLang.value,
-                    onTtsTagChanged = { tag ->
-                        scope.launch {
-                            state.updateTtsLang(tag)
-                            textToSpeech?.speak(Locale.forLanguageTag(tag).displayName)
-                        }
+            TtsLanguageSetting(
+                languages = englishLanguages,
+                currentTtsTag = state.ttsLang.value,
+                onTtsTagChanged = { tag ->
+                    scope.launch {
+                        state.updateTtsLang(tag)
+                        textToSpeech?.speak(Locale.forLanguageTag(tag).displayName)
                     }
-                )
-            }
+                }
+            )
         }
     }
 }

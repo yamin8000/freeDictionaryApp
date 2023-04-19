@@ -34,7 +34,7 @@ import io.github.yamin8000.owl.content.settingsDataStore
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 
 class SettingsState(
     context: Context,
