@@ -20,17 +20,34 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import android.content.Context
+import android.media.AudioManager
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ElevatedSuggestionChip
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +58,11 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +79,7 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
+import io.github.yamin8000.owl.util.findActivity
 import io.github.yamin8000.owl.util.getCurrentLocale
 import io.github.yamin8000.owl.util.speak
 
@@ -247,6 +269,9 @@ fun SpeakableRippleTextWithIcon(
     content: @Composable (() -> Unit)? = null,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
+    val context = LocalContext.current
+    val audio = context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    val increaseVolumeText = context.getString(R.string.increase_volume_notice)
     TtsAwareContent(
         ttsLanguageLocaleTag = localeTag,
         content = {
@@ -255,8 +280,12 @@ fun SpeakableRippleTextWithIcon(
                 content = content,
                 title = title,
                 imageVector = imageVector,
-                onClick = { it.speak(text) },
-                onDoubleClick = onDoubleClick
+                onDoubleClick = onDoubleClick,
+                onClick = {
+                    if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0)
+                        Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
+                    it.speak(text)
+                }
             )
         }
     )
