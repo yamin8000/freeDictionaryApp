@@ -21,7 +21,6 @@
 package io.github.yamin8000.owl.content
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -31,9 +30,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -53,11 +49,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-val Context.historyDataStore: DataStore<Preferences> by preferencesDataStore(name = "history")
-val Context.favouritesDataStore: DataStore<Preferences> by preferencesDataStore(name = "favourites")
-
-class MainActivity : ComponentActivity() {
+class FreeMainActivity : ComponentActivity() {
 
     private val scope = CoroutineScope(Dispatchers.Main)
 

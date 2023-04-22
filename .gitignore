@@ -23,3 +23,6 @@ local.properties
 /.idea/
 /app/src/main/java/io/github/yamin8000/owl/network/ApiKey.kt
 /app/release/
+/app/src/irMarket/java/io/github/yamin8000/owl/ad/AdConstants.kt
+/app/irMarket/
+/app/free/

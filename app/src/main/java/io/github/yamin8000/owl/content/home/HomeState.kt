@@ -372,7 +372,6 @@ class HomeState(
         clearSuggestions()
         if (searchText.length >= Constants.DEFAULT_N_GRAM_SIZE) {
             val suggestions = autoCompleteHelper.suggestTermsForSearch(searchText)
-            suggestions.joinToString().log()
             searchSuggestions.value = ImmutableHolder(
                 suggestions.take(Constants.DEFAULT_N_GRAM_SIZE * 3)
             )

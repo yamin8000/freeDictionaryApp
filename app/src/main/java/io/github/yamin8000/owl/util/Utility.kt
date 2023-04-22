@@ -55,12 +55,6 @@ fun TextToSpeech.speak(
 }
 
 @Suppress("unused")
-fun String.log() {
-    if (BuildConfig.DEBUG)
-        Log.d(Constants.LOG_TAG, this)
-}
-
-@Suppress("unused")
 @Stable
 class StableHolder<T>(val item: T) {
     operator fun component1(): T = item
@@ -77,3 +71,16 @@ fun <T : Any> getImmutableHolderSaver(): Saver<ImmutableHolder<T>, T> = Saver(
     save = { it.item },
     restore = { ImmutableHolder(it) }
 )
+
+fun log(
+    message: String
+) {
+    if (BuildConfig.DEBUG)
+        Log.d(Constants.LOG_TAG, message)
+}
+
+fun log(
+    exception: Exception
+) {
+    log(exception.stackTraceToString())
+}
