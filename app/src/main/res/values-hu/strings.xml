@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~     Owl/Owl.app.main
+  ~     strings.xml Copyrighted by Yamin Siahmargooei at 2023/4/24
+  ~     strings.xml Last modified at 2023/4/24
+  ~     This file is part of Owl/Owl.app.main.
+  ~     Copyright (C) 2023  Yamin Siahmargooei
+  ~
+  ~     Owl/Owl.app.main is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     Owl/Owl.app.main is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name">Owl</string>
+    <string name="search">Keresés</string>
+    <string name="search_hint">Írj be egy szót a kereséshez</string>
+    <string name="favourites">Kedvenc Szavak</string>
+    <string name="search_history">Keresési Előzmények</string>
+    <string name="random_word">Véletlenszerű Szó</string>
+    <string name="general_net_error">Nincs kapcsolat a szerverrel. Az adatok előfordulhat, hogy a gyorsítótárból kerülnek betöltésre.</string>
+    <string name="api_throttled">A szerver elfoglalt, próbáld újra!</string>
+    <string name="definition_not_found">Nem található definíció a szóra.</string>
+    <string name="api_authorization_error">Hitelesítési Hiba</string>
+    <string name="text_copied">Szöveg másolva.</string>
+    <string name="license_header">Ez egy ingyenes applikáció a GNU licensz alatt, tudj meg többet:</string>
+    <string name="gplv3_image_description">GPLv3 Licensz Logó</string>
+    <string name="about_app">Angol-Angol szótár alapján:</string>
+    <string name="added_to_favourites">Hozzáadva a kedvencekhez</string>
+    <string name="clear">Kiürítés</string>
+    <string name="untracked_error">Váratlan hiba!</string>
+    <string name="no_search_term_entered">Semmi sem került bevitelre.</string>
+    <string name="share">Megosztás</string>
+    <string name="this_text_generated_using_owl">Ezt a szöveget az Owl app generálta</string>
+    <string name="clear_all">Mind kiürítése</string>
+    <string name="settings">Beállítások</string>
+    <string name="theme">Téma</string>
+    <string name="dynamic_theme_notice">Android 12-n és afelett az alkalmazásod témája a háttérképed színei alapján készül el</string>
+    <string name="theme_system">Rendszer</string>
+    <string name="theme_light">Világos</string>
+    <string name="theme_dark">Sötét</string>
+    <string name="tts_language">Szövegből-Beszéd Nyelve</string>
+    <string name="about">Az alkalmazásról</string>
+    <string name="version_name">Verzió</string>
+    <string name="pronunciation">Kiejtés</string>
+    <string name="word">Szó</string>
+    <string name="emoji">Emoji</string>
+    <string name="example">Példa</string>
+    <string name="definition">Definíció</string>
+    <string name="type">Típus</string>
+    <string name="general">Általános</string>
+    <string name="vibrate_on_scroll">Rezgés görgetéskor</string>
+    <string name="cancel">Mégse</string>
+    <string name="already_added_to_favourites">Ez a szó már a kedvencek között van.</string>
+    <string name="delete">Törlés</string>
+    <string name="increase_volume_notice">Növeld meg a hangerődet</string>
+</resources>
