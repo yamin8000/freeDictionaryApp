@@ -52,7 +52,6 @@ android {
 
         free {
             dimension "version"
-            applicationIdSuffix ".free"
             manifestPlaceholders = [launcherActivity: "io.github.yamin8000.owl.content.FreeMainActivity"]
         }
     }
