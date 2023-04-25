@@ -22,9 +22,6 @@ package io.github.yamin8000.owl.content.settings
 
 import android.os.Build
 import android.speech.tts.TextToSpeech
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -112,6 +109,7 @@ fun TtsLanguageSetting(
 
     if (isDialogShown) {
         TtsLanguagesDialog(
+            currentTtsTag = currentTtsTag,
             languages = languages,
             onLanguageSelected = onTtsTagChanged,
             onDismiss = { isDialogShown = false }
@@ -134,6 +132,7 @@ fun TtsLanguageSetting(
 
 @Composable
 fun TtsLanguagesDialog(
+    currentTtsTag: String,
     languages: List<Locale>,
     onLanguageSelected: (String) -> Unit,
     onDismiss: () -> Unit
@@ -150,13 +149,12 @@ fun TtsLanguagesDialog(
                 content = {
                     items(languages) {
                         TtsLanguageItem(
-                            modifier = Modifier.fillMaxWidth(),
                             localeTag = it.toLanguageTag(),
-                            onClick = { tag ->
-                                onLanguageSelected(tag)
-                                onDismiss()
-                            }
-                        )
+                            isSelected = it.toLanguageTag() == currentTtsTag
+                        ) { tag ->
+                            onLanguageSelected(tag)
+                            onDismiss()
+                        }
                     }
                 }
             )
@@ -188,29 +186,23 @@ fun GeneralSettings(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TtsLanguageItem(
-    modifier: Modifier = Modifier,
     localeTag: String,
+    isSelected: Boolean,
     onClick: ((String) -> Unit)? = null
 ) {
     OutlinedCard(
+        modifier = Modifier.fillMaxWidth(),
         shape = DefaultCutShape,
-        modifier = modifier.clickable(
-            interactionSource = MutableInteractionSource(),
-            indication = LocalIndication.current,
-            onClick = { onClick?.invoke(localeTag) },
-        )
+        onClick = { onClick?.invoke(localeTag) },
+        enabled = !isSelected
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            PersianText(
-                text = Locale.forLanguageTag(localeTag).displayName,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
+        PersianText(
+            text = Locale.forLanguageTag(localeTag).displayName,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
