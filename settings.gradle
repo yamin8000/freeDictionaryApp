@@ -32,5 +32,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Owl"
+rootProject.name = "Owl2"
 include ':app'
