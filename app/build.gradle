@@ -101,7 +101,7 @@ android {
 
 dependencies {
     //core android
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.palette:palette:1.0.0")
     //compose
     def material3_version = "1.0.1"
