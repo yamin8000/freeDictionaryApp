@@ -214,31 +214,32 @@ fun ThemeSetting(
     var isShowingThemeDialog by remember { mutableStateOf(false) }
 
     SettingsItemCard(
-        title = stringResource(R.string.theme)
-    ) {
-        if (isShowingThemeDialog) {
-            ThemeChangerDialog(
-                currentTheme = currentTheme,
-                onCurrentThemeChange = onCurrentThemeChange,
-                onDismiss = { isShowingThemeDialog = false }
-            )
-        }
-        SettingsItem(
-            onClick = { isShowingThemeDialog = true },
-            content = {
-                Icon(
-                    imageVector = Icons.TwoTone.DisplaySettings,
-                    contentDescription = stringResource(R.string.theme)
-                )
-                PersianText(
-                    text = stringResource(currentTheme.persianNameStringResource),
-                    modifier = Modifier.padding()
+        title = stringResource(R.string.theme),
+        content = {
+            if (isShowingThemeDialog) {
+                ThemeChangerDialog(
+                    currentTheme = currentTheme,
+                    onCurrentThemeChange = onCurrentThemeChange,
+                    onDismiss = { isShowingThemeDialog = false }
                 )
             }
-        )
-        if (currentTheme == ThemeSetting.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            DynamicThemeNotice()
-    }
+            SettingsItem(
+                onClick = { isShowingThemeDialog = true },
+                content = {
+                    Icon(
+                        imageVector = Icons.TwoTone.DisplaySettings,
+                        contentDescription = stringResource(R.string.theme)
+                    )
+                    PersianText(
+                        text = stringResource(currentTheme.persianNameStringResource),
+                        modifier = Modifier.padding()
+                    )
+                }
+            )
+            if (currentTheme == ThemeSetting.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                DynamicThemeNotice()
+        }
+    )
 }
 
 @Composable
@@ -260,35 +261,37 @@ fun ThemeChangerDialog(
                 modifier = Modifier
                     .padding(16.dp)
                     .selectableGroup()
-                    .fillMaxWidth()
-            ) {
-                themes.forEach { theme ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.Start),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = (theme == currentTheme),
-                                role = Role.RadioButton,
-                                onClick = {
-                                    onCurrentThemeChange(theme)
-                                    onDismiss()
-                                }
-                            )
-                    ) {
-                        RadioButton(
-                            selected = (theme == currentTheme),
-                            onClick = null,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                        PersianText(
-                            text = stringResource(theme.persianNameStringResource),
-                            modifier = Modifier.padding(vertical = 16.dp)
+                    .fillMaxWidth(),
+                content = {
+                    themes.forEach { theme ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.Start),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = (theme == currentTheme),
+                                    role = Role.RadioButton,
+                                    onClick = {
+                                        onCurrentThemeChange(theme)
+                                        onDismiss()
+                                    }
+                                ),
+                            content = {
+                                RadioButton(
+                                    selected = (theme == currentTheme),
+                                    onClick = null,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                                PersianText(
+                                    text = stringResource(theme.persianNameStringResource),
+                                    modifier = Modifier.padding(vertical = 16.dp)
+                                )
+                            }
                         )
                     }
                 }
-            }
+            )
         }
     )
 }

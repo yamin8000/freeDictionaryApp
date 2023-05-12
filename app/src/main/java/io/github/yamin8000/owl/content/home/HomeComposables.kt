@@ -114,35 +114,37 @@ internal fun WordCard(
             .indication(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
+            ),
+        content = {
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                content = {
+                    WordText(word, localeTag)
+                    if (pronunciation != null) {
+                        PronunciationText(
+                            localeTag = localeTag,
+                            pronunciation = pronunciation,
+                            word = word
+                        )
+                    }
+                    Row {
+                        ClickableIcon(
+                            imageVector = Icons.TwoTone.Favorite,
+                            contentDescription = stringResource(R.string.favourites),
+                            onClick = onAddToFavourite
+                        )
+                        ClickableIcon(
+                            imageVector = Icons.TwoTone.Share,
+                            contentDescription = stringResource(R.string.share),
+                            onClick = onShareWord
+                        )
+                    }
+                }
             )
-    ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            WordText(word, localeTag)
-            if (pronunciation != null) {
-                PronunciationText(
-                    localeTag = localeTag,
-                    pronunciation = pronunciation,
-                    word = word
-                )
-            }
-            Row {
-                ClickableIcon(
-                    imageVector = Icons.TwoTone.Favorite,
-                    contentDescription = stringResource(R.string.favourites),
-                    onClick = onAddToFavourite
-                )
-                ClickableIcon(
-                    imageVector = Icons.TwoTone.Share,
-                    contentDescription = stringResource(R.string.share),
-                    onClick = onShareWord
-                )
-            }
         }
-    }
+    )
 }
 
 @Composable
@@ -293,44 +295,45 @@ internal fun DefinitionCard(
     Card(
         shape = DefaultCutShape,
         modifier = Modifier.fillMaxWidth(),
-        colors = cardColors
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            content = {
-                if (definition.type != null) {
-                    WordTypeText(
-                        definition.type,
+        colors = cardColors,
+        content = {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                content = {
+                    if (definition.type != null) {
+                        WordTypeText(
+                            definition.type,
+                            localeTag,
+                            onDoubleClick = onWordChipClick
+                        )
+                    }
+                    WordDefinitionText(
+                        word,
+                        definition.definition,
                         localeTag,
                         onDoubleClick = onWordChipClick
                     )
+                    if (definition.example != null) {
+                        WordExampleText(
+                            word = word,
+                            example = definition.example,
+                            localeTag = localeTag,
+                            onDoubleClick = onWordChipClick
+                        )
+                    }
+                    if (definition.emoji != null)
+                        WordEmojiText(definition.emoji, localeTag)
                 }
-                WordDefinitionText(
-                    word,
-                    definition.definition,
-                    localeTag,
-                    onDoubleClick = onWordChipClick
-                )
-                if (definition.example != null) {
-                    WordExampleText(
-                        word = word,
-                        example = definition.example,
-                        localeTag = localeTag,
-                        onDoubleClick = onWordChipClick
-                    )
-                }
-                if (definition.emoji != null)
-                    WordEmojiText(definition.emoji, localeTag)
-            }
-        )
-        DefinitionImage(
-            enabled = !definition.imageUrl.isNullOrBlank(),
-            url = definition.imageUrl,
-            content = definition.definition,
-            onClick = { dialogVisibility = true }
-        )
-    }
+            )
+            DefinitionImage(
+                enabled = !definition.imageUrl.isNullOrBlank(),
+                url = definition.imageUrl,
+                content = definition.definition,
+                onClick = { dialogVisibility = true }
+            )
+        }
+    )
 }
 
 @Composable

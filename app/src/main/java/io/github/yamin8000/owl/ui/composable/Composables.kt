@@ -208,34 +208,35 @@ fun ScaffoldWithTitle(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             Surface(
-                shadowElevation = 8.dp
-            ) {
-                TopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    title = {
-                        PersianText(
-                            text = title,
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    },
-                    actions = {
-                        ClickableIcon(
-                            imageVector = Icons.TwoTone.ArrowBack,
-                            contentDescription = "",
-                            onClick = { onBackClick() }
-                        )
-                    }
-                )
-            }
+                shadowElevation = 8.dp,
+                content = {
+                    TopAppBar(
+                        scrollBehavior = scrollBehavior,
+                        title = {
+                            PersianText(
+                                text = title,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        },
+                        actions = {
+                            ClickableIcon(
+                                imageVector = Icons.TwoTone.ArrowBack,
+                                contentDescription = "",
+                                onClick = { onBackClick() }
+                            )
+                        }
+                    )
+                }
+            )
         },
         content = {
             Box(
+                content = content,
                 modifier = Modifier
                     .padding(it)
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 4.dp)
-                    .fillMaxHeight(),
-                content = { content() }
+                    .fillMaxHeight()
             )
         }
     )

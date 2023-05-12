@@ -27,10 +27,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
@@ -49,37 +45,46 @@ fun HistoryContent(
 
     ScaffoldWithTitle(
         title = stringResource(R.string.search_history),
-        onBackClick = onBackClick
-    ) {
-        when (state.listSatiation) {
-            ListSatiation.Empty -> EmptyList()
-            ListSatiation.Partial -> {
-                val list = state.history.value.toList()
-                LazyVerticalGrid(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    columns = GridCells.Fixed(2)
-                ) {
-                    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-                        RemoveAlHistoryButton {
-                            state.lifeCycleScope.launch { state.removeAllHistory() }
-                        }
-                    }
-                    items(span = { GridItemSpan(1) }, count = list.size) {
-                        HistoryItem(
-                            history = list[it],
-                            onClick = onHistoryItemClick,
-                            onLongClick = {
-                                state.lifeCycleScope.launch {
-                                    state.removeSingleHistory(it)
+        onBackClick = onBackClick,
+        content = {
+            when (state.listSatiation) {
+                ListSatiation.Empty -> EmptyList()
+                ListSatiation.Partial -> {
+                    val list = state.history.value.toList()
+                    LazyVerticalGrid(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        columns = GridCells.Fixed(2),
+                        content = {
+                            item(
+                                span = { GridItemSpan(maxCurrentLineSpan) },
+                                content = {
+                                    RemoveAlHistoryButton {
+                                        state.lifeCycleScope.launch { state.removeAllHistory() }
+                                    }
                                 }
-                            }
-                        )
-                    }
+                            )
+                            items(
+                                span = { GridItemSpan(1) },
+                                count = list.size,
+                                itemContent = {
+                                    HistoryItem(
+                                        history = list[it],
+                                        onClick = onHistoryItemClick,
+                                        onLongClick = {
+                                            state.lifeCycleScope.launch {
+                                                state.removeSingleHistory(it)
+                                            }
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
                 }
             }
         }
-    }
+    )
 }
 
 @Composable

@@ -56,128 +56,134 @@ fun HomeContent(
 ) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        val state = rememberHomeState()
+        modifier = Modifier.fillMaxSize(),
+        content = {
+            val state = rememberHomeState()
 
-        if (state.listState.isScrollInProgress && state.isVibrating.value)
-            LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            if (state.listState.isScrollInProgress && state.isVibrating.value)
+                LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
 
-        InternetAwareComposable { state.isOnline.value = it }
+            InternetAwareComposable { state.isOnline.value = it }
 
-        val locale = if (state.ttsLang.value.isEmpty())
-            Locale.US else Locale.forLanguageTag(state.ttsLang.value)
+            val locale = if (state.ttsLang.value.isEmpty())
+                Locale.US else Locale.forLanguageTag(state.ttsLang.value)
 
-        if (searchTerm != null)
-            state.searchText = searchTerm
-        LaunchedEffect(state.isOnline.value) {
-            if (state.isFirstTimeOpening)
-                state.searchText = "Owl"
-            if (state.searchText.isNotBlank())
-                state.searchForDefinition()
-        }
+            if (searchTerm != null)
+                state.searchText = searchTerm
+            LaunchedEffect(state.isOnline.value) {
+                if (state.isFirstTimeOpening)
+                    state.searchText = "Owl"
+                if (state.searchText.isNotBlank())
+                    state.searchForDefinition()
+            }
 
-        if (state.searchResult.value.item.isNotEmpty() && state.rawWordSearchBody.value != null && state.isSharing.value)
-            state.handleShareIntent()
+            if (state.searchResult.value.item.isNotEmpty() && state.rawWordSearchBody.value != null && state.isSharing.value)
+                state.handleShareIntent()
 
-        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+            val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            snackbarHost = {
-                SnackbarHost(state.snackbarHostState) { data ->
-                    MySnackbar {
-                        PersianText(
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            text = data.visuals.message
-                        )
-                    }
-                }
-            },
-            topBar = {
-                MainTopBar(
-                    scrollBehavior = scrollBehavior,
-                    onHistoryClick = onHistoryClick,
-                    onFavouritesClick = onFavouritesClick,
-                    onInfoClick = onInfoClick,
-                    onSettingsClick = onSettingsClick,
-                    onRandomWordClick = { state.searchForRandomWord() }
-                )
-            },
-            bottomBar = {
-                MainBottomBar(
-                    searchTerm = searchTerm,
-                    suggestions = state.searchSuggestions.value,
-                    isSearching = state.isSearching.value,
-                    onSearchTermChanged = {
-                        state.searchText = it
-                        state.scope.launch { state.handleSuggestions() }
-                        if (state.isWordSelectedFromKeyboardSuggestions) {
-                            state.scope.launch { state.searchForDefinitionHandler() }
-                            state.clearSuggestions()
-                        }
-                    },
-                    onSuggestionClick = {
-                        state.searchText = it
-                        state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
-                    },
-                    onSearch = {
-                        state.searchText = it
-                        state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
-                    },
-                    onCancel = { state.cancel() }
-                )
-            },
-            content = { contentPadding ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(contentPadding)
-                        .padding(top = 8.dp)
-                ) {
-                    AnimatedVisibility(
-                        visible = !state.isOnline.value,
-                        enter = slideInVertically() + fadeIn(),
-                        exit = slideOutVertically() + fadeOut()
-                    ) {
-                        PersianText(
-                            text = stringResource(R.string.general_net_error),
-                            modifier = Modifier.padding(16.dp),
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-
-                    val addedToFavourites = stringResource(R.string.added_to_favourites)
-
-                    if (state.rawWordSearchBody.value != null || state.searchResult.value.item.isNotEmpty()) {
-                        state.rawWordSearchBody.value?.let { word ->
-                            WordCard(
-                                localeTag = locale.toLanguageTag(),
-                                word = word.word,
-                                pronunciation = word.pronunciation,
-                                onShareWord = { state.isSharing.value = true },
-                                onAddToFavourite = {
-                                    state.scope.launch {
-                                        state.addToFavourite(word.word)
-                                        state.snackbarHostState.showSnackbar(addedToFavourites)
-                                    }
-                                }
+            Scaffold(
+                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                snackbarHost = {
+                    SnackbarHost(state.snackbarHostState) { data ->
+                        MySnackbar {
+                            PersianText(
+                                text = data.visuals.message,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
                             )
                         }
-
-                        WordDefinitionsList(
-                            word = state.rawWordSearchBody.value?.word ?: "",
-                            localeTag = locale.toLanguageTag(),
-                            listState = state.listState,
-                            searchResult = state.searchResult.value,
-                            onWordChipClick = {
-                                state.searchText = it
-                                state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                    }
+                },
+                topBar = {
+                    MainTopBar(
+                        scrollBehavior = scrollBehavior,
+                        onHistoryClick = onHistoryClick,
+                        onFavouritesClick = onFavouritesClick,
+                        onInfoClick = onInfoClick,
+                        onSettingsClick = onSettingsClick,
+                        onRandomWordClick = { state.searchForRandomWord() }
+                    )
+                },
+                bottomBar = {
+                    MainBottomBar(
+                        searchTerm = searchTerm,
+                        suggestions = state.searchSuggestions.value,
+                        isSearching = state.isSearching.value,
+                        onSearchTermChanged = {
+                            state.searchText = it
+                            state.scope.launch { state.handleSuggestions() }
+                            if (state.isWordSelectedFromKeyboardSuggestions) {
+                                state.scope.launch { state.searchForDefinitionHandler() }
+                                state.clearSuggestions()
                             }
-                        )
-                    } else EmptyList()
+                        },
+                        onSuggestionClick = {
+                            state.searchText = it
+                            state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                        },
+                        onSearch = {
+                            state.searchText = it
+                            state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                        },
+                        onCancel = { state.cancel() }
+                    )
+                },
+                content = { contentPadding ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(contentPadding)
+                            .padding(top = 8.dp),
+                        content = {
+                            AnimatedVisibility(
+                                visible = !state.isOnline.value,
+                                enter = slideInVertically() + fadeIn(),
+                                exit = slideOutVertically() + fadeOut(),
+                                content = {
+                                    PersianText(
+                                        text = stringResource(R.string.general_net_error),
+                                        modifier = Modifier.padding(16.dp),
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                }
+                            )
+
+                            val addedToFavourites = stringResource(R.string.added_to_favourites)
+
+                            if (state.rawWordSearchBody.value != null || state.searchResult.value.item.isNotEmpty()) {
+                                state.rawWordSearchBody.value?.let { word ->
+                                    WordCard(
+                                        localeTag = locale.toLanguageTag(),
+                                        word = word.word,
+                                        pronunciation = word.pronunciation,
+                                        onShareWord = { state.isSharing.value = true },
+                                        onAddToFavourite = {
+                                            state.scope.launch {
+                                                state.addToFavourite(word.word)
+                                                state.snackbarHostState.showSnackbar(
+                                                    addedToFavourites
+                                                )
+                                            }
+                                        }
+                                    )
+                                }
+
+                                WordDefinitionsList(
+                                    word = state.rawWordSearchBody.value?.word ?: "",
+                                    localeTag = locale.toLanguageTag(),
+                                    listState = state.listState,
+                                    searchResult = state.searchResult.value,
+                                    onWordChipClick = {
+                                        state.searchText = it
+                                        state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                                    }
+                                )
+                            } else EmptyList()
+                        }
+                    )
                 }
-            })
-    }
+            )
+        }
+    )
 }

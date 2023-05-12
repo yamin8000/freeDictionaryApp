@@ -50,68 +50,70 @@ fun AboutContent(
 ) {
     ScaffoldWithTitle(
         title = stringResource(R.string.about),
-        onBackClick = onBackClick
-    ) {
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            val uriHandler = LocalUriHandler.current
-            val sourceUri = stringResource(R.string.github_source)
-            val owlBotUri = stringResource(R.string.owl_bot_link)
-            val licenseUri = stringResource(R.string.license_link)
-            Ripple(
-                onClick = { uriHandler.openUri(licenseUri) },
+        onBackClick = onBackClick,
+        content = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 content = {
-                    Image(
-                        painterResource(id = R.drawable.ic_gplv3),
-                        stringResource(id = R.string.gplv3_image_description),
-                        modifier = Modifier
-                            .padding(32.dp)
-                            .fillMaxWidth(),
-                        contentScale = ContentScale.FillWidth,
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                    val uriHandler = LocalUriHandler.current
+                    val sourceUri = stringResource(R.string.github_source)
+                    val owlBotUri = stringResource(R.string.owl_bot_link)
+                    val licenseUri = stringResource(R.string.license_link)
+                    Ripple(
+                        onClick = { uriHandler.openUri(licenseUri) },
+                        content = {
+                            Image(
+                                painterResource(id = R.drawable.ic_gplv3),
+                                stringResource(id = R.string.gplv3_image_description),
+                                modifier = Modifier
+                                    .padding(32.dp)
+                                    .fillMaxWidth(),
+                                contentScale = ContentScale.FillWidth,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                            )
+                        }
                     )
-                }
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ) {
-                PersianText(
-                    text = stringResource(R.string.version_name)
-                )
-                PersianText(
-                    text = BuildConfig.VERSION_NAME
-                )
-            }
-            PersianText(
-                stringResource(id = R.string.license_header),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Ripple(
-                onClick = { uriHandler.openUri(sourceUri) },
-                content = {
-                    Text(
-                        text = sourceUri,
-                        textDecoration = TextDecoration.Underline
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(
+                            8.dp,
+                            Alignment.CenterHorizontally
+                        ),
+                        content = {
+                            PersianText(stringResource(R.string.version_name))
+                            PersianText(BuildConfig.VERSION_NAME)
+                        }
                     )
-                }
-            )
-            PersianText(
-                stringResource(id = R.string.about_app),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Ripple(
-                onClick = { uriHandler.openUri(owlBotUri) },
-                content = {
-                    Text(
-                        text = owlBotUri,
-                        textDecoration = TextDecoration.Underline
+                    PersianText(
+                        text = stringResource(id = R.string.license_header),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Ripple(
+                        onClick = { uriHandler.openUri(sourceUri) },
+                        content = {
+                            Text(
+                                text = sourceUri,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        }
+                    )
+                    PersianText(
+                        text = stringResource(id = R.string.about_app),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Ripple(
+                        onClick = { uriHandler.openUri(owlBotUri) },
+                        content = {
+                            Text(
+                                text = owlBotUri,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        }
                     )
                 }
             )
         }
-    }
+    )
 }

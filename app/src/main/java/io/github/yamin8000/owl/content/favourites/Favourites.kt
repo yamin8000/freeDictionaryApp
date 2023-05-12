@@ -76,16 +76,20 @@ fun FavouritesGrid(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        columns = GridCells.Fixed(span)
-    ) {
-        items(favourites) { favourite ->
-            FavouriteItem(
-                favourite = favourite,
-                onClick = onItemClick,
-                onLongClick = { onItemLongClick(favourite) }
+        columns = GridCells.Fixed(span),
+        content = {
+            items(
+                items = favourites,
+                itemContent = { favourite ->
+                    FavouriteItem(
+                        favourite = favourite,
+                        onClick = onItemClick,
+                        onLongClick = { onItemLongClick(favourite) }
+                    )
+                }
             )
         }
-    }
+    )
 }
 
 @Composable

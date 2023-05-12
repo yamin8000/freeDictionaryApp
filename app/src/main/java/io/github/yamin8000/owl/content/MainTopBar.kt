@@ -41,42 +41,43 @@ fun MainTopBar(
     onInfoClick: () -> Unit,
 ) {
     Surface(
-        shadowElevation = 8.dp
-    ) {
-        TopAppBar(
-            scrollBehavior = scrollBehavior,
-            title = { AnimatedAppIcon() },
-            actions = {
-                ClickableIcon(
-                    imageVector = Icons.TwoTone.History,
-                    contentDescription = stringResource(R.string.search_history),
-                    onClick = onHistoryClick,
-                )
+        shadowElevation = 8.dp,
+        content = {
+            TopAppBar(
+                scrollBehavior = scrollBehavior,
+                title = { AnimatedAppIcon() },
+                actions = {
+                    ClickableIcon(
+                        imageVector = Icons.TwoTone.History,
+                        contentDescription = stringResource(R.string.search_history),
+                        onClick = onHistoryClick,
+                    )
 
-                ClickableIcon(
-                    imageVector = Icons.TwoTone.Favorite,
-                    contentDescription = stringResource(R.string.favourites),
-                    onClick = onFavouritesClick,
-                )
+                    ClickableIcon(
+                        imageVector = Icons.TwoTone.Favorite,
+                        contentDescription = stringResource(R.string.favourites),
+                        onClick = onFavouritesClick,
+                    )
 
-                ClickableIcon(
-                    imageVector = Icons.TwoTone.Casino,
-                    contentDescription = stringResource(R.string.random_word),
-                    onClick = onRandomWordClick,
-                )
+                    ClickableIcon(
+                        imageVector = Icons.TwoTone.Casino,
+                        contentDescription = stringResource(R.string.random_word),
+                        onClick = onRandomWordClick,
+                    )
 
-                ClickableIcon(
-                    imageVector = Icons.TwoTone.Settings,
-                    contentDescription = stringResource(R.string.settings),
-                    onClick = onSettingsClick
-                )
+                    ClickableIcon(
+                        imageVector = Icons.TwoTone.Settings,
+                        contentDescription = stringResource(R.string.settings),
+                        onClick = onSettingsClick
+                    )
 
-                ClickableIcon(
-                    imageVector = Icons.TwoTone.Info,
-                    contentDescription = stringResource(R.string.about_app),
-                    onClick = onInfoClick
-                )
-            }
-        )
-    }
+                    ClickableIcon(
+                        imageVector = Icons.TwoTone.Info,
+                        contentDescription = stringResource(R.string.about_app),
+                        onClick = onInfoClick
+                    )
+                }
+            )
+        }
+    )
 }

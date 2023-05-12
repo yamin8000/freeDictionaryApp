@@ -128,6 +128,7 @@ fun OwlTheme(
     )
 }
 
+@Suppress("unused")
 @Composable
 fun PreviewTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),

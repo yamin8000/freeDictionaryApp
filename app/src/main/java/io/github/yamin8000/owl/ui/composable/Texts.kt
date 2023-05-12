@@ -38,7 +38,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ElevatedSuggestionChip
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Surface
@@ -120,6 +119,7 @@ fun PersianText(
     overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
+    minLines: Int = 1,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current
 ) {
@@ -131,26 +131,27 @@ fun PersianText(
         localStyle = LocalTextStyle.current.copy(textDirection = TextDirection.Rtl)
     }
     Text(
-        text,
-        modifier,
-        color,
-        fontSize,
-        fontStyle,
-        fontWeight,
-        localFontFamily,
-        letterSpacing,
-        textDecoration,
-        textAlign,
-        lineHeight,
-        overflow,
-        softWrap,
-        maxLines,
-        onTextLayout,
-        localStyle
+        text = text,
+        modifier = modifier,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = localFontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        minLines = minLines,
+        onTextLayout = onTextLayout,
+        style = localStyle
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CopyAbleRippleText(
     text: String,
@@ -193,34 +194,35 @@ fun CopyAbleRippleText(
             onDismissRequest = { isDialogShown = false },
             content = {
                 Surface(
-                    shape = DefaultCutShape
-                ) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.padding(8.dp),
-                        content = {
-                            items(text.split(Regex("\\s+"))) {
-                                ElevatedSuggestionChip(
-                                    onClick = {
-                                        onDoubleClick?.invoke(it)
-                                        isDialogShown = false
-                                    },
-                                    label = {
-                                        Text(
-                                            text = it.replace(NOT_WORD_CHARS_REGEX, ""),
-                                            modifier = Modifier
-                                                .padding(8.dp)
-                                                .fillMaxSize(),
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                    }
-                                )
+                    shape = DefaultCutShape,
+                    content = {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.padding(8.dp),
+                            content = {
+                                items(text.split(Regex("\\s+"))) {
+                                    ElevatedSuggestionChip(
+                                        onClick = {
+                                            onDoubleClick?.invoke(it)
+                                            isDialogShown = false
+                                        },
+                                        label = {
+                                            Text(
+                                                text = it.replace(NOT_WORD_CHARS_REGEX, ""),
+                                                modifier = Modifier
+                                                    .padding(8.dp)
+                                                    .fillMaxSize(),
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                    )
+                                }
                             }
-                        }
-                    )
-                }
+                        )
+                    }
+                )
             }
         )
     }
@@ -242,14 +244,15 @@ fun CopyAbleRippleTextWithIcon(
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(0.25f)
-            ) {
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = text
-                )
-                PersianText(title)
-            }
+                modifier = Modifier.fillMaxWidth(0.25f),
+                content = {
+                    Icon(
+                        imageVector = imageVector,
+                        contentDescription = text
+                    )
+                    PersianText(title)
+                }
+            )
             CopyAbleRippleText(
                 text = text,
                 content = content,

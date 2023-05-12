@@ -52,24 +52,26 @@ fun SettingsItemCard(
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.Start,
-    ) {
-        PersianText(
-            text = title,
-            fontSize = 18.sp,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Card(
-            modifier = modifier,
-            shape = DefaultCutShape
-        ) {
-            Column(
-                modifier = columnModifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                content = { content() }
+        content = {
+            PersianText(
+                text = title,
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.primary
             )
-        }
-    }
+            Card(
+                modifier = modifier,
+                shape = DefaultCutShape,
+                content = {
+                    Column(
+                        modifier = columnModifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        content = { content() }
+                    )
+                }
+            )
+        },
+    )
 }
 
 @Composable
@@ -81,30 +83,31 @@ fun RemovableCard(
     var isMenuExpanded by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
     Card(
-        shape = DefaultCutShape
-    ) {
-        Ripple(
-            modifier = Modifier.padding(8.dp),
-            onClick = onClick,
-            onLongClick = { isMenuExpanded = true },
-            content = {
-                Text(
-                    text = item,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                )
-            }
-        )
-        DeleteMenu(
-            expanded = isMenuExpanded,
-            onDismiss = { isMenuExpanded = false },
-            onDelete = {
-                isMenuExpanded = false
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                onLongClick()
-            }
-        )
-    }
+        shape = DefaultCutShape,
+        content = {
+            Ripple(
+                modifier = Modifier.padding(8.dp),
+                onClick = onClick,
+                onLongClick = { isMenuExpanded = true },
+                content = {
+                    Text(
+                        text = item,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                    )
+                }
+            )
+            DeleteMenu(
+                expanded = isMenuExpanded,
+                onDismiss = { isMenuExpanded = false },
+                onDelete = {
+                    isMenuExpanded = false
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLongClick()
+                }
+            )
+        }
+    )
 }
