@@ -109,7 +109,7 @@ dependencies {
     implementation("androidx.compose.material:material:$compose_libs_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_ui_libs_version")
     debugImplementation("androidx.compose.ui:ui-tooling:$compose_ui_libs_version")
-    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.compose.material:material-icons-extended:$compose_libs_version")
     implementation("androidx.compose.material3:material3:$material3_version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3_version")
@@ -118,11 +118,11 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofit_version")
     //coil
-    def coil_version = "2.3.0"
+    def coil_version = "2.4.0"
     implementation("io.coil-kt:coil:$coil_version")
     implementation("io.coil-kt:coil-compose:$coil_version")
     //navigation
-    def nav_version = "2.5.3"
+    def nav_version = "2.6.0"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
