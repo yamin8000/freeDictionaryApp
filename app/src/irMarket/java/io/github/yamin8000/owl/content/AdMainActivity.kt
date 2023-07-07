@@ -52,7 +52,7 @@ import ir.tapsell.plus.TapsellPlusInitListener
 import ir.tapsell.plus.model.AdNetworkError
 import ir.tapsell.plus.model.AdNetworks
 
-class AdMainActivity : MainActivity() {
+class MainActivity : CommonActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @ExperimentalMaterial3Api
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,8 +68,8 @@ class AdMainActivity : MainActivity() {
                     var adId: String by remember { mutableStateOf("") }
 
                     LaunchedEffect(Unit) {
-                        adId = AdHelper.requestTapsellAd(this@AdMainActivity)
-                        AdHelper.showTapsellAd(this@AdMainActivity, adId, adView)
+                        adId = AdHelper.requestTapsellAd(this@MainActivity)
+                        AdHelper.showTapsellAd(this@MainActivity, adId, adView)
                     }
                     Scaffold {
                         AdMainContent(

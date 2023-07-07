@@ -41,9 +41,10 @@ import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.DataStoreHelper
+import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.runBlocking
 
-abstract class MainActivity : ComponentActivity() {
+abstract class CommonActivity : ComponentActivity() {
 
     protected var shareData: String? = null
 
@@ -58,7 +59,11 @@ abstract class MainActivity : ComponentActivity() {
 
         Constants.db = createDb()
         shareData = handleShareData()
-        runBlocking { theme = getCurrentTheme() }
+        try {
+            runBlocking { theme = getCurrentTheme() }
+        } catch (e: InterruptedException) {
+            log(e.stackTraceToString())
+        }
     }
 
     @Composable

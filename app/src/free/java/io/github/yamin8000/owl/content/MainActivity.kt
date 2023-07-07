@@ -31,7 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import io.github.yamin8000.owl.content.settings.ThemeSetting
 
-class FreeMainActivity : MainActivity() {
+class MainActivity : CommonActivity() {
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @ExperimentalMaterial3Api

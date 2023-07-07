@@ -47,12 +47,10 @@ android {
     productFlavors {
         irMarket {
             dimension "version"
-            manifestPlaceholders = [launcherActivity: "io.github.yamin8000.owl.content.AdMainActivity"]
         }
 
         free {
             dimension "version"
-            manifestPlaceholders = [launcherActivity: "io.github.yamin8000.owl.content.FreeMainActivity"]
         }
     }
 

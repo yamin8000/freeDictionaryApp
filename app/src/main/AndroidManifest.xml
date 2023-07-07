@@ -31,7 +31,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Owl">
         <activity
-            android:name="${launcherActivity}"
+            android:name="io.github.yamin8000.owl.content.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|locale|screenLayout|screenSize"
             android:exported="true"
             android:theme="@style/Theme.Owl">
