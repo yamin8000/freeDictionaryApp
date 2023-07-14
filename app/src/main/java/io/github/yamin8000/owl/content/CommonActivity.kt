@@ -46,7 +46,7 @@ import kotlinx.coroutines.runBlocking
 
 abstract class CommonActivity : ComponentActivity() {
 
-    protected var shareData: String? = null
+    protected var outsideInput: String? = null
 
     protected var theme: ThemeSetting = ThemeSetting.System
 
@@ -58,7 +58,7 @@ abstract class CommonActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         Constants.db = createDb()
-        shareData = handleShareData()
+        outsideInput = handleOutsideInputIntent()
         try {
             runBlocking { theme = getCurrentTheme() }
         } catch (e: InterruptedException) {
@@ -80,13 +80,13 @@ abstract class CommonActivity : ComponentActivity() {
 
     protected fun mainNavigationGraph(
         navController: NavHostController,
-        shareData: String?,
+        outsideInput: String?,
         onThemeChanged: (ThemeSetting) -> Unit
     ): NavGraphBuilder.() -> Unit = {
         composable("${Nav.Routes.Home}/{${Nav.Arguments.Search}}") {
             var searchTerm = it.arguments?.getString(Nav.Arguments.Search.toString())
-            if (searchTerm == null && shareData != null) searchTerm =
-                shareData.toString()
+            if (searchTerm == null && outsideInput != null)
+                searchTerm = outsideInput.toString()
             HomeContent(
                 searchTerm = searchTerm,
                 onFavouritesClick = { navController.navigate(Nav.Routes.Favourites.toString()) },
@@ -138,7 +138,7 @@ abstract class CommonActivity : ComponentActivity() {
         "db"
     ).build()
 
-    private fun handleShareData(): String? {
+    private fun handleOutsideInputIntent(): String? {
         return if (intent.type == "text/plain") {
             when (intent.action) {
                 Intent.ACTION_TRANSLATE, Intent.ACTION_DEFINE, Intent.ACTION_SEND -> {

@@ -68,8 +68,10 @@ fun HomeContent(
             val locale = if (state.ttsLang.value.isEmpty())
                 Locale.US else Locale.forLanguageTag(state.ttsLang.value)
 
-            if (searchTerm != null)
+            if (searchTerm != null) {
                 state.searchText = searchTerm
+                LaunchedEffect(Unit) { state.addSearchTextToHistory() }
+            }
             LaunchedEffect(state.isOnline.value) {
                 if (state.isFirstTimeOpening)
                     state.searchText = "Owl"

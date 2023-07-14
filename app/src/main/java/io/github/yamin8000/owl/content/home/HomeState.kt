@@ -58,7 +58,6 @@ import io.github.yamin8000.owl.util.DataStoreHelper
 import io.github.yamin8000.owl.util.DefinitionListSaver
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getImmutableHolderSaver
-import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
@@ -166,7 +165,7 @@ class HomeState(
         else snackbarHostState.showSnackbar(getErrorMessage(998, context))
     }
 
-    private suspend fun addSearchTextToHistory() {
+    suspend fun addSearchTextToHistory() {
         context.historyDataStore.edit {
             it[stringPreferencesKey(searchText)] = searchText
         }
@@ -284,12 +283,10 @@ class HomeState(
 
     private fun sanitizeWords(
         data: Set<String>
-    ): MutableSet<String> {
-        return data.asSequence()
-            .map { it.lowercase() }
-            .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
-            .toMutableSet()
-    }
+    ) = data.asSequence()
+        .map { it.lowercase() }
+        .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
+        .toMutableSet()
 
     private suspend fun getNewRandomWord(): RandomWord {
         return Web.ninjaApiRetrofit.getAPI<APIs.NinjaAPI>().getRandomWord()

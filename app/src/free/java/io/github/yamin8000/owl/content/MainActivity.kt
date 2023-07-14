@@ -54,7 +54,7 @@ class MainActivity : CommonActivity() {
         val navController = rememberNavController()
         val builder = mainNavigationGraph(
             navController = navController,
-            shareData = shareData,
+            outsideInput = outsideInput,
             onThemeChanged = onThemeChanged
         )
         NavHost(
