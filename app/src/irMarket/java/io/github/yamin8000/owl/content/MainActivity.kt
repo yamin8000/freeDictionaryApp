@@ -1,7 +1,7 @@
 /*
  *     Owl/Owl.app.main
- *     AdMainActivity.kt Copyrighted by Yamin Siahmargooei at 2023/4/22
- *     AdMainActivity.kt Last modified at 2023/4/22
+ *     MainActivity.kt Copyrighted by Yamin Siahmargooei at 2023/4/22
+ *     MainActivity.kt Last modified at 2023/4/22
  *     This file is part of Owl/Owl.app.main.
  *     Copyright (C) 2023  Yamin Siahmargooei
  *
@@ -105,7 +105,7 @@ class MainActivity : CommonActivity() {
             val navController = rememberNavController()
             val builder = mainNavigationGraph(
                 navController = navController,
-                shareData = shareData,
+                outsideInput = outsideInput,
                 onThemeChanged = onThemeChanged
             )
             NavHost(
