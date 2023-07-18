@@ -36,13 +36,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -253,11 +258,24 @@ fun CopyAbleRippleTextWithIcon(
                     PersianText(title)
                 }
             )
-            CopyAbleRippleText(
-                text = text,
-                content = content,
-                onClick = onClick,
-                onDoubleClick = onDoubleClick
+            val selectionColors = TextSelectionColors(
+                handleColor = MaterialTheme.colorScheme.secondary,
+                backgroundColor = MaterialTheme.colorScheme.onSecondary
+            )
+            CompositionLocalProvider(
+                values = arrayOf(LocalTextSelectionColors provides selectionColors),
+                content = {
+                    SelectionContainer(
+                        content = {
+                            CopyAbleRippleText(
+                                text = text,
+                                content = content,
+                                onClick = onClick,
+                                onDoubleClick = onDoubleClick
+                            )
+                        }
+                    )
+                }
             )
         }
     )
