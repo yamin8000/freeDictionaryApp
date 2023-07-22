@@ -41,6 +41,8 @@ android {
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
+        buildConfigField("String", "OWLBOT_TOKEN", "\"${System.getenv("OWLBOT_TOKEN")}\"")
+        buildConfigField("String", "API_NINJA_KEY", "\"${System.getenv("API_NINJA_KEY")}\"")
     }
 
     flavorDimensions "version"

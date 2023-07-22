@@ -20,10 +20,9 @@
 
 package io.github.yamin8000.owl.network
 
+import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.model.RandomWord
 import io.github.yamin8000.owl.model.Word
-import io.github.yamin8000.owl.network.ApiKey.API_NINJA_KEY
-import io.github.yamin8000.owl.network.ApiKey.OWLBOT_TOKEN
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
@@ -32,7 +31,7 @@ object APIs {
 
     interface OwlBotWordAPI {
 
-        @Headers(OWLBOT_TOKEN)
+        @Headers(BuildConfig.OWLBOT_TOKEN)
         @GET("dictionary/{word}")
         suspend fun searchWord(@Path("word") word: String): Word?
     }
@@ -40,7 +39,7 @@ object APIs {
     interface NinjaAPI {
 
         @Suppress("SpellCheckingInspection")
-        @Headers(API_NINJA_KEY)
+        @Headers(BuildConfig.API_NINJA_KEY)
         @GET("randomword")
         suspend fun getRandomWord(): RandomWord
     }
