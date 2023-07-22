@@ -1,5 +1,8 @@
 # Owl2
 
+## Discontinued
+### Since [Owlbot](https://owlbot.info/) API is unavailable development is stopped.
+
 🦉 **Owl2/جغدک** is a simple android application for **OwlBot dictionary**.  
 a reincarnation of https://github.com/yamin8000/Owl
 
