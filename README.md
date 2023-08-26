@@ -1,12 +1,7 @@
-# Owl2
+# freeDictionaryApp
 
-## Discontinued
-### Since [Owlbot](https://owlbot.info/) API is unavailable development is stopped.
-
-🦉 **Owl2/جغدک** is a simple android application for **OwlBot dictionary**.  
-a reincarnation of https://github.com/yamin8000/Owl
-
-Owl2 is the first project in that I used **Jetpack Compose UI** and **Material3** color system.
+🦉 **freeDictionaryApp** is a simple android application for **freeDictionaryAPI**.  
+a reincarnation of https://github.com/yamin8000/Owl2
 
 ---
 
@@ -41,7 +36,7 @@ Just use the search input to search the word.
 
 ## Download
 
-- GitHub releases: [here](https://github.com/yamin8000/Owl2/releases)
+- GitHub releases: [here](https://github.com/yamin8000/freeDictionaryApp/releases)
 - IzzyOnDroid: [here](https://apt.izzysoft.de/fdroid/index/apk/io.github.yamin8000.owl)
 - ~~Bazaar: [here](https://cafebazaar.ir/app/io.github.yamin8000.owl)~~
 
@@ -49,15 +44,15 @@ Just use the search input to search the word.
 
 - English to English dictionary
 - Definition of the word
-- Example of the word usage if available
-- Emoji of the word if available
-- Picture of the word if available
+- ~Example of the word usage if available~
+- ~Emoji of the word if available~
+- ~Picture of the word if available~
 - Pronunciation of the word, both IPA text and audio using TTS
 - Save searched data for offline uses
 
 ## License
 
-> Owl is licensed under the **[GNU General Public License v3.0](./LICENSE)**  
+> freeDictionaryApp is licensed under the **[GNU General Public License v3.0](./LICENSE)**  
 > Permissions of this strong copyleft license are conditioned on making  
 > available complete source code of licensed works and modifications,  
 > which include larger works using a licensed work, under the same  
