@@ -1,15 +1,15 @@
 /*
- *     Owl: an android app for Owlbot Dictionary API
+ *     freeDictionaryApp is a simple android application for freeDictionaryAPI
  *     build.gradle Created by Yamin Siahmargooei at 2022/6/16
  *     This file is part of Owl.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
- *     Owl is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     Owl is distributed in the hope that it will be useful,
+ *     freeDictionaryApp is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
@@ -94,7 +94,7 @@ android {
         }
     }
 
-    kotlin.sourceSets.all {
+    kotlin.sourceSets.configureEach {
         languageSettings.enableLanguageFeature("DataObjects")
     }
 }

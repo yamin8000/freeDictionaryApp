@@ -5,7 +5,7 @@ buildscript {
         compose_compiler_version = '1.4.8'
     }
 }/*
- *     freeDictionaryApp: an android app for freeDictionaryAPI
+ *     freeDictionaryApp is a simple android application for freeDictionaryAPI
  *     build.gradle Created by Yamin Siahmargooei at 2022/6/16
  *     This file is part of freeDictionaryApp.
  *     Copyright (C) 2022  Yamin Siahmargooei
