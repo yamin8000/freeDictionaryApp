@@ -1,6 +1,6 @@
 # freeDictionaryApp
 
-🦉 **freeDictionaryApp** is a simple android application for **freeDictionaryAPI**.  
+**freeDictionaryApp** is a simple android application for **freeDictionaryAPI**.  
 a reincarnation of https://github.com/yamin8000/Owl2
 
 ---
