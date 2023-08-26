@@ -27,7 +27,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 @Suppress("SameParameterValue")
 object Web {
 
-    private const val baseUrl = "https://owlbot.info/api/v4/"
+    private const val baseUrl = "https://api.dictionaryapi.dev/api/v2/"
     private const val ninjaApiBaseUrl = "https://api.api-ninjas.com/v1/"
 
     val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createRetrofit() }

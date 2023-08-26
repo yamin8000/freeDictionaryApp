@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     Definition.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     Definition.kt Last modified at 2023/8/26
+ *     Phonetic.kt Copyrighted by Yamin Siahmargooei at 2023/8/27
+ *     Phonetic.kt Last modified at 2023/8/27
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2023  Yamin Siahmargooei
  *
@@ -21,15 +21,9 @@
 
 package io.github.yamin8000.owl.model
 
-import android.os.Parcelable
-import androidx.compose.runtime.Immutable
-import kotlinx.parcelize.Parcelize
-
-@Immutable
-@Parcelize
-data class Definition(
-    val definition: String,
-    val example: String,
-    val synonyms: List<String>,
-    val antonyms: List<String>
-) : Parcelable
+data class Phonetic(
+    val text: String,
+    val audio: String?,
+    val sourceUrl: String,
+    val license: License?
+)

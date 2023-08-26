@@ -22,6 +22,7 @@
 package io.github.yamin8000.owl.network
 
 import io.github.yamin8000.owl.BuildConfig
+import io.github.yamin8000.owl.model.Entry
 import io.github.yamin8000.owl.model.RandomWord
 import io.github.yamin8000.owl.model.Word
 import retrofit2.http.GET
@@ -29,6 +30,12 @@ import retrofit2.http.Headers
 import retrofit2.http.Path
 
 object APIs {
+
+    interface FreeDictionaryAPI {
+
+        @GET("entries/en/{word}")
+        suspend fun search(@Path("word") word: String): List<Entry>
+    }
 
     interface OwlBotWordAPI {
 
