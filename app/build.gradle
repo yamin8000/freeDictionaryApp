@@ -135,5 +135,5 @@ dependencies {
     //lottie
     implementation("com.airbnb.android:lottie-compose:6.0.1")
     //ad
-    irMarketImplementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.1.8")
+    irMarketImplementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.2.0")
 }
