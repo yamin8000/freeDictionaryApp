@@ -96,6 +96,7 @@ fun MainBottomBar(
             RainbowLinearProgress()
         Crossfade(
             targetState = isSearching,
+            label = "",
             content = { target ->
                 if (target) {
                     BottomAppBar(
