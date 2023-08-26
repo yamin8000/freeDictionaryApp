@@ -133,7 +133,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     //lottie
-    implementation("com.airbnb.android:lottie-compose:6.0.1")
+    implementation("com.airbnb.android:lottie-compose:6.1.0")
     //ad
     irMarketImplementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.1.8")
 }
