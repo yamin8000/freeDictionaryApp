@@ -27,7 +27,13 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
@@ -62,11 +68,13 @@ fun DynamicThemePrimaryColorsFromImage(
     val colors = MaterialTheme.colorScheme.copy(
         primary = animateColorAsState(
             dominantColorState.color,
-            spring(stiffness = Spring.StiffnessLow)
+            spring(stiffness = Spring.StiffnessLow),
+            label = ""
         ).value,
         onPrimary = animateColorAsState(
             dominantColorState.onColor,
-            spring(stiffness = Spring.StiffnessLow)
+            spring(stiffness = Spring.StiffnessLow),
+            label = ""
         ).value
     )
     MaterialTheme(colorScheme = colors, content = content)
