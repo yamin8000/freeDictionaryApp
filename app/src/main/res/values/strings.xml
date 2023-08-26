@@ -20,7 +20,7 @@
   -->
 
 <resources>
-    <string name="app_name">Owl</string>
+    <string name="app_name" translatable="false">freeDictionaryApp</string>
     <string name="search">Search</string>
     <string name="search_hint">Enter a word to search</string>
     <string name="favourites">Favourite Words</string>

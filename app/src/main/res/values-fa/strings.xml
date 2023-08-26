@@ -20,7 +20,6 @@
   -->
 
 <resources>
-    <string name="app_name">جغدک</string>
     <string name="search">جستجو</string>
     <string name="search_hint">واژه‌ای برای جستجو بنویسید</string>
     <string name="favourites">واژه‌های برگزیده</string>

@@ -26,13 +26,13 @@ plugins {
 }
 
 android {
-    namespace 'io.github.yamin8000.owl'
-    compileSdk 33
+    namespace "io.github.yamin8000.owl"
+    compileSdk 34
 
     defaultConfig {
         applicationId "io.github.yamin8000.owl"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 19
         versionName "1.3.6"
         vectorDrawables {
@@ -43,17 +43,6 @@ android {
         }
         buildConfigField("String", "OWLBOT_TOKEN", "\"${System.getenv("OWLBOT_TOKEN")}\"")
         buildConfigField("String", "API_NINJA_KEY", "\"${System.getenv("API_NINJA_KEY")}\"")
-    }
-
-    flavorDimensions "version"
-    productFlavors {
-        irMarket {
-            dimension "version"
-        }
-
-        free {
-            dimension "version"
-        }
     }
 
     buildTypes {
@@ -102,7 +91,7 @@ android {
 dependencies {
     //core android
     implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.palette:palette:1.0.0")
+    implementation("androidx.palette:palette-ktx:1.0.0")
     //compose
     def material3_version = "1.1.1"
     implementation("androidx.compose.ui:ui:$compose_ui_libs_version")
@@ -122,7 +111,7 @@ dependencies {
     implementation("io.coil-kt:coil:$coil_version")
     implementation("io.coil-kt:coil-compose:$coil_version")
     //navigation
-    def nav_version = "2.6.0"
+    def nav_version = "2.7.1"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -133,7 +122,5 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     //lottie
-    implementation("com.airbnb.android:lottie-compose:6.0.1")
-    //ad
-    irMarketImplementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.1.8")
+    implementation("com.airbnb.android:lottie-compose:6.1.0")
 }
