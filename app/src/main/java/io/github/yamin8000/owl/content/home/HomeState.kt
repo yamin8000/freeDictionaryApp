@@ -43,11 +43,10 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.favouritesDataStore
 import io.github.yamin8000.owl.content.historyDataStore
 import io.github.yamin8000.owl.content.settingsDataStore
-import io.github.yamin8000.owl.db.entity.DefinitionEntity
 import io.github.yamin8000.owl.db.entity.WordEntity
 import io.github.yamin8000.owl.model.Definition
+import io.github.yamin8000.owl.model.Entry
 import io.github.yamin8000.owl.model.RandomWord
-import io.github.yamin8000.owl.model.Word
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
@@ -72,8 +71,7 @@ class HomeState(
     val lifecycleOwner: LifecycleOwner,
     private val focusManager: FocusManager,
     var searchText: String,
-    val rawWordSearchBody: MutableState<Word?>,
-    val searchResult: MutableState<ImmutableHolder<List<Definition>>>,
+    val searchResult: MutableState<ImmutableHolder<List<Entry>>>,
     val context: Context,
     val isSharing: MutableState<Boolean>,
     val ttsLang: MutableState<String>,
@@ -101,7 +99,7 @@ class HomeState(
     }
 
     val isFirstTimeOpening: Boolean
-        get() = searchResult.value.item.isEmpty() && rawWordSearchBody.value == null && searchText.isEmpty()
+        get() = searchResult.value.item.isEmpty()
 
     val isWordSelectedFromKeyboardSuggestions: Boolean
         get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
@@ -130,28 +128,30 @@ class HomeState(
 
     private suspend fun searchForDefinitionRequest(
         searchTerm: String
-    ): Word? {
+    ): List<Entry> {
         isSearching.value = true
         searchText = searchTerm
-        val body = try {
-            Web.retrofit.getAPI<APIs.OwlBotWordAPI>().searchWord(searchTerm.trim())
+        val entries = try {
+            Web.retrofit.getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
         } catch (e: HttpException) {
             snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
-            val cache = checkIfDefinitionIsCached(searchTerm)
-            cache
+            //val cache = checkIfDefinitionIsCached(searchTerm)
+            //cache
+            listOf()
         } catch (e: CancellationException) {
-            null
+            listOf()
         } catch (e: Exception) {
             snackbarHostState.showSnackbar(getErrorMessage(999, context))
-            val cache = checkIfDefinitionIsCached(searchTerm)
-            cache
+            //val cache = checkIfDefinitionIsCached(searchTerm)
+            //cache
+            listOf()
         } finally {
             isSearching.value = false
         }
-        if (body != null)
+        if (entries.isNotEmpty())
             focusManager.clearFocus()
         isSearching.value = false
-        return body
+        return entries
     }
 
     suspend fun searchForDefinitionHandler() {
@@ -174,30 +174,25 @@ class HomeState(
 
     fun searchForDefinition() {
         job = scope.launch {
-            rawWordSearchBody.value = searchForDefinitionRequest(searchText)
-            searchResult.value = ImmutableHolder(rawWordSearchBody.value?.definitions ?: listOf())
-            searchResult.value = ImmutableHolder(
-                searchResult.value.item.sortedByDescending { it.imageUrl }
-            )
+            searchResult.value = ImmutableHolder(searchForDefinitionRequest(searchText))
             clearSuggestions()
-
-            if (rawWordSearchBody.value != null) {
+            /*if (rawWordSearchBody.value != null) {
                 rawWordSearchBody.value?.let {
                     addWordToDatabase(it)
                     handleWordCacheableData(it)
                 }
-            }
+            }*/
         }
     }
 
-    private suspend fun checkIfDefinitionIsCached(
+    /*private suspend fun checkIfDefinitionIsCached(
         searchTerm: String
     ): Word? {
         val word = db.wordDao().getByParam("word", searchTerm.trim().lowercase()).firstOrNull()
         return if (word != null) retrieveCachedWordData(word) else null
-    }
+    }*/
 
-    private suspend fun retrieveCachedWordData(
+    /*private suspend fun retrieveCachedWordData(
         word: WordEntity
     ): Word? {
         val definitions = db.definitionDao().getByParam("wordId", word.id)
@@ -215,9 +210,9 @@ class HomeState(
                 )
             }
         )
-    }
+    }*/
 
-    private suspend fun addWordToDatabase(
+    /*private suspend fun addWordToDatabase(
         word: Word
     ) {
         val wordDao = db.wordDao()
@@ -244,9 +239,9 @@ class HomeState(
                 }
             )
         }
-    }
+    }*/
 
-    private suspend fun handleWordCacheableData(
+    /*private suspend fun handleWordCacheableData(
         word: Word
     ) {
         val wordDao = db.wordDao()
@@ -260,7 +255,7 @@ class HomeState(
         newData = sanitizeWords(newData)
 
         addWordDataToCache(newData)
-    }
+    }*/
 
     private suspend fun addWordDataToCache(
         newData: MutableSet<String>
@@ -316,7 +311,7 @@ class HomeState(
     private suspend fun getFavourites() = context.favouritesDataStore.data.first()
 
     private fun createShareText() = buildString {
-        append("Word: ")
+        /*append("Word: ")
         append(rawWordSearchBody.value?.word ?: "-")
         append("\n")
         append("Pronunciation(IPA): ")
@@ -329,16 +324,16 @@ class HomeState(
             item.type?.let { append("Type: $it\n\n") }
             item.example?.let { append("Example: $it\n\n") }
             item.emoji?.let { append("Emoji: $it") }
-        }
+        }*/
         trim()
         append("\n\n")
         append(context.getString(R.string.this_text_generated_using_owl))
         append("\n")
         append(context.getString(R.string.github_source))
         append("\n")
-        append(context.getString(R.string.this_text_extracted_from_owlbot))
+        append(context.getString(R.string.this_text_extracted_from_free_dictionary))
         append("\n")
-        append(context.getString(R.string.owl_bot_link))
+        append(context.getString(R.string.free_dictionary_link))
     }
 
     private fun getErrorMessage(
@@ -393,8 +388,7 @@ fun rememberHomeState(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     focusManager: FocusManager = LocalFocusManager.current,
     searchText: String = rememberSaveable { mutableStateOf("").value },
-    rawWordSearchBody: MutableState<Word?> = rememberSaveable { mutableStateOf(null) },
-    searchResult: MutableState<ImmutableHolder<List<Definition>>> = rememberSaveable(stateSaver = DefinitionListSaver) {
+    searchResult: MutableState<ImmutableHolder<List<Entry>>> = rememberSaveable(stateSaver = DefinitionListSaver) {
         mutableStateOf(ImmutableHolder(emptyList()))
     },
     context: Context = LocalContext.current,
@@ -411,7 +405,6 @@ fun rememberHomeState(
     lifecycleOwner,
     focusManager,
     searchText,
-    rawWordSearchBody,
     searchResult,
     context,
     isSharing,
@@ -426,7 +419,6 @@ fun rememberHomeState(
         lifecycleOwner,
         focusManager,
         searchText,
-        rawWordSearchBody,
         searchResult,
         context,
         isSharing,

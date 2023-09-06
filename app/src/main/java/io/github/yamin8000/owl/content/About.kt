@@ -59,7 +59,7 @@ fun AboutContent(
                 content = {
                     val uriHandler = LocalUriHandler.current
                     val sourceUri = stringResource(R.string.github_source)
-                    val owlBotUri = stringResource(R.string.owl_bot_link)
+                    val owlBotUri = stringResource(R.string.free_dictionary_link)
                     val licenseUri = stringResource(R.string.license_link)
                     Ripple(
                         onClick = { uriHandler.openUri(licenseUri) },

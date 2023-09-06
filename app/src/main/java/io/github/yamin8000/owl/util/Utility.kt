@@ -32,6 +32,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.saveable.Saver
 import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.model.Definition
+import io.github.yamin8000.owl.model.Entry
 import java.util.*
 
 fun Context.findActivity(): Activity? = when (this) {
@@ -66,7 +67,7 @@ class ImmutableHolder<T>(val item: T) {
     operator fun component1(): T = item
 }
 
-val DefinitionListSaver = getImmutableHolderSaver<List<Definition>>()
+val DefinitionListSaver = getImmutableHolderSaver<List<Entry>>()
 
 fun <T : Any> getImmutableHolderSaver(): Saver<ImmutableHolder<T>, T> = Saver(
     save = { it.item },

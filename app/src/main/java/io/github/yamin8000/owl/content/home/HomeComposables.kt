@@ -44,16 +44,10 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -63,15 +57,13 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.model.Definition
+import io.github.yamin8000.owl.model.Meaning
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.HighlightText
 import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.TtsAwareContent
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.ui.util.DynamicThemePrimaryColorsFromImage
-import io.github.yamin8000.owl.ui.util.rememberDominantColorState
-import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.speak
 
 @Composable
@@ -79,7 +71,7 @@ internal fun WordDefinitionsList(
     word: String,
     localeTag: String,
     listState: ScrollState,
-    searchResult: ImmutableHolder<List<Definition>>,
+    meanings: List<Meaning>,
     onWordChipClick: (String) -> Unit
 ) {
     Column(
@@ -89,11 +81,11 @@ internal fun WordDefinitionsList(
             .verticalScroll(listState)
             .padding(16.dp),
         content = {
-            searchResult.item.forEach { definition ->
-                DynamicColorDefinitionCard(
-                    word,
-                    localeTag,
-                    definition,
+            meanings.forEach { meaning ->
+                MeaningCard(
+                    word = word,
+                    localeTag = localeTag,
+                    meaning = meaning,
                     onWordChipClick = onWordChipClick
                 )
             }
@@ -242,7 +234,7 @@ internal fun WordTypeText(
     )
 }
 
-@Composable
+/*@Composable
 internal fun DynamicColorDefinitionCard(
     word: String,
     localeTag: String,
@@ -275,24 +267,16 @@ internal fun DynamicColorDefinitionCard(
             onWordChipClick = onWordChipClick
         )
     }
-}
+}*/
 
 @Composable
-internal fun DefinitionCard(
+internal fun MeaningCard(
     word: String,
     localeTag: String,
-    definition: Definition,
+    meaning: Meaning,
     cardColors: CardColors = CardDefaults.cardColors(),
     onWordChipClick: (String) -> Unit
 ) {
-    var dialogVisibility by rememberSaveable { mutableStateOf(false) }
-
-    ImageDialog(
-        definition = definition,
-        dialogVisibility = dialogVisibility,
-        dialogVisibilityChange = { dialogVisibility = it }
-    )
-
     Card(
         shape = DefaultCutShape,
         modifier = Modifier.fillMaxWidth(),
@@ -302,82 +286,29 @@ internal fun DefinitionCard(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 content = {
-                    if (definition.type != null) {
-                        WordTypeText(
-                            definition.type,
-                            localeTag,
-                            onDoubleClick = onWordChipClick
-                        )
-                    }
-                    WordDefinitionText(
-                        word,
-                        definition.definition,
+                    WordTypeText(
+                        meaning.partOfSpeech,
                         localeTag,
                         onDoubleClick = onWordChipClick
                     )
-                    if (definition.example != null) {
-                        WordExampleText(
-                            word = word,
-                            example = definition.example,
-                            localeTag = localeTag,
+                    meaning.definitions.forEach { definition ->
+                        WordDefinitionText(
+                            word,
+                            definition.definition,
+                            localeTag,
                             onDoubleClick = onWordChipClick
                         )
+                        if (definition.example != null) {
+                            WordExampleText(
+                                word = word,
+                                example = definition.example,
+                                localeTag = localeTag,
+                                onDoubleClick = onWordChipClick
+                            )
+                        }
                     }
-                    if (definition.emoji != null)
-                        WordEmojiText(definition.emoji, localeTag)
                 }
-            )
-            DefinitionImage(
-                enabled = !definition.imageUrl.isNullOrBlank(),
-                url = definition.imageUrl,
-                content = definition.definition,
-                onClick = { dialogVisibility = true }
             )
         }
     )
-}
-
-@Composable
-private fun ImageDialog(
-    dialogVisibility: Boolean,
-    dialogVisibilityChange: (Boolean) -> Unit,
-    definition: Definition
-) {
-    if (dialogVisibility) {
-        Dialog(
-            onDismissRequest = { dialogVisibilityChange(false) },
-            content = {
-                Surface(
-                    modifier = Modifier.wrapContentSize(),
-                    shape = DefaultCutShape,
-                    content = {
-                        DefinitionImage(
-                            enabled = !definition.imageUrl.isNullOrBlank(),
-                            url = definition.imageUrl,
-                            content = definition.definition
-                        )
-                    }
-                )
-            }
-        )
-    }
-}
-
-@Composable
-internal fun DefinitionImage(
-    enabled: Boolean,
-    url: String?,
-    content: String,
-    onClick: (() -> Unit)? = null
-) {
-    if (enabled) {
-        AsyncImage(
-            model = url,
-            contentDescription = content,
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClick?.invoke() }
-        )
-    }
 }

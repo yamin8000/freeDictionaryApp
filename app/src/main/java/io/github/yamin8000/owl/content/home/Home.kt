@@ -80,8 +80,8 @@ fun HomeContent(
                     state.searchForDefinition()
             }
 
-            if (state.searchResult.value.item.isNotEmpty() && state.rawWordSearchBody.value != null && state.isSharing.value)
-                state.handleShareIntent()
+            /*if (state.searchResult.value.item.isNotEmpty() && state.rawWordSearchBody.value != null && state.isSharing.value)
+                state.handleShareIntent()*/
 
             val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -154,29 +154,28 @@ fun HomeContent(
 
                             val addedToFavourites = stringResource(R.string.added_to_favourites)
 
-                            if (state.rawWordSearchBody.value != null || state.searchResult.value.item.isNotEmpty()) {
-                                state.rawWordSearchBody.value?.let { word ->
-                                    WordCard(
-                                        localeTag = locale.toLanguageTag(),
-                                        word = word.word,
-                                        pronunciation = word.pronunciation,
-                                        onShareWord = { state.isSharing.value = true },
-                                        onAddToFavourite = {
-                                            state.scope.launch {
-                                                state.addToFavourite(word.word)
-                                                state.snackbarHostState.showSnackbar(
-                                                    addedToFavourites
-                                                )
-                                            }
+                            if (state.searchResult.value.item.isNotEmpty()) {
+                                val word = state.searchResult.value.item.first().word
+                                WordCard(
+                                    localeTag = locale.toLanguageTag(),
+                                    word = word,
+                                    pronunciation = "",
+                                    onShareWord = { state.isSharing.value = true },
+                                    onAddToFavourite = {
+                                        state.scope.launch {
+                                            state.addToFavourite(word)
+                                            state.snackbarHostState.showSnackbar(
+                                                addedToFavourites
+                                            )
                                         }
-                                    )
-                                }
+                                    }
+                                )
 
                                 WordDefinitionsList(
-                                    word = state.rawWordSearchBody.value?.word ?: "",
+                                    word = word,
                                     localeTag = locale.toLanguageTag(),
                                     listState = state.listState,
-                                    searchResult = state.searchResult.value,
+                                    meanings = state.searchResult.value.item.first().meanings,
                                     onWordChipClick = {
                                         state.searchText = it
                                         state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
