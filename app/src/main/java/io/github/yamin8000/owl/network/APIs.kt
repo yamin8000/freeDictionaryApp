@@ -37,13 +37,6 @@ object APIs {
         suspend fun search(@Path("word") word: String): List<Entry>
     }
 
-    interface OwlBotWordAPI {
-
-        @Headers(BuildConfig.OWLBOT_TOKEN)
-        @GET("dictionary/{word}")
-        suspend fun searchWord(@Path("word") word: String): Word?
-    }
-
     interface NinjaAPI {
 
         @Suppress("SpellCheckingInspection")

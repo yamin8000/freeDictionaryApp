@@ -22,8 +22,8 @@
 package io.github.yamin8000.owl.model
 
 data class Phonetic(
-    val text: String,
+    val text: String?,
     val audio: String?,
-    val sourceUrl: String,
+    val sourceUrl: String?,
     val license: License?
 )
