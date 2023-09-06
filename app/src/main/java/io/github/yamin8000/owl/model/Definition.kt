@@ -29,7 +29,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Definition(
     val definition: String,
-    val example: String,
+    val example: String?,
     val synonyms: List<String>,
     val antonyms: List<String>
 ) : Parcelable
