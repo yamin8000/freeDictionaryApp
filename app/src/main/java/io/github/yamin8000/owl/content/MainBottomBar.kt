@@ -59,7 +59,6 @@ import io.github.yamin8000.owl.util.getCurrentLocale
 import kotlinx.coroutines.delay
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainBottomBar(
     searchTerm: String?,

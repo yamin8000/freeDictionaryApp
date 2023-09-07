@@ -64,6 +64,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.util.Locale
+import java.util.Map.entry
 
 class HomeState(
     val listState: ScrollState,
@@ -72,6 +73,7 @@ class HomeState(
     private val focusManager: FocusManager,
     var searchText: String,
     val searchResult: MutableState<ImmutableHolder<List<Entry>>>,
+    val entry: MutableState<Entry?>,
     val context: Context,
     val isSharing: MutableState<Boolean>,
     val ttsLang: MutableState<String>,
@@ -99,7 +101,7 @@ class HomeState(
     }
 
     val isFirstTimeOpening: Boolean
-        get() = searchResult.value.item.isEmpty()
+        get() = searchResult.value.item.isEmpty() && entry.value == null && searchText.isEmpty()
 
     val isWordSelectedFromKeyboardSuggestions: Boolean
         get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
@@ -175,13 +177,14 @@ class HomeState(
     fun searchForDefinition() {
         job = scope.launch {
             searchResult.value = ImmutableHolder(searchForDefinitionRequest(searchText))
+            entry.value = searchResult.value.item.firstOrNull()
             clearSuggestions()
-            /*if (rawWordSearchBody.value != null) {
-                rawWordSearchBody.value?.let {
-                    addWordToDatabase(it)
-                    handleWordCacheableData(it)
+            if (entry.value != null) {
+                entry.value?.let {
+                    //addWordToDatabase(it)
+                    //handleWordCacheableData(it)
                 }
-            }*/
+            }
         }
     }
 
@@ -311,13 +314,13 @@ class HomeState(
     private suspend fun getFavourites() = context.favouritesDataStore.data.first()
 
     private fun createShareText() = buildString {
-        /*append("Word: ")
-        append(rawWordSearchBody.value?.word ?: "-")
+        append("Word: ")
+        append(entry.value?.word ?: "-")
         append("\n")
         append("Pronunciation(IPA): ")
-        append(rawWordSearchBody.value?.pronunciation ?: "-")
+        append(entry.value?.phonetics?.firstOrNull { it.text != null }?.text ?: "-")
         append("\n\n")
-        searchResult.value.item.forEachIndexed { index, item ->
+        /*entry { index, item ->
             if (searchResult.value.item.size > 1)
                 append("${index + 1})\n")
             append("Definition: ${item.definition}\n\n")
@@ -391,6 +394,7 @@ fun rememberHomeState(
     searchResult: MutableState<ImmutableHolder<List<Entry>>> = rememberSaveable(stateSaver = DefinitionListSaver) {
         mutableStateOf(ImmutableHolder(emptyList()))
     },
+    entry: MutableState<Entry?> = rememberSaveable { mutableStateOf(null) },
     context: Context = LocalContext.current,
     isSharing: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
     ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) },
@@ -406,6 +410,7 @@ fun rememberHomeState(
     focusManager,
     searchText,
     searchResult,
+    entry,
     context,
     isSharing,
     ttsLang,
@@ -420,6 +425,7 @@ fun rememberHomeState(
         focusManager,
         searchText,
         searchResult,
+        entry,
         context,
         isSharing,
         ttsLang,

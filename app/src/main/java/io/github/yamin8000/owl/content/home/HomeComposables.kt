@@ -22,7 +22,6 @@
 package io.github.yamin8000.owl.content.home
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -30,11 +29,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Category
-import androidx.compose.material.icons.twotone.EmojiEmotions
 import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material.icons.twotone.RecordVoiceOver
 import androidx.compose.material.icons.twotone.Share
@@ -45,18 +42,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import coil.compose.AsyncImage
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Meaning
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
@@ -104,36 +96,51 @@ internal fun WordCard(
     OutlinedCard(
         shape = DefaultCutShape,
         modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
             .indication(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
             ),
         content = {
-            Column(
-                modifier = Modifier.padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Row(
                 content = {
-                    WordText(word, localeTag)
-                    if (pronunciation != null) {
-                        PronunciationText(
-                            localeTag = localeTag,
-                            pronunciation = pronunciation,
-                            word = word
-                        )
-                    }
-                    Row {
-                        ClickableIcon(
-                            imageVector = Icons.TwoTone.Favorite,
-                            contentDescription = stringResource(R.string.favourites),
-                            onClick = onAddToFavourite
-                        )
-                        ClickableIcon(
-                            imageVector = Icons.TwoTone.Share,
-                            contentDescription = stringResource(R.string.share),
-                            onClick = onShareWord
-                        )
-                    }
+                    Column(
+                        modifier = Modifier
+                            .weight(2f)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.Start,
+                        content = {
+                            WordText(word, localeTag)
+                            if (pronunciation != null) {
+                                PronunciationText(
+                                    localeTag = localeTag,
+                                    pronunciation = pronunciation,
+                                    word = word
+                                )
+                            }
+                        }
+                    )
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.End,
+                        content = {
+                            ClickableIcon(
+                                imageVector = Icons.TwoTone.Favorite,
+                                contentDescription = stringResource(R.string.favourites),
+                                onClick = onAddToFavourite
+                            )
+                            ClickableIcon(
+                                imageVector = Icons.TwoTone.Share,
+                                contentDescription = stringResource(R.string.share),
+                                onClick = onShareWord
+                            )
+                        }
+                    )
                 }
             )
         }
@@ -147,7 +154,6 @@ internal fun WordText(
 ) {
     SpeakableRippleTextWithIcon(
         text = word,
-        title = stringResource(R.string.word),
         imageVector = Icons.TwoTone.ShortText,
         localeTag = localeTag
     )
@@ -164,24 +170,10 @@ internal fun PronunciationText(
         content = { ttsEngine ->
             CopyAbleRippleTextWithIcon(
                 text = pronunciation,
-                title = stringResource(R.string.pronunciation),
                 imageVector = Icons.TwoTone.RecordVoiceOver,
                 onClick = { ttsEngine.speak(word) }
             )
         }
-    )
-}
-
-@Composable
-internal fun WordEmojiText(
-    emoji: String,
-    localeTag: String
-) {
-    SpeakableRippleTextWithIcon(
-        text = emoji,
-        title = stringResource(R.string.emoji),
-        imageVector = Icons.TwoTone.EmojiEmotions,
-        localeTag
     )
 }
 
@@ -228,46 +220,11 @@ internal fun WordTypeText(
     SpeakableRippleTextWithIcon(
         text = type,
         title = stringResource(R.string.type),
-        Icons.TwoTone.Category,
-        localeTag,
+        imageVector = Icons.TwoTone.Category,
+        localeTag = localeTag,
         onDoubleClick = onDoubleClick
     )
 }
-
-/*@Composable
-internal fun DynamicColorDefinitionCard(
-    word: String,
-    localeTag: String,
-    definition: Definition,
-    onWordChipClick: (String) -> Unit
-) {
-    val dominantColorState = rememberDominantColorState()
-    if (definition.imageUrl != null) {
-        DynamicThemePrimaryColorsFromImage(dominantColorState) {
-            LaunchedEffect(definition) {
-                dominantColorState.updateColorsFromImageUrl(definition.imageUrl)
-            }
-            DefinitionCard(
-                word = word,
-                localeTag = localeTag,
-                definition = definition,
-                onWordChipClick = onWordChipClick,
-                cardColors = CardDefaults.cardColors(
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            )
-        }
-    } else {
-        dominantColorState.reset()
-        DefinitionCard(
-            word = word,
-            localeTag = localeTag,
-            definition = definition,
-            onWordChipClick = onWordChipClick
-        )
-    }
-}*/
 
 @Composable
 internal fun MeaningCard(

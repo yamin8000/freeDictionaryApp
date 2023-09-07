@@ -21,7 +21,11 @@
 
 package io.github.yamin8000.owl.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class License(
     val name: String,
     val url: String
-)
+) : Parcelable

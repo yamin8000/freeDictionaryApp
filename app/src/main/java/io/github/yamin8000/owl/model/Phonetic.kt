@@ -21,9 +21,13 @@
 
 package io.github.yamin8000.owl.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Phonetic(
     val text: String?,
     val audio: String?,
     val sourceUrl: String?,
     val license: License?
-)
+) : Parcelable

@@ -236,8 +236,8 @@ fun CopyAbleRippleText(
 
 @Composable
 fun CopyAbleRippleTextWithIcon(
+    title: String? = null,
     text: String,
-    title: String,
     imageVector: ImageVector,
     onClick: () -> Unit,
     content: @Composable (() -> Unit)? = null,
@@ -247,18 +247,25 @@ fun CopyAbleRippleTextWithIcon(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         content = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(0.25f),
-                content = {
-                    Icon(
-                        imageVector = imageVector,
-                        contentDescription = text
-                    )
-                    PersianText(title)
-                }
-            )
+            if (title != null) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth(0.25f),
+                    content = {
+                        Icon(
+                            imageVector = imageVector,
+                            contentDescription = text
+                        )
+                        PersianText(title)
+                    }
+                )
+            } else {
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = text
+                )
+            }
             val selectionColors = TextSelectionColors(
                 handleColor = MaterialTheme.colorScheme.secondary,
                 backgroundColor = MaterialTheme.colorScheme.onSecondary
@@ -285,9 +292,9 @@ fun CopyAbleRippleTextWithIcon(
 @Composable
 fun SpeakableRippleTextWithIcon(
     text: String,
-    title: String,
     imageVector: ImageVector,
     localeTag: String,
+    title: String? = null,
     content: @Composable (() -> Unit)? = null,
     onDoubleClick: ((String) -> Unit)? = null
 ) {

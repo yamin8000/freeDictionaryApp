@@ -80,8 +80,8 @@ fun HomeContent(
                     state.searchForDefinition()
             }
 
-            /*if (state.searchResult.value.item.isNotEmpty() && state.rawWordSearchBody.value != null && state.isSharing.value)
-                state.handleShareIntent()*/
+            if (state.searchResult.value.item.isNotEmpty() && state.isSharing.value)
+                state.handleShareIntent()
 
             val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -155,11 +155,14 @@ fun HomeContent(
                             val addedToFavourites = stringResource(R.string.added_to_favourites)
 
                             if (state.searchResult.value.item.isNotEmpty()) {
-                                val word = state.searchResult.value.item.first().word
+                                val entry = state.searchResult.value.item.firstOrNull()
+                                val word = entry?.word ?: ""
+                                val phonetic =
+                                    entry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
                                 WordCard(
                                     localeTag = locale.toLanguageTag(),
                                     word = word,
-                                    pronunciation = "",
+                                    pronunciation = phonetic,
                                     onShareWord = { state.isSharing.value = true },
                                     onAddToFavourite = {
                                         state.scope.launch {
