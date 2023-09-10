@@ -61,4 +61,6 @@
     <string name="already_added_to_favourites">Ez a szó már a kedvencek között van.</string>
     <string name="delete">Törlés</string>
     <string name="increase_volume_notice">Növeld meg a hangerődet</string>
+    <string name="antonym">Antonym</string>
+    <string name="synonym">Synonym</string>
 </resources>

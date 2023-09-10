@@ -75,7 +75,7 @@ fun HomeContent(
             }
             LaunchedEffect(state.isOnline.value) {
                 if (state.isFirstTimeOpening)
-                    state.searchText = "Owl"
+                    state.searchText = "free"
                 if (state.searchText.isNotBlank())
                     state.searchForDefinition()
             }

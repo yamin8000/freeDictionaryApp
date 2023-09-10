@@ -66,4 +66,6 @@
     <string name="already_added_to_favourites">This word is already added to the favorites.</string>
     <string name="delete">Delete</string>
     <string name="increase_volume_notice">Increase your volume</string>
+    <string name="antonym">Antonym</string>
+    <string name="synonym">Synonym</string>
 </resources>

@@ -263,6 +263,22 @@ internal fun MeaningCard(
                                 onDoubleClick = onWordChipClick
                             )
                         }
+                        definition.antonyms.forEach { antonym ->
+                            SpeakableRippleTextWithIcon(
+                                text = antonym,
+                                title = stringResource(R.string.antonym),
+                                imageVector = Icons.TwoTone.TextSnippet,
+                                localeTag = localeTag
+                            )
+                        }
+                        definition.synonyms.forEach { synonym ->
+                            SpeakableRippleTextWithIcon(
+                                text = synonym,
+                                title = stringResource(R.string.synonym),
+                                imageVector = Icons.TwoTone.TextSnippet,
+                                localeTag = localeTag
+                            )
+                        }
                     }
                 }
             )
