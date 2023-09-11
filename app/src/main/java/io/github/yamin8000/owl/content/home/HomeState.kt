@@ -64,7 +64,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.util.Locale
-import java.util.Map.entry
 
 class HomeState(
     val listState: ScrollState,
@@ -316,26 +315,32 @@ class HomeState(
     private fun createShareText() = buildString {
         append("Word: ")
         append(entry.value?.word ?: "-")
-        append("\n")
+        appendLine()
         append("Pronunciation(IPA): ")
         append(entry.value?.phonetics?.firstOrNull { it.text != null }?.text ?: "-")
-        append("\n\n")
-        /*entry { index, item ->
-            if (searchResult.value.item.size > 1)
-                append("${index + 1})\n")
-            append("Definition: ${item.definition}\n\n")
-            item.type?.let { append("Type: $it\n\n") }
-            item.example?.let { append("Example: $it\n\n") }
-            item.emoji?.let { append("Emoji: $it") }
-        }*/
+        appendLine()
+        appendLine()
+        entry.value?.meanings?.forEachIndexed { index, meaning ->
+            appendLine("${index + 1})")
+            appendLine("Type: ${meaning.partOfSpeech}")
+            meaning.definitions.take(5).forEach { definition ->
+                appendLine("Definition: ${definition.definition}")
+                if (definition.example != null)
+                    appendLine("Example: ${definition.example}")
+                if (definition.synonyms.isNotEmpty())
+                    appendLine("Synonyms: ${definition.synonyms.take(5).joinToString()}")
+                if (definition.antonyms.isNotEmpty())
+                    appendLine("Antonyms: ${definition.antonyms.take(5).joinToString()}")
+                appendLine()
+            }
+            appendLine()
+        }
         trim()
-        append("\n\n")
-        append(context.getString(R.string.this_text_generated_using_owl))
-        append("\n")
-        append(context.getString(R.string.github_source))
-        append("\n")
-        append(context.getString(R.string.this_text_extracted_from_free_dictionary))
-        append("\n")
+        appendLine()
+        appendLine()
+        appendLine(context.getString(R.string.this_text_generated_using_owl))
+        appendLine(context.getString(R.string.github_source))
+        appendLine(context.getString(R.string.this_text_extracted_from_free_dictionary))
         append(context.getString(R.string.free_dictionary_link))
     }
 
