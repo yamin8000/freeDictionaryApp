@@ -24,26 +24,29 @@ package io.github.yamin8000.owl.util
 import android.content.Context
 import android.speech.tts.TextToSpeech
 import kotlinx.coroutines.suspendCancellableCoroutine
-import java.util.*
+import java.util.Locale
 import kotlin.coroutines.resume
+
+private var tts: TextToSpeech? = null
 
 class TTS(
     private val context: Context,
     private val locale: Locale = Locale.US,
 ) {
-    private lateinit var tts: TextToSpeech
     private var ttsLang: Int = 0
 
     suspend fun getTts(): TextToSpeech? {
         return suspendCancellableCoroutine { continuation ->
-            tts = TextToSpeech(context) {
-                if (it == TextToSpeech.SUCCESS) {
-                    ttsLang = tts.setLanguage(locale)
-                    if (ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        continuation.resume(null)
-                    } else continuation.resume(tts)
-                } else continuation.resume(null)
-            }
+            if (tts == null) {
+                tts = TextToSpeech(context) {
+                    if (it == TextToSpeech.SUCCESS) {
+                        ttsLang = tts?.setLanguage(locale) ?: 0
+                        if (ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                            continuation.resume(null)
+                        } else continuation.resume(tts)
+                    } else continuation.resume(null)
+                }
+            } else continuation.resume(tts)
         }
     }
 }
