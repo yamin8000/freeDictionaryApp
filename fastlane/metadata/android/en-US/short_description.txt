@@ -1,0 +1,1 @@
+freeDictionaryApp is a simple android application for Free Dictionary API.

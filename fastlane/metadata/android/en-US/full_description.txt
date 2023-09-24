@@ -1,0 +1,9 @@
+freeDictionaryApp is a simple android application for Free Dictionary API
+
+Features:
+
+    English to English dictionary
+    Definition of the word
+    Example of the word usage if available
+    Synonyms/Antonyms of the work if available
+    Pronunciation of the word, both IPA text and audio using TTS

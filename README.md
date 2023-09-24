@@ -1,8 +1,8 @@
 # freeDictionaryApp WIP
 
 **freeDictionaryApp** is a simple android application
-for [freeDictionaryAPI](https://dictionaryapi.dev/.  
-a reincarnation of https://github.com/yamin8000/Owl2
+for [freeDictionaryAPI](https://dictionaryapi.dev/) a reincarnation
+of https://github.com/yamin8000/Owl2
 
 ---
 
