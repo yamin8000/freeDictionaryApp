@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp is a simple android application for freeDictionaryAPI
  *     build.gradle Created by Yamin Siahmargooei at 2022/6/16
- *     This file is part of Owl.
+ *     This file is part of freeDictionaryAPI.
  *     Copyright (C) 2022  Yamin Siahmargooei
  *
  *     freeDictionaryApp is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *     GNU General Public License for more details.
  *
  *     You should have received a copy of the GNU General Public License
- *     along with Owl.  If not, see <https://www.gnu.org/licenses/>.
+ *     along with freeDictionaryAPI.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 plugins {

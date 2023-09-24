@@ -59,7 +59,7 @@ fun AboutContent(
                 content = {
                     val uriHandler = LocalUriHandler.current
                     val sourceUri = stringResource(R.string.github_source)
-                    val owlBotUri = stringResource(R.string.free_dictionary_link)
+                    val freeDictionaryUri = stringResource(R.string.free_dictionary_link)
                     val licenseUri = stringResource(R.string.license_link)
                     Ripple(
                         onClick = { uriHandler.openUri(licenseUri) },
@@ -105,10 +105,10 @@ fun AboutContent(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Ripple(
-                        onClick = { uriHandler.openUri(owlBotUri) },
+                        onClick = { uriHandler.openUri(freeDictionaryUri) },
                         content = {
                             Text(
-                                text = owlBotUri,
+                                text = freeDictionaryUri,
                                 textDecoration = TextDecoration.Underline
                             )
                         }
