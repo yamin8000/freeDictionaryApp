@@ -105,7 +105,9 @@ fun HomeContent(
                         onFavouritesClick = onFavouritesClick,
                         onInfoClick = onInfoClick,
                         onSettingsClick = onSettingsClick,
-                        onRandomWordClick = { state.searchForRandomWord() }
+                        onRandomWordClick = {
+                            //state.searchForRandomWord()
+                        }
                     )
                 },
                 bottomBar = {

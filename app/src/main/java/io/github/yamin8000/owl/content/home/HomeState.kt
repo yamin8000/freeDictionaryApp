@@ -46,7 +46,6 @@ import io.github.yamin8000.owl.content.settingsDataStore
 import io.github.yamin8000.owl.db.entity.WordEntity
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Entry
-import io.github.yamin8000.owl.model.RandomWord
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
@@ -105,7 +104,7 @@ class HomeState(
     val isWordSelectedFromKeyboardSuggestions: Boolean
         get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
 
-    fun searchForRandomWord() {
+    /*fun searchForRandomWord() {
         job = scope.launch {
             isSearching.value = true
             focusManager.clearFocus()
@@ -125,7 +124,7 @@ class HomeState(
             if (searchText.isNotBlank())
                 searchForRandomWordDefinition()
         }
-    }
+    }*/
 
     private suspend fun searchForDefinitionRequest(
         searchTerm: String
@@ -286,9 +285,9 @@ class HomeState(
         .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
         .toMutableSet()
 
-    private suspend fun getNewRandomWord(): RandomWord {
+    /*private suspend fun getNewRandomWord(): RandomWord {
         return Web.ninjaApiRetrofit.getAPI<APIs.NinjaAPI>().getRandomWord()
-    }
+    }*/
 
     suspend fun addToFavourite(
         favouriteWord: String

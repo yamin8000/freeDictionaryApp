@@ -33,15 +33,14 @@ android {
         applicationId "io.github.yamin8000.owl"
         minSdk 21
         targetSdk 34
-        versionCode 22
-        versionName "1.4.2"
+        versionCode 23
+        versionName "1.4.3"
         vectorDrawables {
             useSupportLibrary true
         }
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
-        buildConfigField("String", "API_NINJA_KEY", "\"${System.getenv("API_NINJA_KEY")}\"")
     }
 
     buildTypes {
