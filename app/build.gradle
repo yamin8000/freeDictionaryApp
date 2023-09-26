@@ -33,8 +33,8 @@ android {
         applicationId "io.github.yamin8000.owl"
         minSdk 21
         targetSdk 34
-        versionCode 23
-        versionName "1.4.3"
+        versionCode 24
+        versionName "1.4.4"
         vectorDrawables {
             useSupportLibrary true
         }

@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     DefinitionEntity.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     DefinitionEntity.kt Last modified at 2023/8/26
+ *     EntryEntity.kt Copyrighted by Yamin Siahmargooei at 2023/9/26
+ *     EntryEntity.kt Last modified at 2023/9/26
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2023  Yamin Siahmargooei
  *
@@ -22,22 +22,11 @@
 package io.github.yamin8000.owl.db.entity
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = MeaningEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["meaningId"],
-        )
-    ]
-)
-data class DefinitionEntity(
-    val meaningId: Long,
-    val definition: String,
-    val example: String?,
+@Entity
+data class EntryEntity(
+    val word: String,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )

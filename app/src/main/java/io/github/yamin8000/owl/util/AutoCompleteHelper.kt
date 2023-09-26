@@ -109,5 +109,5 @@ class AutoCompleteHelper(
         } else DEFAULT_N_GRAM_SIZE
     }
 
-    private suspend fun getOldSearchData() = db.wordDao().getAll().map { it.word }
+    private suspend fun getOldSearchData() = db.entryDao().getAll().map { it.word }
 }

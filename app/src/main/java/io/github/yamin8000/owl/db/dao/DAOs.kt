@@ -22,13 +22,29 @@
 package io.github.yamin8000.owl.db.dao
 
 import androidx.room.Dao
+import io.github.yamin8000.owl.db.entity.AntonymEntity
 import io.github.yamin8000.owl.db.entity.DefinitionEntity
-import io.github.yamin8000.owl.db.entity.WordEntity
+import io.github.yamin8000.owl.db.entity.EntryEntity
+import io.github.yamin8000.owl.db.entity.MeaningEntity
+import io.github.yamin8000.owl.db.entity.PhoneticEntity
+import io.github.yamin8000.owl.db.entity.SynonymEntity
 
 object DAOs {
+    @Dao
+    abstract class AntonymDao : BaseDao<AntonymEntity>("AntonymEntity")
+
     @Dao
     abstract class DefinitionDao : BaseDao<DefinitionEntity>("DefinitionEntity")
 
     @Dao
-    abstract class WordDao : BaseDao<WordEntity>("WordEntity")
+    abstract class EntryDao : BaseDao<EntryEntity>("EntryEntity")
+
+    @Dao
+    abstract class MeaningDao : BaseDao<MeaningEntity>("MeaningEntity")
+
+    @Dao
+    abstract class PhoneticDao : BaseDao<PhoneticEntity>("PhoneticDao")
+
+    @Dao
+    abstract class SynonymDao : BaseDao<SynonymEntity>("SynonymEntity")
 }

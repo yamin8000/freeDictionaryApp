@@ -43,7 +43,9 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.content.favouritesDataStore
 import io.github.yamin8000.owl.content.historyDataStore
 import io.github.yamin8000.owl.content.settingsDataStore
-import io.github.yamin8000.owl.db.entity.WordEntity
+import io.github.yamin8000.owl.db.entity.DefinitionEntity
+import io.github.yamin8000.owl.db.entity.EntryEntity
+import io.github.yamin8000.owl.db.entity.MeaningEntity
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Entry
 import io.github.yamin8000.owl.network.APIs
@@ -179,7 +181,7 @@ class HomeState(
             clearSuggestions()
             if (entry.value != null) {
                 entry.value?.let {
-                    //addWordToDatabase(it)
+                    addWordToDatabase(it)
                     //handleWordCacheableData(it)
                 }
             }
@@ -213,44 +215,48 @@ class HomeState(
         )
     }*/
 
-    /*private suspend fun addWordToDatabase(
-        word: Word
+    private suspend fun addWordToDatabase(
+        entry: Entry
     ) {
-        val wordDao = db.wordDao()
+        val wordDao = db.entryDao()
+        val meaningDao = db.meaningDao()
         val definitionDao = db.definitionDao()
 
-        val cachedWord = wordDao.getByParam("word", word.word.trim().lowercase()).firstOrNull()
+        val cachedWord = wordDao.getByParam("word", entry.word.trim().lowercase()).firstOrNull()
         if (cachedWord == null) {
-            val wordId = wordDao.insert(
-                WordEntity(
-                    word.word.trim().lowercase(),
-                    word.pronunciation?.trim()?.lowercase()
+            val entryId = wordDao.insert(
+                EntryEntity(word = entry.word.trim().lowercase())
+            )
+
+            entry.meanings.forEach { meaning ->
+                val definitions = meaning.definitions
+                val meaningEntity = MeaningEntity(
+                    entryId = entryId,
+                    partOfSpeech = meaning.partOfSpeech
                 )
-            )
-            definitionDao.insertAll(
-                word.definitions.map {
-                    DefinitionEntity(
-                        type = it.type,
-                        definition = it.definition,
-                        example = it.example,
-                        imageUrl = it.imageUrl,
-                        emoji = it.emoji,
-                        wordId = wordId
-                    )
-                }
-            )
+                val meaningId = meaningDao.insert(meaningEntity)
+                definitionDao.insertAll(
+                    definitions.map {
+                        DefinitionEntity(
+                            meaningId = meaningId,
+                            definition = it.definition,
+                            example = it.example
+                        )
+                    }
+                )
+            }
         }
-    }*/
+    }
 
     /*private suspend fun handleWordCacheableData(
-        word: Word
+        entry: Entry
     ) {
-        val wordDao = db.wordDao()
+        val entryDao = db.entryDao()
 
-        val oldData = wordDao.getAll().map { it.word }.toSet()
-        var newData = extractDataFromWordDefinitions(word.definitions)
+        val oldData = entryDao.getAll().map { it.word }.toSet()
+        var newData = extractDataFromWordDefinitions(entry.meanings)
 
-        if (oldData.contains(word.word).not())
+        if (!oldData.contains(word.word))
             newData.add(word.word)
 
         newData = sanitizeWords(newData)
@@ -261,13 +267,13 @@ class HomeState(
     private suspend fun addWordDataToCache(
         newData: MutableSet<String>
     ) {
-        val wordDao = db.wordDao()
+        /*val wordDao = db.wordDao()
 
         newData.forEach { item ->
             val temp = wordDao.getByParam("word", item.trim().lowercase()).firstOrNull()
             if (temp == null)
                 wordDao.insert(WordEntity(item.trim().lowercase()))
-        }
+        }*/
     }
 
     private fun extractDataFromWordDefinitions(

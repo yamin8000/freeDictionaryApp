@@ -24,14 +24,22 @@ package io.github.yamin8000.owl.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import io.github.yamin8000.owl.db.dao.DAOs
+import io.github.yamin8000.owl.db.entity.AntonymEntity
 import io.github.yamin8000.owl.db.entity.DefinitionEntity
-import io.github.yamin8000.owl.db.entity.WordEntity
+import io.github.yamin8000.owl.db.entity.EntryEntity
+import io.github.yamin8000.owl.db.entity.MeaningEntity
+import io.github.yamin8000.owl.db.entity.PhoneticEntity
+import io.github.yamin8000.owl.db.entity.SynonymEntity
 
 @Database(
-    entities = [WordEntity::class, DefinitionEntity::class],
-    version = 1
+    entities = [AntonymEntity::class, DefinitionEntity::class, EntryEntity::class, MeaningEntity::class, PhoneticEntity::class, SynonymEntity::class],
+    version = 2
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun wordDao(): DAOs.WordDao
+    abstract fun antonymDao(): DAOs.AntonymDao
     abstract fun definitionDao(): DAOs.DefinitionDao
+    abstract fun entryDao(): DAOs.EntryDao
+    abstract fun meaningDao(): DAOs.MeaningDao
+    abstract fun phoneticDao(): DAOs.PhoneticDao
+    abstract fun synonymDao(): DAOs.SynonymDao
 }

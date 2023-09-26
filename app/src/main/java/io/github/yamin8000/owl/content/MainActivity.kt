@@ -85,11 +85,9 @@ class MainActivity : ComponentActivity() {
         DataStoreHelper(settingsDataStore).getString(Constants.THEME) ?: ThemeSetting.System.name
     )
 
-    private fun createDb() = Room.databaseBuilder(
-        this,
-        AppDatabase::class.java,
-        "db"
-    ).build()
+    private fun createDb() = Room.databaseBuilder(this, AppDatabase::class.java, "db")
+        .fallbackToDestructiveMigration()
+        .build()
 
     private fun handleOutsideInputIntent(): String? {
         return if (intent.type == "text/plain") {

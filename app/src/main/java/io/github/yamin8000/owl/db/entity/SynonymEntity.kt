@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     WordEntity.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     WordEntity.kt Last modified at 2023/8/26
+ *     SynonymEntity.kt Copyrighted by Yamin Siahmargooei at 2023/9/26
+ *     SynonymEntity.kt Last modified at 2023/9/26
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2023  Yamin Siahmargooei
  *
@@ -22,12 +22,21 @@
 package io.github.yamin8000.owl.db.entity
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity
-data class WordEntity(
-    val word: String,
-    val pronunciation: String? = null,
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = DefinitionEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["definitionId"]
+        )
+    ]
+)
+data class SynonymEntity(
+    val definitionId: Long,
+    val value: String,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )

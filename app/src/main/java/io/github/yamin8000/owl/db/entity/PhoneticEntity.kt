@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     DefinitionEntity.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     DefinitionEntity.kt Last modified at 2023/8/26
+ *     PhoneticEntity.kt Copyrighted by Yamin Siahmargooei at 2023/9/26
+ *     PhoneticEntity.kt Last modified at 2023/9/26
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2023  Yamin Siahmargooei
  *
@@ -28,16 +28,14 @@ import androidx.room.PrimaryKey
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = MeaningEntity::class,
+            entity = EntryEntity::class,
             parentColumns = ["id"],
-            childColumns = ["meaningId"],
+            childColumns = ["entryId"]
         )
     ]
 )
-data class DefinitionEntity(
-    val meaningId: Long,
-    val definition: String,
-    val example: String?,
+data class PhoneticEntity(
+    val entryId: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )
