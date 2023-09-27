@@ -46,8 +46,12 @@ import io.github.yamin8000.owl.content.settingsDataStore
 import io.github.yamin8000.owl.db.entity.DefinitionEntity
 import io.github.yamin8000.owl.db.entity.EntryEntity
 import io.github.yamin8000.owl.db.entity.MeaningEntity
+import io.github.yamin8000.owl.db.entity.PhoneticEntity
 import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Entry
+import io.github.yamin8000.owl.model.License
+import io.github.yamin8000.owl.model.Meaning
+import io.github.yamin8000.owl.model.Phonetic
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
@@ -59,6 +63,7 @@ import io.github.yamin8000.owl.util.DataStoreHelper
 import io.github.yamin8000.owl.util.DefinitionListSaver
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getImmutableHolderSaver
+import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
@@ -73,7 +78,7 @@ class HomeState(
     private val focusManager: FocusManager,
     var searchText: String,
     val searchResult: MutableState<ImmutableHolder<List<Entry>>>,
-    val entry: MutableState<Entry?>,
+    private val entry: MutableState<Entry?>,
     val context: Context,
     val isSharing: MutableState<Boolean>,
     val ttsLang: MutableState<String>,
@@ -137,23 +142,21 @@ class HomeState(
             Web.retrofit.getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
         } catch (e: HttpException) {
             snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
-            //val cache = checkIfDefinitionIsCached(searchTerm)
-            //cache
-            listOf()
+            val cache = checkIfDefinitionIsCached(searchTerm)
+            listOf(cache)
         } catch (e: CancellationException) {
             listOf()
         } catch (e: Exception) {
             snackbarHostState.showSnackbar(getErrorMessage(999, context))
-            //val cache = checkIfDefinitionIsCached(searchTerm)
-            //cache
-            listOf()
+            val cache = checkIfDefinitionIsCached(searchTerm)
+            listOf(cache)
         } finally {
             isSearching.value = false
         }
         if (entries.isNotEmpty())
             focusManager.clearFocus()
         isSearching.value = false
-        return entries
+        return entries.filterNotNull()
     }
 
     suspend fun searchForDefinitionHandler() {
@@ -182,38 +185,48 @@ class HomeState(
             if (entry.value != null) {
                 entry.value?.let {
                     addWordToDatabase(it)
-                    //handleWordCacheableData(it)
+                    cacheEntryData(it)
                 }
             }
         }
     }
 
-    /*private suspend fun checkIfDefinitionIsCached(
+    private suspend fun checkIfDefinitionIsCached(
         searchTerm: String
-    ): Word? {
-        val word = db.wordDao().getByParam("word", searchTerm.trim().lowercase()).firstOrNull()
-        return if (word != null) retrieveCachedWordData(word) else null
-    }*/
+    ): Entry? {
+        val entry = db.entryDao().getByParam("word", searchTerm.trim().lowercase()).firstOrNull()
+        return if (entry != null) retrieveCachedWordData(entry) else null
+    }
 
-    /*private suspend fun retrieveCachedWordData(
-        word: WordEntity
-    ): Word? {
-        val definitions = db.definitionDao().getByParam("wordId", word.id)
-        if (definitions.isEmpty()) return null
-        return Word(
-            word.word,
-            word.pronunciation,
-            definitions.map {
-                Definition(
-                    type = it.type,
-                    definition = it.definition,
-                    example = it.example,
-                    imageUrl = it.imageUrl,
-                    emoji = it.emoji
+    private suspend fun retrieveCachedWordData(
+        entry: EntryEntity
+    ): Entry {
+        val phonetics = db.phoneticDao().getByParam("entryId", entry.id)
+        val meanings = db.meaningDao().getByParam("entryId", entry.id)
+        val definitions = db.definitionDao().getAll()
+
+        return Entry(
+            word = entry.word,
+            phonetics = phonetics.map { Phonetic(text = it.value) },
+            license = License("", ""),
+            sourceUrls = listOf(),
+            meanings = meanings.map { meaning ->
+                Meaning(
+                    partOfSpeech = meaning.partOfSpeech,
+                    antonyms = listOf(),
+                    synonyms = listOf(),
+                    definitions = definitions.filter { it.meaningId == meaning.id }.map {
+                        Definition(
+                            definition = it.definition,
+                            example = it.example,
+                            antonyms = listOf(),
+                            synonyms = listOf()
+                        )
+                    }
                 )
             }
         )
-    }*/
+    }
 
     private suspend fun addWordToDatabase(
         entry: Entry
@@ -221,11 +234,15 @@ class HomeState(
         val wordDao = db.entryDao()
         val meaningDao = db.meaningDao()
         val definitionDao = db.definitionDao()
+        val phoneticDao = db.phoneticDao()
 
         val cachedWord = wordDao.getByParam("word", entry.word.trim().lowercase()).firstOrNull()
         if (cachedWord == null) {
             val entryId = wordDao.insert(
                 EntryEntity(word = entry.word.trim().lowercase())
+            )
+            phoneticDao.insertAll(
+                entry.phonetics.map { PhoneticEntity(value = it.text, entryId = entryId) }
             )
 
             entry.meanings.forEach { meaning ->
@@ -248,39 +265,45 @@ class HomeState(
         }
     }
 
-    /*private suspend fun handleWordCacheableData(
+    private suspend fun cacheEntryData(
         entry: Entry
     ) {
         val entryDao = db.entryDao()
 
         val oldData = entryDao.getAll().map { it.word }.toSet()
-        var newData = extractDataFromWordDefinitions(entry.meanings)
+        var newData = extractDataFromEntry(entry.meanings)
 
-        if (!oldData.contains(word.word))
-            newData.add(word.word)
+        if (!oldData.contains(entry.word))
+            newData.add(entry.word)
 
-        newData = sanitizeWords(newData)
+        newData = sanitizeWords(newData).filter { it !in oldData }.toMutableSet()
 
         addWordDataToCache(newData)
-    }*/
+    }
 
     private suspend fun addWordDataToCache(
         newData: MutableSet<String>
     ) {
-        /*val wordDao = db.wordDao()
+        val entryDao = db.entryDao()
 
         newData.forEach { item ->
-            val temp = wordDao.getByParam("word", item.trim().lowercase()).firstOrNull()
+            val temp = entryDao.getByParam("word", item.trim().lowercase()).firstOrNull()
             if (temp == null)
-                wordDao.insert(WordEntity(item.trim().lowercase()))
-        }*/
+                entryDao.insert(EntryEntity(item.trim().lowercase()))
+        }
     }
 
-    private fun extractDataFromWordDefinitions(
-        definitions: List<Definition>
-    ) = definitions.asSequence()
-        .flatMap { listOf(it.definition, it.example) }
-        .mapNotNull { it?.split(Regex("\\s+")) }
+    private fun extractDataFromEntry(
+        meanings: List<Meaning>
+    ) = meanings.asSequence()
+        .flatMap { meaning ->
+            listOf(meaning.partOfSpeech)
+                .plus(meaning.definitions.map { it.definition })
+                .plus(meaning.definitions.map { it.example })
+                .plus(meaning.definitions.flatMap { it.synonyms })
+                .plus(meaning.definitions.flatMap { it.antonyms })
+        }.filterNotNull()
+        .map { it.split(Regex("\\s+")) }
         .flatten()
         .toMutableSet()
 

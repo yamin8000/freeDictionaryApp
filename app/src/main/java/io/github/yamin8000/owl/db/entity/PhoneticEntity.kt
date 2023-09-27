@@ -35,6 +35,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class PhoneticEntity(
+    val value: String?,
     val entryId: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0

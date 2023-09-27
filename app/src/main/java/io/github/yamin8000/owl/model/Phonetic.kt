@@ -26,8 +26,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Phonetic(
-    val text: String?,
-    val audio: String?,
-    val sourceUrl: String?,
-    val license: License?
+    val text: String? = null,
+    val audio: String? = null,
+    val sourceUrl: String? = null,
+    val license: License? = null
 ) : Parcelable

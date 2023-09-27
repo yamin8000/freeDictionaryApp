@@ -33,7 +33,7 @@ import io.github.yamin8000.owl.db.entity.SynonymEntity
 
 @Database(
     entities = [AntonymEntity::class, DefinitionEntity::class, EntryEntity::class, MeaningEntity::class, PhoneticEntity::class, SynonymEntity::class],
-    version = 2
+    version = 5
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun antonymDao(): DAOs.AntonymDao

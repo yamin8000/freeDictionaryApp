@@ -43,7 +43,7 @@ object DAOs {
     abstract class MeaningDao : BaseDao<MeaningEntity>("MeaningEntity")
 
     @Dao
-    abstract class PhoneticDao : BaseDao<PhoneticEntity>("PhoneticDao")
+    abstract class PhoneticDao : BaseDao<PhoneticEntity>("PhoneticEntity")
 
     @Dao
     abstract class SynonymDao : BaseDao<SynonymEntity>("SynonymEntity")
