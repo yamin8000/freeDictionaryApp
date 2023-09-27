@@ -47,6 +47,7 @@ Just use the search input to search the word.
 - Synonyms/Antonyms of the work if available
 - Pronunciation of the word, both IPA text and audio using TTS
 - Save searched data for offline uses
+- Search for random word
 
 ## License
 

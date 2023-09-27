@@ -63,7 +63,6 @@ import io.github.yamin8000.owl.util.DataStoreHelper
 import io.github.yamin8000.owl.util.DefinitionListSaver
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getImmutableHolderSaver
-import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
@@ -111,27 +110,10 @@ class HomeState(
     val isWordSelectedFromKeyboardSuggestions: Boolean
         get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
 
-    /*fun searchForRandomWord() {
-        job = scope.launch {
-            isSearching.value = true
-            focusManager.clearFocus()
-            val randomWord = try {
-                getNewRandomWord()
-            } catch (e: HttpException) {
-                snackbarHostState.showSnackbar(getErrorMessage(e.code(), context))
-                null
-            } catch (e: Exception) {
-                snackbarHostState.showSnackbar(getErrorMessage(999, context))
-                null
-            } finally {
-                isSearching.value = false
-            }
-            isSearching.value = false
-            searchText = randomWord?.word ?: ""
-            if (searchText.isNotBlank())
-                searchForRandomWordDefinition()
-        }
-    }*/
+    suspend fun searchForRandomWord() {
+        searchText = getNewRandomWord()
+        searchForDefinition()
+    }
 
     private suspend fun searchForDefinitionRequest(
         searchTerm: String
@@ -164,11 +146,6 @@ class HomeState(
             searchForDefinition()
             addSearchTextToHistory()
         } else snackbarHostState.showSnackbar(getErrorMessage(998, context))
-    }
-
-    private suspend fun searchForRandomWordDefinition() {
-        if (searchText.isNotBlank()) searchForDefinition()
-        else snackbarHostState.showSnackbar(getErrorMessage(998, context))
     }
 
     suspend fun addSearchTextToHistory() {
@@ -314,9 +291,9 @@ class HomeState(
         .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
         .toMutableSet()
 
-    /*private suspend fun getNewRandomWord(): RandomWord {
-        return Web.ninjaApiRetrofit.getAPI<APIs.NinjaAPI>().getRandomWord()
-    }*/
+    private suspend fun getNewRandomWord(): String {
+        return db.entryDao().getAll().map { it.word }.shuffled().first()
+    }
 
     suspend fun addToFavourite(
         favouriteWord: String
