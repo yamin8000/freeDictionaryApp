@@ -24,26 +24,11 @@ package io.github.yamin8000.owl.network
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-@Suppress("SameParameterValue")
 object Web {
 
     private const val baseUrl = "https://api.dictionaryapi.dev/api/v2/"
-    private const val ninjaApiBaseUrl = "https://api.api-ninjas.com/v1/"
 
     val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createRetrofit() }
-
-    val ninjaApiRetrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createNinjaApiRetrofit() }
-
-    private fun createNinjaApiRetrofit(): Retrofit {
-        return createCustomUrlRetrofit(ninjaApiBaseUrl)
-    }
-
-    private fun createCustomUrlRetrofit(baseUrl: String): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-    }
 
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
