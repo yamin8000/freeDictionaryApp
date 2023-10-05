@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.db.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -35,6 +36,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class AntonymEntity(
+    @ColumnInfo(index = true)
     val definitionId: Long,
     val value: String,
     @PrimaryKey(autoGenerate = true)

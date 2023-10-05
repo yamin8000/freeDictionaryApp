@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.db.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 
@@ -36,6 +37,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class MeaningEntity(
+    @ColumnInfo(index = true)
     val entryId: Long,
     val partOfSpeech: String,
     @PrimaryKey(autoGenerate = true)

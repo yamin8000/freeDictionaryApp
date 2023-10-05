@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.db.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -35,6 +36,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class DefinitionEntity(
+    @ColumnInfo(index = true)
     val meaningId: Long,
     val definition: String,
     val example: String?,
