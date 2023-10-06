@@ -42,7 +42,8 @@ class SettingsState(
     val scope: LifecycleCoroutineScope,
     val themeSetting: MutableState<ThemeSetting>,
     var ttsLang: MutableState<String>,
-    val isVibrating: MutableState<Boolean>
+    val isVibrating: MutableState<Boolean>,
+    val isStartingWithBlank: MutableState<Boolean>
 ) {
     private val dataStore = DataStoreHelper(context.settingsDataStore)
 
@@ -53,6 +54,7 @@ class SettingsState(
             )
             ttsLang.value = dataStore.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
             isVibrating.value = dataStore.getBool(Constants.IS_VIBRATING) ?: true
+            isStartingWithBlank.value = dataStore.getBool(Constants.IS_STARTING_BLANK) ?: true
         }
     }
 
@@ -76,6 +78,13 @@ class SettingsState(
         isVibrating.value = newVibrationSetting
         dataStore.setBool(Constants.IS_VIBRATING, newVibrationSetting)
     }
+
+    suspend fun updateStartingBlank(
+        isStartingWithBlank: Boolean
+    ) {
+        this.isStartingWithBlank.value = isStartingWithBlank
+        dataStore.setBool(Constants.IS_STARTING_BLANK, isStartingWithBlank)
+    }
 }
 
 @Composable
@@ -84,7 +93,8 @@ fun rememberSettingsState(
     coroutineScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
     themeSetting: MutableState<ThemeSetting> = rememberSaveable { mutableStateOf(ThemeSetting.System) },
     ttsLang: MutableState<String> = rememberSaveable { mutableStateOf(Locale.US.toLanguageTag()) },
-    isVibrating: MutableState<Boolean> = rememberSaveable { mutableStateOf(true) }
-) = remember(context, themeSetting, coroutineScope, ttsLang, isVibrating) {
-    SettingsState(context, coroutineScope, themeSetting, ttsLang, isVibrating)
+    isVibrating: MutableState<Boolean> = rememberSaveable { mutableStateOf(true) },
+    isStartingWithBlank: MutableState<Boolean> = rememberSaveable { mutableStateOf(true) }
+) = remember(context, themeSetting, coroutineScope, ttsLang, isVibrating, isStartingWithBlank) {
+    SettingsState(context, coroutineScope, themeSetting, ttsLang, isVibrating, isStartingWithBlank)
 }

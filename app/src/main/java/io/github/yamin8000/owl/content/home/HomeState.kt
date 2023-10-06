@@ -75,7 +75,7 @@ class HomeState(
     val isSearching: MutableState<Boolean>,
     val lifecycleOwner: LifecycleOwner,
     private val focusManager: FocusManager,
-    var searchText: String,
+    var searchText: MutableState<String>,
     val searchResult: MutableState<ImmutableHolder<List<Entry>>>,
     private val entry: MutableState<Entry?>,
     val context: Context,
@@ -101,17 +101,19 @@ class HomeState(
         scope.launch {
             ttsLang.value = dataStore.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
             isVibrating.value = dataStore.getBool(Constants.IS_VIBRATING) ?: true
+            val isBlank = dataStore.getBool(Constants.IS_STARTING_BLANK) ?: true
+            if (!isBlank) {
+                searchText.value = "free"
+                searchForDefinition()
+            }
         }
     }
 
-    val isFirstTimeOpening: Boolean
-        get() = searchResult.value.item.isEmpty() && entry.value == null && searchText.isEmpty()
-
     val isWordSelectedFromKeyboardSuggestions: Boolean
-        get() = searchText.length > 1 && searchText.last() == ' ' && !searchText.all { it == ' ' }
+        get() = searchText.value.length > 1 && searchText.value.last() == ' ' && !searchText.value.all { it == ' ' }
 
     suspend fun searchForRandomWord() {
-        searchText = getNewRandomWord()
+        searchText.value = getNewRandomWord()
         searchForDefinition()
     }
 
@@ -119,7 +121,7 @@ class HomeState(
         searchTerm: String
     ): List<Entry> {
         isSearching.value = true
-        searchText = searchTerm
+        searchText.value = searchTerm
         val entries = try {
             Web.retrofit.getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
         } catch (e: HttpException) {
@@ -142,7 +144,7 @@ class HomeState(
     }
 
     suspend fun searchForDefinitionHandler() {
-        if (searchText.isNotBlank()) {
+        if (searchText.value.isNotBlank()) {
             searchForDefinition()
             addSearchTextToHistory()
         } else snackbarHostState.showSnackbar(getErrorMessage(998, context))
@@ -150,13 +152,13 @@ class HomeState(
 
     suspend fun addSearchTextToHistory() {
         context.historyDataStore.edit {
-            it[stringPreferencesKey(searchText)] = searchText
+            it[stringPreferencesKey(searchText.value)] = searchText.value
         }
     }
 
     fun searchForDefinition() {
         job = scope.launch {
-            searchResult.value = ImmutableHolder(searchForDefinitionRequest(searchText))
+            searchResult.value = ImmutableHolder(searchForDefinitionRequest(searchText.value))
             entry.value = searchResult.value.item.firstOrNull()
             clearSuggestions()
             if (entry.value != null) {
@@ -376,8 +378,8 @@ class HomeState(
 
     suspend fun handleSuggestions() {
         clearSuggestions()
-        if (searchText.length >= Constants.DEFAULT_N_GRAM_SIZE) {
-            val suggestions = autoCompleteHelper.suggestTermsForSearch(searchText)
+        if (searchText.value.length >= Constants.DEFAULT_N_GRAM_SIZE) {
+            val suggestions = autoCompleteHelper.suggestTermsForSearch(searchText.value)
             searchSuggestions.value = ImmutableHolder(
                 suggestions.take(Constants.DEFAULT_N_GRAM_SIZE * 3)
             )
@@ -400,7 +402,7 @@ fun rememberHomeState(
     isSearching: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     focusManager: FocusManager = LocalFocusManager.current,
-    searchText: String = rememberSaveable { mutableStateOf("").value },
+    searchText: MutableState<String> = rememberSaveable { mutableStateOf("") },
     searchResult: MutableState<ImmutableHolder<List<Entry>>> = rememberSaveable(stateSaver = DefinitionListSaver) {
         mutableStateOf(ImmutableHolder(emptyList()))
     },

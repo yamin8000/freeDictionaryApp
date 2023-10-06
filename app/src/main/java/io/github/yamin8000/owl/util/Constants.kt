@@ -27,10 +27,10 @@ object Constants {
     lateinit var db: AppDatabase
     const val LOG_TAG = "<==>"
 
-    const val IMAGE_URL = "image_url"
     const val THEME = "theme"
     const val TTS_LANG = "tts_lang"
     const val IS_VIBRATING = "is_vibrating"
+    const val IS_STARTING_BLANK = "is_starting_blank"
 
     const val DEFAULT_N_GRAM_SIZE = 3
 

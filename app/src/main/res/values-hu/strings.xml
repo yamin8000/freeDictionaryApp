@@ -63,4 +63,5 @@
     <string name="increase_volume_notice">Növeld meg a hangerődet</string>
     <string name="antonym">Antonym</string>
     <string name="synonym">Synonym</string>
+    <string name="start_blank_search">Blank startup search</string>
 </resources>

@@ -35,6 +35,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.ArrowDropDownCircle
 import androidx.compose.material.icons.twotone.Delete
+import androidx.compose.material.icons.twotone.Language
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -98,6 +99,26 @@ fun SettingsItem(
 }
 
 @Composable
+fun SwitchItem(
+    imageVector: ImageVector,
+    caption: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = imageVector, contentDescription = caption)
+        SwitchWithText(
+            caption = caption,
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
+    }
+}
+
+@Composable
 fun SwitchWithText(
     caption: String,
     checked: Boolean,
@@ -150,19 +171,6 @@ fun Ripple(
                 onClick = onClick,
                 onLongClick = onLongClick
             )
-    )
-}
-
-@Composable
-fun EmptyList() {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list))
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        iterations = LottieConstants.IterateForever
-    )
-    LottieAnimation(
-        composition = composition,
-        progress = { progress },
     )
 }
 
@@ -413,5 +421,18 @@ fun DeleteMenu(
                 }
             )
         }
+    )
+}
+
+@Composable
+fun EmptyList() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
     )
 }

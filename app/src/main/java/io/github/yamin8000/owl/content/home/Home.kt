@@ -70,13 +70,11 @@ fun HomeContent(
                 Locale.US else Locale.forLanguageTag(state.ttsLang.value)
 
             if (searchTerm != null) {
-                state.searchText = searchTerm
+                state.searchText.value = searchTerm
                 LaunchedEffect(Unit) { state.addSearchTextToHistory() }
             }
             LaunchedEffect(state.isOnline.value) {
-                if (state.isFirstTimeOpening)
-                    state.searchText = "free"
-                if (state.searchText.isNotBlank())
+                if (state.searchText.value.isNotBlank())
                     state.searchForDefinition()
             }
 
@@ -114,7 +112,7 @@ fun HomeContent(
                         suggestions = state.searchSuggestions.value,
                         isSearching = state.isSearching.value,
                         onSearchTermChanged = {
-                            state.searchText = it
+                            state.searchText.value = it
                             state.scope.launch { state.handleSuggestions() }
                             if (state.isWordSelectedFromKeyboardSuggestions) {
                                 state.scope.launch { state.searchForDefinitionHandler() }
@@ -122,11 +120,11 @@ fun HomeContent(
                             }
                         },
                         onSuggestionClick = {
-                            state.searchText = it
+                            state.searchText.value = it
                             state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
                         },
                         onSearch = {
-                            state.searchText = it
+                            state.searchText.value = it
                             state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
                         },
                         onCancel = { state.cancel() }
@@ -180,11 +178,14 @@ fun HomeContent(
                                     listState = state.listState,
                                     meanings = state.searchResult.value.item.first().meanings,
                                     onWordChipClick = {
-                                        state.searchText = it
+                                        state.searchText.value = it
                                         state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
                                     }
                                 )
-                            } else EmptyList()
+                            } else {
+                                PersianText(stringResource(R.string.search_hint))
+                                EmptyList()
+                            }
                         }
                     )
                 }

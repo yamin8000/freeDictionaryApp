@@ -31,6 +31,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material.icons.twotone.Language
+import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -80,7 +81,9 @@ fun SettingsContent(
         ) {
             GeneralSettings(
                 isVibrating = state.isVibrating.value,
-                isVibratingChange = { state.scope.launch { state.updateVibrationSetting(it) } }
+                isVibratingChange = { state.scope.launch { state.updateVibrationSetting(it) } },
+                isStartingBlank = state.isStartingWithBlank.value,
+                isStartingBlankChanged = { state.scope.launch { state.updateStartingBlank(it) } }
             )
             ThemeSetting(state.themeSetting.value) { newTheme ->
                 state.scope.launch { state.updateThemeSetting(newTheme) }
@@ -166,23 +169,26 @@ fun TtsLanguagesDialog(
 @Composable
 fun GeneralSettings(
     isVibrating: Boolean,
-    isVibratingChange: (Boolean) -> Unit
+    isVibratingChange: (Boolean) -> Unit,
+    isStartingBlank: Boolean,
+    isStartingBlankChanged: (Boolean) -> Unit
 ) {
     SettingsItemCard(
         modifier = Modifier.fillMaxWidth(),
         title = stringResource(R.string.general),
         content = {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(imageVector = Icons.TwoTone.Language, contentDescription = null)
-                SwitchWithText(
-                    caption = stringResource(R.string.vibrate_on_scroll),
-                    checked = isVibrating,
-                    onCheckedChange = isVibratingChange
-                )
-            }
+            SwitchItem(
+                imageVector = Icons.TwoTone.Language,
+                caption = stringResource(R.string.vibrate_on_scroll),
+                checked = isVibrating,
+                onCheckedChange = isVibratingChange
+            )
+            SwitchItem(
+                imageVector = Icons.TwoTone.Search,
+                caption = stringResource(R.string.start_blank_search),
+                checked = isStartingBlank,
+                onCheckedChange = isStartingBlankChanged
+            )
         }
     )
 }
