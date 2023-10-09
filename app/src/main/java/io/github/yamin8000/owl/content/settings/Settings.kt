@@ -64,10 +64,9 @@ fun SettingsContent(
     TtsAwareFeature(
         ttsLanguageLocaleTag = state.ttsLang.value,
         onTtsReady = { tts ->
+            val availableLanguages = tts.availableLanguages ?: setOf(Locale.ENGLISH)
             textToSpeech = tts
-            englishLanguages = tts.availableLanguages.filter {
-                it.language == Locale.ENGLISH.language
-            }
+            englishLanguages = availableLanguages.toList()
         }
     )
 
