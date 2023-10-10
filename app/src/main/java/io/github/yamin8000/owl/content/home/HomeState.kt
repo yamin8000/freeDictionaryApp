@@ -63,6 +63,7 @@ import io.github.yamin8000.owl.util.DataStoreHelper
 import io.github.yamin8000.owl.util.DefinitionListSaver
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getImmutableHolderSaver
+import io.github.yamin8000.owl.util.sanitizeWords
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
@@ -284,13 +285,6 @@ class HomeState(
         }.filterNotNull()
         .map { it.split(Regex("\\s+")) }
         .flatten()
-        .toMutableSet()
-
-    private fun sanitizeWords(
-        data: Set<String>
-    ) = data.asSequence()
-        .map { it.lowercase() }
-        .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
         .toMutableSet()
 
     private suspend fun getNewRandomWord(): String {

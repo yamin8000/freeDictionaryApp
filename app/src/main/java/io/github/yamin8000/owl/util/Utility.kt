@@ -86,3 +86,10 @@ fun log(
 ) {
     log(exception.stackTraceToString())
 }
+
+fun sanitizeWords(
+    data: Set<String>
+) = data.asSequence()
+    .map { it.lowercase() }
+    .map { it.replace(Constants.NOT_WORD_CHARS_REGEX, "") }
+    .toMutableSet()

@@ -83,9 +83,9 @@ import androidx.compose.ui.window.Dialog
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.Samim
-import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import io.github.yamin8000.owl.util.findActivity
 import io.github.yamin8000.owl.util.getCurrentLocale
+import io.github.yamin8000.owl.util.sanitizeWords
 import io.github.yamin8000.owl.util.speak
 
 @Composable
@@ -208,7 +208,8 @@ fun CopyAbleRippleText(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier.padding(8.dp),
                             content = {
-                                items(text.split(Regex("\\s+"))) {
+                                val words = sanitizeWords(text.split(Regex("\\s+")).toSet())
+                                items(words.toList()) {
                                     ElevatedSuggestionChip(
                                         onClick = {
                                             onDoubleClick?.invoke(it)
@@ -216,7 +217,7 @@ fun CopyAbleRippleText(
                                         },
                                         label = {
                                             Text(
-                                                text = it.replace(NOT_WORD_CHARS_REGEX, ""),
+                                                text = it,
                                                 modifier = Modifier
                                                     .padding(8.dp)
                                                     .fillMaxSize(),
