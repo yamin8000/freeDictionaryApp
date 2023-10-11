@@ -337,8 +337,6 @@ class HomeState(
             appendLine()
         }
         trim()
-        appendLine()
-        appendLine()
         appendLine(context.getString(R.string.this_text_generated_using_owl))
         appendLine(context.getString(R.string.github_source))
         appendLine(context.getString(R.string.this_text_extracted_from_free_dictionary))
