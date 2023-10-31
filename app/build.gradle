@@ -105,7 +105,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofit_version")
     //coil
-    def coil_version = "2.4.0"
+    def coil_version = "2.5.0"
     implementation("io.coil-kt:coil:$coil_version")
     implementation("io.coil-kt:coil-compose:$coil_version")
     //navigation
