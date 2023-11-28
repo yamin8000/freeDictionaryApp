@@ -4,7 +4,7 @@ buildscript {
     ext {
         compose_libs_version = '1.5.4'
         compose_ui_libs_version = '1.5.4'
-        compose_compiler_version = '1.5.3'
+        compose_compiler_version = '1.5.4'
     }
 }/*
  *     freeDictionaryApp is a simple android application for freeDictionaryAPI
@@ -29,8 +29,8 @@ buildscript {
 plugins {
     id 'com.android.application' version '8.1.4' apply false
     id 'com.android.library' version '8.1.4' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.10' apply false
-    id 'com.google.devtools.ksp' version '1.9.10-1.0.13'
+    id 'org.jetbrains.kotlin.android' version '1.9.20' apply false
+    id 'com.google.devtools.ksp' version '1.9.20-1.0.14'
 }
 
 subprojects {
