@@ -31,9 +31,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.saveable.Saver
 import io.github.yamin8000.owl.BuildConfig
-import io.github.yamin8000.owl.model.Definition
 import io.github.yamin8000.owl.model.Entry
-import java.util.*
+import java.util.Locale
 
 fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this

@@ -254,7 +254,7 @@ fun ThemeChangerDialog(
     onCurrentThemeChange: (ThemeSetting) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val themes = remember { ThemeSetting.values() }
+    val themes = remember { ThemeSetting.entries.toTypedArray() }
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = { /*ignored*/ },

@@ -57,7 +57,6 @@ import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
 import io.github.yamin8000.owl.util.AutoCompleteHelper
 import io.github.yamin8000.owl.util.Constants
-import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import io.github.yamin8000.owl.util.Constants.db
 import io.github.yamin8000.owl.util.DataStoreHelper
 import io.github.yamin8000.owl.util.DefinitionListSaver

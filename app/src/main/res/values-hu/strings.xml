@@ -49,9 +49,6 @@
     <string name="tts_language">Szövegből-Beszéd Nyelve</string>
     <string name="about">Az alkalmazásról</string>
     <string name="version_name">Verzió</string>
-    <string name="pronunciation">Kiejtés</string>
-    <string name="word">Szó</string>
-    <string name="emoji">Emoji</string>
     <string name="example">Példa</string>
     <string name="definition">Definíció</string>
     <string name="type">Típus</string>
