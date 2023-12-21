@@ -36,6 +36,7 @@ Just use the search input to search the word.
 ## Download
 
 - GitHub releases: [here](https://github.com/yamin8000/freeDictionaryApp/releases)
+- F-Droid: [here](https://f-droid.org/packages/io.github.yamin8000.owl)
 - IzzyOnDroid: [here](https://apt.izzysoft.de/fdroid/index/apk/io.github.yamin8000.owl)
 - Bazaar: [here](https://cafebazaar.ir/app/io.github.yamin8000.owl)
 
