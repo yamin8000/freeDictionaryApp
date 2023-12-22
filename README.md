@@ -5,6 +5,8 @@
 <h1>freeDictionary</h1>
 </div>
 
+[![Android CI](https://github.com/yamin8000/freeDictionaryApp/actions/workflows/android.yml/badge.svg)](https://github.com/yamin8000/freeDictionaryApp/actions/workflows/android.yml)
+
 **freeDictionary** is a simple Android application
 for [freeDictionaryAPI](https://dictionaryapi.dev/) a reincarnation
 of https://github.com/yamin8000/Owl2
