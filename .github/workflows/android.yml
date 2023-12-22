@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -35,20 +35,3 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew build
-
-    - name: Run tests
-      run: ./gradlew test
-
-    - name: Lint check
-      run: ./gradlew ktlintCheck
-    
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.3.1
-      with:
-        # Artifact name
-        name: 
-          app.apk
-        # A file, directory or wildcard pattern that describes what to upload
-        path: 
-          ./app/build/outputs/apk/debug/app-debug.apk
-        if-no-files-found: error
