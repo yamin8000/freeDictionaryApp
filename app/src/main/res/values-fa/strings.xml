@@ -34,6 +34,7 @@
     <string name="gplv3_image_description">لوگو پروانه برنامه GPLv3</string>
     <string name="about_app">فرهنگ واژگان انگلیسی به انگلیسی جغد، برگرفته از فرهنگ واژگان</string>
     <string name="added_to_favourites">به برگزیده‌ها اضافه شد</string>
+    <string name="clear">پاک کردن</string>
     <string name="untracked_error">خطای پیش بینی نشده</string>
     <string name="no_search_term_entered">عبارتی وارد نشده</string>
     <string name="share">اشتراک گذاری</string>
