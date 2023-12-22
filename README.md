@@ -2,9 +2,8 @@
 <img src="app/src/main/ic_launcher-playstore.png"
     alt="Get it on F-Droid"
     height="80">
+<h1>freeDictionary</h1>
 </div>
-
-# freeDictionary
 
 **freeDictionary** is a simple Android application
 for [freeDictionaryAPI](https://dictionaryapi.dev/) a reincarnation
