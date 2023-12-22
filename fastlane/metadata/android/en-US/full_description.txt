@@ -1,4 +1,4 @@
-freeDictionaryApp is a simple android application for Free Dictionary API
+freeDictionaryApp is a simple Android application for Free Dictionary API
 
 Features:
 
@@ -7,3 +7,5 @@ Features:
     Example of the word usage if available
     Synonyms/Antonyms of the work if available
     Pronunciation of the word, both IPA text and audio using TTS
+    Save searched data for offline uses
+    Search for a random word
