@@ -1,1 +1,1 @@
-freeDictionaryApp is a simple android application for Free Dictionary API.
+a simple app for Free Dictionary API
