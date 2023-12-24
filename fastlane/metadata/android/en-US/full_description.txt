@@ -1,11 +1,13 @@
-freeDictionaryApp is a simple Android application for Free Dictionary API
+<b>Features</b>
+<ol>
+    <li>English to English dictionary</li>
+    <li>Definition of the word</li>
+    <li>Example of the word usage if available</li>
+    <li>Synonyms/Antonyms of the work if available</li>
+    <li>Pronunciation of the word, both IPA text and audio using TTS</li>
+    <li>Save searched data for offline uses</li>
+    <li>Search for a random word</li>
+</ol>
 
-Features:
-
-    English to English dictionary
-    Definition of the word
-    Example of the word usage if available
-    Synonyms/Antonyms of the work if available
-    Pronunciation of the word, both IPA text and audio using TTS
-    Save searched data for offline uses
-    Search for a random word
+<b>Dictionary Source</b>
+https://dictionaryapi.dev
