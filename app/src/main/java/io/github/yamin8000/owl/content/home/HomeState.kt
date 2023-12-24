@@ -70,6 +70,8 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.util.Locale
 
+private const val FREE = "free"
+
 class HomeState(
     val listState: ScrollState,
     val isSearching: MutableState<Boolean>,
@@ -103,7 +105,7 @@ class HomeState(
             isVibrating.value = dataStore.getBool(Constants.IS_VIBRATING) ?: true
             val isBlank = dataStore.getBool(Constants.IS_STARTING_BLANK) ?: true
             if (!isBlank) {
-                searchText.value = "free"
+                searchText.value = FREE
                 searchForDefinition()
             }
         }
@@ -287,7 +289,7 @@ class HomeState(
         .toMutableSet()
 
     private suspend fun getNewRandomWord(): String {
-        return db.entryDao().getAll().map { it.word }.shuffled().first()
+        return db.entryDao().getAll().map { it.word }.shuffled().firstOrNull() ?: FREE
     }
 
     suspend fun addToFavourite(
