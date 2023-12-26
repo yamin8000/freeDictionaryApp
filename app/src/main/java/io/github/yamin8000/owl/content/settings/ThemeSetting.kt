@@ -30,5 +30,5 @@ import kotlinx.parcelize.Parcelize
 enum class ThemeSetting(
     @StringRes val persianNameStringResource: Int
 ) : Parcelable {
-    Dark(R.string.theme_dark), Light(R.string.theme_light), System(R.string.theme_system);
+    Dark(R.string.theme_dark), Light(R.string.theme_light), System(R.string.theme_system), Darker(R.string.theme_oled)
 }

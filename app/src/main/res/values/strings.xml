@@ -19,7 +19,7 @@
   ~     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">freeDictionary</string>
     <string name="search">Search</string>
     <string name="search_hint">Enter a word to search</string>
@@ -66,4 +66,5 @@
     <string name="antonym">Antonym</string>
     <string name="synonym">Synonym</string>
     <string name="start_blank_search">Blank startup search</string>
+    <string name="theme_oled" tools:ignore="MissingTranslation">OLED/Darker</string>
 </resources>

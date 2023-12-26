@@ -114,6 +114,7 @@ class MainActivity : ComponentActivity() {
     ) {
         OwlTheme(
             isDarkTheme = isDarkTheme(currentTheme, isSystemInDarkTheme()),
+            isOledTheme = currentTheme == ThemeSetting.Darker,
             isDynamicColor = currentTheme == ThemeSetting.System,
             content = content
         )
@@ -126,6 +127,7 @@ class MainActivity : ComponentActivity() {
         if (themeSetting == ThemeSetting.Light) return false
         if (themeSetting == ThemeSetting.System) return isSystemInDarkTheme
         if (themeSetting == ThemeSetting.Dark) return true
+        if (themeSetting == ThemeSetting.Darker) return true
         return false
     }
 
