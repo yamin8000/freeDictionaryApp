@@ -41,6 +41,7 @@ android {
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
+        archivesBaseName = "$applicationId-v$versionCode($versionName)"
     }
 
     buildTypes {
