@@ -176,7 +176,22 @@ fun CopyAbleRippleText(
         content = {
             Box(
                 modifier = Modifier.padding(8.dp),
-                content = { content?.invoke() ?: Text(text) }
+                content = {
+                    val selectionColors = TextSelectionColors(
+                        handleColor = MaterialTheme.colorScheme.secondary,
+                        backgroundColor = MaterialTheme.colorScheme.onSecondary
+                    )
+                    CompositionLocalProvider(
+                        values = arrayOf(LocalTextSelectionColors provides selectionColors),
+                        content = {
+                            SelectionContainer(
+                                content = {
+                                    content?.invoke() ?: Text(text)
+                                }
+                            )
+                        }
+                    )
+                }
             )
         },
         modifier = Modifier
@@ -267,24 +282,11 @@ fun CopyAbleRippleTextWithIcon(
                     contentDescription = text
                 )
             }
-            val selectionColors = TextSelectionColors(
-                handleColor = MaterialTheme.colorScheme.secondary,
-                backgroundColor = MaterialTheme.colorScheme.onSecondary
-            )
-            CompositionLocalProvider(
-                values = arrayOf(LocalTextSelectionColors provides selectionColors),
-                content = {
-                    SelectionContainer(
-                        content = {
-                            CopyAbleRippleText(
-                                text = text,
-                                content = content,
-                                onClick = onClick,
-                                onDoubleClick = onDoubleClick
-                            )
-                        }
-                    )
-                }
+            CopyAbleRippleText(
+                text = text,
+                content = content,
+                onClick = onClick,
+                onDoubleClick = onDoubleClick
             )
         }
     )
