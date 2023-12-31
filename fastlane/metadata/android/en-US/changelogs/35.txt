@@ -1,2 +1,3 @@
 - Added OLED theme
 - Fixed a bug that showed non-english languages during TTS Language selection
+- Fixed a bug that would crash the app during text selection
