@@ -159,5 +159,5 @@ fun PreviewTheme(
 }
 
 private fun Color.darken(): Color {
-    return copy(alpha, red / 2, green / 2, blue / 2)
+    return copy(alpha, red / 10, green / 10, blue / 10)
 }
