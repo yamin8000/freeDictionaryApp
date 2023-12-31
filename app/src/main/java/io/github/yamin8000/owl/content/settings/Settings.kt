@@ -23,7 +23,11 @@ package io.github.yamin8000.owl.content.settings
 
 import android.os.Build
 import android.speech.tts.TextToSpeech
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
@@ -32,8 +36,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material.icons.twotone.Language
 import androidx.compose.material.icons.twotone.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.RadioButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -43,11 +55,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.*
+import io.github.yamin8000.owl.ui.composable.PersianText
+import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
+import io.github.yamin8000.owl.ui.composable.SettingsItem
+import io.github.yamin8000.owl.ui.composable.SettingsItemCard
+import io.github.yamin8000.owl.ui.composable.SwitchItem
+import io.github.yamin8000.owl.ui.composable.TtsAwareFeature
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.util.speak
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +83,9 @@ fun SettingsContent(
         onTtsReady = { tts ->
             val availableLanguages = tts.availableLanguages ?: setOf(Locale.ENGLISH)
             textToSpeech = tts
-            englishLanguages = availableLanguages.toList()
+            englishLanguages = availableLanguages.filter {
+                it.language == Locale.ENGLISH.language
+            }
         }
     )
 
@@ -76,29 +95,30 @@ fun SettingsContent(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            GeneralSettings(
-                isVibrating = state.isVibrating.value,
-                isVibratingChange = { state.scope.launch { state.updateVibrationSetting(it) } },
-                isStartingBlank = state.isStartingWithBlank.value,
-                isStartingBlankChanged = { state.scope.launch { state.updateStartingBlank(it) } }
-            )
-            ThemeSetting(state.themeSetting.value) { newTheme ->
-                state.scope.launch { state.updateThemeSetting(newTheme) }
-                onThemeChanged(newTheme)
-            }
-            TtsLanguageSetting(
-                languages = englishLanguages,
-                currentTtsTag = state.ttsLang.value,
-                onTtsTagChanged = { tag ->
-                    scope.launch {
-                        state.updateTtsLang(tag)
-                        textToSpeech?.speak(Locale.forLanguageTag(tag).displayName)
-                    }
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            content = {
+                GeneralSettings(
+                    isVibrating = state.isVibrating.value,
+                    isVibratingChange = { state.scope.launch { state.updateVibrationSetting(it) } },
+                    isStartingBlank = state.isStartingWithBlank.value,
+                    isStartingBlankChanged = { state.scope.launch { state.updateStartingBlank(it) } }
+                )
+                ThemeSetting(state.themeSetting.value) { newTheme ->
+                    state.scope.launch { state.updateThemeSetting(newTheme) }
+                    onThemeChanged(newTheme)
                 }
-            )
-        }
+                TtsLanguageSetting(
+                    languages = englishLanguages,
+                    currentTtsTag = state.ttsLang.value,
+                    onTtsTagChanged = { tag ->
+                        scope.launch {
+                            state.updateTtsLang(tag)
+                            textToSpeech?.speak(Locale.forLanguageTag(tag).displayName)
+                        }
+                    }
+                )
+            }
+        )
     }
 }
 
