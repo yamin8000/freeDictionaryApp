@@ -4,7 +4,7 @@ buildscript {
     ext {
         compose_libs_version = '1.5.4'
         compose_ui_libs_version = '1.5.4'
-        compose_compiler_version = '1.5.7'
+        compose_compiler_version = '1.5.8'
     }
 }/*
  *     freeDictionaryApp is a simple android application for freeDictionaryAPI
