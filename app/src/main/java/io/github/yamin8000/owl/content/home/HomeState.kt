@@ -263,7 +263,7 @@ class HomeState(
     }
 
     private suspend fun addWordDataToCache(
-        newData: MutableSet<String>
+        newData: Set<String>
     ) {
         val entryDao = db.entryDao()
 

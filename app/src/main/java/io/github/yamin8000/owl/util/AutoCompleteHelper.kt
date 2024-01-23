@@ -77,17 +77,10 @@ class AutoCompleteHelper(
         searchTerm: String
     ): List<String> {
         val nGramSize = nGramSizeProvider(searchTerm)
-        if (suggestions.isNotEmpty() && suggestions.size > 1) {
+        return if (suggestions.isNotEmpty() && suggestions.size > 1) {
             val searchTermGrams = searchTerm.windowed(nGramSize)
-            val rankedSuggestions = buildList {
-                suggestions.forEach { suggestion ->
-                    val rank = suggestion.windowed(nGramSize)
-                        .intersect(searchTermGrams.toSet())
-                        .size
-                    add(rank to suggestion)
-                }
-            }
-            return rankedSuggestions.asSequence()
+            val rankedSuggestions = getRankedSuggestions(suggestions, nGramSize, searchTermGrams)
+            rankedSuggestions.asSequence()
                 .sortedBy { abs(it.second.length - searchTerm.length) }
                 .sortedByDescending {
                     it.second.startsWith(searchTerm.take(nGramSize)) ||
@@ -96,18 +89,29 @@ class AutoCompleteHelper(
                 .sortedByDescending { it.first }
                 .map { it.second }
                 .toList()
-        } else return suggestions.toList()
+        } else suggestions.toList()
+    }
+
+    private fun getRankedSuggestions(
+        suggestions: Set<String>,
+        nGramSize: Int,
+        searchTermGrams: List<String>
+    ) = buildList {
+        suggestions.forEach { suggestion ->
+            val rank = suggestion.windowed(nGramSize)
+                .intersect(searchTermGrams.toSet())
+                .size
+            add(rank to suggestion)
+        }
     }
 
     private fun nGramSizeProvider(
         searchTerm: String
-    ): Int {
-        return if (searchTerm.length > DEFAULT_N_GRAM_SIZE) {
-            val size = ceil(searchTerm.length.toFloat() / DEFAULT_N_GRAM_SIZE).roundToInt()
-            if (size < DEFAULT_N_GRAM_SIZE) DEFAULT_N_GRAM_SIZE
-            else size
-        } else DEFAULT_N_GRAM_SIZE
-    }
+    ) = if (searchTerm.length > DEFAULT_N_GRAM_SIZE) {
+        val size = ceil(searchTerm.length.toFloat() / DEFAULT_N_GRAM_SIZE).roundToInt()
+        if (size < DEFAULT_N_GRAM_SIZE) DEFAULT_N_GRAM_SIZE
+        else size
+    } else DEFAULT_N_GRAM_SIZE
 
     private suspend fun getOldSearchData() = db.entryDao().getAll().map { it.word }
 }
