@@ -37,7 +37,7 @@ import io.github.yamin8000.owl.util.DataStoreHelper
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class SettingsState(
+internal class SettingsState(
     context: Context,
     val scope: LifecycleCoroutineScope,
     val themeSetting: MutableState<ThemeSetting>,
@@ -88,7 +88,7 @@ class SettingsState(
 }
 
 @Composable
-fun rememberSettingsState(
+internal fun rememberSettingsState(
     context: Context = LocalContext.current,
     coroutineScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
     themeSetting: MutableState<ThemeSetting> = rememberSaveable { mutableStateOf(ThemeSetting.System) },

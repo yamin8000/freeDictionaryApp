@@ -37,7 +37,7 @@ import io.github.yamin8000.owl.content.favouritesDataStore
 import io.github.yamin8000.owl.util.list.ListSatiation
 import kotlinx.coroutines.launch
 
-class FavouritesState(
+internal class FavouritesState(
     private val context: Context,
     val scope: LifecycleCoroutineScope,
     var favourites: MutableState<Set<String>>
@@ -74,7 +74,7 @@ class FavouritesState(
 }
 
 @Composable
-fun rememberFavouritesState(
+internal fun rememberFavouritesState(
     context: Context = LocalContext.current,
     lifeCycleScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
     favourites: MutableState<Set<String>> = rememberSaveable { mutableStateOf(emptySet()) }

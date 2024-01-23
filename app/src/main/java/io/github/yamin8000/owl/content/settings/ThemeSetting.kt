@@ -27,7 +27,7 @@ import io.github.yamin8000.owl.R
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-enum class ThemeSetting(
+internal enum class ThemeSetting(
     @StringRes val persianNameStringResource: Int
 ) : Parcelable {
     Dark(R.string.theme_dark), Light(R.string.theme_light), System(R.string.theme_system), Darker(R.string.theme_oled)

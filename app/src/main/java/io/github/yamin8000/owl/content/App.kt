@@ -27,8 +27,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 
-val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-val Context.historyDataStore: DataStore<Preferences> by preferencesDataStore(name = "history")
-val Context.favouritesDataStore: DataStore<Preferences> by preferencesDataStore(name = "favourites")
+internal val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+internal val Context.historyDataStore: DataStore<Preferences> by preferencesDataStore(name = "history")
+internal val Context.favouritesDataStore: DataStore<Preferences> by preferencesDataStore(name = "favourites")
 
-class App : Application()
+internal class App : Application()

@@ -72,7 +72,7 @@ import java.util.Locale
 
 private const val FREE = "free"
 
-class HomeState(
+internal class HomeState(
     val listState: ScrollState,
     val isSearching: MutableState<Boolean>,
     val lifecycleOwner: LifecycleOwner,
@@ -390,7 +390,7 @@ class HomeState(
 }
 
 @Composable
-fun rememberHomeState(
+internal fun rememberHomeState(
     listState: ScrollState = rememberScrollState(),
     isSearching: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,

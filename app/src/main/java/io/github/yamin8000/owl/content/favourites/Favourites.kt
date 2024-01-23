@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavouritesContent(
+internal fun FavouritesContent(
     onFavouritesItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -67,7 +67,7 @@ fun FavouritesContent(
 }
 
 @Composable
-fun FavouritesGrid(
+private fun FavouritesGrid(
     favourites: List<String>,
     onItemClick: (String) -> Unit,
     onItemLongClick: (String) -> Unit

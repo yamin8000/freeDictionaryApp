@@ -31,14 +31,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.*
+import io.github.yamin8000.owl.ui.composable.EmptyList
+import io.github.yamin8000.owl.ui.composable.PersianText
+import io.github.yamin8000.owl.ui.composable.RemovableCard
+import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.util.list.ListSatiation
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryContent(
+internal fun HistoryContent(
     onHistoryItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -100,7 +103,7 @@ private fun RemoveAlHistoryButton(
 }
 
 @Composable
-fun HistoryItem(
+private fun HistoryItem(
     history: String,
     onClick: (String) -> Unit,
     onLongClick: (String) -> Unit

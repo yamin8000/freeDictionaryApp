@@ -22,8 +22,15 @@
 package io.github.yamin8000.owl.content
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.twotone.Casino
+import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material.icons.twotone.History
+import androidx.compose.material.icons.twotone.Info
+import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -33,7 +40,7 @@ import io.github.yamin8000.owl.ui.composable.ClickableIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar(
+internal fun MainTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     onHistoryClick: () -> Unit,
     onFavouritesClick: () -> Unit,

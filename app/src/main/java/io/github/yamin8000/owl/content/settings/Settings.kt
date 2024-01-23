@@ -68,7 +68,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsContent(
+internal fun SettingsContent(
     onThemeChanged: (ThemeSetting) -> Unit,
     onBackClick: () -> Unit
 ) {
@@ -123,7 +123,7 @@ fun SettingsContent(
 }
 
 @Composable
-fun TtsLanguageSetting(
+private fun TtsLanguageSetting(
     currentTtsTag: String,
     languages: List<Locale>,
     onTtsTagChanged: (String) -> Unit
@@ -154,7 +154,7 @@ fun TtsLanguageSetting(
 }
 
 @Composable
-fun TtsLanguagesDialog(
+private fun TtsLanguagesDialog(
     currentTtsTag: String,
     languages: List<Locale>,
     onLanguageSelected: (String) -> Unit,
@@ -186,7 +186,7 @@ fun TtsLanguagesDialog(
 }
 
 @Composable
-fun GeneralSettings(
+private fun GeneralSettings(
     isVibrating: Boolean,
     isVibratingChange: (Boolean) -> Unit,
     isStartingBlank: Boolean,
@@ -214,7 +214,7 @@ fun GeneralSettings(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TtsLanguageItem(
+private fun TtsLanguageItem(
     localeTag: String,
     isSelected: Boolean,
     onClick: ((String) -> Unit)? = null
@@ -233,7 +233,7 @@ fun TtsLanguageItem(
 }
 
 @Composable
-fun ThemeSetting(
+private fun ThemeSetting(
     currentTheme: ThemeSetting,
     onCurrentThemeChange: (ThemeSetting) -> Unit
 ) {
@@ -269,7 +269,7 @@ fun ThemeSetting(
 }
 
 @Composable
-fun ThemeChangerDialog(
+private fun ThemeChangerDialog(
     currentTheme: ThemeSetting,
     onCurrentThemeChange: (ThemeSetting) -> Unit,
     onDismiss: () -> Unit
@@ -323,7 +323,7 @@ fun ThemeChangerDialog(
 }
 
 @Composable
-fun DynamicThemeNotice() {
+private fun DynamicThemeNotice() {
     PersianText(
         text = stringResource(R.string.dynamic_theme_notice),
         textAlign = TextAlign.Justify

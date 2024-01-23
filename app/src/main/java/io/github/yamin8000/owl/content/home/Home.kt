@@ -48,7 +48,7 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeContent(
+internal fun HomeContent(
     searchTerm: String?,
     onHistoryClick: () -> Unit,
     onFavouritesClick: () -> Unit,

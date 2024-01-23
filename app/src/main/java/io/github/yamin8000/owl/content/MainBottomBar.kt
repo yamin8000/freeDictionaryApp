@@ -60,7 +60,7 @@ import kotlinx.coroutines.delay
 import java.util.*
 
 @Composable
-fun MainBottomBar(
+internal fun MainBottomBar(
     searchTerm: String?,
     suggestions: ImmutableHolder<List<String>>,
     onSuggestionClick: (String) -> Unit,

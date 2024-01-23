@@ -52,7 +52,7 @@ import io.github.yamin8000.owl.util.DataStoreHelper
 import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.runBlocking
 
-class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity() {
 
     private var outsideInput: String? = null
 
@@ -123,12 +123,10 @@ class MainActivity : ComponentActivity() {
     private fun isDarkTheme(
         themeSetting: ThemeSetting,
         isSystemInDarkTheme: Boolean
-    ): Boolean {
-        if (themeSetting == ThemeSetting.Light) return false
-        if (themeSetting == ThemeSetting.System) return isSystemInDarkTheme
-        if (themeSetting == ThemeSetting.Dark) return true
-        if (themeSetting == ThemeSetting.Darker) return true
-        return false
+    ) = when (themeSetting) {
+        ThemeSetting.Light -> false
+        ThemeSetting.System -> isSystemInDarkTheme
+        ThemeSetting.Dark, ThemeSetting.Darker -> true
     }
 
     @Composable

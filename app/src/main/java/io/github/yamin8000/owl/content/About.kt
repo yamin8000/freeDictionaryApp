@@ -22,7 +22,11 @@
 package io.github.yamin8000.owl.content
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,7 +50,7 @@ import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutContent(
+internal fun AboutContent(
     onBackClick: () -> Unit
 ) {
     ScaffoldWithTitle(

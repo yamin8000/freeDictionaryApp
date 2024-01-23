@@ -37,7 +37,7 @@ import io.github.yamin8000.owl.content.historyDataStore
 import io.github.yamin8000.owl.util.list.ListSatiation
 import kotlinx.coroutines.launch
 
-class HistoryState(
+internal class HistoryState(
     private val context: Context,
     val lifeCycleScope: LifecycleCoroutineScope,
     var history: MutableState<Set<String>>
@@ -77,7 +77,7 @@ class HistoryState(
 }
 
 @Composable
-fun rememberHistoryState(
+internal fun rememberHistoryState(
     context: Context = LocalContext.current,
     lifeCycleScope: LifecycleCoroutineScope = LocalLifecycleOwner.current.lifecycleScope,
     history: MutableState<Set<String>> = rememberSaveable { mutableStateOf(emptySet()) }
