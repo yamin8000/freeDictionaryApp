@@ -10,6 +10,13 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate Report
+        run: |
+          pip install codecov
+          pip install pytest-cov
+          pytest --cov=./ --cov-report=xml
+          codecov
+
       - name: Upload coverage to Codecov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
