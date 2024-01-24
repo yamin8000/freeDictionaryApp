@@ -51,5 +51,5 @@ object Constants {
 
     const val FREE = "free"
 
-    val DEFAULT_LOCALE = Locale.US.toLanguageTag()
+    val DEFAULT_LOCALE: String = Locale.US.toLanguageTag()
 }
