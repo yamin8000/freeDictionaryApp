@@ -31,7 +31,7 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 internal class SettingsViewModel(
-    private val repository: DataStoreRepository
+    private val settings: DataStoreRepository
 ) : ViewModel() {
     val scope = viewModelScope
 
@@ -50,11 +50,11 @@ internal class SettingsViewModel(
     init {
         viewModelScope.launch {
             _themeSetting.value = ThemeSetting.valueOf(
-                repository.getString(Constants.THEME) ?: ThemeSetting.System.name
+                settings.getString(Constants.THEME) ?: ThemeSetting.System.name
             )
-            _ttsLang.value = repository.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
-            _isVibrating.value = repository.getBool(Constants.IS_VIBRATING) ?: true
-            _isStartingWithBlankPage.value = repository.getBool(Constants.IS_STARTING_BLANK) ?: true
+            _ttsLang.value = settings.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
+            _isVibrating.value = settings.getBool(Constants.IS_VIBRATING) ?: true
+            _isStartingWithBlankPage.value = settings.getBool(Constants.IS_STARTING_BLANK) ?: true
         }
     }
 
@@ -62,27 +62,27 @@ internal class SettingsViewModel(
         newTtsLang: String
     ) = withContext(scope.coroutineContext) {
         _ttsLang.value = newTtsLang
-        repository.setString(Constants.TTS_LANG, newTtsLang)
+        settings.setString(Constants.TTS_LANG, newTtsLang)
     }
 
     suspend fun updateThemeSetting(
         newTheme: ThemeSetting
     ) = withContext(scope.coroutineContext) {
         _themeSetting.value = newTheme
-        repository.setString(Constants.THEME, newTheme.name)
+        settings.setString(Constants.THEME, newTheme.name)
     }
 
     suspend fun updateVibrationSetting(
         newVibrationSetting: Boolean
     ) = withContext(scope.coroutineContext) {
         _isVibrating.value = newVibrationSetting
-        repository.setBool(Constants.IS_VIBRATING, newVibrationSetting)
+        settings.setBool(Constants.IS_VIBRATING, newVibrationSetting)
     }
 
     suspend fun updateStartingBlank(
         isStartingWithBlank: Boolean
     ) = withContext(scope.coroutineContext) {
         _isStartingWithBlankPage.value = isStartingWithBlank
-        repository.setBool(Constants.IS_STARTING_BLANK, isStartingWithBlank)
+        settings.setBool(Constants.IS_STARTING_BLANK, isStartingWithBlank)
     }
 }

@@ -22,6 +22,7 @@
 package io.github.yamin8000.owl.util
 
 import io.github.yamin8000.owl.data.db.AppDatabase
+import java.util.Locale
 
 object Constants {
     lateinit var db: AppDatabase
@@ -47,4 +48,8 @@ object Constants {
         "10.202.10.202",
         "10.202.10.102"
     )
+
+    const val FREE = "free"
+
+    val DEFAULT_LOCALE = Locale.US.toLanguageTag()
 }
