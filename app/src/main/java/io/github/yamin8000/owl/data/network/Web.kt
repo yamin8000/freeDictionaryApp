@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     Constants.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     Constants.kt Last modified at 2023/8/26
+ *     Web.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
+ *     Web.kt Last modified at 2023/8/26
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2023  Yamin Siahmargooei
  *
@@ -19,32 +19,29 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.util
+package io.github.yamin8000.owl.data.network
 
-import io.github.yamin8000.owl.data.db.AppDatabase
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
-object Constants {
-    lateinit var db: AppDatabase
-    const val LOG_TAG = "<==>"
+object Web {
 
-    const val THEME = "theme"
-    const val TTS_LANG = "tts_lang"
-    const val IS_VIBRATING = "is_vibrating"
-    const val IS_STARTING_BLANK = "is_starting_blank"
+    private const val baseUrl = "https://api.dictionaryapi.dev/api/v2/"
 
-    const val DEFAULT_N_GRAM_SIZE = 3
+    val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createRetrofit() }
 
-    val NOT_WORD_CHARS_REGEX = Regex("\\W+")
+    private fun createRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+    }
 
-    const val INTERNET_CHECK_DELAY = 3000L
-    val DNS_SERVERS = listOf(
-        "8.8.8.8",
-        "8.8.4.4",
-        "1.1.1.1",
-        "1.0.0.1",
-        "185.51.200.2",
-        "178.22.122.100",
-        "10.202.10.202",
-        "10.202.10.102"
-    )
+    /**
+     * get service of given api/interface
+     *
+     * @param T type/class/interface of api
+     * @return service for that api
+     */
+    inline fun <reified T> Retrofit.getAPI(): T = this.create(T::class.java)
 }
