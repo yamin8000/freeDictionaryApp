@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -61,17 +62,18 @@ fun SettingsItemCard(
             )
             Card(
                 modifier = modifier,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
                 shape = DefaultCutShape,
                 content = {
                     Column(
                         modifier = columnModifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        content = { content() }
+                        content = content
                     )
                 }
             )
-        },
+        }
     )
 }
 
@@ -81,33 +83,41 @@ fun RemovableCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
-    var isMenuExpanded by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
     Card(
         shape = DefaultCutShape,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
         content = {
+            var isMenuExpanded by remember { mutableStateOf(false) }
+            val onRippleLongClick = remember(isMenuExpanded) {
+                {
+                    isMenuExpanded = true
+                }
+            }
             Ripple(
-                modifier = Modifier.padding(8.dp),
                 onClick = onClick,
-                onLongClick = { isMenuExpanded = true },
+                onLongClick = onRippleLongClick,
                 content = {
                     Text(
                         text = item,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .padding(16.dp)
+                            .padding(8.dp)
                             .fillMaxWidth()
                     )
                 }
             )
-            DeleteMenu(
-                expanded = isMenuExpanded,
-                onDismiss = { isMenuExpanded = false },
-                onDelete = {
+            val onDelete = remember(isMenuExpanded, haptic, onLongClick) {
+                {
                     isMenuExpanded = false
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onLongClick()
                 }
+            }
+            DeleteMenu(
+                expanded = isMenuExpanded,
+                onDismiss = { isMenuExpanded = false },
+                onDelete = onDelete
             )
         }
     )

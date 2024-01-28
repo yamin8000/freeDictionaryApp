@@ -25,9 +25,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
@@ -35,8 +42,8 @@ import io.github.yamin8000.owl.ui.composable.EmptyList
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.RemovableCard
 import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
+import io.github.yamin8000.owl.ui.historyDataStore
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.util.list.ListSatiation
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,58 +52,82 @@ internal fun HistoryContent(
     onHistoryItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val state = rememberHistoryState()
+    val vm = HistoryViewModel(LocalContext.current.historyDataStore)
 
     ScaffoldWithTitle(
         title = stringResource(R.string.search_history),
         onBackClick = onBackClick,
         content = {
-            when (state.listSatiation) {
-                ListSatiation.Empty -> EmptyList()
-                ListSatiation.Partial -> {
-                    val list = state.history.value.toList()
-                    LazyVerticalGrid(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        columns = GridCells.Fixed(2),
-                        content = {
-                            item(
-                                span = { GridItemSpan(maxCurrentLineSpan) },
-                                content = {
-                                    RemoveAlHistoryButton {
-                                        state.lifeCycleScope.launch { state.removeAllHistory() }
-                                    }
-                                }
-                            )
-                            items(
-                                span = { GridItemSpan(1) },
-                                count = list.size,
-                                itemContent = {
-                                    HistoryItem(
-                                        history = list[it],
-                                        onClick = onHistoryItemClick,
-                                        onLongClick = {
-                                            state.lifeCycleScope.launch {
-                                                state.removeSingleHistory(it)
-                                            }
-                                        }
-                                    )
-                                }
-                            )
-                        }
-                    )
-                }
-            }
+            val list = vm.history.collectAsState().value.toList()
+            if (list.isNotEmpty()) {
+                HistoryList(
+                    onRemoveAll = { vm.scope.launch { vm.removeAllHistory() } },
+                    onRemoveSingle = { vm.scope.launch { vm.removeSingleHistory(it) } },
+                    list = list,
+                    onItemClick = onHistoryItemClick
+                )
+            } else EmptyList()
         }
     )
 }
 
 @Composable
-private fun RemoveAlHistoryButton(
+private fun HistoryList(
+    onRemoveAll: () -> Unit,
+    onRemoveSingle: (String) -> Unit,
+    onItemClick: (String) -> Unit,
+    list: List<String>
+) {
+    LazyVerticalGrid(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        columns = GridCells.Fixed(2),
+        content = {
+            item(
+                span = { GridItemSpan(maxCurrentLineSpan) },
+                content = { RemoveAllHistoryContent(onRemoveAllClick = onRemoveAll) }
+            )
+            items(
+                span = { GridItemSpan(1) },
+                count = list.size,
+                itemContent = {
+                    HistoryItem(
+                        history = list[it],
+                        onClick = onItemClick,
+                        onLongClick = { item -> onRemoveSingle(item) }
+                    )
+                }
+            )
+        }
+    )
+}
+
+@Composable
+private fun RemoveAllHistoryContent(
     onRemoveAllClick: () -> Unit
 ) {
+    var isShowingDialog by remember { mutableStateOf(false) }
+    if (isShowingDialog) {
+        AlertDialog(
+            onDismissRequest = { isShowingDialog = false },
+            title = { PersianText(stringResource(R.string.clear_all)) },
+            text = { PersianText(stringResource(R.string.remove_all_history_prompt)) },
+            confirmButton = {
+                Button(
+                    onClick = onRemoveAllClick,
+                    content = { PersianText(stringResource(R.string.yes)) }
+                )
+            },
+            dismissButton = {
+                Button(
+                    onClick = { isShowingDialog = false },
+                    content = { PersianText(stringResource(R.string.no)) }
+                )
+            }
+        )
+    }
     Button(
-        onClick = onRemoveAllClick,
+        onClick = { isShowingDialog = true },
         shape = DefaultCutShape,
         content = { PersianText(text = stringResource(R.string.clear_all)) }
     )

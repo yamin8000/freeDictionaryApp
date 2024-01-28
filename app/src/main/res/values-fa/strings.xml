@@ -62,4 +62,8 @@
     <string name="synonym">مترادف</string>
     <string name="start_blank_search">Blank startup search</string>
     <string name="theme_oled">تاریک تر</string>
+    <string name="yes">بله</string>
+    <string name="remove_all_history_prompt">آیا میخواهید کل پیشینه را پاک کنید؟</string>
+    <string name="no">نه</string>
+    <string name="back">بازگشت</string>
 </resources>

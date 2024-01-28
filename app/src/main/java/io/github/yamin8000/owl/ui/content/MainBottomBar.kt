@@ -36,8 +36,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Clear
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Stop
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ElevatedSuggestionChip
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -57,7 +67,7 @@ import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getCurrentLocale
 import kotlinx.coroutines.delay
-import java.util.*
+import java.util.Locale
 
 @Composable
 internal fun MainBottomBar(

@@ -24,4 +24,4 @@ package io.github.yamin8000.owl.ui.theme
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.ui.unit.dp
 
-val DefaultCutShape = CutCornerShape(15.dp)
+val DefaultCutShape = CutCornerShape(8.dp)

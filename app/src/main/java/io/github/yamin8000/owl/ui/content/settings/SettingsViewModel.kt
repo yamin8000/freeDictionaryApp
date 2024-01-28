@@ -33,7 +33,7 @@ import java.util.Locale
 internal class SettingsViewModel(
     private val settings: DataStoreRepository
 ) : ViewModel() {
-    val scope = viewModelScope
+    internal val scope = viewModelScope
 
     private var _themeSetting = MutableStateFlow(ThemeSetting.System)
     val themeSetting = _themeSetting
@@ -48,7 +48,7 @@ internal class SettingsViewModel(
     val isStartingWithBlankPage = _isStartingWithBlankPage
 
     init {
-        viewModelScope.launch {
+        scope.launch {
             _themeSetting.value = ThemeSetting.valueOf(
                 settings.getString(Constants.THEME) ?: ThemeSetting.System.name
             )
@@ -58,9 +58,9 @@ internal class SettingsViewModel(
         }
     }
 
-    suspend fun updateTtsLang(
+    fun updateTtsLang(
         newTtsLang: String
-    ) = withContext(scope.coroutineContext) {
+    ) = scope.launch {
         _ttsLang.value = newTtsLang
         settings.setString(Constants.TTS_LANG, newTtsLang)
     }
@@ -72,16 +72,16 @@ internal class SettingsViewModel(
         settings.setString(Constants.THEME, newTheme.name)
     }
 
-    suspend fun updateVibrationSetting(
+    fun updateVibrationSetting(
         newVibrationSetting: Boolean
-    ) = withContext(scope.coroutineContext) {
+    ) = scope.launch {
         _isVibrating.value = newVibrationSetting
         settings.setBool(Constants.IS_VIBRATING, newVibrationSetting)
     }
 
-    suspend fun updateStartingBlank(
+    fun updateStartingBlank(
         isStartingWithBlank: Boolean
-    ) = withContext(scope.coroutineContext) {
+    ) = scope.launch {
         _isStartingWithBlankPage.value = isStartingWithBlank
         settings.setBool(Constants.IS_STARTING_BLANK, isStartingWithBlank)
     }

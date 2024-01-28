@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -49,21 +50,22 @@ internal fun FavouritesContent(
 
     ScaffoldWithTitle(
         title = stringResource(R.string.favourites),
-        onBackClick = onBackClick
-    ) {
-        when (state.listSatiation) {
-            ListSatiation.Empty -> EmptyList()
-            ListSatiation.Partial -> {
-                FavouritesGrid(
-                    favourites = state.favourites.value.toList(),
-                    onItemClick = onFavouritesItemClick,
-                    onItemLongClick = { favourite ->
-                        state.scope.launch { state.removeFavourite(favourite) }
-                    }
-                )
+        onBackClick = onBackClick,
+        content = {
+            when (state.listSatiation) {
+                ListSatiation.Empty -> EmptyList()
+                ListSatiation.Partial -> {
+                    FavouritesGrid(
+                        favourites = state.favourites.value.toList(),
+                        onItemClick = onFavouritesItemClick,
+                        onItemLongClick = { favourite ->
+                            state.scope.launch { state.removeFavourite(favourite) }
+                        }
+                    )
+                }
             }
         }
-    }
+    )
 }
 
 @Composable
@@ -82,10 +84,13 @@ private fun FavouritesGrid(
             items(
                 items = favourites,
                 itemContent = { favourite ->
+                    val onLongClick = remember(onItemLongClick, favourite) {
+                        { onItemLongClick(favourite) }
+                    }
                     FavouriteItem(
                         favourite = favourite,
                         onClick = onItemClick,
-                        onLongClick = { onItemLongClick(favourite) }
+                        onLongClick = onLongClick
                     )
                 }
             )

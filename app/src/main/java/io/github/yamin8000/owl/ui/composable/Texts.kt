@@ -129,9 +129,10 @@ fun PersianText(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current
 ) {
+    val context = LocalContext.current
     var localStyle = style
     var localFontFamily = fontFamily
-    val currentLocale = getCurrentLocale(LocalContext.current)
+    val currentLocale = remember { getCurrentLocale(context) }
     if (currentLocale.language == Locale("fa").language) {
         localFontFamily = Samim
         localStyle = LocalTextStyle.current.copy(textDirection = TextDirection.Rtl)
@@ -171,6 +172,18 @@ fun CopyAbleRippleText(
     val haptic = LocalHapticFeedback.current
 
     var isDialogShown by remember { mutableStateOf(false) }
+    val onDismissDialog = remember(isDialogShown) { { isDialogShown = false } }
+    val onShowDialog = remember(isDialogShown) { { isDialogShown = true } }
+
+    val onLongClick = remember(haptic, clipboardManager, text, context, textCopied) {
+        {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            clipboardManager.setText(AnnotatedString(text))
+            Toast
+                .makeText(context, textCopied, Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 
     Box(
         content = {
@@ -184,11 +197,7 @@ fun CopyAbleRippleText(
                     CompositionLocalProvider(
                         values = arrayOf(LocalTextSelectionColors provides selectionColors),
                         content = {
-                            SelectionContainer(
-                                content = {
-                                    content?.invoke() ?: Text(text)
-                                }
-                            )
+                            SelectionContainer(content = { content?.invoke() ?: Text(text) })
                         }
                     )
                 }
@@ -200,43 +209,41 @@ fun CopyAbleRippleText(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
                 onClick = onClick,
-                onDoubleClick = { isDialogShown = true },
-                onLongClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    clipboardManager.setText(AnnotatedString(text))
-                    Toast
-                        .makeText(context, textCopied, Toast.LENGTH_SHORT)
-                        .show()
-                }
+                onDoubleClick = onShowDialog,
+                onLongClick = onLongClick
             )
     )
     if (isDialogShown) {
         Dialog(
-            onDismissRequest = { isDialogShown = false },
+            onDismissRequest = onDismissDialog,
             content = {
                 Surface(
                     shape = DefaultCutShape,
                     content = {
+                        val regex = remember { Regex("\\s+") }
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(2),
                             verticalArrangement = Arrangement.spacedBy(4.dp),
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier.padding(8.dp),
                             content = {
-                                val words = sanitizeWords(text.split(Regex("\\s+")).toSet())
-                                items(words.toList()) {
-                                    ElevatedSuggestionChip(
-                                        onClick = {
-                                            onDoubleClick?.invoke(it)
+                                val words = sanitizeWords(text.split(regex).toSet()).toList()
+                                items(words) { item ->
+                                    val onItemClick = remember(onDoubleClick, isDialogShown) {
+                                        {
+                                            onDoubleClick?.invoke(item)
                                             isDialogShown = false
-                                        },
+                                        }
+                                    }
+                                    ElevatedSuggestionChip(
+                                        onClick = onItemClick,
                                         label = {
                                             Text(
-                                                text = it,
+                                                text = item,
+                                                overflow = TextOverflow.Ellipsis,
                                                 modifier = Modifier
                                                     .padding(8.dp)
-                                                    .fillMaxSize(),
-                                                overflow = TextOverflow.Ellipsis
+                                                    .fillMaxSize()
                                             )
                                         }
                                     )
@@ -271,15 +278,20 @@ fun CopyAbleRippleTextWithIcon(
                     content = {
                         Icon(
                             imageVector = imageVector,
-                            contentDescription = text
+                            contentDescription = text,
+                            tint = MaterialTheme.colorScheme.secondary
                         )
-                        PersianText(title)
+                        PersianText(
+                            text = title,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     }
                 )
             } else {
                 Icon(
                     imageVector = imageVector,
-                    contentDescription = text
+                    contentDescription = text,
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
             CopyAbleRippleText(
@@ -302,22 +314,28 @@ fun SpeakableRippleTextWithIcon(
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     val context = LocalContext.current
-    val audio = context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     val increaseVolumeText = context.getString(R.string.increase_volume_notice)
+    val audio = remember {
+        context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    }
+
     TtsAwareContent(
         ttsLanguageLocaleTag = localeTag,
         content = {
+            val onClick = remember(it, audio, content, increaseVolumeText) {
+                {
+                    if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0)
+                        Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
+                    it.speak(text)
+                }
+            }
             CopyAbleRippleTextWithIcon(
                 text = text,
                 content = content,
                 title = title,
                 imageVector = imageVector,
                 onDoubleClick = onDoubleClick,
-                onClick = {
-                    if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0)
-                        Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
-                    it.speak(text)
-                }
+                onClick = onClick
             )
         }
     )

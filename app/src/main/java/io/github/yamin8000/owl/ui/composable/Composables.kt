@@ -22,9 +22,6 @@
 package io.github.yamin8000.owl.ui.composable
 
 import android.speech.tts.TextToSpeech
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
@@ -42,10 +39,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ArrowBack
+import androidx.compose.material.icons.automirrored.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.ArrowDropDownCircle
 import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material.ripple.rememberRipple
@@ -54,7 +50,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -71,7 +66,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,6 +75,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
@@ -144,15 +139,20 @@ fun SwitchItem(
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(imageVector = imageVector, contentDescription = caption)
-        SwitchWithText(
-            caption = caption,
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
-    }
+        verticalAlignment = Alignment.CenterVertically,
+        content = {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = caption,
+                tint = MaterialTheme.colorScheme.secondary
+            )
+            SwitchWithText(
+                caption = caption,
+                checked = checked,
+                onCheckedChange = onCheckedChange
+            )
+        }
+    )
 }
 
 @Composable
@@ -162,7 +162,6 @@ fun SwitchWithText(
     onCheckedChange: (Boolean) -> Unit
 ) {
     val hapticFeedback = LocalHapticFeedback.current
-    val internalChecked = rememberSaveable { mutableStateOf(checked) }
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -170,22 +169,22 @@ fun SwitchWithText(
                 role = Role.Switch,
                 onClick = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                    internalChecked.value = !internalChecked.value
-                    onCheckedChange(internalChecked.value)
+                    onCheckedChange(!checked)
                 }
             ),
         content = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                PersianText(caption)
-                Switch(
-                    checked = checked,
-                    onCheckedChange = null
-                )
-            }
+                horizontalArrangement = Arrangement.SpaceBetween,
+                content = {
+                    PersianText(caption)
+                    Switch(
+                        checked = checked,
+                        onCheckedChange = null
+                    )
+                }
+            )
         }
     )
 }
@@ -245,6 +244,7 @@ fun ScaffoldWithTitle(
     title: String,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+    snackbarHost: @Composable () -> Unit = {},
     onBackClick: () -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
@@ -252,6 +252,7 @@ fun ScaffoldWithTitle(
         modifier = modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
+        snackbarHost = snackbarHost,
         topBar = {
             Surface(
                 shadowElevation = 8.dp,
@@ -267,9 +268,9 @@ fun ScaffoldWithTitle(
                         },
                         actions = {
                             ClickableIcon(
-                                imageVector = Icons.TwoTone.ArrowBack,
-                                contentDescription = "",
-                                onClick = { onBackClick() }
+                                imageVector = Icons.AutoMirrored.TwoTone.ArrowBack,
+                                contentDescription = stringResource(R.string.back),
+                                onClick = onBackClick
                             )
                         }
                     )
@@ -288,13 +289,6 @@ fun ScaffoldWithTitle(
     )
 }
 
-enum class IconClickState {
-    Clicked,
-    Normal;
-
-    fun flip() = if (this == Clicked) Normal else Clicked
-}
-
 @Composable
 fun ClickableIcon(
     modifier: Modifier = Modifier,
@@ -302,52 +296,14 @@ fun ClickableIcon(
     contentDescription: String,
     onClick: () -> Unit
 ) {
-    val defaultSize = imageVector.defaultHeight
-
-    var currentState by remember { mutableStateOf(IconClickState.Normal) }
-    val transition = updateTransition(currentState, label = "")
-
-    val tint by transition.animateColor(
-        label = ""
-    ) {
-        when (it) {
-            IconClickState.Normal -> LocalContentColor.current
-            IconClickState.Clicked -> MaterialTheme.colorScheme.primary
-        }
-    }
-
-    val size by transition.animateDp(
-        label = ""
-    ) {
-        when (it) {
-            IconClickState.Normal -> defaultSize
-            IconClickState.Clicked -> (defaultSize.value * 1.25).dp
-        }
-    }
-
-    var isAnimating by remember { mutableStateOf(false) }
-
-    LaunchedEffect(isAnimating) {
-        if (isAnimating) {
-            currentState = currentState.flip()
-            delay(300)
-            currentState = currentState.flip()
-        }
-        isAnimating = false
-    }
-
     ClickableIcon(
         modifier = modifier,
-        onClick = {
-            onClick()
-            isAnimating = true
-        },
+        onClick = onClick,
         icon = {
             Icon(
                 imageVector = imageVector,
                 contentDescription = contentDescription,
-                modifier = Modifier.size(size),
-                tint = tint
+                tint = MaterialTheme.colorScheme.secondary
             )
         }
     )
@@ -375,7 +331,8 @@ fun TtsAwareContent(
     ttsLanguageLocaleTag: String = Locale.US.toLanguageTag(),
     content: @Composable (TextToSpeech) -> Unit
 ) {
-    val ttsHelper = TTS(LocalContext.current, Locale.forLanguageTag(ttsLanguageLocaleTag))
+    val context = LocalContext.current
+    val ttsHelper = remember { TTS(context, Locale.forLanguageTag(ttsLanguageLocaleTag)) }
     val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
     LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
     if (tts.value != null) tts.value?.let { content(it) }
@@ -386,7 +343,8 @@ fun TtsAwareFeature(
     ttsLanguageLocaleTag: String = Locale.US.toLanguageTag(),
     onTtsReady: (TextToSpeech) -> Unit
 ) {
-    val ttsHelper = TTS(LocalContext.current, Locale.forLanguageTag(ttsLanguageLocaleTag))
+    val context = LocalContext.current
+    val ttsHelper = remember { TTS(context, Locale.forLanguageTag(ttsLanguageLocaleTag)) }
     val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
     LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
     if (tts.value != null) tts.value?.let { onTtsReady(it) }
@@ -471,5 +429,14 @@ fun EmptyList() {
     LottieAnimation(
         composition = composition,
         progress = { progress },
+    )
+}
+
+@Composable
+fun AppIcon() {
+    Icon(
+        painter = painterResource(R.drawable.ic_launcher_foreground),
+        contentDescription = stringResource(R.string.app_name),
+        tint = MaterialTheme.colorScheme.tertiary,
     )
 }

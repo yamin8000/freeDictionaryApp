@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.ui.content.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,21 +32,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.ShortText
+import androidx.compose.material.icons.automirrored.twotone.TextSnippet
 import androidx.compose.material.icons.twotone.Category
 import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material.icons.twotone.RecordVoiceOver
 import androidx.compose.material.icons.twotone.Share
-import androidx.compose.material.icons.twotone.ShortText
-import androidx.compose.material.icons.twotone.TextSnippet
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
@@ -95,9 +96,11 @@ internal fun WordCard(
 ) {
     OutlinedCard(
         shape = DefaultCutShape,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
+            .padding(bottom = 8.dp)
             .indication(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
@@ -154,7 +157,7 @@ internal fun WordText(
 ) {
     SpeakableRippleTextWithIcon(
         text = word,
-        imageVector = Icons.TwoTone.ShortText,
+        imageVector = Icons.AutoMirrored.TwoTone.ShortText,
         localeTag = localeTag
     )
 }
@@ -188,7 +191,7 @@ internal fun WordExampleText(
         content = { HighlightText(fullText = example, highlightedText = word) },
         text = example,
         title = stringResource(R.string.example),
-        imageVector = Icons.TwoTone.TextSnippet,
+        imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
         localeTag = localeTag,
         onDoubleClick = onDoubleClick
     )
@@ -205,7 +208,7 @@ internal fun WordDefinitionText(
         content = { HighlightText(fullText = definition, highlightedText = word) },
         text = definition,
         title = stringResource(R.string.definition),
-        imageVector = Icons.TwoTone.ShortText,
+        imageVector = Icons.AutoMirrored.TwoTone.ShortText,
         localeTag = localeTag,
         onDoubleClick = onDoubleClick
     )
@@ -231,13 +234,20 @@ internal fun MeaningCard(
     word: String,
     localeTag: String,
     meaning: Meaning,
-    cardColors: CardColors = CardDefaults.cardColors(),
     onWordChipClick: (String) -> Unit
 ) {
     Card(
         shape = DefaultCutShape,
         modifier = Modifier.fillMaxWidth(),
-        colors = cardColors,
+        border = BorderStroke(
+            1.dp,
+            Brush.verticalGradient(
+                listOf(
+                    MaterialTheme.colorScheme.tertiary,
+                    MaterialTheme.colorScheme.primary
+                )
+            )
+        ),
         content = {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -267,7 +277,7 @@ internal fun MeaningCard(
                             SpeakableRippleTextWithIcon(
                                 text = antonym,
                                 title = stringResource(R.string.antonym),
-                                imageVector = Icons.TwoTone.TextSnippet,
+                                imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
                                 localeTag = localeTag
                             )
                         }
@@ -275,7 +285,7 @@ internal fun MeaningCard(
                             SpeakableRippleTextWithIcon(
                                 text = synonym,
                                 title = stringResource(R.string.synonym),
-                                imageVector = Icons.TwoTone.TextSnippet,
+                                imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
                                 localeTag = localeTag
                             )
                         }

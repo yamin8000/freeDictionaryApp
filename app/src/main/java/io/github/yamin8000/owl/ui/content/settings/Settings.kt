@@ -54,15 +54,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.settingsDataStore
+import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
 import io.github.yamin8000.owl.ui.composable.SettingsItem
 import io.github.yamin8000.owl.ui.composable.SettingsItemCard
 import io.github.yamin8000.owl.ui.composable.SwitchItem
 import io.github.yamin8000.owl.ui.composable.TtsAwareFeature
+import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.util.speak
 import kotlinx.coroutines.launch
@@ -92,37 +92,36 @@ internal fun SettingsContent(
 
     ScaffoldWithTitle(
         title = stringResource(id = R.string.settings),
-        onBackClick = onBackClick
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            content = {
-                GeneralSettings(
-                    isVibrating = vm.isVibrating.collectAsState().value,
-                    isVibratingChange = { vm.scope.launch { vm.updateVibrationSetting(it) } },
-                    isStartingBlank = vm.isStartingWithBlankPage.collectAsState().value,
-                    isStartingBlankChanged = { vm.scope.launch { vm.updateStartingBlank(it) } }
-                )
-                ThemeSetting(vm.themeSetting.collectAsState().value) { newTheme ->
-                    vm.scope.launch {
-                        vm.updateThemeSetting(newTheme)
-                        onThemeChanged(newTheme)
-                    }
-                }
-                TtsLanguageSetting(
-                    languages = englishLanguages,
-                    currentTtsTag = vm.ttsLang.collectAsState().value,
-                    onTtsTagChanged = { tag ->
+        onBackClick = onBackClick,
+        content = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                content = {
+                    GeneralSettings(
+                        isVibrating = vm.isVibrating.collectAsState().value,
+                        isVibratingChange = vm::updateVibrationSetting,
+                        isStartingBlank = vm.isStartingWithBlankPage.collectAsState().value,
+                        isStartingBlankChanged = vm::updateStartingBlank
+                    )
+                    ThemeSetting(vm.themeSetting.collectAsState().value) { newTheme ->
                         vm.scope.launch {
+                            vm.updateThemeSetting(newTheme)
+                            onThemeChanged(newTheme)
+                        }
+                    }
+                    TtsLanguageSetting(
+                        languages = englishLanguages,
+                        currentTtsTag = vm.ttsLang.collectAsState().value,
+                        onTtsTagChanged = { tag ->
                             vm.updateTtsLang(tag)
                             textToSpeech?.speak(Locale.forLanguageTag(tag).displayName)
                         }
-                    }
-                )
-            }
-        )
-    }
+                    )
+                }
+            )
+        }
+    )
 }
 
 @Composable
@@ -167,7 +166,7 @@ private fun TtsLanguagesDialog(
     onDismiss: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = onDismiss,
         title = { PersianText(stringResource(R.string.tts_language)) },
         icon = { Icon(imageVector = Icons.TwoTone.Language, contentDescription = null) },
         confirmButton = {/*ignored*/ },
@@ -216,24 +215,25 @@ private fun GeneralSettings(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TtsLanguageItem(
     localeTag: String,
     isSelected: Boolean,
-    onClick: ((String) -> Unit)? = null
+    onClick: (String) -> Unit
 ) {
+    val onItemClick = remember(onClick, localeTag) { { onClick(localeTag) } }
     OutlinedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = DefaultCutShape,
-        onClick = { onClick?.invoke(localeTag) },
-        enabled = !isSelected
-    ) {
-        PersianText(
-            text = Locale.forLanguageTag(localeTag).displayName,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
+        onClick = onItemClick,
+        enabled = !isSelected,
+        content = {
+            PersianText(
+                text = Locale.forLanguageTag(localeTag).displayName,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    )
 }
 
 @Composable
@@ -241,20 +241,22 @@ private fun ThemeSetting(
     currentTheme: ThemeSetting,
     onCurrentThemeChange: (ThemeSetting) -> Unit
 ) {
-    var isShowingThemeDialog by remember { mutableStateOf(false) }
+    var isShowingDialog by remember { mutableStateOf(false) }
+    val onDismissDialog = remember(isShowingDialog) { { isShowingDialog = false } }
+    val onShowDialog = remember(isShowingDialog) { { isShowingDialog = true } }
 
     SettingsItemCard(
         title = stringResource(R.string.theme),
         content = {
-            if (isShowingThemeDialog) {
+            if (isShowingDialog) {
                 ThemeChangerDialog(
                     currentTheme = currentTheme,
                     onCurrentThemeChange = onCurrentThemeChange,
-                    onDismiss = { isShowingThemeDialog = false }
+                    onDismiss = onDismissDialog
                 )
             }
             SettingsItem(
-                onClick = { isShowingThemeDialog = true },
+                onClick = onShowDialog,
                 content = {
                     Icon(
                         imageVector = Icons.TwoTone.DisplaySettings,
@@ -294,6 +296,12 @@ private fun ThemeChangerDialog(
                     .fillMaxWidth(),
                 content = {
                     themes.forEach { theme ->
+                        val onThemeClick = remember(onCurrentThemeChange, theme, onDismiss) {
+                            {
+                                onCurrentThemeChange(theme)
+                                onDismiss()
+                            }
+                        }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.Start),
@@ -302,10 +310,7 @@ private fun ThemeChangerDialog(
                                 .selectable(
                                     selected = (theme == currentTheme),
                                     role = Role.RadioButton,
-                                    onClick = {
-                                        onCurrentThemeChange(theme)
-                                        onDismiss()
-                                    }
+                                    onClick = onThemeClick
                                 ),
                             content = {
                                 RadioButton(
