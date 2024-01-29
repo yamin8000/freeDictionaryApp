@@ -1,0 +1,6 @@
+- Fixed some UI bugs
+- Fixed some performance issues related to Compose
+- Added borders for some Cards
+- Migration from Plain Class State Holders to ViewModels WIP
+- Some refactors and reformats
+- Migration to Kotlin DSL for build.gradle
