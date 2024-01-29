@@ -1,7 +1,7 @@
 <div align="center">
 <img src="app/src/main/ic_launcher-playstore.png"
     alt="Get it on F-Droid"
-    height="80">
+    height="100">
 <h1>freeDictionary</h1>
 </div>
 
@@ -33,7 +33,18 @@ height="80">](https://f-droid.org/packages/io.github.yamin8000.owl)
 
 ### Featured on [TechDoc](https://www.youtube.com/watch?v=vlf0jEFHR74&t=59s)
 
-<img src="/screenshots/1.4.0/photo_2023-09-11_01-55-29.jpg" alt="preview" width="225"/>
+<table>
+<tr>
+<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="preview" width="200"/></td>
+<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" alt="preview" width="200"/></td>
+<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" alt="preview" width="200"/></td>
+</tr>
+<tr>
+<td align="center">Dark</td>
+<td align="center">Light</td>
+<td align="center">OLED</td>
+</tr>
+</table>
 
 More screenshots [here](./screenshots).
 
