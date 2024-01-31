@@ -65,7 +65,6 @@ private val lightColors = lightColorScheme(
     errorContainer = md_theme_light_errorContainer,
     onErrorContainer = md_theme_light_onErrorContainer,
     outline = md_theme_light_outline,
-    //surfaceTintColor = md_theme_light_surfaceTintColor,
 )
 
 
@@ -97,7 +96,6 @@ private val darkColors = darkColorScheme(
     inverseSurface = md_theme_dark_inverseSurface,
     inversePrimary = md_theme_dark_inversePrimary,
     surfaceTint = md_theme_dark_surfaceTint,
-    //surfaceTintColor = md_theme_dark_surfaceTintColor,
 )
 
 @Composable
@@ -118,11 +116,20 @@ fun OwlTheme(
     }
 
     if (isDarkTheme && isOledTheme) {
+        @Suppress("unused")
         colors = colors.copy(
-            background = colors.background.darken(),
-            surface = colors.surface.darken(),
-            surfaceVariant = colors.surfaceVariant.darken(),
-            inverseOnSurface = colors.inverseOnSurface.darken()
+            onPrimary = colors.onPrimary.darken(),
+            primaryContainer = colors.primaryContainer.darken(),
+            onSecondary = colors.onSecondary.darken(),
+            secondaryContainer = colors.secondaryContainer.darken(),
+            onTertiary = colors.onTertiary.darken(),
+            tertiaryContainer = colors.tertiaryContainer.darken(),
+            background = Color(0xFF000000),
+            surface = Color(0xFF000000),
+            surfaceVariant = Color(0xFF000000),
+            inverseOnSurface = Color(0xFF000000),
+            inversePrimary = colors.inversePrimary.darken(),
+            surfaceTint = colors.surfaceTint.darken(),
         )
     }
 
@@ -139,7 +146,6 @@ fun OwlTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = AppTypography,
         content = content
     )
 }
@@ -159,5 +165,10 @@ fun PreviewTheme(
 }
 
 private fun Color.darken(): Color {
-    return copy(alpha, red / 10, green / 10, blue / 10)
+    return copy(alpha, red / 5, green / 5, blue / 5)
+}
+
+@Suppress("unused")
+private fun Color.lighten(): Color {
+    return copy(alpha, red + (1f - red) / 2, green + (1f - green) / 2, blue + (1f - blue) / 2)
 }

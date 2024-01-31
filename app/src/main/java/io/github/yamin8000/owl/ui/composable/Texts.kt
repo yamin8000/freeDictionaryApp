@@ -83,6 +83,7 @@ import androidx.compose.ui.window.Dialog
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.Samim
+import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.util.findActivity
 import io.github.yamin8000.owl.util.getCurrentLocale
 import io.github.yamin8000.owl.util.sanitizeWords
@@ -236,6 +237,7 @@ fun CopyAbleRippleText(
                                         }
                                     }
                                     ElevatedSuggestionChip(
+                                        border = defaultGradientBorder(),
                                         onClick = onItemClick,
                                         label = {
                                             Text(

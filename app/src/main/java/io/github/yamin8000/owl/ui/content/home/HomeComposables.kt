@@ -46,7 +46,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
@@ -57,6 +56,7 @@ import io.github.yamin8000.owl.ui.composable.HighlightText
 import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.TtsAwareContent
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.util.speak
 
 @Composable
@@ -239,15 +239,7 @@ internal fun MeaningCard(
     Card(
         shape = DefaultCutShape,
         modifier = Modifier.fillMaxWidth(),
-        border = BorderStroke(
-            1.dp,
-            Brush.verticalGradient(
-                listOf(
-                    MaterialTheme.colorScheme.tertiary,
-                    MaterialTheme.colorScheme.primary
-                )
-            )
-        ),
+        border = defaultGradientBorder(),
         content = {
             Column(
                 modifier = Modifier.padding(16.dp),

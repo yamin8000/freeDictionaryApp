@@ -64,6 +64,7 @@ import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.HighlightText
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.Samim
+import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getCurrentLocale
 import kotlinx.coroutines.delay
@@ -90,6 +91,7 @@ internal fun MainBottomBar(
                         items = suggestions.item,
                         itemContent = {
                             ElevatedSuggestionChip(
+                                border = defaultGradientBorder(),
                                 label = { HighlightText(it, searchText) },
                                 onClick = {
                                     onSuggestionClick(it)
@@ -123,54 +125,55 @@ internal fun MainBottomBar(
                         }
                     )
                 } else {
-                    BottomAppBar {
-                        TextField(
-                            singleLine = true,
-                            shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp, 0.dp, 16.dp, 0.dp),
-                            label = {
-                                PersianText(
-                                    stringResource(R.string.search),
-                                    modifier = Modifier.fillMaxWidth()
+                    BottomAppBar(
+                        content = {
+                            TextField(
+                                singleLine = true,
+                                shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                                label = {
+                                    PersianText(
+                                        stringResource(R.string.search),
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                },
+                                placeholder = {
+                                    PersianText(
+                                        text = stringResource(R.string.search_hint),
+                                        modifier = Modifier.fillMaxWidth(),
+                                        fontSize = 12.sp
+                                    )
+                                },
+                                leadingIcon = {
+                                    ClickableIcon(
+                                        imageVector = Icons.TwoTone.Clear,
+                                        contentDescription = stringResource(R.string.clear),
+                                        onClick = { searchText = "" }
+                                    )
+                                },
+                                trailingIcon = {
+                                    ClickableIcon(
+                                        imageVector = Icons.TwoTone.Search,
+                                        contentDescription = stringResource(R.string.search),
+                                        onClick = { onSearch(searchText) }
+                                    )
+                                },
+                                value = searchText,
+                                onValueChange = {
+                                    searchText = it
+                                    onSearchTermChanged(searchText)
+                                },
+                                textStyle = getTextStyleBasedOnLocale(LocalContext.current),
+                                keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Search,
+                                    keyboardType = KeyboardType.Text,
+                                    capitalization = KeyboardCapitalization.Words
                                 )
-                            },
-                            placeholder = {
-                                PersianText(
-                                    text = stringResource(R.string.search_hint),
-                                    modifier = Modifier.fillMaxWidth(),
-                                    fontSize = 12.sp
-                                )
-                            },
-                            leadingIcon = {
-                                ClickableIcon(
-                                    imageVector = Icons.TwoTone.Clear,
-                                    contentDescription = stringResource(R.string.clear),
-                                    onClick = { searchText = "" }
-                                )
-                            },
-                            trailingIcon = {
-                                ClickableIcon(
-                                    imageVector = Icons.TwoTone.Search,
-                                    contentDescription = stringResource(R.string.search),
-                                    onClick = { onSearch(searchText) }
-                                )
-                            },
-                            value = searchText,
-                            onValueChange = {
-                                searchText = it
-                                onSearchTermChanged(searchText)
-                            },
-                            textStyle = getTextStyleBasedOnLocale(LocalContext.current),
-                            keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Search,
-                                keyboardType = KeyboardType.Text,
-                                capitalization = KeyboardCapitalization.Words
                             )
-                        )
-                    }
+                        })
                 }
             }
         )

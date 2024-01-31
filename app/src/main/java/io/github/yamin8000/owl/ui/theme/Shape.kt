@@ -21,7 +21,24 @@
 
 package io.github.yamin8000.owl.ui.theme
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 
 val DefaultCutShape = CutCornerShape(8.dp)
+
+@Composable
+fun defaultGradientBorder(): BorderStroke {
+    return BorderStroke(
+        1.dp,
+        Brush.verticalGradient(
+            listOf(
+                MaterialTheme.colorScheme.tertiary,
+                MaterialTheme.colorScheme.primary
+            )
+        )
+    )
+}
