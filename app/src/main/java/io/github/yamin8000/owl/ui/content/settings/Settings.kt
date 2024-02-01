@@ -58,9 +58,7 @@ import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
-import io.github.yamin8000.owl.ui.composable.SettingsItem
 import io.github.yamin8000.owl.ui.composable.SettingsItemCard
-import io.github.yamin8000.owl.ui.composable.SwitchItem
 import io.github.yamin8000.owl.ui.composable.TtsAwareFeature
 import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape

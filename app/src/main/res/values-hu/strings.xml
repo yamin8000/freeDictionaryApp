@@ -65,4 +65,5 @@
     <string name="remove_all_history_prompt">Do you want to remove all the history?</string>
     <string name="no">Nem</string>
     <string name="back">Back</string>
+    <string name="remove_all_prompt">Do you want to remove all?</string>
 </resources>

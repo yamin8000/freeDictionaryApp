@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     HistoryViewModel.kt Copyrighted by Yamin Siahmargooei at 2024/1/28
- *     HistoryViewModel.kt Last modified at 2024/1/28
+ *     FavouritesViewModel.kt Copyrighted by Yamin Siahmargooei at 2024/2/1
+ *     FavouritesViewModel.kt Last modified at 2024/2/1
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.content.history
+package io.github.yamin8000.owl.ui.content.favourites
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -28,22 +28,23 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HistoryViewModel(
-    private val historyDataStore: DataStore<Preferences>
+internal class FavouritesViewModel(
+    private val favouritesDataStore: DataStore<Preferences>
 ) : ViewModel() {
     val scope = viewModelScope
 
-    private var _history = MutableStateFlow(emptySet<String>())
-    val history = _history
+    private var _favourites = MutableStateFlow(setOf<String>())
+    val favourites = _favourites.asStateFlow()
 
     init {
         scope.launch {
-            historyDataStore.data.collect { preferences ->
-                _history.value = buildSet {
+            favouritesDataStore.data.collect { preferences ->
+                _favourites.value = buildSet {
                     preferences.asMap().forEach { entry ->
-                        add(entry.value.toString())
+                        add(entry.key.toString())
                     }
                 }
             }
@@ -51,24 +52,24 @@ class HistoryViewModel(
     }
 
     suspend fun remove(
-        history: String
+        favourite: String
     ) {
-        historyDataStore.edit { it.remove(stringPreferencesKey(history)) }
-        val data = this.history.value.toMutableSet()
-        data.remove(history)
-        _history.value = data
+        favouritesDataStore.edit { it.remove(stringPreferencesKey(favourite)) }
+        val data = _favourites.value.toMutableSet()
+        data.remove(favourite)
+        _favourites.value = data
     }
 
     suspend fun removeAll() {
-        historyDataStore.edit { it.clear() }
-        _history.value = emptySet()
+        favouritesDataStore.edit { it.clear() }
+        _favourites.value = emptySet()
     }
 
     suspend fun add(
-        singleHistory: String
+        favourite: String
     ) {
-        historyDataStore.edit {
-            it[stringPreferencesKey(singleHistory)] = singleHistory
+        favouritesDataStore.edit {
+            it[stringPreferencesKey(favourite)]
         }
     }
 }

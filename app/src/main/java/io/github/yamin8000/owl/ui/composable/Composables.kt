@@ -23,26 +23,19 @@ package io.github.yamin8000.owl.ui.composable
 
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ArrowBack
-import androidx.compose.material.icons.twotone.ArrowDropDownCircle
 import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.DropdownMenu
@@ -55,7 +48,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDefaults
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -67,7 +59,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -77,7 +68,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -95,99 +85,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.util.Locale
-
-@Composable
-fun SettingsItem(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    Box(
-        modifier = modifier.clickable(
-            interactionSource = interactionSource,
-            indication = LocalIndication.current,
-            onClick = onClick,
-        ),
-        content = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    content = content
-                )
-                Icon(
-                    imageVector = Icons.TwoTone.ArrowDropDownCircle,
-                    contentDescription = ""
-                )
-            }
-        }
-    )
-}
-
-@Composable
-fun SwitchItem(
-    imageVector: ImageVector,
-    caption: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically,
-        content = {
-            Icon(
-                imageVector = imageVector,
-                contentDescription = caption,
-                tint = MaterialTheme.colorScheme.secondary
-            )
-            SwitchWithText(
-                caption = caption,
-                checked = checked,
-                onCheckedChange = onCheckedChange
-            )
-        }
-    )
-}
-
-@Composable
-fun SwitchWithText(
-    caption: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    val hapticFeedback = LocalHapticFeedback.current
-    Box(
-        modifier = Modifier
-            .padding(4.dp)
-            .clickable(
-                role = Role.Switch,
-                onClick = {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onCheckedChange(!checked)
-                }
-            ),
-        content = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                content = {
-                    PersianText(caption)
-                    Switch(
-                        checked = checked,
-                        onCheckedChange = null
-                    )
-                }
-            )
-        }
-    )
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

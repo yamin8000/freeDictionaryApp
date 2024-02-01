@@ -21,92 +21,29 @@
 
 package io.github.yamin8000.owl.ui.content.favourites
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.EmptyList
-import io.github.yamin8000.owl.ui.composable.RemovableCard
-import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
-import io.github.yamin8000.owl.util.list.ListSatiation
+import io.github.yamin8000.owl.ui.composable.CrudContent
+import io.github.yamin8000.owl.ui.favouritesDataStore
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FavouritesContent(
     onFavouritesItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val state = rememberFavouritesState()
+    val vm = FavouritesViewModel(LocalContext.current.favouritesDataStore)
 
-    ScaffoldWithTitle(
+    val list = vm.favourites.collectAsState().value.toList()
+    CrudContent(
         title = stringResource(R.string.favourites),
+        items = list,
         onBackClick = onBackClick,
-        content = {
-            when (state.listSatiation) {
-                ListSatiation.Empty -> EmptyList()
-                ListSatiation.Partial -> {
-                    FavouritesGrid(
-                        favourites = state.favourites.value.toList(),
-                        onItemClick = onFavouritesItemClick,
-                        onItemLongClick = { favourite ->
-                            state.scope.launch { state.removeFavourite(favourite) }
-                        }
-                    )
-                }
-            }
-        }
-    )
-}
-
-@Composable
-private fun FavouritesGrid(
-    favourites: List<String>,
-    onItemClick: (String) -> Unit,
-    onItemLongClick: (String) -> Unit
-) {
-    val span = rememberSaveable { if (favourites.size == 1) 1 else 2 }
-    LazyVerticalGrid(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        columns = GridCells.Fixed(span),
-        content = {
-            items(
-                items = favourites,
-                itemContent = { favourite ->
-                    val onLongClick = remember(onItemLongClick, favourite) {
-                        { onItemLongClick(favourite) }
-                    }
-                    FavouriteItem(
-                        favourite = favourite,
-                        onClick = onItemClick,
-                        onLongClick = onLongClick
-                    )
-                }
-            )
-        }
-    )
-}
-
-@Composable
-private fun FavouriteItem(
-    favourite: String,
-    onClick: (String) -> Unit,
-    onLongClick: () -> Unit
-) {
-    RemovableCard(
-        item = favourite,
-        onClick = { onClick(favourite) },
-        onLongClick = onLongClick
+        onRemoveAll = { vm.scope.launch { vm.removeAll() } },
+        onRemoveSingle = { index -> vm.scope.launch { vm.remove(list[index]) } },
+        onItemClick = { index -> onFavouritesItemClick(list[index]) }
     )
 }
