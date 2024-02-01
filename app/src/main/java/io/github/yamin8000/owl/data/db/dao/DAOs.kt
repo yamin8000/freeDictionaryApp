@@ -31,20 +31,20 @@ import io.github.yamin8000.owl.data.db.entity.SynonymEntity
 
 object DAOs {
     @Dao
-    abstract class AntonymDao : BaseDao<AntonymEntity>("AntonymEntity")
+    abstract class AntonymDao : AdvancedDao<AntonymEntity>("AntonymEntity")
 
     @Dao
-    abstract class DefinitionDao : BaseDao<DefinitionEntity>("DefinitionEntity")
+    abstract class DefinitionDao : AdvancedDao<DefinitionEntity>("DefinitionEntity")
 
     @Dao
-    abstract class EntryDao : BaseDao<EntryEntity>("EntryEntity")
+    abstract class EntryDao : AdvancedDao<EntryEntity>("EntryEntity")
 
     @Dao
-    abstract class MeaningDao : BaseDao<MeaningEntity>("MeaningEntity")
+    abstract class MeaningDao : AdvancedDao<MeaningEntity>("MeaningEntity")
 
     @Dao
-    abstract class PhoneticDao : BaseDao<PhoneticEntity>("PhoneticEntity")
+    abstract class PhoneticDao : AdvancedDao<PhoneticEntity>("PhoneticEntity")
 
     @Dao
-    abstract class SynonymDao : BaseDao<SynonymEntity>("SynonymEntity")
+    abstract class SynonymDao : AdvancedDao<SynonymEntity>("SynonymEntity")
 }
