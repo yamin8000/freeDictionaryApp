@@ -27,11 +27,10 @@ import android.content.ContextWrapper
 import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.saveable.Saver
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.InitializerViewModelFactoryBuilder
 import io.github.yamin8000.owl.BuildConfig
-import io.github.yamin8000.owl.data.model.Entry
 import java.util.Locale
 
 fun Context.findActivity(): Activity? = when (this) {
@@ -61,18 +60,6 @@ class StableHolder<T>(val item: T) {
     operator fun component1(): T = item
 }
 
-@Immutable
-class ImmutableHolder<T>(val item: T) {
-    operator fun component1(): T = item
-}
-
-val DefinitionListSaver = getImmutableHolderSaver<List<Entry>>()
-
-fun <T : Any> getImmutableHolderSaver(): Saver<ImmutableHolder<T>, T> = Saver(
-    save = { it.item },
-    restore = { ImmutableHolder(it) }
-)
-
 fun log(
     message: String
 ) {
@@ -91,4 +78,9 @@ fun sanitizeWords(
 ) = data.asSequence()
     .map { it.lowercase() }
     .map { it.replace(Constants.NOT_WORD_CHARS_REGEX, "") }
+    .filter { it.isNotBlank() }
     .toMutableSet()
+
+inline fun viewModelFactory(
+    builder: InitializerViewModelFactoryBuilder.() -> Unit
+): ViewModelProvider.Factory = InitializerViewModelFactoryBuilder().apply(builder).build()

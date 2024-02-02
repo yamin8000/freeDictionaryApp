@@ -39,17 +39,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
+import io.github.yamin8000.owl.data.DataStoreRepository
+import io.github.yamin8000.owl.data.db.AppDatabase
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.history.HistoryContent
 import io.github.yamin8000.owl.ui.content.home.HomeContent
 import io.github.yamin8000.owl.ui.content.settings.SettingsContent
 import io.github.yamin8000.owl.ui.content.settings.ThemeSetting
-import io.github.yamin8000.owl.data.db.AppDatabase
-import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.navigation.Nav
+import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
-import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.runBlocking
 
@@ -83,7 +83,8 @@ internal class MainActivity : ComponentActivity() {
     }
 
     private suspend fun getCurrentTheme() = ThemeSetting.valueOf(
-        DataStoreRepository(settingsDataStore).getString(Constants.THEME) ?: ThemeSetting.System.name
+        DataStoreRepository(settingsDataStore).getString(Constants.THEME)
+            ?: ThemeSetting.System.name
     )
 
     private fun createDb() = Room.databaseBuilder(this, AppDatabase::class.java, "db")
@@ -146,10 +147,16 @@ internal class MainActivity : ComponentActivity() {
                         searchTerm = outsideInput.toString()
                     HomeContent(
                         searchTerm = searchTerm,
-                        onFavouritesClick = { navController.navigate(Nav.Routes.Favourites.toString()) },
-                        onHistoryClick = { navController.navigate(Nav.Routes.History.toString()) },
-                        onInfoClick = { navController.navigate(Nav.Routes.About.toString()) },
-                        onSettingsClick = { navController.navigate(Nav.Routes.Settings.toString()) }
+                        onTopBarClick = { item ->
+                            val route = when (item) {
+                                TopBarItem.Favourites -> Nav.Routes.Favourites.toString()
+                                TopBarItem.History -> Nav.Routes.History.toString()
+                                TopBarItem.Info -> Nav.Routes.About.toString()
+                                TopBarItem.Random -> Nav.Routes.Home.toString()
+                                TopBarItem.Settings -> Nav.Routes.Settings.toString()
+                            }
+                            navController.navigate(route)
+                        }
                     )
                 }
 

@@ -55,15 +55,15 @@
     <string name="general">Általános</string>
     <string name="vibrate_on_scroll">Rezgés görgetéskor</string>
     <string name="cancel">Mégse</string>
-    <string name="already_added_to_favourites">Ez a szó már a kedvencek között van.</string>
     <string name="delete">Törlés</string>
     <string name="increase_volume_notice">Növeld meg a hangerődet</string>
     <string name="antonym">Antonym</string>
     <string name="synonym">Synonym</string>
     <string name="start_blank_search">Blank startup search</string>
+    <string name="theme_oled">OLED/Darker</string>
     <string name="yes">Igen</string>
-    <string name="remove_all_history_prompt">Do you want to remove all the history?</string>
     <string name="no">Nem</string>
     <string name="back">Back</string>
     <string name="remove_all_prompt">Do you want to remove all?</string>
+    <string name="cancelled">Cancelled</string>
 </resources>

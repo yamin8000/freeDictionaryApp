@@ -54,6 +54,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.ui.composable.PersianText
@@ -63,6 +65,7 @@ import io.github.yamin8000.owl.ui.composable.TtsAwareFeature
 import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.util.speak
+import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -72,7 +75,12 @@ internal fun SettingsContent(
     onThemeChanged: (ThemeSetting) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val vm = SettingsViewModel(DataStoreRepository(LocalContext.current.settingsDataStore))
+    val context = LocalContext.current
+    val vm: SettingsViewModel = viewModel(factory = viewModelFactory {
+        initializer {
+            SettingsViewModel(DataStoreRepository(context.settingsDataStore))
+        }
+    })
 
     var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
     var textToSpeech: TextToSpeech? by remember { mutableStateOf(null) }
@@ -99,7 +107,7 @@ internal fun SettingsContent(
                     GeneralSettings(
                         isVibrating = vm.isVibrating.collectAsState().value,
                         isVibratingChange = vm::updateVibrationSetting,
-                        isStartingBlank = vm.isStartingWithBlankPage.collectAsState().value,
+                        isStartingBlank = vm.isStartingBlank.collectAsState().value,
                         isStartingBlankChanged = vm::updateStartingBlank
                     )
                     ThemeSetting(vm.themeSetting.collectAsState().value) { newTheme ->

@@ -26,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -36,16 +37,16 @@ internal class SettingsViewModel(
     internal val scope = viewModelScope
 
     private var _themeSetting = MutableStateFlow(ThemeSetting.System)
-    val themeSetting = _themeSetting
+    val themeSetting = _themeSetting.asStateFlow()
 
     private var _ttsLang = MutableStateFlow(Locale.US.toLanguageTag())
-    val ttsLang = _ttsLang
+    val ttsLang = _ttsLang.asStateFlow()
 
     private var _isVibrating = MutableStateFlow(true)
-    val isVibrating = _isVibrating
+    val isVibrating = _isVibrating.asStateFlow()
 
-    private var _isStartingWithBlankPage = MutableStateFlow(true)
-    val isStartingWithBlankPage = _isStartingWithBlankPage
+    private var _isStartingBlank = MutableStateFlow(true)
+    val isStartingBlank = _isStartingBlank.asStateFlow()
 
     init {
         scope.launch {
@@ -54,7 +55,7 @@ internal class SettingsViewModel(
             )
             _ttsLang.value = settings.getString(Constants.TTS_LANG) ?: Locale.US.toLanguageTag()
             _isVibrating.value = settings.getBool(Constants.IS_VIBRATING) ?: true
-            _isStartingWithBlankPage.value = settings.getBool(Constants.IS_STARTING_BLANK) ?: true
+            _isStartingBlank.value = settings.getBool(Constants.IS_STARTING_BLANK) ?: true
         }
     }
 
@@ -82,7 +83,7 @@ internal class SettingsViewModel(
     fun updateStartingBlank(
         isStartingWithBlank: Boolean
     ) = scope.launch {
-        _isStartingWithBlankPage.value = isStartingWithBlank
+        _isStartingBlank.value = isStartingWithBlank
         settings.setBool(Constants.IS_STARTING_BLANK, isStartingWithBlank)
     }
 }

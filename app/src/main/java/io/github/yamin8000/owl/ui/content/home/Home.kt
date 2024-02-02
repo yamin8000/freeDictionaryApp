@@ -21,72 +21,156 @@
 
 package io.github.yamin8000.owl.ui.content.home
 
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.data.DataStoreRepository
+import io.github.yamin8000.owl.data.model.Entry
+import io.github.yamin8000.owl.ui.composable.EmptyList
+import io.github.yamin8000.owl.ui.composable.InternetAwareComposable
+import io.github.yamin8000.owl.ui.composable.LockScreenOrientation
+import io.github.yamin8000.owl.ui.composable.MySnackbar
+import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.content.MainBottomBar
 import io.github.yamin8000.owl.ui.content.MainTopBar
-import io.github.yamin8000.owl.ui.composable.*
+import io.github.yamin8000.owl.ui.content.TopBarItem
+import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
+import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
+import io.github.yamin8000.owl.ui.content.settings.SettingsViewModel
+import io.github.yamin8000.owl.ui.favouritesDataStore
+import io.github.yamin8000.owl.ui.historyDataStore
+import io.github.yamin8000.owl.ui.settingsDataStore
+import io.github.yamin8000.owl.util.AutoCompleteHelper
+import io.github.yamin8000.owl.util.log
+import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.coroutines.launch
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeContent(
     searchTerm: String?,
-    onHistoryClick: () -> Unit,
-    onFavouritesClick: () -> Unit,
-    onInfoClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onTopBarClick: (TopBarItem) -> Unit
 ) {
+    val context = LocalContext.current
+
+    val settingsVM: SettingsViewModel = viewModel(factory = viewModelFactory {
+        initializer {
+            SettingsViewModel(DataStoreRepository(context.settingsDataStore))
+        }
+    })
+
+    val historyVM: HistoryViewModel = viewModel(factory = viewModelFactory {
+        initializer {
+            HistoryViewModel(context.historyDataStore)
+        }
+    })
+
+    val autoCompleteHelper = AutoCompleteHelper(context, LocalLifecycleOwner.current.lifecycleScope)
+    val isStartingBlank = settingsVM.isStartingBlank.collectAsState().value
+
+    val vm: HomeViewModel = viewModel(factory = viewModelFactory {
+        initializer {
+            HomeViewModel(
+                sentSearchTerm = searchTerm,
+                isStartingBlank = isStartingBlank,
+                autoCompleteHelper = autoCompleteHelper
+            )
+        }
+    })
+
+    val favouritesVM: FavouritesViewModel = viewModel(factory = viewModelFactory {
+        initializer {
+            FavouritesViewModel(context.favouritesDataStore)
+        }
+    })
+
+    val snackbarHostState = SnackbarHostState()
+    val focusManager = LocalFocusManager.current
+    LaunchedEffect(Unit) {
+        vm.searchState.collect { searchState ->
+            when (searchState) {
+                is SearchState.RequestFailed -> {
+                    log(getErrorMessage(searchState.code, context))
+                    snackbarHostState.showSnackbar(getErrorMessage(searchState.code, context))
+                    vm.resetSearchState()
+                }
+
+                is SearchState.RequestFinished -> {
+                    historyVM.add(searchState.term)
+                }
+
+                SearchState.RequestSucceed -> {
+                    focusManager.clearFocus()
+                }
+
+                SearchState.Unknown -> {}
+            }
+        }
+    }
+
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Surface(
         modifier = Modifier.fillMaxSize(),
         content = {
-            val state = rememberHomeState()
-
-            if (state.listState.isScrollInProgress && state.isVibrating.value)
+            val listState = rememberScrollState()
+            if (listState.isScrollInProgress && settingsVM.isVibrating.collectAsState().value)
                 LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
 
-            InternetAwareComposable { state.isOnline.value = it }
+            InternetAwareComposable(
+                onlineChanged = {
+                    vm.updateIsOnline(it)
+                }
+            )
 
-            val locale = if (state.ttsLang.value.isEmpty())
-                Locale.US else Locale.forLanguageTag(state.ttsLang.value)
+            val locale = vm.getLocale(settingsVM.ttsLang.collectAsState().value)
 
-            if (searchTerm != null) {
-                state.searchText.value = searchTerm
-                LaunchedEffect(Unit) { state.addSearchTextToHistory() }
+            if (vm.isSharing.collectAsState().value) {
+                val temp = vm.searchResult.collectAsState().value.firstOrNull()
+                if (temp != null)
+                    HandleShareIntent(temp)
             }
-            LaunchedEffect(state.isOnline.value) {
-                if (state.searchText.value.isNotBlank())
-                    state.searchForDefinition()
-            }
 
-            if (state.searchResult.value.item.isNotEmpty() && state.isSharing.value)
-                state.handleShareIntent()
 
             val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
             Scaffold(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 snackbarHost = {
-                    SnackbarHost(state.snackbarHostState) { data ->
+                    SnackbarHost(snackbarHostState) { data ->
                         MySnackbar {
                             PersianText(
                                 text = data.visuals.message,
@@ -99,35 +183,36 @@ internal fun HomeContent(
                 topBar = {
                     MainTopBar(
                         scrollBehavior = scrollBehavior,
-                        onHistoryClick = onHistoryClick,
-                        onFavouritesClick = onFavouritesClick,
-                        onInfoClick = onInfoClick,
-                        onSettingsClick = onSettingsClick,
-                        onRandomWordClick = { state.scope.launch { state.searchForRandomWord() } }
+                        onTopBarClick = {
+                            when (it) {
+                                TopBarItem.Random -> vm.scope.launch { vm.searchForRandomWord() }
+                                else -> onTopBarClick(it)
+                            }
+                        }
                     )
                 },
                 bottomBar = {
+                    val search = vm.searchTerm.collectAsState()
                     MainBottomBar(
-                        searchTerm = searchTerm,
-                        suggestions = state.searchSuggestions.value,
-                        isSearching = state.isSearching.value,
+                        searchTerm = search.value,
+                        suggestions = vm.searchSuggestions.collectAsState().value,
+                        isSearching = vm.isSearching.collectAsState().value,
                         onSearchTermChanged = {
-                            state.searchText.value = it
-                            state.scope.launch { state.handleSuggestions() }
-                            if (state.isWordSelectedFromKeyboardSuggestions) {
-                                state.scope.launch { state.searchForDefinitionHandler() }
-                                state.clearSuggestions()
+                            vm.updateSearchTerm(it)
+                            vm.scope.launch { vm.handleSuggestions() }
+                            if (vm.isWordSelectedFromKeyboardSuggestions.value) {
+                                vm.clearSuggestions()
+                                vm.scope.launch { vm.searchForDefinition(it) }
                             }
                         },
                         onSuggestionClick = {
-                            state.searchText.value = it
-                            state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                            vm.updateSearchTerm(it)
+                            vm.scope.launch { vm.searchForDefinition(it) }
                         },
                         onSearch = {
-                            state.searchText.value = it
-                            state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                            vm.scope.launch { vm.searchForDefinition(search.value) }
                         },
-                        onCancel = { state.cancel() }
+                        onCancel = { vm.cancel() }
                     )
                 },
                 content = { contentPadding ->
@@ -138,7 +223,7 @@ internal fun HomeContent(
                             .padding(top = 8.dp),
                         content = {
                             AnimatedVisibility(
-                                visible = !state.isOnline.value,
+                                visible = !vm.isOnline.collectAsState().value,
                                 enter = slideInVertically() + fadeIn(),
                                 exit = slideOutVertically() + fadeOut(),
                                 content = {
@@ -152,22 +237,22 @@ internal fun HomeContent(
 
                             val addedToFavourites = stringResource(R.string.added_to_favourites)
 
-                            if (state.searchResult.value.item.isNotEmpty()) {
-                                val entry = state.searchResult.value.item.firstOrNull()
+                            val searchResult = vm.searchResult.collectAsState()
+                            if (searchResult.value.isNotEmpty()) {
+                                val entry = searchResult.value.firstOrNull()
                                 val word = entry?.word ?: ""
-                                val phonetic =
-                                    entry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
+                                val phonetic = entry?.phonetics
+                                    ?.firstOrNull { it.text != null }
+                                    ?.text ?: ""
                                 WordCard(
                                     localeTag = locale.toLanguageTag(),
                                     word = word,
                                     pronunciation = phonetic,
-                                    onShareWord = { state.isSharing.value = true },
+                                    onShareWord = { vm.startWordSharing() },
                                     onAddToFavourite = {
-                                        state.scope.launch {
-                                            state.addToFavourite(word)
-                                            state.snackbarHostState.showSnackbar(
-                                                addedToFavourites
-                                            )
+                                        vm.scope.launch {
+                                            favouritesVM.add(word)
+                                            snackbarHostState.showSnackbar(addedToFavourites)
                                         }
                                     }
                                 )
@@ -175,11 +260,11 @@ internal fun HomeContent(
                                 WordDefinitionsList(
                                     word = word,
                                     localeTag = locale.toLanguageTag(),
-                                    listState = state.listState,
-                                    meanings = state.searchResult.value.item.first().meanings,
+                                    listState = listState,
+                                    meanings = searchResult.value.first().meanings,
                                     onWordChipClick = {
-                                        state.searchText.value = it
-                                        state.lifecycleOwner.lifecycleScope.launch { state.searchForDefinitionHandler() }
+                                        vm.updateSearchTerm(it)
+                                        vm.scope.launch { vm.searchForDefinition(it) }
                                     }
                                 )
                             } else {
@@ -192,4 +277,66 @@ internal fun HomeContent(
             )
         }
     )
+}
+
+@Composable
+private fun HandleShareIntent(
+    entry: Entry
+) {
+    val context = LocalContext.current
+    val text = createShareText(context, entry)
+
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, text)
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    context.startActivity(shareIntent)
+}
+
+private fun createShareText(
+    context: Context,
+    entry: Entry
+) = buildString {
+    append("Word: ")
+    append(entry.word)
+    appendLine()
+    append("Pronunciation(IPA): ")
+    append(entry.phonetics.firstOrNull { it.text != null }?.text ?: "-")
+    appendLine()
+    appendLine()
+    entry.meanings.forEachIndexed { index, meaning ->
+        appendLine("${index + 1})")
+        appendLine("Type: ${meaning.partOfSpeech}")
+        meaning.definitions.take(5).forEach { definition ->
+            appendLine("Definition: ${definition.definition}")
+            if (definition.example != null)
+                appendLine("Example: ${definition.example}")
+            if (definition.synonyms.isNotEmpty())
+                appendLine("Synonyms: ${definition.synonyms.take(5).joinToString()}")
+            if (definition.antonyms.isNotEmpty())
+                appendLine("Antonyms: ${definition.antonyms.take(5).joinToString()}")
+            appendLine()
+        }
+        appendLine()
+    }
+    trim()
+    appendLine(context.getString(R.string.this_text_generated_using_owl))
+    appendLine(context.getString(R.string.github_source))
+    appendLine(context.getString(R.string.this_text_extracted_from_free_dictionary))
+    append(context.getString(R.string.free_dictionary_link))
+}
+
+private fun getErrorMessage(
+    code: Int,
+    context: Context
+) = when (code) {
+    401 -> context.getString(R.string.api_authorization_error)
+    404 -> context.getString(R.string.definition_not_found)
+    429 -> context.getString(R.string.api_throttled)
+    997 -> context.getString(R.string.cancelled)
+    998 -> context.getString(R.string.no_search_term_entered)
+    999 -> context.getString(R.string.untracked_error)
+    else -> context.getString(R.string.general_net_error)
 }

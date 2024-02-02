@@ -25,9 +25,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.CrudContent
 import io.github.yamin8000.owl.ui.favouritesDataStore
+import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,7 +39,12 @@ internal fun FavouritesContent(
     onFavouritesItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val vm = FavouritesViewModel(LocalContext.current.favouritesDataStore)
+    val context = LocalContext.current
+    val vm: FavouritesViewModel = viewModel(factory = viewModelFactory {
+        initializer {
+            FavouritesViewModel(context.favouritesDataStore)
+        }
+    })
 
     val list = vm.favourites.collectAsState().value.toList()
     CrudContent(

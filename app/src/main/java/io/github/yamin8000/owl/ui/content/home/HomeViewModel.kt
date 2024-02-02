@@ -21,53 +21,285 @@
 
 package io.github.yamin8000.owl.ui.content.home
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.yamin8000.owl.data.DataStoreRepository
+import io.github.yamin8000.owl.data.db.entity.DefinitionEntity
+import io.github.yamin8000.owl.data.db.entity.EntryEntity
+import io.github.yamin8000.owl.data.db.entity.MeaningEntity
+import io.github.yamin8000.owl.data.db.entity.PhoneticEntity
+import io.github.yamin8000.owl.data.model.Definition
 import io.github.yamin8000.owl.data.model.Entry
+import io.github.yamin8000.owl.data.model.License
+import io.github.yamin8000.owl.data.model.Meaning
+import io.github.yamin8000.owl.data.model.Phonetic
+import io.github.yamin8000.owl.data.network.APIs
+import io.github.yamin8000.owl.data.network.Web
+import io.github.yamin8000.owl.data.network.Web.getAPI
+import io.github.yamin8000.owl.util.AutoCompleteHelper
 import io.github.yamin8000.owl.util.Constants
-import io.github.yamin8000.owl.util.Constants.DEFAULT_LOCALE
 import io.github.yamin8000.owl.util.Constants.FREE
+import io.github.yamin8000.owl.util.sanitizeWords
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.util.Locale
+import kotlin.coroutines.cancellation.CancellationException
 
-class HomeViewModel(
-    private val settings: DataStoreRepository
+internal class HomeViewModel(
+    sentSearchTerm: String?,
+    isStartingBlank: Boolean,
+    private val autoCompleteHelper: AutoCompleteHelper
 ) : ViewModel() {
-    private var _isSearching = MutableStateFlow(false)
-    val isSearching = _isSearching.asStateFlow()
+    val scope = viewModelScope
 
-    private var _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
+    private var job: Job? = null
 
-    private var _searchResult = MutableStateFlow(listOf<Entry>())
-    val searchResult = _searchResult.asStateFlow()
-
-    private var _entry = MutableStateFlow<Entry?>(null)
-    val entry = _entry.asStateFlow()
-
-    private var _searchSuggestions = MutableStateFlow(listOf<String>())
-    val searchSuggestions = _searchSuggestions.asStateFlow()
-
-    private var _isOnline = MutableStateFlow(false)
+    private val _isOnline = MutableStateFlow(false)
     val isOnline = _isOnline.asStateFlow()
 
-    private var _isVibrating = MutableStateFlow(true)
-    val isVibrating = _isVibrating.asStateFlow()
+    private val _isSharing = MutableStateFlow(false)
+    val isSharing = _isSharing.asStateFlow()
 
-    private var _ttsLang = MutableStateFlow(DEFAULT_LOCALE)
-    val ttsLang = _ttsLang.asStateFlow()
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    private val _searchTerm = MutableStateFlow(sentSearchTerm ?: "")
+    val searchTerm = _searchTerm.asStateFlow()
+
+    private val _searchResult = MutableStateFlow(listOf<Entry>())
+    val searchResult = _searchResult.asStateFlow()
+
+    private val _searchSuggestions = MutableStateFlow(listOf<String>())
+    val searchSuggestions = _searchSuggestions.asStateFlow()
+
+    private val _searchState = MutableStateFlow<SearchState>(SearchState.Unknown)
+    val searchState = _searchState.asSharedFlow()
+
+    val isWordSelectedFromKeyboardSuggestions: State<Boolean>
+        get() = derivedStateOf { _searchTerm.value.length > 1 && _searchTerm.value.last() == ' ' && !_searchTerm.value.all { it == ' ' } }
 
     init {
-        viewModelScope.launch {
-            _ttsLang.value = settings.getString(Constants.TTS_LANG) ?: DEFAULT_LOCALE
-            _isVibrating.value = settings.getBool(Constants.IS_VIBRATING) ?: true
-            val isBlank = settings.getBool(Constants.IS_STARTING_BLANK) ?: true
-            if (!isBlank) {
-                _searchText.value = FREE
-                //searchForDefinition()
+        if (_searchTerm.value.isNotBlank()) {
+            scope.launch {
+                searchForDefinition(_searchTerm.value)
+            }
+        } else if (!isStartingBlank) {
+            _searchTerm.value = "free"
+        }
+    }
+
+    suspend fun resetSearchState() {
+        _searchState.emit(SearchState.Unknown)
+    }
+
+    fun updateIsOnline(isOnline: Boolean) {
+        _isOnline.value = isOnline
+    }
+
+    fun startWordSharing() {
+        _isSharing.value = true
+    }
+
+    fun stopWordSharing() {
+        _isSharing.value = false
+    }
+
+    fun updateSearchTerm(new: String) {
+        _searchTerm.value = new
+    }
+
+    suspend fun searchForRandomWord() {
+        searchForDefinition(getNewRandomWord())
+    }
+
+    suspend fun searchForDefinition(
+        searchTerm: String
+    ) {
+        if (searchTerm.isNotBlank()) {
+            job = scope.launch {
+                _searchResult.value = searchForDefinitionRequest(searchTerm)
+                val entry = searchResult.value.firstOrNull()
+                clearSuggestions()
+                entry?.let {
+                    addWordToDatabase(it)
+                    cacheEntryData(it)
+                }
+                _searchState.emit(SearchState.RequestFinished(searchTerm))
+            }
+        } else _searchState.emit(SearchState.RequestFailed(SearchState.EMPTY))
+    }
+
+    private suspend fun searchForDefinitionRequest(
+        searchTerm: String
+    ): List<Entry> {
+        _isSearching.value = true
+        _searchTerm.value = searchTerm
+        val entries = try {
+            val result = Web.retrofit.getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
+            _searchState.emit(SearchState.RequestSucceed)
+            result
+        } catch (e: HttpException) {
+            _searchState.emit(SearchState.RequestFailed(e.code()))
+            val cache = checkIfDefinitionIsCached(searchTerm)
+            listOf(cache)
+        } catch (e: CancellationException) {
+            _searchState.emit(SearchState.RequestFailed(SearchState.CANCEL))
+            listOf()
+        } catch (e: Exception) {
+            _searchState.emit(SearchState.RequestFailed(SearchState.UNKNOWN))
+            val cache = checkIfDefinitionIsCached(searchTerm)
+            listOf(cache)
+        } finally {
+            _isSearching.value = false
+        }
+
+        _isSearching.value = false
+        return entries.filterNotNull()
+    }
+
+    private suspend fun checkIfDefinitionIsCached(
+        searchTerm: String
+    ): Entry? {
+        val entry =
+            Constants.db.entryDao().getByParam("word", searchTerm.trim().lowercase()).firstOrNull()
+        return if (entry != null) retrieveCachedWordData(entry) else null
+    }
+
+    private suspend fun retrieveCachedWordData(
+        entry: EntryEntity
+    ): Entry {
+        val phonetics = Constants.db.phoneticDao().getByParam("entryId", entry.id)
+        val meanings = Constants.db.meaningDao().getByParam("entryId", entry.id)
+        val definitions = Constants.db.definitionDao().getAll()
+
+        return Entry(
+            word = entry.word,
+            phonetics = phonetics.map { Phonetic(text = it.value) },
+            license = License("", ""),
+            sourceUrls = listOf(),
+            meanings = meanings.map { meaning ->
+                Meaning(
+                    partOfSpeech = meaning.partOfSpeech,
+                    antonyms = listOf(),
+                    synonyms = listOf(),
+                    definitions = definitions.filter { it.meaningId == meaning.id }.map {
+                        Definition(
+                            definition = it.definition,
+                            example = it.example,
+                            antonyms = listOf(),
+                            synonyms = listOf()
+                        )
+                    }
+                )
+            }
+        )
+    }
+
+    private suspend fun addWordToDatabase(
+        entry: Entry
+    ) {
+        val wordDao = Constants.db.entryDao()
+        val meaningDao = Constants.db.meaningDao()
+        val definitionDao = Constants.db.definitionDao()
+        val phoneticDao = Constants.db.phoneticDao()
+
+        val cachedWord = wordDao.getByParam("word", entry.word.trim().lowercase()).firstOrNull()
+        if (cachedWord == null) {
+            val entryId = wordDao.insert(
+                EntryEntity(word = entry.word.trim().lowercase())
+            )
+            phoneticDao.insertAll(
+                entry.phonetics.map { PhoneticEntity(value = it.text, entryId = entryId) }
+            )
+
+            entry.meanings.forEach { meaning ->
+                val definitions = meaning.definitions
+                val meaningEntity = MeaningEntity(
+                    entryId = entryId,
+                    partOfSpeech = meaning.partOfSpeech
+                )
+                val meaningId = meaningDao.insert(meaningEntity)
+                definitionDao.insertAll(
+                    definitions.map {
+                        DefinitionEntity(
+                            meaningId = meaningId,
+                            definition = it.definition,
+                            example = it.example
+                        )
+                    }
+                )
             }
         }
     }
+
+    private suspend fun cacheEntryData(
+        entry: Entry
+    ) {
+        val entryDao = Constants.db.entryDao()
+
+        val oldData = entryDao.getAll().map { it.word }.toSet()
+        var newData = extractDataFromEntry(entry.meanings)
+
+        if (!oldData.contains(entry.word))
+            newData.add(entry.word)
+
+        newData = sanitizeWords(newData).filter { it !in oldData }.toMutableSet()
+
+        addWordDataToCache(newData)
+    }
+
+    private suspend fun addWordDataToCache(
+        newData: Set<String>
+    ) {
+        val entryDao = Constants.db.entryDao()
+
+        newData.forEach { item ->
+            val temp = entryDao.getByParam("word", item.trim().lowercase()).firstOrNull()
+            if (temp == null)
+                entryDao.insert(EntryEntity(item.trim().lowercase()))
+        }
+    }
+
+    private fun extractDataFromEntry(
+        meanings: List<Meaning>
+    ) = meanings.asSequence()
+        .flatMap { meaning ->
+            listOf(meaning.partOfSpeech)
+                .plus(meaning.definitions.map { it.definition })
+                .plus(meaning.definitions.map { it.example })
+                .plus(meaning.definitions.flatMap { it.synonyms })
+                .plus(meaning.definitions.flatMap { it.antonyms })
+        }.filterNotNull()
+        .map { it.split(Regex("\\s+")) }
+        .flatten()
+        .toMutableSet()
+
+    private suspend fun getNewRandomWord(): String {
+        return Constants.db.entryDao().getAll().map { it.word }.shuffled().firstOrNull() ?: FREE
+    }
+
+    suspend fun handleSuggestions() {
+        clearSuggestions()
+        if (_searchTerm.value.length >= Constants.DEFAULT_N_GRAM_SIZE) {
+            val suggestions = autoCompleteHelper.suggestTermsForSearch(_searchTerm.value)
+            _searchSuggestions.value = suggestions.take(Constants.DEFAULT_N_GRAM_SIZE * 3)
+        }
+    }
+
+    fun clearSuggestions() {
+        _searchSuggestions.value = listOf()
+    }
+
+    fun cancel() {
+        _isSearching.value = false
+        job?.cancel()
+    }
+
+    fun getLocale(tts: String): Locale =
+        if (tts.isEmpty()) Locale.US else Locale.forLanguageTag(tts)
 }

@@ -25,9 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.CrudContent
 import io.github.yamin8000.owl.ui.historyDataStore
+import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,7 +38,12 @@ internal fun HistoryContent(
     onHistoryItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val vm = HistoryViewModel(LocalContext.current.historyDataStore)
+    val context = LocalContext.current
+    val vm: HistoryViewModel = viewModel(factory = viewModelFactory {
+        initializer {
+            HistoryViewModel(context.historyDataStore)
+        }
+    })
 
     val list = vm.history.collectAsState().value.toList()
     CrudContent(

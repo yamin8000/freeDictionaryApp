@@ -65,38 +65,33 @@ import io.github.yamin8000.owl.ui.composable.HighlightText
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
-import io.github.yamin8000.owl.util.ImmutableHolder
 import io.github.yamin8000.owl.util.getCurrentLocale
 import kotlinx.coroutines.delay
 import java.util.Locale
 
 @Composable
 internal fun MainBottomBar(
-    searchTerm: String?,
-    suggestions: ImmutableHolder<List<String>>,
+    searchTerm: String,
+    suggestions: List<String>,
     onSuggestionClick: (String) -> Unit,
     isSearching: Boolean,
     onSearchTermChanged: (String) -> Unit,
-    onSearch: (String) -> Unit,
+    onSearch: () -> Unit,
     onCancel: () -> Unit
 ) {
-    var searchText by remember { mutableStateOf(searchTerm ?: "") }
     Column {
-        if (suggestions.item.isNotEmpty()) {
+        if (suggestions.isNotEmpty()) {
             LazyRow(
                 modifier = Modifier.padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 content = {
                     items(
-                        items = suggestions.item,
+                        items = suggestions,
                         itemContent = {
                             ElevatedSuggestionChip(
                                 border = defaultGradientBorder(),
-                                label = { HighlightText(it, searchText) },
-                                onClick = {
-                                    onSuggestionClick(it)
-                                    searchText = it
-                                }
+                                label = { HighlightText(it, searchTerm) },
+                                onClick = { onSuggestionClick(it) }
                             )
                         }
                     )
@@ -150,23 +145,20 @@ internal fun MainBottomBar(
                                     ClickableIcon(
                                         imageVector = Icons.TwoTone.Clear,
                                         contentDescription = stringResource(R.string.clear),
-                                        onClick = { searchText = "" }
+                                        onClick = { onSearchTermChanged("") }
                                     )
                                 },
                                 trailingIcon = {
                                     ClickableIcon(
                                         imageVector = Icons.TwoTone.Search,
                                         contentDescription = stringResource(R.string.search),
-                                        onClick = { onSearch(searchText) }
+                                        onClick = { onSearch() }
                                     )
                                 },
-                                value = searchText,
-                                onValueChange = {
-                                    searchText = it
-                                    onSearchTermChanged(searchText)
-                                },
+                                value = searchTerm,
+                                onValueChange = { onSearchTermChanged(it) },
                                 textStyle = getTextStyleBasedOnLocale(LocalContext.current),
-                                keyboardActions = KeyboardActions(onSearch = { onSearch(searchText) }),
+                                keyboardActions = KeyboardActions(onSearch = { onSearch() }),
                                 keyboardOptions = KeyboardOptions(
                                     imeAction = ImeAction.Search,
                                     keyboardType = KeyboardType.Text,
@@ -184,7 +176,7 @@ internal fun MainBottomBar(
 private fun RainbowLinearProgress() {
     fun randomBeam(): Int = (16..255).random()
     val colors = buildList {
-        repeat((5..10).random()) {
+        repeat((5..20).random()) {
             add(androidx.compose.ui.graphics.Color(randomBeam(), randomBeam(), randomBeam()))
         }
     }

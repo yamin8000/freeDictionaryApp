@@ -65,10 +65,10 @@ class HistoryViewModel(
     }
 
     suspend fun add(
-        singleHistory: String
+        history: String
     ) {
         historyDataStore.edit {
-            it[stringPreferencesKey(singleHistory)] = singleHistory
+            it[stringPreferencesKey(history)] = history
         }
     }
 }

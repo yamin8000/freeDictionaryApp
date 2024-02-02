@@ -42,11 +42,7 @@ import io.github.yamin8000.owl.ui.composable.ClickableIcon
 @Composable
 internal fun MainTopBar(
     scrollBehavior: TopAppBarScrollBehavior,
-    onHistoryClick: () -> Unit,
-    onFavouritesClick: () -> Unit,
-    onRandomWordClick: () -> Unit,
-    onSettingsClick: () -> Unit,
-    onInfoClick: () -> Unit,
+    onTopBarClick: (TopBarItem) -> Unit
 ) {
     Surface(
         shadowElevation = 8.dp,
@@ -58,27 +54,27 @@ internal fun MainTopBar(
                     ClickableIcon(
                         imageVector = Icons.TwoTone.History,
                         contentDescription = stringResource(R.string.search_history),
-                        onClick = onHistoryClick,
+                        onClick = { onTopBarClick(TopBarItem.History) },
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Favorite,
                         contentDescription = stringResource(R.string.favourites),
-                        onClick = onFavouritesClick,
+                        onClick = { onTopBarClick(TopBarItem.Favourites) },
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Casino,
                         contentDescription = stringResource(R.string.random_word),
-                        onClick = onRandomWordClick,
+                        onClick = { onTopBarClick(TopBarItem.Random) },
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Settings,
                         contentDescription = stringResource(R.string.settings),
-                        onClick = onSettingsClick
+                        onClick = { onTopBarClick(TopBarItem.Settings) }
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Info,
                         contentDescription = stringResource(R.string.about_app),
-                        onClick = onInfoClick
+                        onClick = { onTopBarClick(TopBarItem.Info) }
                     )
                 }
             )

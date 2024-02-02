@@ -38,11 +38,11 @@ class AutoCompleteHelper(
     coroutineScope: CoroutineScope,
     userData: List<String> = listOf()
 ) {
-    private var data = setOf<String>()
+    private var items = setOf<String>()
 
     init {
-        data = getBasic2000Data().plus(userData).toSet()
-        coroutineScope.launch { data = data.plus(getOldSearchData()) }
+        items = getBasic2000Data().plus(userData).toSet()
+        coroutineScope.launch { items = items.plus(getOldSearchData()) }
     }
 
     private fun getBasic2000Data() = try {
@@ -58,18 +58,18 @@ class AutoCompleteHelper(
     suspend fun suggestTermsForSearch(
         searchTerm: String
     ): List<String> {
-        data = data.plus(getOldSearchData())
+        items = items.plus(getOldSearchData())
 
         val term = searchTerm.lowercase().replace(NOT_WORD_CHARS_REGEX, "")
         val nGramSize = nGramSizeProvider(term)
-        if (data.contains(term)) return listOf(term)
+        if (items.contains(term)) return listOf(term)
         val searchTermGrams = term.windowed(nGramSize)
         val suggestions = buildSet {
             searchTermGrams.forEach { gram ->
-                addAll(data.filter { word -> word.contains(gram) })
+                addAll(items.filter { word -> word.contains(gram) })
             }
         }
-        return sortSuggestions(suggestions, term)
+        return sortSuggestions(suggestions, term).filter { it.isNotBlank() }
     }
 
     private fun sortSuggestions(

@@ -55,7 +55,6 @@
     <string name="general">عمومی</string>
     <string name="vibrate_on_scroll">لرزش در زمان پیمایش لیست</string>
     <string name="cancel">لغو</string>
-    <string name="already_added_to_favourites">این واژه پیش از این به برگزیده‌ها اضافه شده است.</string>
     <string name="delete">پاک کردن</string>
     <string name="increase_volume_notice">صدای بلندگو را زیاد کنید.</string>
     <string name="antonym">متضاد</string>
@@ -63,8 +62,8 @@
     <string name="start_blank_search">Blank startup search</string>
     <string name="theme_oled">تاریک تر</string>
     <string name="yes">بله</string>
-    <string name="remove_all_history_prompt">آیا میخواهید کل پیشینه را پاک کنید؟</string>
     <string name="no">نه</string>
     <string name="back">بازگشت</string>
-    <string name="remove_all_prompt">آیا میخواهید همه را پاک کنید؟</string>
+    <string name="remove_all_prompt">آیا می‌خواهید همه را پاک کنید؟</string>
+    <string name="cancelled">لغو شد.</string>
 </resources>
