@@ -122,6 +122,8 @@ internal fun MainBottomBar(
                 } else {
                     BottomAppBar(
                         content = {
+                            val onSearchClick = remember { onSearch }
+                            val onTermChanged: (String) -> Unit = remember { onSearchTermChanged }
                             TextField(
                                 singleLine = true,
                                 shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
@@ -142,23 +144,24 @@ internal fun MainBottomBar(
                                     )
                                 },
                                 leadingIcon = {
+                                    val onClearClick = remember { { onSearchTermChanged("") } }
                                     ClickableIcon(
                                         imageVector = Icons.TwoTone.Clear,
                                         contentDescription = stringResource(R.string.clear),
-                                        onClick = { onSearchTermChanged("") }
+                                        onClick = onClearClick
                                     )
                                 },
                                 trailingIcon = {
                                     ClickableIcon(
                                         imageVector = Icons.TwoTone.Search,
                                         contentDescription = stringResource(R.string.search),
-                                        onClick = { onSearch() }
+                                        onClick = onSearchClick
                                     )
                                 },
                                 value = searchTerm,
-                                onValueChange = { onSearchTermChanged(it) },
+                                onValueChange = onTermChanged,
                                 textStyle = getTextStyleBasedOnLocale(LocalContext.current),
-                                keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+                                keyboardActions = KeyboardActions(onSearch = { onSearchClick() }),
                                 keyboardOptions = KeyboardOptions(
                                     imeAction = ImeAction.Search,
                                     keyboardType = KeyboardType.Text,

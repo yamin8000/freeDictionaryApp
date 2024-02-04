@@ -24,16 +24,13 @@ package io.github.yamin8000.owl.ui.content.home
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import io.github.yamin8000.owl.data.db.entity.DefinitionEntity
 import io.github.yamin8000.owl.data.db.entity.EntryEntity
 import io.github.yamin8000.owl.data.db.entity.MeaningEntity
 import io.github.yamin8000.owl.data.db.entity.PhoneticEntity
-import io.github.yamin8000.owl.data.model.Definition
+import io.github.yamin8000.owl.data.db.entity.TermEntity
 import io.github.yamin8000.owl.data.model.Entry
-import io.github.yamin8000.owl.data.model.License
 import io.github.yamin8000.owl.data.model.Meaning
-import io.github.yamin8000.owl.data.model.Phonetic
 import io.github.yamin8000.owl.data.network.APIs
 import io.github.yamin8000.owl.data.network.Web
 import io.github.yamin8000.owl.data.network.Web.getAPI
@@ -41,6 +38,8 @@ import io.github.yamin8000.owl.util.AutoCompleteHelper
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.Constants.FREE
 import io.github.yamin8000.owl.util.sanitizeWords
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -55,7 +54,7 @@ internal class HomeViewModel(
     isStartingBlank: Boolean,
     private val autoCompleteHelper: AutoCompleteHelper
 ) : ViewModel() {
-    val scope = viewModelScope
+    val ioScope = CoroutineScope(Dispatchers.IO)
 
     private var job: Job? = null
 
@@ -85,11 +84,10 @@ internal class HomeViewModel(
 
     init {
         if (_searchTerm.value.isNotBlank()) {
-            scope.launch {
-                searchForDefinition(_searchTerm.value)
-            }
+            ioScope.launch { searchForDefinition(_searchTerm.value) }
         } else if (!isStartingBlank) {
             _searchTerm.value = "free"
+            ioScope.launch { searchForDefinition(_searchTerm.value) }
         }
     }
 
@@ -121,13 +119,11 @@ internal class HomeViewModel(
         searchTerm: String
     ) {
         if (searchTerm.isNotBlank()) {
-            job = scope.launch {
+            job = ioScope.launch {
                 _searchResult.value = searchForDefinitionRequest(searchTerm)
                 val entry = searchResult.value.firstOrNull()
-                clearSuggestions()
-                entry?.let {
-                    addWordToDatabase(it)
-                    cacheEntryData(it)
+                if (entry != null) {
+                    clearSuggestions()
                 }
                 _searchState.emit(SearchState.RequestFinished(searchTerm))
             }
@@ -139,65 +135,28 @@ internal class HomeViewModel(
     ): List<Entry> {
         _isSearching.value = true
         _searchTerm.value = searchTerm
-        val entries = try {
+
+        return try {
             val result = Web.retrofit.getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
+            val entry = result.firstOrNull()
+            if (entry != null) {
+                addWordToDatabase(entry)
+                cacheEntryData(entry)
+            }
             _searchState.emit(SearchState.RequestSucceed)
             result
         } catch (e: HttpException) {
             _searchState.emit(SearchState.RequestFailed(e.code()))
-            val cache = checkIfDefinitionIsCached(searchTerm)
-            listOf(cache)
+            listOf()
         } catch (e: CancellationException) {
             _searchState.emit(SearchState.RequestFailed(SearchState.CANCEL))
             listOf()
         } catch (e: Exception) {
             _searchState.emit(SearchState.RequestFailed(SearchState.UNKNOWN))
-            val cache = checkIfDefinitionIsCached(searchTerm)
-            listOf(cache)
+            listOf()
         } finally {
             _isSearching.value = false
         }
-
-        _isSearching.value = false
-        return entries.filterNotNull()
-    }
-
-    private suspend fun checkIfDefinitionIsCached(
-        searchTerm: String
-    ): Entry? {
-        val entry =
-            Constants.db.entryDao().getByParam("word", searchTerm.trim().lowercase()).firstOrNull()
-        return if (entry != null) retrieveCachedWordData(entry) else null
-    }
-
-    private suspend fun retrieveCachedWordData(
-        entry: EntryEntity
-    ): Entry {
-        val phonetics = Constants.db.phoneticDao().getByParam("entryId", entry.id)
-        val meanings = Constants.db.meaningDao().getByParam("entryId", entry.id)
-        val definitions = Constants.db.definitionDao().getAll()
-
-        return Entry(
-            word = entry.word,
-            phonetics = phonetics.map { Phonetic(text = it.value) },
-            license = License("", ""),
-            sourceUrls = listOf(),
-            meanings = meanings.map { meaning ->
-                Meaning(
-                    partOfSpeech = meaning.partOfSpeech,
-                    antonyms = listOf(),
-                    synonyms = listOf(),
-                    definitions = definitions.filter { it.meaningId == meaning.id }.map {
-                        Definition(
-                            definition = it.definition,
-                            example = it.example,
-                            antonyms = listOf(),
-                            synonyms = listOf()
-                        )
-                    }
-                )
-            }
-        )
     }
 
     private suspend fun addWordToDatabase(
@@ -208,7 +167,7 @@ internal class HomeViewModel(
         val definitionDao = Constants.db.definitionDao()
         val phoneticDao = Constants.db.phoneticDao()
 
-        val cachedWord = wordDao.getByParam("word", entry.word.trim().lowercase()).firstOrNull()
+        val cachedWord = wordDao.where("word", entry.word.trim().lowercase()).firstOrNull()
         if (cachedWord == null) {
             val entryId = wordDao.insert(
                 EntryEntity(word = entry.word.trim().lowercase())
@@ -240,9 +199,9 @@ internal class HomeViewModel(
     private suspend fun cacheEntryData(
         entry: Entry
     ) {
-        val entryDao = Constants.db.entryDao()
+        val termDao = Constants.db.termDao()
 
-        val oldData = entryDao.getAll().map { it.word }.toSet()
+        val oldData = termDao.all().map { it.word }.toSet()
         var newData = extractDataFromEntry(entry.meanings)
 
         if (!oldData.contains(entry.word))
@@ -256,12 +215,12 @@ internal class HomeViewModel(
     private suspend fun addWordDataToCache(
         newData: Set<String>
     ) {
-        val entryDao = Constants.db.entryDao()
+        val termDao = Constants.db.termDao()
 
         newData.forEach { item ->
-            val temp = entryDao.getByParam("word", item.trim().lowercase()).firstOrNull()
+            val temp = termDao.where("word", item.trim().lowercase()).firstOrNull()
             if (temp == null)
-                entryDao.insert(EntryEntity(item.trim().lowercase()))
+                termDao.insert(TermEntity(item.trim().lowercase()))
         }
     }
 
@@ -277,10 +236,11 @@ internal class HomeViewModel(
         }.filterNotNull()
         .map { it.split(Regex("\\s+")) }
         .flatten()
+        .map { it.trim() }
         .toMutableSet()
 
     private suspend fun getNewRandomWord(): String {
-        return Constants.db.entryDao().getAll().map { it.word }.shuffled().firstOrNull() ?: FREE
+        return Constants.db.entryDao().all().map { it.word }.shuffled().firstOrNull() ?: FREE
     }
 
     suspend fun handleSuggestions() {

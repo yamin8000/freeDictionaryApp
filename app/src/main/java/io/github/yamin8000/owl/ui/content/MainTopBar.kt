@@ -32,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
@@ -51,30 +52,35 @@ internal fun MainTopBar(
                 scrollBehavior = scrollBehavior,
                 title = { AppIcon() },
                 actions = {
+                    val onHistoryClick = remember { { onTopBarClick(TopBarItem.History) } }
+                    val onFavouriteClick = remember { { onTopBarClick(TopBarItem.Favourites) } }
+                    val onRandomClick = remember { { onTopBarClick(TopBarItem.Random) } }
+                    val onSettingsClick = remember { { onTopBarClick(TopBarItem.Settings) } }
+                    val onInfoClick = remember { { onTopBarClick(TopBarItem.Info) } }
                     ClickableIcon(
                         imageVector = Icons.TwoTone.History,
                         contentDescription = stringResource(R.string.search_history),
-                        onClick = { onTopBarClick(TopBarItem.History) },
+                        onClick = onHistoryClick
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Favorite,
                         contentDescription = stringResource(R.string.favourites),
-                        onClick = { onTopBarClick(TopBarItem.Favourites) },
+                        onClick = onFavouriteClick
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Casino,
                         contentDescription = stringResource(R.string.random_word),
-                        onClick = { onTopBarClick(TopBarItem.Random) },
+                        onClick = onRandomClick
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Settings,
                         contentDescription = stringResource(R.string.settings),
-                        onClick = { onTopBarClick(TopBarItem.Settings) }
+                        onClick = onSettingsClick
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Info,
                         contentDescription = stringResource(R.string.about_app),
-                        onClick = { onTopBarClick(TopBarItem.Info) }
+                        onClick = onInfoClick
                     )
                 }
             )

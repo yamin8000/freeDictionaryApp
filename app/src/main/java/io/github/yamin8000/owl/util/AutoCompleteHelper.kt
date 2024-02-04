@@ -28,6 +28,7 @@ import io.github.yamin8000.owl.util.Constants.DEFAULT_N_GRAM_SIZE
 import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
 import io.github.yamin8000.owl.util.Constants.db
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -35,14 +36,14 @@ import kotlin.math.roundToInt
 
 class AutoCompleteHelper(
     private val context: Context,
-    coroutineScope: CoroutineScope,
     userData: List<String> = listOf()
 ) {
+    private val scope = CoroutineScope(Dispatchers.IO)
     private var items = setOf<String>()
 
     init {
         items = getBasic2000Data().plus(userData).toSet()
-        coroutineScope.launch { items = items.plus(getOldSearchData()) }
+        scope.launch { items = items.plus(getOldSearchData()) }
     }
 
     private fun getBasic2000Data() = try {
@@ -113,5 +114,5 @@ class AutoCompleteHelper(
         else size
     } else DEFAULT_N_GRAM_SIZE
 
-    private suspend fun getOldSearchData() = db.entryDao().getAll().map { it.word }
+    private suspend fun getOldSearchData() = db.termDao().all().map { it.word }
 }

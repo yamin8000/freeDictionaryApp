@@ -28,6 +28,7 @@ import io.github.yamin8000.owl.data.db.entity.EntryEntity
 import io.github.yamin8000.owl.data.db.entity.MeaningEntity
 import io.github.yamin8000.owl.data.db.entity.PhoneticEntity
 import io.github.yamin8000.owl.data.db.entity.SynonymEntity
+import io.github.yamin8000.owl.data.db.entity.TermEntity
 
 object DAOs {
     @Dao
@@ -47,4 +48,7 @@ object DAOs {
 
     @Dao
     abstract class SynonymDao : AdvancedDao<SynonymEntity>("SynonymEntity")
+
+    @Dao
+    abstract class TermDao : AdvancedDao<TermEntity>("TermEntity")
 }

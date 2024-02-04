@@ -30,8 +30,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material.icons.twotone.Language
@@ -103,6 +105,9 @@ internal fun SettingsContent(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = 16.dp),
                 content = {
                     GeneralSettings(
                         isVibrating = vm.isVibrating.collectAsState().value,

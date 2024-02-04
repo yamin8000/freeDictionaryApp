@@ -44,6 +44,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -51,11 +52,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import io.github.yamin8000.owl.R
@@ -76,7 +76,6 @@ import io.github.yamin8000.owl.ui.favouritesDataStore
 import io.github.yamin8000.owl.ui.historyDataStore
 import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.util.AutoCompleteHelper
-import io.github.yamin8000.owl.util.log
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.coroutines.launch
 
@@ -100,7 +99,7 @@ internal fun HomeContent(
         }
     })
 
-    val autoCompleteHelper = AutoCompleteHelper(context, LocalLifecycleOwner.current.lifecycleScope)
+    val autoCompleteHelper = AutoCompleteHelper(context)
     val isStartingBlank = settingsVM.isStartingBlank.collectAsState().value
 
     val vm: HomeViewModel = viewModel(factory = viewModelFactory {
@@ -119,27 +118,30 @@ internal fun HomeContent(
         }
     })
 
-    val snackbarHostState = SnackbarHostState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val focusManager = LocalFocusManager.current
+    val keyboardManager = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
         vm.searchState.collect { searchState ->
             when (searchState) {
                 is SearchState.RequestFailed -> {
-                    log(getErrorMessage(searchState.code, context))
                     snackbarHostState.showSnackbar(getErrorMessage(searchState.code, context))
-                    vm.resetSearchState()
                 }
 
                 is SearchState.RequestFinished -> {
                     historyVM.add(searchState.term)
-                }
-
-                SearchState.RequestSucceed -> {
+                    keyboardManager?.hide()
                     focusManager.clearFocus()
                 }
 
-                SearchState.Unknown -> {}
+                SearchState.RequestSucceed -> {
+                    keyboardManager?.hide()
+                    focusManager.clearFocus()
+                }
+
+                else -> {}
             }
+            vm.resetSearchState()
         }
     }
 
@@ -161,8 +163,10 @@ internal fun HomeContent(
 
             if (vm.isSharing.collectAsState().value) {
                 val temp = vm.searchResult.collectAsState().value.firstOrNull()
-                if (temp != null)
+                if (temp != null) {
                     HandleShareIntent(temp)
+                    vm.stopWordSharing()
+                }
             }
 
 
@@ -185,7 +189,7 @@ internal fun HomeContent(
                         scrollBehavior = scrollBehavior,
                         onTopBarClick = {
                             when (it) {
-                                TopBarItem.Random -> vm.scope.launch { vm.searchForRandomWord() }
+                                TopBarItem.Random -> vm.ioScope.launch { vm.searchForRandomWord() }
                                 else -> onTopBarClick(it)
                             }
                         }
@@ -197,22 +201,20 @@ internal fun HomeContent(
                         searchTerm = search.value,
                         suggestions = vm.searchSuggestions.collectAsState().value,
                         isSearching = vm.isSearching.collectAsState().value,
-                        onSearchTermChanged = {
-                            vm.updateSearchTerm(it)
-                            vm.scope.launch { vm.handleSuggestions() }
-                            if (vm.isWordSelectedFromKeyboardSuggestions.value) {
-                                vm.clearSuggestions()
-                                vm.scope.launch { vm.searchForDefinition(it) }
-                            }
-                        },
+                        onSearch = { vm.ioScope.launch { vm.searchForDefinition(search.value) } },
+                        onCancel = { vm.cancel() },
                         onSuggestionClick = {
                             vm.updateSearchTerm(it)
-                            vm.scope.launch { vm.searchForDefinition(it) }
+                            vm.ioScope.launch { vm.searchForDefinition(it) }
                         },
-                        onSearch = {
-                            vm.scope.launch { vm.searchForDefinition(search.value) }
-                        },
-                        onCancel = { vm.cancel() }
+                        onSearchTermChanged = {
+                            vm.updateSearchTerm(it)
+                            vm.ioScope.launch { vm.handleSuggestions() }
+                            if (vm.isWordSelectedFromKeyboardSuggestions.value) {
+                                vm.clearSuggestions()
+                                vm.ioScope.launch { vm.searchForDefinition(it) }
+                            }
+                        }
                     )
                 },
                 content = { contentPadding ->
@@ -220,7 +222,7 @@ internal fun HomeContent(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .padding(contentPadding)
-                            .padding(top = 8.dp),
+                            .padding(top = 16.dp),
                         content = {
                             AnimatedVisibility(
                                 visible = !vm.isOnline.collectAsState().value,
@@ -248,9 +250,9 @@ internal fun HomeContent(
                                     localeTag = locale.toLanguageTag(),
                                     word = word,
                                     pronunciation = phonetic,
-                                    onShareWord = { vm.startWordSharing() },
+                                    onShareWord = vm::startWordSharing,
                                     onAddToFavourite = {
-                                        vm.scope.launch {
+                                        vm.ioScope.launch {
                                             favouritesVM.add(word)
                                             snackbarHostState.showSnackbar(addedToFavourites)
                                         }
@@ -264,7 +266,7 @@ internal fun HomeContent(
                                     meanings = searchResult.value.first().meanings,
                                     onWordChipClick = {
                                         vm.updateSearchTerm(it)
-                                        vm.scope.launch { vm.searchForDefinition(it) }
+                                        vm.ioScope.launch { vm.searchForDefinition(it) }
                                     }
                                 )
                             } else {

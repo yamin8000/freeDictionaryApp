@@ -131,9 +131,9 @@ fun PersianText(
     style: TextStyle = LocalTextStyle.current
 ) {
     val context = LocalContext.current
-    var localStyle = style
-    var localFontFamily = fontFamily
-    val currentLocale = remember { getCurrentLocale(context) }
+    var localStyle by remember { mutableStateOf(style) }
+    var localFontFamily by remember { mutableStateOf(fontFamily) }
+    val currentLocale = remember(context) { getCurrentLocale(context) }
     if (currentLocale.language == Locale("fa").language) {
         localFontFamily = Samim
         localStyle = LocalTextStyle.current.copy(textDirection = TextDirection.Rtl)
@@ -317,7 +317,7 @@ fun SpeakableRippleTextWithIcon(
 ) {
     val context = LocalContext.current
     val increaseVolumeText = context.getString(R.string.increase_volume_notice)
-    val audio = remember {
+    val audio = remember(context) {
         context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 

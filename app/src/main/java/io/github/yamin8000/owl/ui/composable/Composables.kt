@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
@@ -179,8 +178,7 @@ fun ScaffoldWithTitle(
                 content = content,
                 modifier = Modifier
                     .padding(it)
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 4.dp)
-                    .fillMaxHeight()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 0.dp, top = 4.dp)
             )
         }
     )
@@ -193,32 +191,22 @@ fun ClickableIcon(
     contentDescription: String,
     onClick: () -> Unit
 ) {
-    ClickableIcon(
+    val haptic = LocalHapticFeedback.current
+    val clickWithFeedback = remember(haptic) {
+        {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            onClick()
+        }
+    }
+    IconButton(
         modifier = modifier,
-        onClick = onClick,
-        icon = {
+        onClick = clickWithFeedback,
+        content = {
             Icon(
                 imageVector = imageVector,
                 contentDescription = contentDescription,
                 tint = MaterialTheme.colorScheme.secondary
             )
-        }
-    )
-}
-
-@Composable
-fun ClickableIcon(
-    modifier: Modifier = Modifier,
-    icon: @Composable () -> Unit,
-    onClick: () -> Unit
-) {
-    val haptic = LocalHapticFeedback.current
-    IconButton(
-        modifier = modifier,
-        content = icon,
-        onClick = {
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            onClick()
         }
     )
 }

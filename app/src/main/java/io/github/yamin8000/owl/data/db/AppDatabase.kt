@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.data.db
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import io.github.yamin8000.owl.data.db.dao.DAOs
@@ -30,10 +31,18 @@ import io.github.yamin8000.owl.data.db.entity.EntryEntity
 import io.github.yamin8000.owl.data.db.entity.MeaningEntity
 import io.github.yamin8000.owl.data.db.entity.PhoneticEntity
 import io.github.yamin8000.owl.data.db.entity.SynonymEntity
+import io.github.yamin8000.owl.data.db.entity.TermEntity
 
 @Database(
-    entities = [AntonymEntity::class, DefinitionEntity::class, EntryEntity::class, MeaningEntity::class, PhoneticEntity::class, SynonymEntity::class],
-    version = 6
+    version = 7,
+    entities = [
+        AntonymEntity::class, DefinitionEntity::class, EntryEntity::class,
+        MeaningEntity::class, PhoneticEntity::class, SynonymEntity::class,
+        TermEntity::class
+    ],
+    autoMigrations = [
+        AutoMigration(from = 6, to = 7)
+    ]
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun antonymDao(): DAOs.AntonymDao
@@ -42,4 +51,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun meaningDao(): DAOs.MeaningDao
     abstract fun phoneticDao(): DAOs.PhoneticDao
     abstract fun synonymDao(): DAOs.SynonymDao
+    abstract fun termDao(): DAOs.TermDao
 }

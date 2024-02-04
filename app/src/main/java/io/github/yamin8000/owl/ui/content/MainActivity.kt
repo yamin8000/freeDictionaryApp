@@ -88,7 +88,7 @@ internal class MainActivity : ComponentActivity() {
     )
 
     private fun createDb() = Room.databaseBuilder(this, AppDatabase::class.java, "db")
-        .fallbackToDestructiveMigration()
+        //.fallbackToDestructiveMigration()
         .build()
 
     private fun handleOutsideInputIntent(): String? {
@@ -147,41 +147,34 @@ internal class MainActivity : ComponentActivity() {
                         searchTerm = outsideInput.toString()
                     HomeContent(
                         searchTerm = searchTerm,
-                        onTopBarClick = { item ->
-                            val route = when (item) {
-                                TopBarItem.Favourites -> Nav.Routes.Favourites.toString()
-                                TopBarItem.History -> Nav.Routes.History.toString()
-                                TopBarItem.Info -> Nav.Routes.About.toString()
-                                TopBarItem.Random -> Nav.Routes.Home.toString()
-                                TopBarItem.Settings -> Nav.Routes.Settings.toString()
-                            }
-                            navController.navigate(route)
-                        }
+                        onTopBarClick = { item -> navController.navigate(item.route()) }
                     )
                 }
 
+                val onBackClick: () -> Unit = { navController.popBackStack() }
+
                 composable(Nav.Routes.About.toString()) {
-                    AboutContent { navController.popBackStack() }
+                    AboutContent(onBackClick)
                 }
 
                 composable(Nav.Routes.Favourites.toString()) {
                     FavouritesContent(
                         onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.Home}/${favourite}") },
-                        onBackClick = { navController.popBackStack() }
+                        onBackClick = onBackClick
                     )
                 }
 
                 composable(Nav.Routes.History.toString()) {
                     HistoryContent(
                         onHistoryItemClick = { history -> navController.navigate("${Nav.Routes.Home}/${history}") },
-                        onBackClick = { navController.popBackStack() }
+                        onBackClick = onBackClick
                     )
                 }
 
                 composable(Nav.Routes.Settings.toString()) {
                     SettingsContent(
                         onThemeChanged = onThemeChanged,
-                        onBackClick = { navController.popBackStack() }
+                        onBackClick = onBackClick
                     )
                 }
             }

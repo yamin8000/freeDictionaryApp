@@ -31,31 +31,45 @@ import androidx.sqlite.db.SupportSQLiteQuery
 abstract class AdvancedDao<T>(tableName: String) : BaseDao<T>(tableName) {
 
     @RawQuery
-    protected abstract suspend fun getById(query: SupportSQLiteQuery): T?
+    protected abstract suspend fun find(query: SupportSQLiteQuery): T?
 
-    suspend fun getById(id: Long) = getById(SimpleSQLiteQuery("$baseQuery where id = $id"))
-
-    @RawQuery
-    protected abstract suspend fun getAll(query: SupportSQLiteQuery): List<T>
-
-    suspend fun getAll() = getAll(SimpleSQLiteQuery(baseQuery))
+    suspend fun find(id: Long) = find(SimpleSQLiteQuery("$baseQuery where id = $id"))
 
     @RawQuery
-    protected abstract suspend fun getAllByIds(query: SupportSQLiteQuery): List<T>
+    protected abstract suspend fun all(query: SupportSQLiteQuery): List<T>
 
-    suspend fun getAllByIds(
+    suspend fun all() = all(SimpleSQLiteQuery(baseQuery))
+
+    @RawQuery
+    protected abstract suspend fun findAll(query: SupportSQLiteQuery): List<T>
+
+    suspend fun findAll(
         ids: List<Long>
     ): List<T> {
-        val params = ids.joinToString("")
-        return getAllByIds(SimpleSQLiteQuery("$baseWhereQuery id in ($params)"))
+        val params = ids.joinToString(",")
+        return findAll(SimpleSQLiteQuery("$baseWhereQuery id in ($params)"))
     }
 
     @RawQuery
-    protected abstract suspend fun getByParam(query: SupportSQLiteQuery): List<T>
+    protected abstract suspend fun where(query: SupportSQLiteQuery): List<T>
 
-    suspend fun <P> getByParam(
-        param: String, value: P
-    ) = getByParam(SimpleSQLiteQuery("$baseWhereQuery $param='$value'"))
+    suspend fun <V> where(
+        column: String,
+        value: V,
+        operator: String = "="
+    ) = where(SimpleSQLiteQuery("$baseWhereQuery $column $operator '$value'"))
+
+    @RawQuery
+    protected abstract suspend fun whereIn(query: SupportSQLiteQuery): List<T>
+
+    suspend fun whereIn(
+        column: String,
+        values: List<*>
+    ): List<T> {
+        val temp = values.joinToString(separator = ",", transform = { "'$it'" })
+        val query = SimpleSQLiteQuery("$baseWhereQuery $column in ($temp)")
+        return whereIn(query)
+    }
 
     suspend fun getByParams(
         paramPair: Pair<String, *>,
@@ -68,6 +82,6 @@ abstract class AdvancedDao<T>(tableName: String) : BaseDao<T>(tableName) {
                 if (index != params.lastIndex) append(" and ")
             }
         }
-        return getByParam(SimpleSQLiteQuery("$baseWhereQuery $condition"))
+        return where(SimpleSQLiteQuery("$baseWhereQuery $condition"))
     }
 }
