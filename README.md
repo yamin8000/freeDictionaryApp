@@ -50,7 +50,8 @@ More screenshots [here](./screenshots).
 
 ## Compatibility
 
-**SDK21+** or **Android 5.0+**
+> [!important]
+> **SDK21+** or **Android 5.0+**
 
 ## Usage
 
@@ -75,6 +76,7 @@ Just use the search input to search the word.
 
 ## License
 
+> [!important]
 > freeDictionaryApp is licensed under the **[GNU General Public License v3.0](./LICENSE)**  
 > Permissions of this strong copyleft license are conditioned on making  
 > available complete source code of licensed works and modifications,  
