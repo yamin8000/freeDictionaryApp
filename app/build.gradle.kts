@@ -97,7 +97,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     //compose
     val material3Version = "1.2.0-rc01"
-    val composeLibsVersion = "1.6.0"
+    val composeLibsVersion = "1.6.1"
     val composeUiLibsVersion = "1.6.1"
     implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
     implementation("androidx.compose.material:material:$composeLibsVersion")
