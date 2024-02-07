@@ -83,20 +83,16 @@ fun RemovableCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
-    val haptic = LocalHapticFeedback.current
     Card(
         shape = DefaultCutShape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
         content = {
             var isMenuExpanded by remember { mutableStateOf(false) }
-            val onRippleLongClick = remember(isMenuExpanded) {
-                {
-                    isMenuExpanded = true
-                }
-            }
+            val showMenu = remember(isMenuExpanded) { { isMenuExpanded = true } }
+            val hideMenu = remember(isMenuExpanded) { { isMenuExpanded = false } }
             Ripple(
                 onClick = onClick,
-                onLongClick = onRippleLongClick,
+                onLongClick = showMenu,
                 content = {
                     Text(
                         text = item,
@@ -107,6 +103,7 @@ fun RemovableCard(
                     )
                 }
             )
+            val haptic = LocalHapticFeedback.current
             val onDelete = remember(isMenuExpanded, haptic, onLongClick) {
                 {
                     isMenuExpanded = false
@@ -116,7 +113,7 @@ fun RemovableCard(
             }
             DeleteMenu(
                 expanded = isMenuExpanded,
-                onDismiss = { isMenuExpanded = false },
+                onDismiss = hideMenu,
                 onDelete = onDelete
             )
         }

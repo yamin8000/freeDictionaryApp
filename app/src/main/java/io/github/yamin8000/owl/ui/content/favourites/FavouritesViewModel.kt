@@ -30,7 +30,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal class FavouritesViewModel(
     private val favouritesDataStore: DataStore<Preferences>
@@ -52,23 +51,23 @@ internal class FavouritesViewModel(
         }
     }
 
-    suspend fun remove(
+    fun remove(
         favourite: String
-    ) {
+    ) = scope.launch {
         favouritesDataStore.edit { it.remove(stringPreferencesKey(favourite)) }
         val data = _favourites.value.toMutableSet()
         data.remove(favourite)
         _favourites.value = data
     }
 
-    suspend fun removeAll() {
+    fun removeAll() = scope.launch {
         favouritesDataStore.edit { it.clear() }
         _favourites.value = emptySet()
     }
 
-    suspend fun add(
+    fun add(
         favourite: String
-    ) = withContext(scope.coroutineContext) {
+    ) = scope.launch {
         favouritesDataStore.edit {
             it[stringPreferencesKey(favourite)] = favourite
         }

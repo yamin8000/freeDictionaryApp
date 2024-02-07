@@ -22,37 +22,24 @@
 package io.github.yamin8000.owl.ui.content.favourites
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.CrudContent
-import io.github.yamin8000.owl.ui.favouritesDataStore
-import io.github.yamin8000.owl.util.viewModelFactory
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun FavouritesContent(
+    favourites: List<String>,
+    onRemoveAll: () -> Unit,
+    onRemove: (String) -> Unit,
     onFavouritesItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    val vm: FavouritesViewModel = viewModel(factory = viewModelFactory {
-        initializer {
-            FavouritesViewModel(context.favouritesDataStore)
-        }
-    })
-
-    val list = vm.favourites.collectAsState().value.toList()
     CrudContent(
         title = stringResource(R.string.favourites),
-        items = list,
+        items = favourites,
         onBackClick = onBackClick,
-        onRemoveAll = { vm.scope.launch { vm.removeAll() } },
-        onRemoveSingle = { index -> vm.scope.launch { vm.remove(list[index]) } },
-        onItemClick = { index -> onFavouritesItemClick(list[index]) }
+        onRemoveAll = onRemoveAll,
+        onRemoveSingle = onRemove,
+        onItemClick = onFavouritesItemClick
     )
 }

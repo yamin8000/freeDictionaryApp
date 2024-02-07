@@ -22,7 +22,6 @@
 package io.github.yamin8000.owl.ui.content.settings
 
 import android.os.Build
-import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,7 +43,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,48 +55,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
 import io.github.yamin8000.owl.ui.composable.SettingsItemCard
-import io.github.yamin8000.owl.ui.composable.TtsAwareFeature
-import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.util.speak
-import io.github.yamin8000.owl.util.viewModelFactory
-import kotlinx.coroutines.launch
+import io.github.yamin8000.owl.util.TTS
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsContent(
-    onThemeChanged: (ThemeSetting) -> Unit,
+    isVibrating: Boolean,
+    onVibratingChange: (Boolean) -> Unit,
+    isStartingBlank: Boolean,
+    onStartingBlankChange: (Boolean) -> Unit,
+    themeSetting: ThemeSetting,
+    onThemeSettingChange: (ThemeSetting) -> Unit,
+    onSystemThemeChange: (ThemeSetting) -> Unit,
+    ttsTag: String,
+    onTtsTagChange: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    val vm: SettingsViewModel = viewModel(factory = viewModelFactory {
-        initializer {
-            SettingsViewModel(DataStoreRepository(context.settingsDataStore))
-        }
-    })
-
-    var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
-    var textToSpeech: TextToSpeech? by remember { mutableStateOf(null) }
-
-    TtsAwareFeature(
-        ttsLanguageLocaleTag = vm.ttsLang.collectAsState().value,
-        onTtsReady = { tts ->
-            val availableLanguages = tts.availableLanguages ?: setOf(Locale.ENGLISH)
-            textToSpeech = tts
-            englishLanguages = availableLanguages.filter {
-                it.language == Locale.ENGLISH.language
-            }
-        }
-    )
-
     ScaffoldWithTitle(
         title = stringResource(id = R.string.settings),
         onBackClick = onBackClick,
@@ -110,24 +89,18 @@ internal fun SettingsContent(
                     .padding(bottom = 16.dp),
                 content = {
                     GeneralSettings(
-                        isVibrating = vm.isVibrating.collectAsState().value,
-                        isVibratingChange = vm::updateVibrationSetting,
-                        isStartingBlank = vm.isStartingBlank.collectAsState().value,
-                        isStartingBlankChanged = vm::updateStartingBlank
+                        isVibrating = isVibrating,
+                        onVibratingChange = onVibratingChange,
+                        isStartingBlank = isStartingBlank,
+                        onStartingBlankChange = onStartingBlankChange
                     )
-                    ThemeSetting(vm.themeSetting.collectAsState().value) { newTheme ->
-                        vm.scope.launch {
-                            vm.updateThemeSetting(newTheme)
-                            onThemeChanged(newTheme)
-                        }
+                    ThemeSetting(themeSetting) { newTheme ->
+                        onThemeSettingChange(newTheme)
+                        onSystemThemeChange(newTheme)
                     }
                     TtsLanguageSetting(
-                        languages = englishLanguages,
-                        currentTtsTag = vm.ttsLang.collectAsState().value,
-                        onTtsTagChanged = { tag ->
-                            vm.updateTtsLang(tag)
-                            textToSpeech?.speak(Locale.forLanguageTag(tag).displayName)
-                        }
+                        currentTtsTag = ttsTag,
+                        onTtsTagChange = onTtsTagChange
                     )
                 }
             )
@@ -138,20 +111,36 @@ internal fun SettingsContent(
 @Composable
 private fun TtsLanguageSetting(
     currentTtsTag: String,
-    languages: List<Locale>,
-    onTtsTagChanged: (String) -> Unit
+    onTtsTagChange: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
+
+    LaunchedEffect(currentTtsTag) {
+        englishLanguages = TTS(context, Locale.forLanguageTag(currentTtsTag))
+            .getTts()
+            ?.availableLanguages
+            ?.filter { it.language == Locale.ENGLISH.language }
+            ?: listOf()
+    }
+
+
     var isDialogShown by remember { mutableStateOf(false) }
+    val showDialog = remember(isDialogShown) { { isDialogShown = true } }
+    val hideDialog = remember(isDialogShown) { { isDialogShown = false } }
+    val onLanguageSelect: (String) -> Unit = remember(isDialogShown, onTtsTagChange) {
+        {
+            onTtsTagChange(it)
+            isDialogShown = false
+        }
+    }
 
     if (isDialogShown) {
         TtsLanguagesDialog(
             currentTtsTag = currentTtsTag,
-            languages = languages,
-            onDismiss = { isDialogShown = false },
-            onLanguageSelected = {
-                onTtsTagChanged(it)
-                isDialogShown = false
-            }
+            languages = englishLanguages,
+            onDismiss = hideDialog,
+            onLanguageSelect = onLanguageSelect
         )
     }
 
@@ -159,7 +148,7 @@ private fun TtsLanguageSetting(
         title = stringResource(R.string.tts_language),
         content = {
             SettingsItem(
-                onClick = { isDialogShown = true },
+                onClick = showDialog,
                 content = {
                     Icon(imageVector = Icons.TwoTone.Language, contentDescription = null)
                     PersianText(Locale.forLanguageTag(currentTtsTag).displayName)
@@ -173,7 +162,7 @@ private fun TtsLanguageSetting(
 private fun TtsLanguagesDialog(
     currentTtsTag: String,
     languages: List<Locale>,
-    onLanguageSelected: (String) -> Unit,
+    onLanguageSelect: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -190,7 +179,7 @@ private fun TtsLanguagesDialog(
                         TtsLanguageItem(
                             localeTag = it.toLanguageTag(),
                             isSelected = it.toLanguageTag() == currentTtsTag,
-                            onClick = onLanguageSelected
+                            onClick = onLanguageSelect
                         )
                     }
                 }
@@ -202,9 +191,9 @@ private fun TtsLanguagesDialog(
 @Composable
 private fun GeneralSettings(
     isVibrating: Boolean,
-    isVibratingChange: (Boolean) -> Unit,
+    onVibratingChange: (Boolean) -> Unit,
     isStartingBlank: Boolean,
-    isStartingBlankChanged: (Boolean) -> Unit
+    onStartingBlankChange: (Boolean) -> Unit
 ) {
     SettingsItemCard(
         modifier = Modifier.fillMaxWidth(),
@@ -214,13 +203,13 @@ private fun GeneralSettings(
                 imageVector = Icons.TwoTone.Language,
                 caption = stringResource(R.string.vibrate_on_scroll),
                 checked = isVibrating,
-                onCheckedChange = isVibratingChange
+                onCheckedChange = onVibratingChange
             )
             SwitchItem(
                 imageVector = Icons.TwoTone.Search,
                 caption = stringResource(R.string.start_blank_search),
                 checked = isStartingBlank,
-                onCheckedChange = isStartingBlankChanged
+                onCheckedChange = onStartingBlankChange
             )
         }
     )

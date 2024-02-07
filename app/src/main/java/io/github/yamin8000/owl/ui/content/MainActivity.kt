@@ -31,10 +31,14 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -42,15 +46,21 @@ import androidx.room.Room
 import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.data.db.AppDatabase
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
+import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
 import io.github.yamin8000.owl.ui.content.history.HistoryContent
+import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
 import io.github.yamin8000.owl.ui.content.home.HomeContent
 import io.github.yamin8000.owl.ui.content.settings.SettingsContent
+import io.github.yamin8000.owl.ui.content.settings.SettingsViewModel
 import io.github.yamin8000.owl.ui.content.settings.ThemeSetting
+import io.github.yamin8000.owl.ui.favouritesDataStore
+import io.github.yamin8000.owl.ui.historyDataStore
 import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.log
+import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.coroutines.runBlocking
 
 internal class MainActivity : ComponentActivity() {
@@ -135,6 +145,25 @@ internal class MainActivity : ComponentActivity() {
     private fun MainNav(
         onThemeChanged: (ThemeSetting) -> Unit
     ) {
+        val context = LocalContext.current
+        val settingsViewModel: SettingsViewModel = viewModel(factory = viewModelFactory {
+            initializer {
+                SettingsViewModel(DataStoreRepository(context.settingsDataStore))
+            }
+        })
+
+        val historyVM: HistoryViewModel = viewModel(factory = viewModelFactory {
+            initializer {
+                HistoryViewModel(context.historyDataStore)
+            }
+        })
+
+        val favouritesVM: FavouritesViewModel = viewModel(factory = viewModelFactory {
+            initializer {
+                FavouritesViewModel(context.favouritesDataStore)
+            }
+        })
+
         val start = "${Nav.Routes.Home}/{${Nav.Arguments.Search}}"
         val navController = rememberNavController()
         NavHost(
@@ -147,7 +176,12 @@ internal class MainActivity : ComponentActivity() {
                         searchTerm = outsideInput.toString()
                     HomeContent(
                         searchTerm = searchTerm,
-                        onTopBarClick = { item -> navController.navigate(item.route()) }
+                        onTopBarClick = { item -> navController.navigate(item.route()) },
+                        ttsLang = settingsViewModel.ttsLang.collectAsState().value,
+                        isVibrating = settingsViewModel.isVibrating.collectAsState().value,
+                        isStartingBlank = settingsViewModel.isStartingBlank.collectAsState().value,
+                        onAddToHistory = historyVM::add,
+                        onAddToFavourite = favouritesVM::add
                     )
                 }
 
@@ -160,20 +194,34 @@ internal class MainActivity : ComponentActivity() {
                 composable(Nav.Routes.Favourites.toString()) {
                     FavouritesContent(
                         onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.Home}/${favourite}") },
-                        onBackClick = onBackClick
+                        onBackClick = onBackClick,
+                        favourites = favouritesVM.favourites.collectAsState().value.toList(),
+                        onRemoveAll = favouritesVM::removeAll,
+                        onRemove = favouritesVM::remove
                     )
                 }
 
                 composable(Nav.Routes.History.toString()) {
                     HistoryContent(
                         onHistoryItemClick = { history -> navController.navigate("${Nav.Routes.Home}/${history}") },
-                        onBackClick = onBackClick
+                        onBackClick = onBackClick,
+                        history = historyVM.history.collectAsState().value.toList(),
+                        onRemoveAll = historyVM::removeAll,
+                        onRemove = historyVM::remove
                     )
                 }
 
                 composable(Nav.Routes.Settings.toString()) {
                     SettingsContent(
-                        onThemeChanged = onThemeChanged,
+                        isVibrating = settingsViewModel.isVibrating.collectAsState().value,
+                        onVibratingChange = settingsViewModel::updateVibrationSetting,
+                        isStartingBlank = settingsViewModel.isStartingBlank.collectAsState().value,
+                        onStartingBlankChange = settingsViewModel::updateStartingBlank,
+                        themeSetting = settingsViewModel.themeSetting.collectAsState().value,
+                        onSystemThemeChange = onThemeChanged,
+                        onThemeSettingChange = settingsViewModel::updateThemeSetting,
+                        ttsTag = settingsViewModel.ttsLang.collectAsState().value,
+                        onTtsTagChange = settingsViewModel::updateTtsLang,
                         onBackClick = onBackClick
                     )
                 }

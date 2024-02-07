@@ -28,13 +28,12 @@ import io.github.yamin8000.owl.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Locale
 
 internal class SettingsViewModel(
     private val settings: DataStoreRepository
 ) : ViewModel() {
-    internal val scope = viewModelScope
+    private val scope = viewModelScope
 
     private var _themeSetting = MutableStateFlow(ThemeSetting.System)
     val themeSetting = _themeSetting.asStateFlow()
@@ -66,9 +65,9 @@ internal class SettingsViewModel(
         settings.setString(Constants.TTS_LANG, newTtsLang)
     }
 
-    suspend fun updateThemeSetting(
+    fun updateThemeSetting(
         newTheme: ThemeSetting
-    ) = withContext(scope.coroutineContext) {
+    ) = scope.launch {
         _themeSetting.value = newTheme
         settings.setString(Constants.THEME, newTheme.name)
     }

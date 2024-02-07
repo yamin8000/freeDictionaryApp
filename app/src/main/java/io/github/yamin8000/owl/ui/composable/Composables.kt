@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.ui.composable
 
+import android.content.Context
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -221,18 +222,6 @@ fun TtsAwareContent(
     val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
     LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
     if (tts.value != null) tts.value?.let { content(it) }
-}
-
-@Composable
-fun TtsAwareFeature(
-    ttsLanguageLocaleTag: String = Locale.US.toLanguageTag(),
-    onTtsReady: (TextToSpeech) -> Unit
-) {
-    val context = LocalContext.current
-    val ttsHelper = remember { TTS(context, Locale.forLanguageTag(ttsLanguageLocaleTag)) }
-    val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
-    LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
-    if (tts.value != null) tts.value?.let { onTtsReady(it) }
 }
 
 @Composable

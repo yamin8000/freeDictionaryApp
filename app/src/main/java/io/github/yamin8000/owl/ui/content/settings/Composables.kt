@@ -63,19 +63,20 @@ internal fun SettingsItem(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    content = content
-                )
-                Icon(
-                    imageVector = Icons.TwoTone.ArrowDropDownCircle,
-                    contentDescription = ""
-                )
-            }
+                verticalAlignment = Alignment.CenterVertically,
+                content = {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        content = content
+                    )
+                    Icon(
+                        imageVector = Icons.TwoTone.ArrowDropDownCircle,
+                        contentDescription = null
+                    )
+                }
+            )
         }
     )
 }
@@ -112,15 +113,18 @@ internal fun SwitchWithText(
     onCheckedChange: (Boolean) -> Unit
 ) {
     val hapticFeedback = LocalHapticFeedback.current
+    val onClick = remember(hapticFeedback, onCheckedChange, checked) {
+        {
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+            onCheckedChange(!checked)
+        }
+    }
     Box(
         modifier = Modifier
             .padding(4.dp)
             .clickable(
                 role = Role.Switch,
-                onClick = {
-                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onCheckedChange(!checked)
-                }
+                onClick = onClick
             ),
         content = {
             Row(

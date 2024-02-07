@@ -59,7 +59,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.data.model.Entry
 import io.github.yamin8000.owl.ui.composable.EmptyList
 import io.github.yamin8000.owl.ui.composable.InternetAwareComposable
@@ -69,12 +68,6 @@ import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.content.MainBottomBar
 import io.github.yamin8000.owl.ui.content.MainTopBar
 import io.github.yamin8000.owl.ui.content.TopBarItem
-import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
-import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
-import io.github.yamin8000.owl.ui.content.settings.SettingsViewModel
-import io.github.yamin8000.owl.ui.favouritesDataStore
-import io.github.yamin8000.owl.ui.historyDataStore
-import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.util.AutoCompleteHelper
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.coroutines.launch
@@ -83,24 +76,16 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun HomeContent(
     searchTerm: String?,
-    onTopBarClick: (TopBarItem) -> Unit
+    isStartingBlank: Boolean,
+    isVibrating: Boolean,
+    ttsLang: String,
+    onTopBarClick: (TopBarItem) -> Unit,
+    onAddToHistory: (String) -> Unit,
+    onAddToFavourite: (String) -> Unit
 ) {
     val context = LocalContext.current
 
-    val settingsVM: SettingsViewModel = viewModel(factory = viewModelFactory {
-        initializer {
-            SettingsViewModel(DataStoreRepository(context.settingsDataStore))
-        }
-    })
-
-    val historyVM: HistoryViewModel = viewModel(factory = viewModelFactory {
-        initializer {
-            HistoryViewModel(context.historyDataStore)
-        }
-    })
-
-    val autoCompleteHelper = AutoCompleteHelper(context)
-    val isStartingBlank = settingsVM.isStartingBlank.collectAsState().value
+    val autoCompleteHelper = remember { AutoCompleteHelper(context) }
 
     val vm: HomeViewModel = viewModel(factory = viewModelFactory {
         initializer {
@@ -109,12 +94,6 @@ internal fun HomeContent(
                 isStartingBlank = isStartingBlank,
                 autoCompleteHelper = autoCompleteHelper
             )
-        }
-    })
-
-    val favouritesVM: FavouritesViewModel = viewModel(factory = viewModelFactory {
-        initializer {
-            FavouritesViewModel(context.favouritesDataStore)
         }
     })
 
@@ -129,7 +108,7 @@ internal fun HomeContent(
                 }
 
                 is SearchState.RequestFinished -> {
-                    historyVM.add(searchState.term)
+                    onAddToHistory(searchState.term)
                     keyboardManager?.hide()
                     focusManager.clearFocus()
                 }
@@ -150,7 +129,7 @@ internal fun HomeContent(
         modifier = Modifier.fillMaxSize(),
         content = {
             val listState = rememberScrollState()
-            if (listState.isScrollInProgress && settingsVM.isVibrating.collectAsState().value)
+            if (listState.isScrollInProgress && isVibrating)
                 LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
 
             InternetAwareComposable(
@@ -159,7 +138,7 @@ internal fun HomeContent(
                 }
             )
 
-            val locale = vm.getLocale(settingsVM.ttsLang.collectAsState().value)
+            val locale = remember(vm, ttsLang) { vm.getLocale(ttsLang) }
 
             if (vm.isSharing.collectAsState().value) {
                 val temp = vm.searchResult.collectAsState().value.firstOrNull()
@@ -253,7 +232,7 @@ internal fun HomeContent(
                                     onShareWord = vm::startWordSharing,
                                     onAddToFavourite = {
                                         vm.ioScope.launch {
-                                            favouritesVM.add(word)
+                                            onAddToFavourite(word)
                                             snackbarHostState.showSnackbar(addedToFavourites)
                                         }
                                     }

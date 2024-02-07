@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -48,16 +47,9 @@ fun <T> CrudContent(
     items: List<T>,
     onBackClick: () -> Unit,
     onRemoveAll: () -> Unit,
-    onRemoveSingle: (index: Int) -> Unit,
-    onItemClick: (index: Int) -> Unit,
+    onRemoveSingle: (T) -> Unit,
+    onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
-    itemContent: (@Composable LazyGridItemScope.(index: Int) -> Unit) = { index ->
-        CrudItem(
-            item = items[index].toString(),
-            onClick = { onItemClick(index) },
-            onLongClick = { onRemoveSingle(index) }
-        )
-    },
     emptyContent: (@Composable () -> Unit) = { EmptyList() }
 ) {
     ScaffoldWithTitle(
@@ -79,7 +71,15 @@ fun <T> CrudContent(
                         items(
                             span = { GridItemSpan(1) },
                             count = items.size,
-                            itemContent = itemContent
+                            itemContent = {
+                                val onClick = remember { { onItemClick(items[it]) } }
+                                val onLongClick = remember { { onRemoveSingle(items[it]) } }
+                                CrudItem(
+                                    item = items[it].toString(),
+                                    onClick = onClick,
+                                    onLongClick = onLongClick
+                                )
+                            }
                         )
                     }
                 )
@@ -89,7 +89,7 @@ fun <T> CrudContent(
 }
 
 @Composable
-fun CrudItem(
+private fun CrudItem(
     item: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit
@@ -106,9 +106,11 @@ private fun RemoveAllContent(
     onRemoveAllClick: () -> Unit
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
+    val hideDialog = remember(isShowingDialog) { { isShowingDialog = false } }
+    val showDialog = remember(isShowingDialog) { { isShowingDialog = true } }
     if (isShowingDialog) {
         AlertDialog(
-            onDismissRequest = { isShowingDialog = false },
+            onDismissRequest = hideDialog,
             title = { PersianText(stringResource(R.string.clear_all)) },
             text = { PersianText(stringResource(R.string.remove_all_prompt)) },
             confirmButton = {
@@ -119,14 +121,14 @@ private fun RemoveAllContent(
             },
             dismissButton = {
                 Button(
-                    onClick = { isShowingDialog = false },
+                    onClick = hideDialog,
                     content = { PersianText(stringResource(R.string.no)) }
                 )
             }
         )
     }
     Button(
-        onClick = { isShowingDialog = true },
+        onClick = showDialog,
         shape = DefaultCutShape,
         content = { PersianText(text = stringResource(R.string.clear_all)) }
     )

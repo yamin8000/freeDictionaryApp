@@ -27,13 +27,14 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class HistoryViewModel(
     private val historyDataStore: DataStore<Preferences>
 ) : ViewModel() {
-    val scope = viewModelScope
+    private val scope = viewModelScope
 
     private var _history = MutableStateFlow(emptySet<String>())
     val history = _history
@@ -50,23 +51,23 @@ class HistoryViewModel(
         }
     }
 
-    suspend fun remove(
+    fun remove(
         history: String
-    ) {
+    ) = scope.launch {
         historyDataStore.edit { it.remove(stringPreferencesKey(history)) }
-        val data = this.history.value.toMutableSet()
+        val data = this@HistoryViewModel.history.value.toMutableSet()
         data.remove(history)
         _history.value = data
     }
 
-    suspend fun removeAll() {
+    fun removeAll() = scope.launch {
         historyDataStore.edit { it.clear() }
         _history.value = emptySet()
     }
 
-    suspend fun add(
+    fun add(
         history: String
-    ) {
+    ) = scope.launch {
         historyDataStore.edit {
             it[stringPreferencesKey(history)] = history
         }
