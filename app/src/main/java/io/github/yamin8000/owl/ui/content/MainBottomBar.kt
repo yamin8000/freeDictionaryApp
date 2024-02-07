@@ -66,16 +66,17 @@ import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.util.getCurrentLocale
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.delay
 import java.util.Locale
 
 @Composable
 internal fun MainBottomBar(
     searchTerm: String,
-    suggestions: List<String>,
+    suggestions: PersistentList<String>,
     onSuggestionClick: (String) -> Unit,
     isSearching: Boolean,
-    onSearchTermChanged: (String) -> Unit,
+    onSearchTermChange: (String) -> Unit,
     onSearch: () -> Unit,
     onCancel: () -> Unit
 ) {
@@ -88,10 +89,11 @@ internal fun MainBottomBar(
                     items(
                         items = suggestions,
                         itemContent = {
+                            val onClick = remember { { onSuggestionClick(it) } }
                             ElevatedSuggestionChip(
                                 border = defaultGradientBorder(),
                                 label = { HighlightText(it, searchTerm) },
-                                onClick = { onSuggestionClick(it) }
+                                onClick = onClick
                             )
                         }
                     )
@@ -123,7 +125,7 @@ internal fun MainBottomBar(
                     BottomAppBar(
                         content = {
                             val onSearchClick = remember { onSearch }
-                            val onTermChanged: (String) -> Unit = remember { onSearchTermChanged }
+                            val onTermChanged: (String) -> Unit = remember { onSearchTermChange }
                             TextField(
                                 singleLine = true,
                                 shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
@@ -144,7 +146,7 @@ internal fun MainBottomBar(
                                     )
                                 },
                                 leadingIcon = {
-                                    val onClearClick = remember { { onSearchTermChanged("") } }
+                                    val onClearClick = remember { { onSearchTermChange("") } }
                                     ClickableIcon(
                                         imageVector = Icons.TwoTone.Clear,
                                         contentDescription = stringResource(R.string.clear),
@@ -168,7 +170,8 @@ internal fun MainBottomBar(
                                     capitalization = KeyboardCapitalization.Words
                                 )
                             )
-                        })
+                        }
+                    )
                 }
             }
         )

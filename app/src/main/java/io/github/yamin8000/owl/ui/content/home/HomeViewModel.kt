@@ -24,6 +24,7 @@ package io.github.yamin8000.owl.ui.content.home
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.github.yamin8000.owl.data.db.entity.DefinitionEntity
 import io.github.yamin8000.owl.data.db.entity.EntryEntity
 import io.github.yamin8000.owl.data.db.entity.MeaningEntity
@@ -115,19 +116,21 @@ internal class HomeViewModel(
         searchForDefinition(getNewRandomWord())
     }
 
-    suspend fun searchForDefinition(
+    fun searchForDefinition(
         searchTerm: String
     ) {
-        if (searchTerm.isNotBlank()) {
-            job = ioScope.launch {
-                _searchResult.value = searchForDefinitionRequest(searchTerm)
-                val entry = searchResult.value.firstOrNull()
-                if (entry != null) {
-                    clearSuggestions()
+        viewModelScope.launch {
+            if (searchTerm.isNotBlank()) {
+                job = ioScope.launch {
+                    _searchResult.value = searchForDefinitionRequest(searchTerm)
+                    val entry = searchResult.value.firstOrNull()
+                    if (entry != null) {
+                        clearSuggestions()
+                    }
+                    _searchState.emit(SearchState.RequestFinished(searchTerm))
                 }
-                _searchState.emit(SearchState.RequestFinished(searchTerm))
-            }
-        } else _searchState.emit(SearchState.RequestFailed(SearchState.EMPTY))
+            } else _searchState.emit(SearchState.RequestFailed(SearchState.EMPTY))
+        }
     }
 
     private suspend fun searchForDefinitionRequest(

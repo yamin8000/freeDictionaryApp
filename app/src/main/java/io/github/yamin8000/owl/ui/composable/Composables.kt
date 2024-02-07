@@ -193,7 +193,7 @@ fun ClickableIcon(
     onClick: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
-    val clickWithFeedback = remember(haptic) {
+    val clickWithFeedback = remember {
         {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             onClick()

@@ -128,4 +128,6 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     //lottie
     implementation("com.airbnb.android:lottie-compose:6.3.0")
+    //
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
 }

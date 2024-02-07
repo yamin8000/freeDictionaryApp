@@ -66,7 +66,7 @@ fun <T> CrudContent(
                     content = {
                         item(
                             span = { GridItemSpan(maxCurrentLineSpan) },
-                            content = { RemoveAllContent(onRemoveAllClick = onRemoveAll) }
+                            content = { RemoveAllContent(onRemoveAllClick = remember { onRemoveAll }) }
                         )
                         items(
                             span = { GridItemSpan(1) },
@@ -106,8 +106,8 @@ private fun RemoveAllContent(
     onRemoveAllClick: () -> Unit
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
-    val hideDialog = remember(isShowingDialog) { { isShowingDialog = false } }
-    val showDialog = remember(isShowingDialog) { { isShowingDialog = true } }
+    val hideDialog = remember { { isShowingDialog = false } }
+    val showDialog = remember { { isShowingDialog = true } }
     if (isShowingDialog) {
         AlertDialog(
             onDismissRequest = hideDialog,

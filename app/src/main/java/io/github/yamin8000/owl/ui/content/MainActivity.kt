@@ -87,7 +87,16 @@ internal class MainActivity : ComponentActivity() {
             var currentTheme by remember { mutableStateOf(theme) }
             MainContent(
                 currentTheme = currentTheme,
-                content = { Scaffold { MainNav { currentTheme = it } } }
+                content = {
+                    Scaffold {
+                        val onThemeChanged: (ThemeSetting) -> Unit = remember {
+                            {
+                                currentTheme = it
+                            }
+                        }
+                        MainNav(onThemeChanged = onThemeChanged)
+                    }
+                }
             )
         }
     }

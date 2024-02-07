@@ -126,9 +126,9 @@ private fun TtsLanguageSetting(
 
 
     var isDialogShown by remember { mutableStateOf(false) }
-    val showDialog = remember(isDialogShown) { { isDialogShown = true } }
-    val hideDialog = remember(isDialogShown) { { isDialogShown = false } }
-    val onLanguageSelect: (String) -> Unit = remember(isDialogShown, onTtsTagChange) {
+    val showDialog = remember { { isDialogShown = true } }
+    val hideDialog = remember { { isDialogShown = false } }
+    val onLanguageSelect: (String) -> Unit = remember {
         {
             onTtsTagChange(it)
             isDialogShown = false
@@ -221,7 +221,7 @@ private fun TtsLanguageItem(
     isSelected: Boolean,
     onClick: (String) -> Unit
 ) {
-    val onItemClick = remember(onClick, localeTag) { { onClick(localeTag) } }
+    val onItemClick = remember(localeTag) { { onClick(localeTag) } }
     OutlinedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = DefaultCutShape,
@@ -242,8 +242,8 @@ private fun ThemeSetting(
     onCurrentThemeChange: (ThemeSetting) -> Unit
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
-    val onDismissDialog = remember(isShowingDialog) { { isShowingDialog = false } }
-    val onShowDialog = remember(isShowingDialog) { { isShowingDialog = true } }
+    val onDismissDialog = remember { { isShowingDialog = false } }
+    val onShowDialog = remember { { isShowingDialog = true } }
 
     SettingsItemCard(
         title = stringResource(R.string.theme),
@@ -296,7 +296,7 @@ private fun ThemeChangerDialog(
                     .fillMaxWidth(),
                 content = {
                     themes.forEach { theme ->
-                        val onThemeClick = remember(onCurrentThemeChange, theme, onDismiss) {
+                        val onThemeClick = remember(theme) {
                             {
                                 onCurrentThemeChange(theme)
                                 onDismiss()

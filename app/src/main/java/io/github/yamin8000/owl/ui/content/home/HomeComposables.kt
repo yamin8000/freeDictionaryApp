@@ -58,14 +58,16 @@ import io.github.yamin8000.owl.ui.composable.TtsAwareContent
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.util.speak
+import kotlinx.collections.immutable.PersistentList
 
 @Composable
 internal fun WordDefinitionsList(
     word: String,
     localeTag: String,
     listState: ScrollState,
-    meanings: List<Meaning>,
-    onWordChipClick: (String) -> Unit
+    meanings: PersistentList<Meaning>,
+    onWordChipClick: (String) -> Unit,
+    wordCard: @Composable () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -74,6 +76,7 @@ internal fun WordDefinitionsList(
             .verticalScroll(listState)
             .padding(16.dp),
         content = {
+            wordCard()
             meanings.forEach { meaning ->
                 MeaningCard(
                     word = word,
@@ -88,6 +91,7 @@ internal fun WordDefinitionsList(
 
 @Composable
 internal fun WordCard(
+    modifier: Modifier = Modifier,
     localeTag: String,
     word: String,
     pronunciation: String?,
@@ -97,15 +101,15 @@ internal fun WordCard(
     OutlinedCard(
         shape = DefaultCutShape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
             .indication(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(),
             ),
         content = {
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 content = {
                     Column(
                         modifier = Modifier

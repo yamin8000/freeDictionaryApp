@@ -133,7 +133,7 @@ fun PersianText(
     val context = LocalContext.current
     var localStyle by remember { mutableStateOf(style) }
     var localFontFamily by remember { mutableStateOf(fontFamily) }
-    val currentLocale = remember(context) { getCurrentLocale(context) }
+    val currentLocale = remember { getCurrentLocale(context) }
     if (currentLocale.language == Locale("fa").language) {
         localFontFamily = Samim
         localStyle = LocalTextStyle.current.copy(textDirection = TextDirection.Rtl)
@@ -173,10 +173,10 @@ fun CopyAbleRippleText(
     val haptic = LocalHapticFeedback.current
 
     var isDialogShown by remember { mutableStateOf(false) }
-    val onDismissDialog = remember(isDialogShown) { { isDialogShown = false } }
-    val onShowDialog = remember(isDialogShown) { { isDialogShown = true } }
+    val onDismissDialog = remember { { isDialogShown = false } }
+    val onShowDialog = remember { { isDialogShown = true } }
 
-    val onLongClick = remember(haptic, clipboardManager, text, context, textCopied) {
+    val onLongClick = remember(text) {
         {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             clipboardManager.setText(AnnotatedString(text))
@@ -317,7 +317,7 @@ fun SpeakableRippleTextWithIcon(
 ) {
     val context = LocalContext.current
     val increaseVolumeText = context.getString(R.string.increase_volume_notice)
-    val audio = remember(context) {
+    val audio = remember {
         context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
