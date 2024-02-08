@@ -92,9 +92,10 @@ android {
 }
 
 dependencies {
-    //core android
+    //core android/kotlin
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
     //compose
     val material3Version = "1.2.0"
     val composeLibsVersion = "1.6.1"
@@ -128,6 +129,4 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     //lottie
     implementation("com.airbnb.android:lottie-compose:6.3.0")
-    //
-    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
 }
