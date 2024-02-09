@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     TopBarItem.kt Copyrighted by Yamin Siahmargooei at 2024/2/2
- *     TopBarItem.kt Last modified at 2024/2/2
+ *     HomeTopBarItem.kt Copyrighted by Yamin Siahmargooei at 2024/2/9
+ *     HomeTopBarItem.kt Last modified at 2024/2/4
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,16 +19,16 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.content
+package io.github.yamin8000.owl.ui.content.home
 
 import io.github.yamin8000.owl.ui.navigation.Nav
 
-internal sealed class TopBarItem {
-    data object Info : TopBarItem()
-    data object Settings : TopBarItem()
-    data object Favourites : TopBarItem()
-    data object History : TopBarItem()
-    data object Random : TopBarItem()
+internal sealed class HomeTopBarItem {
+    data object Info : HomeTopBarItem()
+    data object Settings : HomeTopBarItem()
+    data object Favourites : HomeTopBarItem()
+    data object History : HomeTopBarItem()
+    data object Random : HomeTopBarItem()
 
     fun route() = when (this) {
         Favourites -> Nav.Routes.Favourites.toString()

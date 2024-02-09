@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     MainTopBar.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     MainTopBar.kt Last modified at 2023/8/26
+ *     HomeTopBar.kt Copyrighted by Yamin Siahmargooei at 2024/2/9
+ *     HomeTopBar.kt Last modified at 2024/2/8
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
- *     Copyright (C) 2023  Yamin Siahmargooei
+ *     Copyright (C) 2024  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.app.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.content
+package io.github.yamin8000.owl.ui.content.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Casino
@@ -41,7 +41,7 @@ import io.github.yamin8000.owl.ui.composable.ClickableIcon
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainTopBar(
-    onTopBarClick: (TopBarItem) -> Unit
+    onItemClick: (HomeTopBarItem) -> Unit
 ) {
     Surface(
         shadowElevation = 8.dp,
@@ -49,11 +49,11 @@ internal fun MainTopBar(
             TopAppBar(
                 title = { AppIcon() },
                 actions = {
-                    val onHistoryClick = remember { { onTopBarClick(TopBarItem.History) } }
-                    val onFavouriteClick = remember { { onTopBarClick(TopBarItem.Favourites) } }
-                    val onRandomClick = remember { { onTopBarClick(TopBarItem.Random) } }
-                    val onSettingsClick = remember { { onTopBarClick(TopBarItem.Settings) } }
-                    val onInfoClick = remember { { onTopBarClick(TopBarItem.Info) } }
+                    val onHistoryClick = remember { { onItemClick(HomeTopBarItem.History) } }
+                    val onFavouriteClick = remember { { onItemClick(HomeTopBarItem.Favourites) } }
+                    val onRandomClick = remember { { onItemClick(HomeTopBarItem.Random) } }
+                    val onSettingsClick = remember { { onItemClick(HomeTopBarItem.Settings) } }
+                    val onInfoClick = remember { { onItemClick(HomeTopBarItem.Info) } }
                     ClickableIcon(
                         imageVector = Icons.TwoTone.History,
                         contentDescription = stringResource(R.string.search_history),

@@ -26,6 +26,7 @@ internal sealed class SearchState {
     data class RequestFailed(val code: Int) : SearchState()
     data class RequestFinished(val term: String) : SearchState()
     data object Unknown : SearchState()
+    data object Cached : SearchState()
 
     companion object {
         const val CANCEL = 997

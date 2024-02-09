@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     MainBottomBar.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     MainBottomBar.kt Last modified at 2023/8/26
+ *     HomeBottomBar.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
+ *     HomeBottomBar.kt Last modified at 2023/8/26
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2023  Yamin Siahmargooei
  *
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.content
+package io.github.yamin8000.owl.ui.content.home
 
 import android.content.Context
 import androidx.compose.animation.Crossfade

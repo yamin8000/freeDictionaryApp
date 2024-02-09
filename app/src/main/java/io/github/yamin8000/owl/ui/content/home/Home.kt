@@ -62,9 +62,6 @@ import io.github.yamin8000.owl.ui.composable.InternetAwareComposable
 import io.github.yamin8000.owl.ui.composable.LockScreenOrientation
 import io.github.yamin8000.owl.ui.composable.MySnackbar
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.content.MainBottomBar
-import io.github.yamin8000.owl.ui.content.MainTopBar
-import io.github.yamin8000.owl.ui.content.TopBarItem
 import io.github.yamin8000.owl.util.AutoCompleteHelper
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.collections.immutable.toPersistentList
@@ -76,7 +73,7 @@ internal fun HomeContent(
     isStartingBlank: Boolean,
     isVibrating: Boolean,
     ttsLang: String,
-    onTopBarClick: (TopBarItem) -> Unit,
+    onTopBarClick: (HomeTopBarItem) -> Unit,
     onAddToHistory: (String) -> Unit,
     onAddToFavourite: (String) -> Unit
 ) {
@@ -115,7 +112,12 @@ internal fun HomeContent(
                     focusManager.clearFocus()
                 }
 
-                else -> {}
+                SearchState.Cached -> {
+                    keyboardManager?.hide()
+                    focusManager.clearFocus()
+                }
+
+                SearchState.Unknown -> {}
             }
             vm.resetSearchState()
         }
@@ -158,15 +160,15 @@ internal fun HomeContent(
                     }
                 },
                 topBar = {
-                    val onClick: (TopBarItem) -> Unit = remember {
+                    val onClick: (HomeTopBarItem) -> Unit = remember {
                         {
                             when (it) {
-                                TopBarItem.Random -> vm.ioScope.launch { vm.searchForRandomWord() }
+                                HomeTopBarItem.Random -> vm.ioScope.launch { vm.searchForRandomWord() }
                                 else -> onTopBarClick(it)
                             }
                         }
                     }
-                    MainTopBar(onTopBarClick = onClick)
+                    MainTopBar(onItemClick = onClick)
                 },
                 bottomBar = {
                     val search = vm.searchTerm.collectAsState()

@@ -30,8 +30,11 @@ import io.github.yamin8000.owl.data.db.entity.EntryEntity
 import io.github.yamin8000.owl.data.db.entity.MeaningEntity
 import io.github.yamin8000.owl.data.db.entity.PhoneticEntity
 import io.github.yamin8000.owl.data.db.entity.TermEntity
+import io.github.yamin8000.owl.data.model.Definition
 import io.github.yamin8000.owl.data.model.Entry
+import io.github.yamin8000.owl.data.model.License
 import io.github.yamin8000.owl.data.model.Meaning
+import io.github.yamin8000.owl.data.model.Phonetic
 import io.github.yamin8000.owl.data.network.APIs
 import io.github.yamin8000.owl.data.network.Web
 import io.github.yamin8000.owl.data.network.Web.getAPI
@@ -139,27 +142,73 @@ internal class HomeViewModel(
         _isSearching.value = true
         _searchTerm.value = searchTerm
 
-        return try {
-            val result = Web.retrofit.getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
-            val entry = result.firstOrNull()
-            if (entry != null) {
-                addWordToDatabase(entry)
-                cacheEntryData(entry)
+        val cache = findCachedDefinitionOrNull(searchTerm)
+        if (cache == null) {
+            return try {
+                val result = Web.retrofit.getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
+                val entry = result.firstOrNull()
+                if (entry != null) {
+                    addWordToDatabase(entry)
+                    cacheEntryData(entry)
+                }
+                _searchState.emit(SearchState.RequestSucceed)
+                result
+            } catch (e: HttpException) {
+                _searchState.emit(SearchState.RequestFailed(e.code()))
+                listOf()
+            } catch (e: CancellationException) {
+                _searchState.emit(SearchState.RequestFailed(SearchState.CANCEL))
+                listOf()
+            } catch (e: Exception) {
+                _searchState.emit(SearchState.RequestFailed(SearchState.UNKNOWN))
+                listOf()
+            } finally {
+                _isSearching.value = false
             }
-            _searchState.emit(SearchState.RequestSucceed)
-            result
-        } catch (e: HttpException) {
-            _searchState.emit(SearchState.RequestFailed(e.code()))
-            listOf()
-        } catch (e: CancellationException) {
-            _searchState.emit(SearchState.RequestFailed(SearchState.CANCEL))
-            listOf()
-        } catch (e: Exception) {
-            _searchState.emit(SearchState.RequestFailed(SearchState.UNKNOWN))
-            listOf()
-        } finally {
+        } else {
             _isSearching.value = false
+            _searchState.emit(SearchState.Cached)
+            return listOf(cache)
         }
+    }
+
+    private suspend fun findCachedDefinitionOrNull(
+        searchTerm: String
+    ): Entry? {
+        val entry = Constants.db.entryDao()
+            .where("word", searchTerm.trim().lowercase())
+            .firstOrNull()
+        return if (entry != null) retrieveCachedWordData(entry) else null
+    }
+
+    private suspend fun retrieveCachedWordData(
+        entry: EntryEntity
+    ): Entry {
+        val phonetics = Constants.db.phoneticDao().where("entryId", entry.id)
+        val meanings = Constants.db.meaningDao().where("entryId", entry.id)
+        val definitions = Constants.db.definitionDao().all()
+
+        return Entry(
+            word = entry.word,
+            phonetics = phonetics.map { Phonetic(text = it.value) },
+            license = License("", ""),
+            sourceUrls = listOf(),
+            meanings = meanings.map { meaning ->
+                Meaning(
+                    partOfSpeech = meaning.partOfSpeech,
+                    antonyms = listOf(),
+                    synonyms = listOf(),
+                    definitions = definitions.filter { it.meaningId == meaning.id }.map {
+                        Definition(
+                            definition = it.definition,
+                            example = it.example,
+                            antonyms = listOf(),
+                            synonyms = listOf()
+                        )
+                    }
+                )
+            }
+        )
     }
 
     private suspend fun addWordToDatabase(
