@@ -51,7 +51,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh api graphql --field tagName=$DETEKT_RELEASE_TAG --raw-field query='
+        gh api graphql --field tagName=1.23.5 --raw-field query='
           query getReleaseAssetDownloadUrl($tagName: String!) {
             repository(name: "detekt", owner: "detekt") {
               release(tagName: $tagName) {
