@@ -113,7 +113,7 @@ internal fun SwitchWithText(
     onCheckedChange: (Boolean) -> Unit
 ) {
     val hapticFeedback = LocalHapticFeedback.current
-    val onClick = remember(checked) {
+    val onClick = remember(checked, onCheckedChange) {
         {
             hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
             onCheckedChange(!checked)

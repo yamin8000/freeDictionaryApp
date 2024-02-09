@@ -50,7 +50,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.util.Locale
 import kotlin.coroutines.cancellation.CancellationException
 
 internal class HomeViewModel(
@@ -311,7 +310,4 @@ internal class HomeViewModel(
         _isSearching.value = false
         job?.cancel()
     }
-
-    fun getLocale(tts: String): Locale =
-        if (tts.isEmpty()) Locale.US else Locale.forLanguageTag(tts)
 }

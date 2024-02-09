@@ -72,7 +72,6 @@ internal fun HomeContent(
     searchTerm: String?,
     isStartingBlank: Boolean,
     isVibrating: Boolean,
-    ttsLang: String,
     onTopBarClick: (HomeTopBarItem) -> Unit,
     onAddToHistory: (String) -> Unit,
     onAddToFavourite: (String) -> Unit
@@ -136,8 +135,6 @@ internal fun HomeContent(
                     vm.updateIsOnline(it)
                 }
             )
-
-            val locale = remember(ttsLang) { vm.getLocale(ttsLang) }
 
             if (vm.isSharing.collectAsState().value) {
                 val temp = vm.searchResult.collectAsState().value.firstOrNull()
@@ -231,25 +228,30 @@ internal fun HomeContent(
                                     ?.firstOrNull { it.text != null }
                                     ?.text ?: ""
 
-                                WordDefinitionsList(
-                                    word = word,
-                                    localeTag = locale.toLanguageTag(),
-                                    listState = listState,
-                                    meanings = searchResult.value.first().meanings.toPersistentList(),
-                                    onWordChipClick = {
+                                val onWordChipClick: (String) -> Unit = remember {
+                                    {
                                         vm.updateSearchTerm(it)
                                         vm.ioScope.launch { vm.searchForDefinition(it) }
-                                    },
+                                    }
+                                }
+                                WordDefinitionsList(
+                                    word = word,
+                                    listState = listState,
+                                    meanings = searchResult.value.first().meanings.toPersistentList(),
+                                    onWordChipClick = onWordChipClick,
                                     wordCard = {
                                         WordCard(
-                                            localeTag = locale.toLanguageTag(),
                                             word = word,
                                             pronunciation = phonetic,
-                                            onShareWord = vm::startWordSharing,
-                                            onAddToFavourite = {
-                                                vm.ioScope.launch {
-                                                    onAddToFavourite(word)
-                                                    snackbarHostState.showSnackbar(addedToFavourites)
+                                            onShareWord = remember { { vm.startWordSharing() } },
+                                            onAddToFavourite = remember(searchResult.value) {
+                                                {
+                                                    vm.ioScope.launch {
+                                                        onAddToFavourite(word)
+                                                        snackbarHostState.showSnackbar(
+                                                            addedToFavourites
+                                                        )
+                                                    }
                                                 }
                                             }
                                         )

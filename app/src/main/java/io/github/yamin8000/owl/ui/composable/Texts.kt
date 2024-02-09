@@ -81,6 +81,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.ui.LocalTTS
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
@@ -131,9 +132,9 @@ fun PersianText(
     style: TextStyle = LocalTextStyle.current
 ) {
     val context = LocalContext.current
-    var localStyle by remember { mutableStateOf(style) }
-    var localFontFamily by remember { mutableStateOf(fontFamily) }
-    val currentLocale = remember { getCurrentLocale(context) }
+    var localStyle by remember(style) { mutableStateOf(style) }
+    var localFontFamily by remember(fontFamily) { mutableStateOf(fontFamily) }
+    val currentLocale = remember(context) { getCurrentLocale(context) }
     if (currentLocale.language == Locale("fa").language) {
         localFontFamily = Samim
         localStyle = LocalTextStyle.current.copy(textDirection = TextDirection.Rtl)
@@ -230,7 +231,7 @@ fun CopyAbleRippleText(
                             content = {
                                 val words = sanitizeWords(text.split(regex).toSet()).toList()
                                 items(words) { item ->
-                                    val onItemClick = remember(onDoubleClick, isDialogShown) {
+                                    val onItemClick = remember(onDoubleClick, item) {
                                         {
                                             onDoubleClick?.invoke(item)
                                             isDialogShown = false
@@ -310,7 +311,6 @@ fun CopyAbleRippleTextWithIcon(
 fun SpeakableRippleTextWithIcon(
     text: String,
     imageVector: ImageVector,
-    localeTag: String,
     title: String? = null,
     content: @Composable (() -> Unit)? = null,
     onDoubleClick: ((String) -> Unit)? = null
@@ -321,24 +321,21 @@ fun SpeakableRippleTextWithIcon(
         context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
-    TtsAwareContent(
-        ttsLanguageLocaleTag = localeTag,
-        content = {
-            val onClick = remember(it, audio, content, increaseVolumeText) {
-                {
-                    if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0)
-                        Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
-                    it.speak(text)
-                }
-            }
-            CopyAbleRippleTextWithIcon(
-                text = text,
-                content = content,
-                title = title,
-                imageVector = imageVector,
-                onDoubleClick = onDoubleClick,
-                onClick = onClick
-            )
+    val tts = LocalTTS.current
+    val onClick = remember(tts, audio, text) {
+        {
+            if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0)
+                Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
+            tts?.speak(text)
+            Unit
         }
+    }
+    CopyAbleRippleTextWithIcon(
+        text = text,
+        content = content,
+        title = title,
+        imageVector = imageVector,
+        onDoubleClick = onDoubleClick,
+        onClick = onClick
     )
 }

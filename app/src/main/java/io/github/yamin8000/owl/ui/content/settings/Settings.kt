@@ -113,45 +113,44 @@ private fun TtsLanguageSetting(
     currentTtsTag: String,
     onTtsTagChange: (String) -> Unit
 ) {
-    val context = LocalContext.current
-    var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
-
-    LaunchedEffect(currentTtsTag) {
-        englishLanguages = TTS(context, Locale.forLanguageTag(currentTtsTag))
-            .getTts()
-            ?.availableLanguages
-            ?.filter { it.language == Locale.ENGLISH.language }
-            ?: listOf()
-    }
-
-
-    var isDialogShown by remember { mutableStateOf(false) }
-    val showDialog = remember { { isDialogShown = true } }
-    val hideDialog = remember { { isDialogShown = false } }
-    val onLanguageSelect: (String) -> Unit = remember {
-        {
-            onTtsTagChange(it)
-            isDialogShown = false
-        }
-    }
-
-    if (isDialogShown) {
-        TtsLanguagesDialog(
-            currentTtsTag = currentTtsTag,
-            languages = englishLanguages,
-            onDismiss = hideDialog,
-            onLanguageSelect = onLanguageSelect
-        )
-    }
-
     SettingsItemCard(
         title = stringResource(R.string.tts_language),
         content = {
+            var isDialogShown by remember { mutableStateOf(false) }
+            val showDialog = remember { { isDialogShown = true } }
             SettingsItem(
                 onClick = showDialog,
                 content = {
                     Icon(imageVector = Icons.TwoTone.Language, contentDescription = null)
                     PersianText(Locale.forLanguageTag(currentTtsTag).displayName)
+
+                    val context = LocalContext.current
+                    var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
+
+                    LaunchedEffect(currentTtsTag) {
+                        englishLanguages = TTS(context, Locale.forLanguageTag(currentTtsTag))
+                            .getTts()
+                            ?.availableLanguages
+                            ?.filter { it.language == Locale.ENGLISH.language }
+                            ?: listOf()
+                    }
+
+                    val hideDialog = remember { { isDialogShown = false } }
+                    val onLanguageSelect: (String) -> Unit = remember {
+                        {
+                            onTtsTagChange(it)
+                            isDialogShown = false
+                        }
+                    }
+
+                    if (isDialogShown) {
+                        TtsLanguagesDialog(
+                            currentTtsTag = currentTtsTag,
+                            languages = englishLanguages,
+                            onDismiss = hideDialog,
+                            onLanguageSelect = onLanguageSelect
+                        )
+                    }
                 }
             )
         }

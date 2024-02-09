@@ -21,13 +21,12 @@
 
 package io.github.yamin8000.owl.data.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.compose.runtime.Stable
 
-@Parcelize
+@Stable
 data class Meaning(
     val partOfSpeech: String,
     val definitions: List<Definition>,
     val synonyms: List<String>,
     val antonyms: List<String>
-) : Parcelable
+)

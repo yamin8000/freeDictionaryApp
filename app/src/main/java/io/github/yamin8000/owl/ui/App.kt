@@ -23,6 +23,9 @@ package io.github.yamin8000.owl.ui
 
 import android.app.Application
 import android.content.Context
+import android.speech.tts.TextToSpeech
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.compositionLocalOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -30,5 +33,7 @@ import androidx.datastore.preferences.preferencesDataStore
 internal val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 internal val Context.historyDataStore: DataStore<Preferences> by preferencesDataStore(name = "history")
 internal val Context.favouritesDataStore: DataStore<Preferences> by preferencesDataStore(name = "favourites")
+
+internal val LocalTTS: ProvidableCompositionLocal<TextToSpeech?> = compositionLocalOf { null }
 
 internal class App : Application()

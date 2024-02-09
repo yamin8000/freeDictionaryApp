@@ -25,12 +25,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,11 +49,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.data.db.AppDatabase
+import io.github.yamin8000.owl.ui.LocalTTS
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
 import io.github.yamin8000.owl.ui.content.history.HistoryContent
 import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
 import io.github.yamin8000.owl.ui.content.home.HomeContent
+import io.github.yamin8000.owl.ui.content.home.HomeTopBarItem
 import io.github.yamin8000.owl.ui.content.settings.SettingsContent
 import io.github.yamin8000.owl.ui.content.settings.SettingsViewModel
 import io.github.yamin8000.owl.ui.content.settings.ThemeSetting
@@ -59,9 +65,11 @@ import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.theme.OwlTheme
 import io.github.yamin8000.owl.util.Constants
+import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.log
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.coroutines.runBlocking
+import java.util.Locale
 
 internal class MainActivity : ComponentActivity() {
 
@@ -173,68 +181,93 @@ internal class MainActivity : ComponentActivity() {
             }
         })
 
-        val start = "${Nav.Routes.Home}/{${Nav.Arguments.Search}}"
-        val navController = rememberNavController()
-        NavHost(
-            navController = navController,
-            startDestination = start,
-            builder = {
-                composable(start) {
-                    var searchTerm = it.arguments?.getString(Nav.Arguments.Search.toString())
-                    if (searchTerm == null && outsideInput != null)
-                        searchTerm = outsideInput.toString()
-                    HomeContent(
-                        searchTerm = searchTerm,
-                        onTopBarClick = { item -> navController.navigate(item.route()) },
-                        ttsLang = settingsViewModel.ttsLang.collectAsState().value,
-                        isVibrating = settingsViewModel.isVibrating.collectAsState().value,
-                        isStartingBlank = settingsViewModel.isStartingBlank.collectAsState().value,
-                        onAddToHistory = historyVM::add,
-                        onAddToFavourite = favouritesVM::add
-                    )
-                }
+        val ttsTag = settingsViewModel.ttsLang.collectAsState().value
+        val ttsHelper = remember { TTS(context, Locale.forLanguageTag(ttsTag)) }
+        val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
+        LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
 
-                val onBackClick: () -> Unit = { navController.popBackStack() }
+        CompositionLocalProvider(LocalTTS provides tts.value) {
+            val start = "${Nav.Routes.Home}/{${Nav.Arguments.Search}}"
+            val navController = rememberNavController()
+            val onBackClick: () -> Unit = remember { { navController.popBackStack() } }
+            NavHost(
+                navController = navController,
+                startDestination = start,
+                builder = {
+                    composable(start) {
+                        var searchTerm = it.arguments?.getString(Nav.Arguments.Search.toString())
+                        if (searchTerm == null && outsideInput != null)
+                            searchTerm = outsideInput.toString()
+                        val addToHistory: (String) -> Unit = remember {
+                            { item -> historyVM.add(item) }
+                        }
+                        val addToFavourite: (String) -> Unit = remember {
+                            { item -> favouritesVM.add(item) }
+                        }
+                        val onTopBarClick: (HomeTopBarItem) -> Unit = remember {
+                            { item -> navController.navigate(item.route()) }
+                        }
+                        HomeContent(
+                            searchTerm = searchTerm,
+                            isStartingBlank = settingsViewModel.isStartingBlank.collectAsState().value,
+                            isVibrating = settingsViewModel.isVibrating.collectAsState().value,
+                            onTopBarClick = onTopBarClick,
+                            onAddToHistory = addToHistory,
+                            onAddToFavourite = addToFavourite
+                        )
+                    }
 
-                composable(Nav.Routes.About.toString()) {
-                    AboutContent(onBackClick)
-                }
+                    composable(Nav.Routes.About.toString()) {
+                        AboutContent(onBackClick)
+                    }
 
-                composable(Nav.Routes.Favourites.toString()) {
-                    FavouritesContent(
-                        onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.Home}/${favourite}") },
-                        onBackClick = onBackClick,
-                        favourites = favouritesVM.favourites.collectAsState().value.toList(),
-                        onRemoveAll = favouritesVM::removeAll,
-                        onRemove = favouritesVM::remove
-                    )
-                }
+                    composable(Nav.Routes.Favourites.toString()) {
+                        FavouritesContent(
+                            onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.Home}/${favourite}") },
+                            onBackClick = onBackClick,
+                            favourites = favouritesVM.favourites.collectAsState().value.toList(),
+                            onRemoveAll = favouritesVM::removeAll,
+                            onRemove = favouritesVM::remove
+                        )
+                    }
 
-                composable(Nav.Routes.History.toString()) {
-                    HistoryContent(
-                        onHistoryItemClick = { history -> navController.navigate("${Nav.Routes.Home}/${history}") },
-                        onBackClick = onBackClick,
-                        history = historyVM.history.collectAsState().value.toList(),
-                        onRemoveAll = historyVM::removeAll,
-                        onRemove = historyVM::remove
-                    )
-                }
+                    composable(Nav.Routes.History.toString()) {
+                        val onHistoryItemClick: (String) -> Unit = remember {
+                            { history -> navController.navigate("${Nav.Routes.Home}/${history}") }
+                        }
+                        HistoryContent(
+                            onHistoryItemClick = onHistoryItemClick,
+                            onBackClick = onBackClick,
+                            history = historyVM.history.collectAsState().value.toList(),
+                            onRemoveAll = historyVM::removeAll,
+                            onRemove = historyVM::remove
+                        )
+                    }
 
-                composable(Nav.Routes.Settings.toString()) {
-                    SettingsContent(
-                        isVibrating = settingsViewModel.isVibrating.collectAsState().value,
-                        onVibratingChange = settingsViewModel::updateVibrationSetting,
-                        isStartingBlank = settingsViewModel.isStartingBlank.collectAsState().value,
-                        onStartingBlankChange = settingsViewModel::updateStartingBlank,
-                        themeSetting = settingsViewModel.themeSetting.collectAsState().value,
-                        onSystemThemeChange = onThemeChanged,
-                        onThemeSettingChange = settingsViewModel::updateThemeSetting,
-                        ttsTag = settingsViewModel.ttsLang.collectAsState().value,
-                        onTtsTagChange = settingsViewModel::updateTtsLang,
-                        onBackClick = onBackClick
-                    )
+                    composable(Nav.Routes.Settings.toString()) {
+                        SettingsContent(
+                            isVibrating = settingsViewModel.isVibrating.collectAsState().value,
+                            onVibratingChange = remember {
+                                { settingsViewModel.updateVibrationSetting(it) }
+                            },
+                            isStartingBlank = settingsViewModel.isStartingBlank.collectAsState().value,
+                            onStartingBlankChange = remember {
+                                { settingsViewModel.updateStartingBlank(it) }
+                            },
+                            themeSetting = settingsViewModel.themeSetting.collectAsState().value,
+                            onSystemThemeChange = onThemeChanged,
+                            onThemeSettingChange = remember {
+                                { settingsViewModel.updateThemeSetting(it) }
+                            },
+                            ttsTag = settingsViewModel.ttsLang.collectAsState().value,
+                            onTtsTagChange = remember {
+                                { settingsViewModel.updateTtsLang(it) }
+                            },
+                            onBackClick = onBackClick
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }

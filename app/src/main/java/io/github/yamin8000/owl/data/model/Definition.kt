@@ -21,15 +21,12 @@
 
 package io.github.yamin8000.owl.data.model
 
-import android.os.Parcelable
-import androidx.compose.runtime.Immutable
-import kotlinx.parcelize.Parcelize
+import androidx.compose.runtime.Stable
 
-@Immutable
-@Parcelize
+@Stable
 data class Definition(
     val definition: String,
     val example: String?,
     val synonyms: List<String>,
     val antonyms: List<String>
-) : Parcelable
+)

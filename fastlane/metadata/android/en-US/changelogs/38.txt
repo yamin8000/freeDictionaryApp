@@ -1,0 +1,2 @@
+- Fixed some bugs
+- Fixed some performance issues related to Compose

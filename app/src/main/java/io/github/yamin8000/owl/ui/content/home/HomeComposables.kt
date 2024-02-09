@@ -27,6 +27,7 @@ import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -50,11 +51,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.data.model.Meaning
+import io.github.yamin8000.owl.ui.LocalTTS
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.CopyAbleRippleTextWithIcon
 import io.github.yamin8000.owl.ui.composable.HighlightText
 import io.github.yamin8000.owl.ui.composable.SpeakableRippleTextWithIcon
-import io.github.yamin8000.owl.ui.composable.TtsAwareContent
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.util.speak
@@ -63,11 +64,10 @@ import kotlinx.collections.immutable.PersistentList
 @Composable
 internal fun WordDefinitionsList(
     word: String,
-    localeTag: String,
     listState: ScrollState,
     meanings: PersistentList<Meaning>,
     onWordChipClick: (String) -> Unit,
-    wordCard: @Composable () -> Unit
+    wordCard: @Composable ColumnScope.() -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -80,7 +80,6 @@ internal fun WordDefinitionsList(
             meanings.forEach { meaning ->
                 MeaningCard(
                     word = word,
-                    localeTag = localeTag,
                     meaning = meaning,
                     onWordChipClick = onWordChipClick
                 )
@@ -92,7 +91,6 @@ internal fun WordDefinitionsList(
 @Composable
 internal fun WordCard(
     modifier: Modifier = Modifier,
-    localeTag: String,
     word: String,
     pronunciation: String?,
     onAddToFavourite: () -> Unit,
@@ -118,10 +116,9 @@ internal fun WordCard(
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.Start,
                         content = {
-                            WordText(word, localeTag)
+                            WordText(word)
                             if (pronunciation != null) {
                                 PronunciationText(
-                                    localeTag = localeTag,
                                     pronunciation = pronunciation,
                                     word = word
                                 )
@@ -155,31 +152,30 @@ internal fun WordCard(
 
 @Composable
 internal fun WordText(
-    word: String,
-    localeTag: String
+    word: String
 ) {
     SpeakableRippleTextWithIcon(
         text = word,
-        imageVector = Icons.AutoMirrored.TwoTone.ShortText,
-        localeTag = localeTag
+        imageVector = Icons.AutoMirrored.TwoTone.ShortText
     )
 }
 
 @Composable
 internal fun PronunciationText(
-    localeTag: String,
     pronunciation: String,
     word: String
 ) {
-    TtsAwareContent(
-        ttsLanguageLocaleTag = localeTag,
-        content = { ttsEngine ->
-            CopyAbleRippleTextWithIcon(
-                text = pronunciation,
-                imageVector = Icons.TwoTone.RecordVoiceOver,
-                onClick = { ttsEngine.speak(word) }
-            )
+    val tts = LocalTTS.current
+    val onClick = remember(tts) {
+        {
+            tts?.speak(word)
+            Unit
         }
+    }
+    CopyAbleRippleTextWithIcon(
+        text = pronunciation,
+        imageVector = Icons.TwoTone.RecordVoiceOver,
+        onClick = onClick
     )
 }
 
@@ -187,15 +183,13 @@ internal fun PronunciationText(
 internal fun WordExampleText(
     word: String,
     example: String,
-    localeTag: String,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
-        content = { HighlightText(fullText = example, highlightedText = word) },
         text = example,
-        title = stringResource(R.string.example),
         imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
-        localeTag = localeTag,
+        title = stringResource(R.string.example),
+        content = { HighlightText(fullText = example, highlightedText = word) },
         onDoubleClick = onDoubleClick
     )
 }
@@ -204,15 +198,13 @@ internal fun WordExampleText(
 internal fun WordDefinitionText(
     word: String,
     definition: String,
-    localeTag: String,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
-        content = { HighlightText(fullText = definition, highlightedText = word) },
         text = definition,
-        title = stringResource(R.string.definition),
         imageVector = Icons.AutoMirrored.TwoTone.ShortText,
-        localeTag = localeTag,
+        title = stringResource(R.string.definition),
+        content = { HighlightText(fullText = definition, highlightedText = word) },
         onDoubleClick = onDoubleClick
     )
 }
@@ -220,14 +212,12 @@ internal fun WordDefinitionText(
 @Composable
 internal fun WordTypeText(
     type: String,
-    localeTag: String,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(
         text = type,
-        title = stringResource(R.string.type),
         imageVector = Icons.TwoTone.Category,
-        localeTag = localeTag,
+        title = stringResource(R.string.type),
         onDoubleClick = onDoubleClick
     )
 }
@@ -235,7 +225,6 @@ internal fun WordTypeText(
 @Composable
 internal fun MeaningCard(
     word: String,
-    localeTag: String,
     meaning: Meaning,
     onWordChipClick: (String) -> Unit
 ) {
@@ -250,38 +239,33 @@ internal fun MeaningCard(
                 content = {
                     WordTypeText(
                         meaning.partOfSpeech,
-                        localeTag,
                         onDoubleClick = onWordChipClick
                     )
                     meaning.definitions.forEach { definition ->
                         WordDefinitionText(
                             word,
                             definition.definition,
-                            localeTag,
                             onDoubleClick = onWordChipClick
                         )
                         if (definition.example != null) {
                             WordExampleText(
                                 word = word,
                                 example = definition.example,
-                                localeTag = localeTag,
                                 onDoubleClick = onWordChipClick
                             )
                         }
                         definition.antonyms.forEach { antonym ->
                             SpeakableRippleTextWithIcon(
                                 text = antonym,
-                                title = stringResource(R.string.antonym),
                                 imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
-                                localeTag = localeTag
+                                title = stringResource(R.string.antonym)
                             )
                         }
                         definition.synonyms.forEach { synonym ->
                             SpeakableRippleTextWithIcon(
                                 text = synonym,
-                                title = stringResource(R.string.synonym),
                                 imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
-                                localeTag = localeTag
+                                title = stringResource(R.string.synonym)
                             )
                         }
                     }

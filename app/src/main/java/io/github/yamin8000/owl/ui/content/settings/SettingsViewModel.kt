@@ -60,29 +60,37 @@ internal class SettingsViewModel(
 
     fun updateTtsLang(
         newTtsLang: String
-    ) = scope.launch {
-        _ttsLang.value = newTtsLang
-        settings.setString(Constants.TTS_LANG, newTtsLang)
+    ) {
+        scope.launch {
+            _ttsLang.value = newTtsLang
+            settings.setString(Constants.TTS_LANG, newTtsLang)
+        }
     }
 
     fun updateThemeSetting(
         newTheme: ThemeSetting
-    ) = scope.launch {
-        _themeSetting.value = newTheme
-        settings.setString(Constants.THEME, newTheme.name)
+    ) {
+        scope.launch {
+            _themeSetting.value = newTheme
+            settings.setString(Constants.THEME, newTheme.name)
+        }
     }
 
     fun updateVibrationSetting(
         newVibrationSetting: Boolean
-    ) = scope.launch {
-        _isVibrating.value = newVibrationSetting
-        settings.setBool(Constants.IS_VIBRATING, newVibrationSetting)
+    ) {
+        scope.launch {
+            _isVibrating.value = newVibrationSetting
+            settings.setBool(Constants.IS_VIBRATING, newVibrationSetting)
+        }
     }
 
     fun updateStartingBlank(
         isStartingWithBlank: Boolean
-    ) = scope.launch {
-        _isStartingBlank.value = isStartingWithBlank
-        settings.setBool(Constants.IS_STARTING_BLANK, isStartingWithBlank)
+    ) {
+        scope.launch {
+            _isStartingBlank.value = isStartingWithBlank
+            settings.setBool(Constants.IS_STARTING_BLANK, isStartingWithBlank)
+        }
     }
 }

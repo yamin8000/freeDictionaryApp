@@ -39,8 +39,8 @@ android {
         applicationId = appId
         minSdk = 21
         targetSdk = 34
-        versionCode = 37
-        versionName = "1.6.0"
+        versionCode = 38
+        versionName = "1.6.1"
         vectorDrawables.useSupportLibrary = true
         ksp.arg("room.schemaLocation", "$projectDir/schemas")
         archivesName = "$applicationId-v$versionCode($versionName)"

@@ -21,8 +21,6 @@
 
 package io.github.yamin8000.owl.ui.composable
 
-import android.content.Context
-import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -54,7 +52,6 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -79,12 +76,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.util.Constants.DNS_SERVERS
 import io.github.yamin8000.owl.util.Constants.INTERNET_CHECK_DELAY
-import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.findActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -193,7 +188,7 @@ fun ClickableIcon(
     onClick: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
-    val clickWithFeedback = remember {
+    val clickWithFeedback = remember(onClick) {
         {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             onClick()
@@ -210,18 +205,6 @@ fun ClickableIcon(
             )
         }
     )
-}
-
-@Composable
-fun TtsAwareContent(
-    ttsLanguageLocaleTag: String = Locale.US.toLanguageTag(),
-    content: @Composable (TextToSpeech) -> Unit
-) {
-    val context = LocalContext.current
-    val ttsHelper = remember { TTS(context, Locale.forLanguageTag(ttsLanguageLocaleTag)) }
-    val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
-    LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
-    if (tts.value != null) tts.value?.let { content(it) }
 }
 
 @Composable

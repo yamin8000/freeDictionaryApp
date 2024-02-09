@@ -21,14 +21,10 @@
 
 package io.github.yamin8000.owl.data.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
 data class Entry(
     val word: String,
     val phonetics: List<Phonetic>,
     val meanings: List<Meaning>,
     val license: License,
     val sourceUrls: List<String>
-) : Parcelable
+)
