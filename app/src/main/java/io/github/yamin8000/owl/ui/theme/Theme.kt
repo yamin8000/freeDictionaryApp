@@ -99,7 +99,7 @@ private val darkColors = darkColorScheme(
 )
 
 @Composable
-fun OwlTheme(
+fun AppTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     isOledTheme: Boolean = false,
     isPreviewing: Boolean = false,
@@ -146,20 +146,6 @@ fun OwlTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        content = content
-    )
-}
-
-@Suppress("unused")
-@Composable
-fun PreviewTheme(
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    OwlTheme(
-        isDarkTheme = isDarkTheme,
-        isPreviewing = true,
-        isDynamicColor = false,
         content = content
     )
 }

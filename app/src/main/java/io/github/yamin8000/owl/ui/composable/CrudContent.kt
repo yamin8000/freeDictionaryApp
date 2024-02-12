@@ -42,7 +42,7 @@ import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> CrudContent(
+internal fun <T> CrudContent(
     title: String,
     items: List<T>,
     onBackClick: () -> Unit,

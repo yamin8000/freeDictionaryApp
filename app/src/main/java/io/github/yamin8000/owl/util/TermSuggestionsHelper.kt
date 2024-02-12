@@ -34,7 +34,11 @@ import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
-class AutoCompleteHelper(
+/**
+ * A helper class to provide term suggestions
+ * using simple n-gram algorithms
+ */
+class TermSuggestionsHelper(
     private val context: Context,
     userData: List<String> = listOf()
 ) {
@@ -56,6 +60,9 @@ class AutoCompleteHelper(
         listOf()
     }
 
+    /**
+     * Suggest terms for [searchTerm] based on saved data (previous search data)
+     */
     suspend fun suggestTermsForSearch(
         searchTerm: String
     ): List<String> {

@@ -21,6 +21,9 @@
 
 package io.github.yamin8000.owl.ui.navigation
 
+/**
+ * Navigation singleton
+ */
 object Nav {
     object Routes {
         data object Home

@@ -35,10 +35,10 @@ import io.github.yamin8000.owl.data.model.Entry
 import io.github.yamin8000.owl.data.model.License
 import io.github.yamin8000.owl.data.model.Meaning
 import io.github.yamin8000.owl.data.model.Phonetic
-import io.github.yamin8000.owl.data.network.APIs
-import io.github.yamin8000.owl.data.network.Web
-import io.github.yamin8000.owl.data.network.Web.getAPI
-import io.github.yamin8000.owl.util.AutoCompleteHelper
+import io.github.yamin8000.owl.network.APIs
+import io.github.yamin8000.owl.network.Web
+import io.github.yamin8000.owl.network.Web.getAPI
+import io.github.yamin8000.owl.util.TermSuggestionsHelper
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.Constants.FREE
 import io.github.yamin8000.owl.util.sanitizeWords
@@ -55,7 +55,7 @@ import kotlin.coroutines.cancellation.CancellationException
 internal class HomeViewModel(
     sentSearchTerm: String?,
     isStartingBlank: Boolean,
-    private val autoCompleteHelper: AutoCompleteHelper
+    private val termSuggestionsHelper: TermSuggestionsHelper
 ) : ViewModel() {
     val ioScope = CoroutineScope(Dispatchers.IO)
 
@@ -297,7 +297,7 @@ internal class HomeViewModel(
     suspend fun handleSuggestions() {
         clearSuggestions()
         if (_searchTerm.value.length >= Constants.DEFAULT_N_GRAM_SIZE) {
-            val suggestions = autoCompleteHelper.suggestTermsForSearch(_searchTerm.value)
+            val suggestions = termSuggestionsHelper.suggestTermsForSearch(_searchTerm.value)
             _searchSuggestions.value = suggestions.take(Constants.DEFAULT_N_GRAM_SIZE * 3)
         }
     }

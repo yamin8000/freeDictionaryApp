@@ -22,8 +22,10 @@
 package io.github.yamin8000.owl.util
 
 import io.github.yamin8000.owl.data.db.AppDatabase
-import java.util.Locale
 
+/**
+ * App-wide constants
+ */
 object Constants {
     lateinit var db: AppDatabase
     const val LOG_TAG = "<==>"
@@ -50,6 +52,4 @@ object Constants {
     )
 
     const val FREE = "free"
-
-    val DEFAULT_LOCALE: String = Locale.US.toLanguageTag()
 }

@@ -27,18 +27,23 @@ import android.content.ContextWrapper
 import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.InitializerViewModelFactoryBuilder
 import io.github.yamin8000.owl.BuildConfig
 import java.util.Locale
 
+/**
+ * Finds current activity instance or null
+ */
 fun Context.findActivity(): Activity? = when (this) {
     is Activity -> this
     is ContextWrapper -> baseContext.findActivity()
     else -> null
 }
 
+/**
+ * Returns current [Locale] of the device
+ */
 @Suppress("DEPRECATION")
 fun getCurrentLocale(
     context: Context
@@ -48,18 +53,19 @@ fun getCurrentLocale(
     } else context.resources.configuration.locale
 }
 
+/**
+ * Extension method for [TextToSpeech] that
+ * calls [TextToSpeech.speak] with some predefined parameters
+ */
 fun TextToSpeech.speak(
     text: String
 ) {
     speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
 }
 
-@Suppress("unused")
-@Stable
-class StableHolder<T>(val item: T) {
-    operator fun component1(): T = item
-}
-
+/**
+ * Prints [message] to logcat if app is in debug build
+ */
 fun log(
     message: String
 ) {
@@ -67,20 +73,22 @@ fun log(
         Log.d(Constants.LOG_TAG, message)
 }
 
-fun log(
-    exception: Exception
-) {
-    log(exception.stackTraceToString())
-}
-
+/**
+ * This method sanitize words from the given [data] set
+ * by removing unnecessary characters like white spaces and numbers and etc and
+ * making them lowercase and filtering out blank entries
+ */
 fun sanitizeWords(
     data: Set<String>
-) = data.asSequence()
-    .map { it.lowercase() }
+): Set<String> = data.asSequence()
     .map { it.replace(Constants.NOT_WORD_CHARS_REGEX, "") }
+    .map { it.lowercase() }
     .filter { it.isNotBlank() }
-    .toMutableSet()
+    .toSet()
 
+/**
+ * General Purpose factory for [androidx.lifecycle.ViewModel]
+ */
 inline fun viewModelFactory(
     builder: InitializerViewModelFactoryBuilder.() -> Unit
 ): ViewModelProvider.Factory = InitializerViewModelFactoryBuilder().apply(builder).build()

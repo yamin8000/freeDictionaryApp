@@ -23,18 +23,26 @@ package io.github.yamin8000.owl.util
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
+import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Locale
 import kotlin.coroutines.resume
 
 private var tts: TextToSpeech? = null
 
+/**
+ * A helper/wrapper for [TextToSpeech]
+ */
 class TTS(
     private val context: Context,
     private val locale: Locale = Locale.US,
 ) {
     private var ttsLang: Int = 0
 
+    /**
+     * This method wraps around classic [TextToSpeech.OnInitListener] callback method
+     * and suspends it result with a [CancellableContinuation] coroutine
+     */
     suspend fun getTts(): TextToSpeech? {
         return suspendCancellableCoroutine { continuation ->
             if (tts == null) {

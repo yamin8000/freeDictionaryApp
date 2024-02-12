@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 internal class FavouritesViewModel(
     private val favouritesDataStore: DataStore<Preferences>
 ) : ViewModel() {
-    val scope = viewModelScope
+    private val scope = viewModelScope
 
     private var _favourites = MutableStateFlow(setOf<String>())
     val favourites = _favourites.asStateFlow()
@@ -43,8 +43,8 @@ internal class FavouritesViewModel(
         scope.launch {
             favouritesDataStore.data.collect { preferences ->
                 _favourites.value = buildSet {
-                    preferences.asMap().forEach { entry ->
-                        add(entry.key.toString())
+                    preferences.asMap().forEach { (key) ->
+                        add(key.toString())
                     }
                 }
             }

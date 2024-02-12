@@ -62,7 +62,7 @@ import io.github.yamin8000.owl.ui.composable.InternetAwareComposable
 import io.github.yamin8000.owl.ui.composable.LockScreenOrientation
 import io.github.yamin8000.owl.ui.composable.MySnackbar
 import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.util.AutoCompleteHelper
+import io.github.yamin8000.owl.util.TermSuggestionsHelper
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -78,14 +78,14 @@ internal fun HomeContent(
 ) {
     val context = LocalContext.current
 
-    val autoCompleteHelper = remember { AutoCompleteHelper(context) }
+    val termSuggestionsHelper = remember { TermSuggestionsHelper(context) }
 
     val vm: HomeViewModel = viewModel(factory = viewModelFactory {
         initializer {
             HomeViewModel(
                 sentSearchTerm = searchTerm,
                 isStartingBlank = isStartingBlank,
-                autoCompleteHelper = autoCompleteHelper
+                termSuggestionsHelper = termSuggestionsHelper
             )
         }
     })

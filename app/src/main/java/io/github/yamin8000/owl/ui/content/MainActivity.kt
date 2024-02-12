@@ -63,7 +63,7 @@ import io.github.yamin8000.owl.ui.favouritesDataStore
 import io.github.yamin8000.owl.ui.historyDataStore
 import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.ui.settingsDataStore
-import io.github.yamin8000.owl.ui.theme.OwlTheme
+import io.github.yamin8000.owl.ui.theme.AppTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.log
@@ -141,7 +141,7 @@ internal class MainActivity : ComponentActivity() {
         currentTheme: ThemeSetting,
         content: @Composable () -> Unit
     ) {
-        OwlTheme(
+        AppTheme(
             isDarkTheme = isDarkTheme(currentTheme, isSystemInDarkTheme()),
             isOledTheme = currentTheme == ThemeSetting.Darker,
             isDynamicColor = currentTheme == ThemeSetting.System,
@@ -163,7 +163,7 @@ internal class MainActivity : ComponentActivity() {
         onThemeChanged: (ThemeSetting) -> Unit
     ) {
         val context = LocalContext.current
-        val settingsViewModel: SettingsViewModel = viewModel(factory = viewModelFactory {
+        val settingsVM: SettingsViewModel = viewModel(factory = viewModelFactory {
             initializer {
                 SettingsViewModel(DataStoreRepository(context.settingsDataStore))
             }
@@ -181,8 +181,8 @@ internal class MainActivity : ComponentActivity() {
             }
         })
 
-        val ttsTag = settingsViewModel.ttsLang.collectAsState().value
-        val ttsHelper = remember { TTS(context, Locale.forLanguageTag(ttsTag)) }
+        val ttsTag = settingsVM.ttsLang.collectAsState().value
+        val ttsHelper = remember(ttsTag) { TTS(context, Locale.forLanguageTag(ttsTag)) }
         val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
         LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
 
@@ -209,8 +209,8 @@ internal class MainActivity : ComponentActivity() {
                         }
                         HomeContent(
                             searchTerm = searchTerm,
-                            isStartingBlank = settingsViewModel.isStartingBlank.collectAsState().value,
-                            isVibrating = settingsViewModel.isVibrating.collectAsState().value,
+                            isStartingBlank = settingsVM.isStartingBlank.collectAsState().value,
+                            isVibrating = settingsVM.isVibrating.collectAsState().value,
                             onTopBarClick = onTopBarClick,
                             onAddToHistory = addToHistory,
                             onAddToFavourite = addToFavourite
@@ -222,8 +222,11 @@ internal class MainActivity : ComponentActivity() {
                     }
 
                     composable(Nav.Routes.Favourites.toString()) {
+                        val onFavouritesItemClick: (String) -> Unit = remember {
+                            { favourite -> navController.navigate("${Nav.Routes.Home}/${favourite}") }
+                        }
                         FavouritesContent(
-                            onFavouritesItemClick = { favourite -> navController.navigate("${Nav.Routes.Home}/${favourite}") },
+                            onFavouritesItemClick = onFavouritesItemClick,
                             onBackClick = onBackClick,
                             favourites = favouritesVM.favourites.collectAsState().value.toList(),
                             onRemoveAll = favouritesVM::removeAll,
@@ -246,23 +249,15 @@ internal class MainActivity : ComponentActivity() {
 
                     composable(Nav.Routes.Settings.toString()) {
                         SettingsContent(
-                            isVibrating = settingsViewModel.isVibrating.collectAsState().value,
-                            onVibratingChange = remember {
-                                { settingsViewModel.updateVibrationSetting(it) }
-                            },
-                            isStartingBlank = settingsViewModel.isStartingBlank.collectAsState().value,
-                            onStartingBlankChange = remember {
-                                { settingsViewModel.updateStartingBlank(it) }
-                            },
-                            themeSetting = settingsViewModel.themeSetting.collectAsState().value,
+                            isVibrating = settingsVM.isVibrating.collectAsState().value,
+                            onVibratingChange = remember { { settingsVM.updateVibrationSetting(it) } },
+                            isStartingBlank = settingsVM.isStartingBlank.collectAsState().value,
+                            onStartingBlankChange = remember { { settingsVM.updateStartingBlank(it) } },
+                            themeSetting = settingsVM.themeSetting.collectAsState().value,
                             onSystemThemeChange = onThemeChanged,
-                            onThemeSettingChange = remember {
-                                { settingsViewModel.updateThemeSetting(it) }
-                            },
-                            ttsTag = settingsViewModel.ttsLang.collectAsState().value,
-                            onTtsTagChange = remember {
-                                { settingsViewModel.updateTtsLang(it) }
-                            },
+                            onThemeSettingChange = remember { { settingsVM.updateThemeSetting(it) } },
+                            ttsTag = settingsVM.ttsLang.collectAsState().value,
+                            onTtsTagChange = remember { { settingsVM.updateTtsLang(it) } },
                             onBackClick = onBackClick
                         )
                     }

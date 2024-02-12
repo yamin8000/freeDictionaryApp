@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     Web.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     Web.kt Last modified at 2023/8/26
+ *     APIs.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
+ *     APIs.kt Last modified at 2023/8/26
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2023  Yamin Siahmargooei
  *
@@ -19,29 +19,26 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.data.network
+package io.github.yamin8000.owl.network
 
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import io.github.yamin8000.owl.data.model.Entry
+import retrofit2.http.GET
+import retrofit2.http.Path
 
-object Web {
-
-    private const val baseUrl = "https://api.dictionaryapi.dev/api/v2/"
-
-    val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createRetrofit() }
-
-    private fun createRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-    }
+/**
+ * App APIs
+ */
+object APIs {
 
     /**
-     * get service of given api/interface
-     *
-     * @param T type/class/interface of api
-     * @return service for that api
+     * [Free Dictionary API](https://dictionaryapi.dev)
      */
-    inline fun <reified T> Retrofit.getAPI(): T = this.create(T::class.java)
+    interface FreeDictionaryAPI {
+
+        /**
+         * Search for [word] definitions
+         */
+        @GET("entries/en/{word}")
+        suspend fun search(@Path("word") word: String): List<Entry>
+    }
 }
