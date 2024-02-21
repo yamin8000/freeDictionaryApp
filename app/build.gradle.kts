@@ -39,8 +39,8 @@ android {
         applicationId = appId
         minSdk = 21
         targetSdk = 34
-        versionCode = 38
-        versionName = "1.6.1"
+        versionCode = 39
+        versionName = "1.6.2"
         vectorDrawables.useSupportLibrary = true
         ksp.arg("room.schemaLocation", "$projectDir/schemas")
         archivesName = "$applicationId-v$versionCode($versionName)"
@@ -96,6 +96,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
+    implementation("androidx.core:core-splashscreen:1.0.1")
     //compose
     val material3Version = "1.2.0"
     val composeLibsVersion = "1.6.1"

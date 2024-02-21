@@ -24,11 +24,12 @@
     <style name="Theme.Owl" parent="android:Theme.Material.Light.NoActionBar" />
 
     <style name="Theme.Owl.Splash" parent="Theme.SplashScreen">
-        <item name="android:windowSplashScreenBackground" tools:targetApi="s">#FBE9E7</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="s">#201A1B</item>
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">
             @drawable/ic_launcher_foreground
         </item>
-        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="s">#BB0055</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="s">#BB0055
+        </item>
         <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">500</item>
         <item name="postSplashScreenTheme">@style/Theme.Owl</item>
     </style>
