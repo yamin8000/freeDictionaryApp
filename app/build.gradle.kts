@@ -27,7 +27,7 @@ plugins {
     id("com.google.devtools.ksp") version ("1.9.22-1.0.17")
 }
 
-private val composeCompilerVersion = "1.5.9"
+private val composeCompilerVersion = "1.5.10"
 
 private val appId = "io.github.yamin8000.owl"
 
