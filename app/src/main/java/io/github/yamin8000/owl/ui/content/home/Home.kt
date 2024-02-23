@@ -296,17 +296,17 @@ private fun createShareText(
     append(entry.phonetics.firstOrNull { it.text != null }?.text ?: "-")
     appendLine()
     appendLine()
-    entry.meanings.forEachIndexed { index, meaning ->
+    entry.meanings.forEachIndexed { index, (partOfSpeech, definitions, _, _) ->
         appendLine("${index + 1})")
-        appendLine("Type: ${meaning.partOfSpeech}")
-        meaning.definitions.take(5).forEach { definition ->
-            appendLine("Definition: ${definition.definition}")
-            if (definition.example != null)
-                appendLine("Example: ${definition.example}")
-            if (definition.synonyms.isNotEmpty())
-                appendLine("Synonyms: ${definition.synonyms.take(5).joinToString()}")
-            if (definition.antonyms.isNotEmpty())
-                appendLine("Antonyms: ${definition.antonyms.take(5).joinToString()}")
+        appendLine("Type: $partOfSpeech")
+        definitions.take(5).forEach { (definition, example, synonyms, antonyms) ->
+            appendLine("Definition: $definition")
+            if (example != null)
+                appendLine("Example: $example")
+            if (synonyms.isNotEmpty())
+                appendLine("Synonyms: ${synonyms.take(5).joinToString()}")
+            if (antonyms.isNotEmpty())
+                appendLine("Antonyms: ${antonyms.take(5).joinToString()}")
             appendLine()
         }
         appendLine()

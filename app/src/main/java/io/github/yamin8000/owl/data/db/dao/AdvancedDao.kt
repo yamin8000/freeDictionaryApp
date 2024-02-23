@@ -77,8 +77,8 @@ abstract class AdvancedDao<T>(tableName: String) : BaseDao<T>(tableName) {
     ): List<T> {
         val params = listOf(paramPair, *paramPairs)
         val condition = buildString {
-            params.forEachIndexed { index, pair ->
-                append("${pair.first}='${pair.second}'")
+            params.forEachIndexed { index, (first, second) ->
+                append("${first}='${second}'")
                 if (index != params.lastIndex) append(" and ")
             }
         }

@@ -38,9 +38,9 @@ import io.github.yamin8000.owl.data.model.Phonetic
 import io.github.yamin8000.owl.network.APIs
 import io.github.yamin8000.owl.network.Web
 import io.github.yamin8000.owl.network.Web.getAPI
-import io.github.yamin8000.owl.util.TermSuggestionsHelper
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.Constants.FREE
+import io.github.yamin8000.owl.util.TermSuggestionsHelper
 import io.github.yamin8000.owl.util.sanitizeWords
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -192,12 +192,12 @@ internal class HomeViewModel(
             phonetics = phonetics.map { Phonetic(text = it.value) },
             license = License("", ""),
             sourceUrls = listOf(),
-            meanings = meanings.map { meaning ->
+            meanings = meanings.map { (_, partOfSpeech, id) ->
                 Meaning(
-                    partOfSpeech = meaning.partOfSpeech,
+                    partOfSpeech = partOfSpeech,
                     antonyms = listOf(),
                     synonyms = listOf(),
-                    definitions = definitions.filter { it.meaningId == meaning.id }.map {
+                    definitions = definitions.filter { it.meaningId == id }.map {
                         Definition(
                             definition = it.definition,
                             example = it.example,
@@ -227,11 +227,10 @@ internal class HomeViewModel(
                 entry.phonetics.map { PhoneticEntity(value = it.text, entryId = entryId) }
             )
 
-            entry.meanings.forEach { meaning ->
-                val definitions = meaning.definitions
+            entry.meanings.forEach { (partOfSpeech, definitions, _, _) ->
                 val meaningEntity = MeaningEntity(
                     entryId = entryId,
-                    partOfSpeech = meaning.partOfSpeech
+                    partOfSpeech = partOfSpeech
                 )
                 val meaningId = meaningDao.insert(meaningEntity)
                 definitionDao.insertAll(
@@ -278,12 +277,12 @@ internal class HomeViewModel(
     private fun extractDataFromEntry(
         meanings: List<Meaning>
     ) = meanings.asSequence()
-        .flatMap { meaning ->
-            listOf(meaning.partOfSpeech)
-                .plus(meaning.definitions.map { it.definition })
-                .plus(meaning.definitions.map { it.example })
-                .plus(meaning.definitions.flatMap { it.synonyms })
-                .plus(meaning.definitions.flatMap { it.antonyms })
+        .flatMap { (partOfSpeech, definitions, _, _) ->
+            listOf(partOfSpeech)
+                .plus(definitions.map { it.definition })
+                .plus(definitions.map { it.example })
+                .plus(definitions.flatMap { it.synonyms })
+                .plus(definitions.flatMap { it.antonyms })
         }.filterNotNull()
         .map { it.split(Regex("\\s+")) }
         .flatten()

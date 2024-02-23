@@ -241,27 +241,27 @@ internal fun MeaningCard(
                         meaning.partOfSpeech,
                         onDoubleClick = onWordChipClick
                     )
-                    meaning.definitions.forEach { definition ->
+                    meaning.definitions.forEach { (definition, example, synonyms, antonyms) ->
                         WordDefinitionText(
-                            word,
-                            definition.definition,
+                            word = word,
+                            definition = definition,
                             onDoubleClick = onWordChipClick
                         )
-                        if (definition.example != null) {
+                        if (example != null) {
                             WordExampleText(
                                 word = word,
-                                example = definition.example,
+                                example = example,
                                 onDoubleClick = onWordChipClick
                             )
                         }
-                        definition.antonyms.forEach { antonym ->
+                        antonyms.forEach { antonym ->
                             SpeakableRippleTextWithIcon(
                                 text = antonym,
                                 imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
                                 title = stringResource(R.string.antonym)
                             )
                         }
-                        definition.synonyms.forEach { synonym ->
+                        synonyms.forEach { synonym ->
                             SpeakableRippleTextWithIcon(
                                 text = synonym,
                                 imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
