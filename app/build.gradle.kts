@@ -27,7 +27,7 @@ plugins {
     id("com.google.devtools.ksp") version ("1.9.22-1.0.17")
 }
 
-private val composeCompilerVersion = "1.5.9"
+private val composeCompilerVersion = "1.5.10"
 
 private val appId = "io.github.yamin8000.owl"
 
@@ -99,8 +99,8 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     //compose
     val material3Version = "1.2.0"
-    val composeLibsVersion = "1.6.1"
-    val composeUiLibsVersion = "1.6.1"
+    val composeLibsVersion = "1.6.2"
+    val composeUiLibsVersion = "1.6.2"
     implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
@@ -114,7 +114,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
     //coil
-    val coilVersion = "2.5.0"
+    val coilVersion = "2.6.0"
     implementation("io.coil-kt:coil:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
     //navigation
