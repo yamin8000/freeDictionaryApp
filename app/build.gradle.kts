@@ -98,9 +98,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
     implementation("androidx.core:core-splashscreen:1.0.1")
     //compose
-    val material3Version = "1.2.0"
-    val composeLibsVersion = "1.6.2"
-    val composeUiLibsVersion = "1.6.2"
+    val material3Version = "1.2.1"
+    val composeLibsVersion = "1.6.3"
+    val composeUiLibsVersion = "1.6.3"
     implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
