@@ -21,6 +21,9 @@
 
 package io.github.yamin8000.owl.data.model
 
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class Entry(
     val word: String,
     val phonetics: List<Phonetic>,

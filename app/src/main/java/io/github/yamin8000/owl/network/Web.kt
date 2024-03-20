@@ -29,7 +29,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  */
 object Web {
 
-    private const val baseUrl = "https://api.dictionaryapi.dev/api/v2/"
+    private const val BASE_URL = "https://api.dictionaryapi.dev/api/v2/"
 
     /**
      * App-wide [Retrofit] singleton object
@@ -38,16 +38,16 @@ object Web {
 
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }
 
     /**
-     * get service of given api/interface
+     * Get service of given API/interface
      *
-     * @param T type/class/interface of api
-     * @return service for that api
+     * @param T type/class/interface of API
+     * @return service for that API
      */
     inline fun <reified T> Retrofit.getAPI(): T = this.create(T::class.java)
 }

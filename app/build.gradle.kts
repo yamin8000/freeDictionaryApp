@@ -110,9 +110,11 @@ dependencies {
     implementation("androidx.compose.material3:material3:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
     //network
-    val retrofitVersion = "2.9.0"
+    val retrofitVersion = "2.10.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
+    ksp("com.squareup.retrofit2:response-type-keeper:$retrofitVersion")
     //coil
     val coilVersion = "2.6.0"
     implementation("io.coil-kt:coil:$coilVersion")

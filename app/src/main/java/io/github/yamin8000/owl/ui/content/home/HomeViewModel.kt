@@ -41,6 +41,7 @@ import io.github.yamin8000.owl.network.Web.getAPI
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.Constants.FREE
 import io.github.yamin8000.owl.util.TermSuggestionsHelper
+import io.github.yamin8000.owl.util.log
 import io.github.yamin8000.owl.util.sanitizeWords
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -153,12 +154,15 @@ internal class HomeViewModel(
                 _searchState.emit(SearchState.RequestSucceed)
                 result
             } catch (e: HttpException) {
+                log(e.stackTraceToString())
                 _searchState.emit(SearchState.RequestFailed(e.code()))
                 listOf()
             } catch (e: CancellationException) {
+                log(e.stackTraceToString())
                 _searchState.emit(SearchState.RequestFailed(SearchState.CANCEL))
                 listOf()
             } catch (e: Exception) {
+                log(e.stackTraceToString())
                 _searchState.emit(SearchState.RequestFailed(SearchState.UNKNOWN))
                 listOf()
             } finally {
