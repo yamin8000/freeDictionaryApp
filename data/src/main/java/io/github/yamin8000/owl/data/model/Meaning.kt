@@ -21,11 +21,9 @@
 
 package io.github.yamin8000.owl.data.model
 
-import androidx.compose.runtime.Stable
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-@Stable
 data class Meaning(
     val partOfSpeech: String,
     val definitions: List<Definition>,

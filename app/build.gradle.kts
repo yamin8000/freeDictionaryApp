@@ -24,7 +24,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
-    id("com.google.devtools.ksp") version ("1.9.22-1.0.18")
 }
 
 private val composeCompilerVersion = "1.5.10"
@@ -42,7 +41,6 @@ android {
         versionCode = 39
         versionName = "1.6.2"
         vectorDrawables.useSupportLibrary = true
-        ksp.arg("room.schemaLocation", "$projectDir/schemas")
         archivesName = "$applicationId-v$versionCode($versionName)"
     }
 
@@ -92,6 +90,9 @@ android {
 }
 
 dependencies {
+    //modules
+    implementation(project(":data"))
+    implementation(project(":network"))
     //core android/kotlin
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
@@ -99,8 +100,8 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     //compose
     val material3Version = "1.2.1"
-    val composeLibsVersion = "1.6.3"
-    val composeUiLibsVersion = "1.6.3"
+    val composeLibsVersion = "1.6.4"
+    val composeUiLibsVersion = "1.6.4"
     implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
@@ -109,12 +110,6 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeLibsVersion")
     implementation("androidx.compose.material3:material3:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
-    //network
-    val retrofitVersion = "2.10.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
-    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
-    ksp("com.squareup.retrofit2:response-type-keeper:$retrofitVersion")
     //coil
     val coilVersion = "2.6.0"
     implementation("io.coil-kt:coil:$coilVersion")
@@ -122,14 +117,6 @@ dependencies {
     //navigation
     val navVersion = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$navVersion")
-    //datastore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
-    //room
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
     //lottie
     implementation("com.airbnb.android:lottie-compose:6.4.0")
 }
