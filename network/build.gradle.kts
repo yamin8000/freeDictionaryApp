@@ -60,7 +60,7 @@ android {
 dependencies {
     implementation(project(":data"))
     //retrofit
-    val retrofitVersion = "2.10.0"
+    val retrofitVersion = "2.11.0"
     api("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
     kapt("com.squareup.retrofit2:response-type-keeper:$retrofitVersion")
