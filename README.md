@@ -16,19 +16,6 @@ of https://github.com/yamin8000/Owl2
 alt="Get it on F-Droid"
 height="80">](https://f-droid.org/packages/io.github.yamin8000.owl)
 
----
-
-| Icon |                Item                 |
-|:----:|:-----------------------------------:|
-|  📺  |       [**Preview**](#Preview)       |
-|  📱  | [**Compatibility**](#Compatibility) |
-|  💻  |         [**Usage**](#Usage)         |
-|  📩  |      [**Download**](#Download)      |
-|  📋  |      [**Features**](#Features)      |
-|  ⚖️  |       [**License**](#License)       |
-
----
-
 ## Preview
 
 ### Featured on [TechDoc](https://www.youtube.com/watch?v=vlf0jEFHR74&t=59s)
@@ -73,6 +60,15 @@ Just use the search input to search the word.
 - Pronunciation of the word, both IPA text and audio using TTS
 - Save searched data for offline uses
 - Search for a random word
+
+## Tech Stack
+
+- Kotlin(JVM)
+- Compose UI
+- Material3/Material You
+- Simple MVVM
+- Retrofit, Moshi with KSP, Coil
+- Datastore, Room with KSP
 
 ## License
 
