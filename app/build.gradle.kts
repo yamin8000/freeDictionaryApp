@@ -94,19 +94,19 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":network"))
     //core android/kotlin
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
     implementation("androidx.core:core-splashscreen:1.0.1")
     //compose
     val material3Version = "1.2.1"
-    val composeLibsVersion = "1.6.5"
-    val composeUiLibsVersion = "1.6.5"
+    val composeLibsVersion = "1.6.6"
+    val composeUiLibsVersion = "1.6.6"
     implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiLibsVersion")
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.compose.material:material-icons-extended:$composeLibsVersion")
     implementation("androidx.compose.material3:material3:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
