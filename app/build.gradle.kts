@@ -101,7 +101,7 @@ dependencies {
     //compose
     val material3Version = "1.2.1"
     val composeLibsVersion = "1.6.5"
-    val composeUiLibsVersion = "1.6.5"
+    val composeUiLibsVersion = "1.6.6"
     implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
