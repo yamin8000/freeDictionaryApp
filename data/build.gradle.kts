@@ -69,5 +69,5 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     api("androidx.room:room-ktx:$roomVersion")
     //datastore
-    api("androidx.datastore:datastore-preferences:1.0.0")
+    api("androidx.datastore:datastore-preferences:1.1.0")
 }
