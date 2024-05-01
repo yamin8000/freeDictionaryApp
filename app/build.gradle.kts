@@ -26,7 +26,7 @@ plugins {
     id("kotlin-parcelize")
 }
 
-private val composeCompilerVersion = "1.5.11"
+private val composeCompilerVersion = "1.5.13"
 
 private val appId = "io.github.yamin8000.owl"
 
