@@ -26,7 +26,7 @@ plugins {
     id("kotlin-parcelize")
 }
 
-private val composeCompilerVersion = "1.5.11"
+private val composeCompilerVersion = "1.5.13"
 
 private val appId = "io.github.yamin8000.owl"
 
@@ -94,14 +94,14 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":network"))
     //core android/kotlin
-    implementation("androidx.core:core-ktx:1.13.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
     implementation("androidx.core:core-splashscreen:1.0.1")
     //compose
     val material3Version = "1.2.1"
-    val composeLibsVersion = "1.6.6"
-    val composeUiLibsVersion = "1.6.6"
+    val composeLibsVersion = "1.6.7"
+    val composeUiLibsVersion = "1.6.7"
     implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
