@@ -66,6 +66,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsContent(
+    modifier: Modifier = Modifier,
     isVibrating: Boolean,
     onVibratingChange: (Boolean) -> Unit,
     isStartingBlank: Boolean,
@@ -78,6 +79,7 @@ internal fun SettingsContent(
     onBackClick: () -> Unit
 ) {
     ScaffoldWithTitle(
+        modifier = modifier,
         title = stringResource(id = R.string.settings),
         onBackClick = onBackClick,
         content = {
@@ -94,10 +96,13 @@ internal fun SettingsContent(
                         isStartingBlank = isStartingBlank,
                         onStartingBlankChange = onStartingBlankChange
                     )
-                    ThemeSetting(themeSetting) { newTheme ->
-                        onThemeSettingChange(newTheme)
-                        onSystemThemeChange(newTheme)
-                    }
+                    ThemeSetting(
+                        currentTheme = themeSetting,
+                        onCurrentThemeChange = { newTheme ->
+                            onThemeSettingChange(newTheme)
+                            onSystemThemeChange(newTheme)
+                        }
+                    )
                     TtsLanguageSetting(
                         currentTtsTag = ttsTag,
                         onTtsTagChange = onTtsTagChange
@@ -110,10 +115,12 @@ internal fun SettingsContent(
 
 @Composable
 private fun TtsLanguageSetting(
+    modifier: Modifier = Modifier,
     currentTtsTag: String,
     onTtsTagChange: (String) -> Unit
 ) {
     SettingsItemCard(
+        modifier = modifier,
         title = stringResource(R.string.tts_language),
         content = {
             var isDialogShown by remember { mutableStateOf(false) }
@@ -159,12 +166,14 @@ private fun TtsLanguageSetting(
 
 @Composable
 private fun TtsLanguagesDialog(
+    modifier: Modifier = Modifier,
     currentTtsTag: String,
     languages: List<Locale>,
     onLanguageSelect: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
+        modifier = modifier,
         onDismissRequest = onDismiss,
         title = { PersianText(stringResource(R.string.tts_language)) },
         icon = { Icon(imageVector = Icons.TwoTone.Language, contentDescription = null) },
@@ -189,13 +198,14 @@ private fun TtsLanguagesDialog(
 
 @Composable
 private fun GeneralSettings(
+    modifier: Modifier = Modifier,
     isVibrating: Boolean,
     onVibratingChange: (Boolean) -> Unit,
     isStartingBlank: Boolean,
     onStartingBlankChange: (Boolean) -> Unit
 ) {
     SettingsItemCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         title = stringResource(R.string.general),
         content = {
             SwitchItem(
@@ -216,13 +226,14 @@ private fun GeneralSettings(
 
 @Composable
 private fun TtsLanguageItem(
+    modifier: Modifier = Modifier,
     localeTag: String,
     isSelected: Boolean,
     onClick: (String) -> Unit
 ) {
     val onItemClick = remember(localeTag) { { onClick(localeTag) } }
     OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = DefaultCutShape,
         onClick = onItemClick,
         enabled = !isSelected,
@@ -237,6 +248,7 @@ private fun TtsLanguageItem(
 
 @Composable
 private fun ThemeSetting(
+    modifier: Modifier = Modifier,
     currentTheme: ThemeSetting,
     onCurrentThemeChange: (ThemeSetting) -> Unit
 ) {
@@ -245,6 +257,7 @@ private fun ThemeSetting(
     val onShowDialog = remember { { isShowingDialog = true } }
 
     SettingsItemCard(
+        modifier = modifier,
         title = stringResource(R.string.theme),
         content = {
             if (isShowingDialog) {
@@ -275,12 +288,14 @@ private fun ThemeSetting(
 
 @Composable
 private fun ThemeChangerDialog(
+    modifier: Modifier = Modifier,
     currentTheme: ThemeSetting,
     onCurrentThemeChange: (ThemeSetting) -> Unit,
     onDismiss: () -> Unit
 ) {
     val themes = remember { ThemeSetting.entries.toTypedArray() }
     AlertDialog(
+        modifier = modifier,
         onDismissRequest = onDismiss,
         confirmButton = { /*ignored*/ },
         title = { PersianText(stringResource(R.string.theme)) },
@@ -331,8 +346,11 @@ private fun ThemeChangerDialog(
 }
 
 @Composable
-private fun DynamicThemeNotice() {
+private fun DynamicThemeNotice(
+    modifier: Modifier = Modifier,
+) {
     PersianText(
+        modifier = modifier,
         text = stringResource(R.string.dynamic_theme_notice),
         textAlign = TextAlign.Justify
     )

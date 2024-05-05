@@ -92,6 +92,7 @@ import io.github.yamin8000.owl.util.speak
 
 @Composable
 fun HighlightText(
+    modifier: Modifier = Modifier,
     fullText: String,
     highlightedText: String,
     highlightedTextStyle: SpanStyle = SpanStyle(
@@ -103,12 +104,18 @@ fun HighlightText(
         val start = fullText.indexOf(highlightedText, 0, true)
         val end = start + highlightedText.length
         Text(
-            buildAnnotatedString {
+            modifier = modifier,
+            text = buildAnnotatedString {
                 append(fullText)
                 addStyle(highlightedTextStyle, start, end)
             }
         )
-    } else Text(fullText)
+    } else {
+        Text(
+            text = fullText,
+            modifier = modifier
+        )
+    }
 }
 
 @Composable

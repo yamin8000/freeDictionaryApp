@@ -32,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
@@ -41,9 +42,11 @@ import io.github.yamin8000.owl.ui.composable.ClickableIcon
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainTopBar(
+    modifier: Modifier = Modifier,
     onItemClick: (HomeTopBarItem) -> Unit
 ) {
     Surface(
+        modifier = modifier,
         shadowElevation = 8.dp,
         content = {
             TopAppBar(

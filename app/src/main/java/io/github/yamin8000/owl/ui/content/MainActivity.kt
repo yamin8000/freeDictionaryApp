@@ -56,7 +56,7 @@ import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
 import io.github.yamin8000.owl.ui.content.history.HistoryContent
 import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
-import io.github.yamin8000.owl.ui.content.home.HomeContent
+import io.github.yamin8000.owl.ui.content.home.HomeScreen
 import io.github.yamin8000.owl.ui.content.home.HomeTopBarItem
 import io.github.yamin8000.owl.ui.content.settings.SettingsContent
 import io.github.yamin8000.owl.ui.content.settings.SettingsViewModel
@@ -213,7 +213,7 @@ internal class MainActivity : ComponentActivity() {
                         val onTopBarClick: (HomeTopBarItem) -> Unit = remember {
                             { item -> navController.navigate(item.route()) }
                         }
-                        HomeContent(
+                        HomeScreen(
                             searchTerm = searchTerm,
                             isStartingBlank = settingsVM.isStartingBlank.collectAsState().value,
                             isVibrating = settingsVM.isVibrating.collectAsState().value,
@@ -224,7 +224,9 @@ internal class MainActivity : ComponentActivity() {
                     }
 
                     composable(Nav.Routes.About.toString()) {
-                        AboutContent(onBackClick)
+                        AboutContent(
+                            onBackClick = onBackClick
+                        )
                     }
 
                     composable(Nav.Routes.Favourites.toString()) {

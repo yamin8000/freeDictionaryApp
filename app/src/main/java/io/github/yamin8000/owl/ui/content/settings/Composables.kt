@@ -83,12 +83,14 @@ internal fun SettingsItem(
 
 @Composable
 internal fun SwitchItem(
+    modifier: Modifier = Modifier,
     imageVector: ImageVector,
     caption: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         content = {
@@ -108,6 +110,7 @@ internal fun SwitchItem(
 
 @Composable
 internal fun SwitchWithText(
+    modifier: Modifier = Modifier,
     caption: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
@@ -120,7 +123,7 @@ internal fun SwitchWithText(
         }
     }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(4.dp)
             .clickable(
                 role = Role.Switch,

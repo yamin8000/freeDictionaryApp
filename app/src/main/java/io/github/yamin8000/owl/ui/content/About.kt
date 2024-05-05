@@ -51,9 +51,11 @@ import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AboutContent(
+    modifier: Modifier = Modifier,
     onBackClick: () -> Unit
 ) {
     ScaffoldWithTitle(
+        modifier = modifier,
         title = stringResource(R.string.about),
         onBackClick = onBackClick,
         content = {

@@ -68,7 +68,8 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun HomeContent(
+internal fun HomeScreen(
+    modifier: Modifier = Modifier,
     searchTerm: String?,
     isStartingBlank: Boolean,
     isVibrating: Boolean,
@@ -124,7 +125,7 @@ internal fun HomeContent(
 
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         content = {
             val listState = rememberScrollState()
             if (listState.isScrollInProgress && isVibrating)

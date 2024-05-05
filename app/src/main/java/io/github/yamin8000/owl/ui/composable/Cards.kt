@@ -79,11 +79,13 @@ fun SettingsItemCard(
 
 @Composable
 fun RemovableCard(
+    modifier: Modifier = Modifier,
     item: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
     Card(
+        modifier = modifier,
         shape = DefaultCutShape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
         content = {

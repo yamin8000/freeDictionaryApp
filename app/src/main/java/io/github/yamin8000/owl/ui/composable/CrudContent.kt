@@ -90,11 +90,13 @@ internal fun <T> CrudContent(
 
 @Composable
 private fun CrudItem(
+    modifier: Modifier = Modifier,
     item: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
     RemovableCard(
+        modifier = modifier,
         item = item,
         onClick = onClick,
         onLongClick = onLongClick

@@ -85,13 +85,13 @@ import kotlinx.coroutines.withContext
 @Composable
 fun Ripple(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    content: @Composable BoxScope.() -> Unit,
     onClick: () -> Unit,
     onLongClick: () -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Box(
-        content = { content() },
+        content = content,
         modifier = modifier
             .combinedClickable(
                 interactionSource = interactionSource,
@@ -238,7 +238,9 @@ fun InternetAwareComposable(
 }
 
 @Composable
-fun LockScreenOrientation(orientation: Int) {
+fun LockScreenOrientation(
+    orientation: Int
+) {
     val context = LocalContext.current
     DisposableEffect(Unit) {
         val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
@@ -253,12 +255,14 @@ fun LockScreenOrientation(orientation: Int) {
 
 @Composable
 fun DeleteMenu(
+    modifier: Modifier = Modifier,
     expanded: Boolean,
     onDismiss: () -> Unit,
     onDelete: () -> Unit
 ) {
     val delete = stringResource(R.string.delete)
     DropdownMenu(
+        modifier = modifier,
         expanded = expanded,
         onDismissRequest = onDismiss,
         content = {
@@ -277,21 +281,27 @@ fun DeleteMenu(
 }
 
 @Composable
-fun EmptyList() {
+fun EmptyList(
+    modifier: Modifier = Modifier,
+) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list))
     val progress by animateLottieCompositionAsState(
         composition = composition,
         iterations = LottieConstants.IterateForever
     )
     LottieAnimation(
+        modifier = modifier,
         composition = composition,
         progress = { progress },
     )
 }
 
 @Composable
-fun AppIcon() {
+fun AppIcon(
+    modifier: Modifier = Modifier,
+) {
     Icon(
+        modifier = modifier,
         painter = painterResource(R.drawable.ic_launcher_foreground),
         contentDescription = stringResource(R.string.app_name),
         tint = MaterialTheme.colorScheme.tertiary,

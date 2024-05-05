@@ -63,6 +63,7 @@ import kotlinx.collections.immutable.PersistentList
 
 @Composable
 internal fun WordDefinitionsList(
+    modifier: Modifier = Modifier,
     word: String,
     listState: ScrollState,
     meanings: PersistentList<Meaning>,
@@ -72,7 +73,7 @@ internal fun WordDefinitionsList(
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .verticalScroll(listState)
             .padding(16.dp),
         content = {
@@ -224,13 +225,14 @@ internal fun WordTypeText(
 
 @Composable
 internal fun MeaningCard(
+    modifier: Modifier = Modifier,
     word: String,
     meaning: Meaning,
     onWordChipClick: (String) -> Unit
 ) {
     Card(
         shape = DefaultCutShape,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         border = defaultGradientBorder(),
         content = {
             Column(
