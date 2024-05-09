@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     HomeViewModel.kt Copyrighted by Yamin Siahmargooei at 2024/1/25
- *     HomeViewModel.kt Last modified at 2024/1/25
+ *     HomeViewModel.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
+ *     HomeViewModel.kt Last modified at 2024/3/23
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *

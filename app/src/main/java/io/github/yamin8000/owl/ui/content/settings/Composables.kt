@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     Composables.kt Copyrighted by Yamin Siahmargooei at 2024/2/1
- *     Composables.kt Last modified at 2024/2/1
+ *     Composables.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
+ *     Composables.kt Last modified at 2024/5/6
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *

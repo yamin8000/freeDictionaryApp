@@ -1,15 +1,16 @@
 /*
- *     freeDictionaryApp: an android app for freeDictionaryAPI
- *     settings.gradle Created by Yamin Siahmargooei at 2022/6/16
- *     This file is part of freeDictionaryApp.
- *     Copyright (C) 2022  Yamin Siahmargooei
+ *     freeDictionaryApp/freeDictionaryApp
+ *     settings.gradle.kts Copyrighted by Yamin Siahmargooei at 2024/5/9
+ *     settings.gradle.kts Last modified at 2024/3/23
+ *     This file is part of freeDictionaryApp/freeDictionaryApp.
+ *     Copyright (C) 2024  Yamin Siahmargooei
  *
- *     freeDictionaryApp is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp/freeDictionaryApp is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     freeDictionaryApp is distributed in the hope that it will be useful,
+ *     freeDictionaryApp/freeDictionaryApp is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.

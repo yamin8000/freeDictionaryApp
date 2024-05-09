@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.network
- *     build.gradle.kts Copyrighted by Yamin Siahmargooei at 2024/3/20
- *     build.gradle.kts Last modified at 2024/3/20
+ *     build.gradle.kts Copyrighted by Yamin Siahmargooei at 2024/5/9
+ *     build.gradle.kts Last modified at 2024/3/30
  *     This file is part of freeDictionaryApp/freeDictionaryApp.network.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *

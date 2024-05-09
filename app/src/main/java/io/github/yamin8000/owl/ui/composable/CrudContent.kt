@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     CrudContent.kt Copyrighted by Yamin Siahmargooei at 2024/2/1
- *     CrudContent.kt Last modified at 2024/2/1
+ *     CrudContent.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
+ *     CrudContent.kt Last modified at 2024/5/6
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *

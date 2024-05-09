@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     HomeTopBarItem.kt Copyrighted by Yamin Siahmargooei at 2024/2/9
- *     HomeTopBarItem.kt Last modified at 2024/2/4
+ *     HomeTopBarItem.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
+ *     HomeTopBarItem.kt Last modified at 2024/3/23
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *

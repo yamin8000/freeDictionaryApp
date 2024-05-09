@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     Nav.kt Copyrighted by Yamin Siahmargooei at 2023/8/26
- *     Nav.kt Last modified at 2023/8/26
+ *     Nav.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
+ *     Nav.kt Last modified at 2024/3/23
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
- *     Copyright (C) 2023  Yamin Siahmargooei
+ *     Copyright (C) 2024  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.app.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
