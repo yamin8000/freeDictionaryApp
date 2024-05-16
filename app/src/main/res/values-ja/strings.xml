@@ -1,0 +1,74 @@
+<!--
+  ~     freeDictionaryApp/freeDictionaryApp.app.main
+  ~     strings.xml Copyrighted by Yamin Siahmargooei at 2024/5/9
+  ~     strings.xml Last modified at 2024/3/23
+  ~     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
+  ~     Copyright (C) 2024  Yamin Siahmargooei
+  ~
+  ~     freeDictionaryApp/freeDictionaryApp.app.main is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     freeDictionaryApp/freeDictionaryApp.app.main is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">freeDictionary</string>
+    <string name="search">検索</string>
+    <string name="search_hint">単語を入力してください</string>
+    <string name="favourites">好きな単語</string>
+    <string name="search_history">検索履歴</string>
+    <string name="random_word">ランダムワード</string>
+    <string name="general_net_error">サーバーに接続されていません。 データはキャッシュからロードされる場合があります。</string>
+    <string name="api_throttled">サーバーがビジー状態です。もう一度お試しください！</string>
+    <string name="definition_not_found">言葉の定義が見つかりませんでした。</string>
+    <string name="api_authorization_error">認証エラー</string>
+    <string name="text_copied">テキストをコピーしました。</string>
+    <string name="license_header">これはGNUライセンスに基づいた無料のアプリケーションです。詳細については次を参照してください：</string>
+    <string name="gplv3_image_description">GPLv3 License Logo</string>
+    <string name="about_app">英語から英語への辞書、以下をベースにしています。</string>
+    <string name="github_source" translatable="false">https://github.com/yamin8000/freeDictionaryApp</string>
+    <string name="license_link" translatable="false">https://raw.githubusercontent.com/yamin8000/freeDictionaryApp/master/LICENSE</string>
+    <string name="free_dictionary_link" translatable="false">https://dictionaryapi.dev/</string>
+    <string name="added_to_favourites">お気に入りに追加されました</string>
+    <string name="clear">消去</string>
+    <string name="untracked_error">予期しないエラーが発生しました！</string>
+    <string name="no_search_term_entered">何も入力されていません。</string>
+    <string name="share">共有</string>
+    <string name="this_text_generated_using_owl">このテキストはfreeDictionaryを使用して生成されています</string>
+    <string name="clear_all">全て消去</string>
+    <string name="settings">設定</string>
+    <string name="theme">テーマ</string>
+    <string name="dynamic_theme_notice">Android 12以降では、アプリのテーマカラーはホーム画面の背景に基づきます</string>
+    <string name="theme_system">システム</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="tts_language">テキストの読み上げ言語</string>
+    <string name="about">詳細</string>
+    <string name="version_name">バージョン</string>
+    <string name="example">例文</string>
+    <string name="definition">意味</string>
+    <string name="type">タイプ</string>
+    <string name="this_text_extracted_from_free_dictionary" translatable="false">This text is extracted from the Free Dictionary API</string>
+    <string name="general">一般</string>
+    <string name="vibrate_on_scroll">スクロール時に振動</string>
+    <string name="cancel">キャンセル</string>
+    <string name="delete">削除</string>
+    <string name="increase_volume_notice">音量を上げてください</string>
+    <string name="antonym">対義語</string>
+    <string name="synonym">同義語</string>
+    <string name="start_blank_search">起動時に空白で検索</string>
+    <string name="theme_oled" tools:ignore="MissingTranslation">OLED/Darker</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="back">戻る</string>
+    <string name="remove_all_prompt">本当に全て削除しますか？</string>
+    <string name="cancelled">キャンセル</string>
+</resources>
