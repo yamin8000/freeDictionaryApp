@@ -24,23 +24,21 @@ package io.github.yamin8000.owl.network
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-/**
- * App-wide Web Helper Singleton
- */
+/** App-wide Web Helper Singleton */
 object Web {
 
     private const val BASE_URL = "https://api.dictionaryapi.dev/api/v2/"
 
-    /**
-     * App-wide [Retrofit] singleton object
-     */
-    val retrofit: Retrofit by lazy(LazyThreadSafetyMode.NONE) { createRetrofit() }
+    private lateinit var retrofit: Retrofit
 
-    private fun createRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
+    fun getRetrofit(): Retrofit {
+        if (!this::retrofit.isInitialized) {
+            retrofit = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+        }
+        return retrofit
     }
 
     /**

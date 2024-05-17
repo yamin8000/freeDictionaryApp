@@ -27,7 +27,7 @@ plugins {
     id("kotlin-parcelize")
 }
 
-private val composeCompilerVersion = "1.5.13"
+private val composeCompilerVersion = "1.5.14"
 
 private val appId = "io.github.yamin8000.owl"
 
@@ -39,8 +39,8 @@ android {
         applicationId = appId
         minSdk = 21
         targetSdk = 34
-        versionCode = 40
-        versionName = "1.6.3"
+        versionCode = 41
+        versionName = "1.6.4"
         vectorDrawables.useSupportLibrary = true
         archivesName = "$applicationId-v$versionCode($versionName)"
     }
@@ -96,7 +96,7 @@ dependencies {
     implementation(project(":network"))
     //core android/kotlin
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
     implementation("androidx.core:core-splashscreen:1.0.1")
     //compose

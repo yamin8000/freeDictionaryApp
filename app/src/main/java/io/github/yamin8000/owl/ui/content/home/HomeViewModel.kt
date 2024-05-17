@@ -145,7 +145,7 @@ internal class HomeViewModel(
         val cache = findCachedDefinitionOrNull(searchTerm)
         if (cache == null) {
             return try {
-                val result = Web.retrofit.getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
+                val result = Web.getRetrofit().getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
                 val entry = result.firstOrNull()
                 if (entry != null) {
                     addWordToDatabase(entry)
