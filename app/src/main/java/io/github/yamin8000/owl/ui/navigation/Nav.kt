@@ -21,16 +21,14 @@
 
 package io.github.yamin8000.owl.ui.navigation
 
-/**
- * Navigation singleton
- */
+/** Navigation singleton */
 object Nav {
-    object Routes {
-        data object Home
-        data object History
-        data object Settings
-        data object About
-        data object Favourites
+    sealed interface Route {
+        data object Home : Route
+        data object History : Route
+        data object Settings : Route
+        data object About : Route
+        data object Favourites : Route
     }
 
     object Arguments {

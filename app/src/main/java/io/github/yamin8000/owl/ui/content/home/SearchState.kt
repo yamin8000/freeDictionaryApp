@@ -21,12 +21,12 @@
 
 package io.github.yamin8000.owl.ui.content.home
 
-internal sealed class SearchState {
-    data object RequestSucceed : SearchState()
-    data class RequestFailed(val code: Int) : SearchState()
-    data class RequestFinished(val term: String) : SearchState()
-    data object Unknown : SearchState()
-    data object Cached : SearchState()
+internal sealed interface SearchState {
+    data object RequestSucceed : SearchState
+    data class RequestFailed(val code: Int) : SearchState
+    data class RequestFinished(val term: String) : SearchState
+    data object Unknown : SearchState
+    data object Cached : SearchState
 
     companion object {
         const val CANCEL = 997

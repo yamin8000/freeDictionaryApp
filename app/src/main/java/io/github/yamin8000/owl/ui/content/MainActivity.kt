@@ -193,7 +193,7 @@ internal class MainActivity : ComponentActivity() {
         LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
 
         CompositionLocalProvider(LocalTTS provides tts.value) {
-            val start = "${Nav.Routes.Home}/{${Nav.Arguments.Search}}"
+            val start = "${Nav.Route.Home}/{${Nav.Arguments.Search}}"
             val navController = rememberNavController()
             val onBackClick: () -> Unit = remember { { navController.popBackStack() } }
             NavHost(
@@ -223,15 +223,15 @@ internal class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable(Nav.Routes.About.toString()) {
+                    composable(Nav.Route.About.toString()) {
                         AboutContent(
                             onBackClick = onBackClick
                         )
                     }
 
-                    composable(Nav.Routes.Favourites.toString()) {
+                    composable(Nav.Route.Favourites.toString()) {
                         val onFavouritesItemClick: (String) -> Unit = remember {
-                            { favourite -> navController.navigate("${Nav.Routes.Home}/${favourite}") }
+                            { favourite -> navController.navigate("${Nav.Route.Home}/${favourite}") }
                         }
                         FavouritesContent(
                             onFavouritesItemClick = onFavouritesItemClick,
@@ -242,9 +242,9 @@ internal class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable(Nav.Routes.History.toString()) {
+                    composable(Nav.Route.History.toString()) {
                         val onHistoryItemClick: (String) -> Unit = remember {
-                            { history -> navController.navigate("${Nav.Routes.Home}/${history}") }
+                            { history -> navController.navigate("${Nav.Route.Home}/${history}") }
                         }
                         HistoryContent(
                             onHistoryItemClick = onHistoryItemClick,
@@ -255,7 +255,7 @@ internal class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable(Nav.Routes.Settings.toString()) {
+                    composable(Nav.Route.Settings.toString()) {
                         SettingsContent(
                             isVibrating = settingsVM.isVibrating.collectAsState().value,
                             onVibratingChange = remember { { settingsVM.updateVibrationSetting(it) } },

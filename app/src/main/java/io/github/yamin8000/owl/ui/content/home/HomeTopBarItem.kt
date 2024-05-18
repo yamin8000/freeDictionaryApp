@@ -31,10 +31,10 @@ internal sealed class HomeTopBarItem {
     data object Random : HomeTopBarItem()
 
     fun route() = when (this) {
-        Favourites -> Nav.Routes.Favourites.toString()
-        History -> Nav.Routes.History.toString()
-        Info -> Nav.Routes.About.toString()
-        Random -> Nav.Routes.Home.toString()
-        Settings -> Nav.Routes.Settings.toString()
+        Favourites -> Nav.Route.Favourites.toString()
+        History -> Nav.Route.History.toString()
+        Info -> Nav.Route.About.toString()
+        Random -> Nav.Route.Home.toString()
+        Settings -> Nav.Route.Settings.toString()
     }
 }

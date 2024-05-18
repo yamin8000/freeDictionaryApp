@@ -110,6 +110,7 @@ private fun RemoveAllContent(
     var isShowingDialog by remember { mutableStateOf(false) }
     val hideDialog = remember { { isShowingDialog = false } }
     val showDialog = remember { { isShowingDialog = true } }
+
     if (isShowingDialog) {
         AlertDialog(
             onDismissRequest = hideDialog,

@@ -28,6 +28,7 @@ import io.github.yamin8000.owl.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
 internal class SettingsViewModel(
@@ -48,7 +49,7 @@ internal class SettingsViewModel(
     val isStartingBlank = _isStartingBlank.asStateFlow()
 
     init {
-        scope.launch {
+        runBlocking {
             _themeSetting.value = ThemeSetting.valueOf(
                 settings.getString(Constants.THEME) ?: ThemeSetting.System.name
             )
