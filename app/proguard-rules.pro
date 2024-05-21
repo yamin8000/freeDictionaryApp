@@ -55,3 +55,6 @@
 -keepnames class * implements android.os.Parcelable {
    public static final ** CREATOR;
 }
+
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn java.lang.invoke.StringConcatFactory

@@ -19,6 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
-# This is generated automatically by the Android Gradle plugin.
--dontwarn java.lang.invoke.StringConcatFactory
