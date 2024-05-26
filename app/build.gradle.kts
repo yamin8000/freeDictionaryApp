@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
-
 /*
  *     freeDictionaryApp/freeDictionaryApp.app
  *     build.gradle.kts Copyrighted by Yamin Siahmargooei at 2024/5/9
@@ -24,10 +22,9 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("kotlin-parcelize")
 }
-
-private val composeCompilerVersion = "1.5.14"
 
 private val appId = "io.github.yamin8000.owl"
 
@@ -42,7 +39,7 @@ android {
         versionCode = 42
         versionName = "1.6.5"
         vectorDrawables.useSupportLibrary = true
-        archivesName = "$applicationId-v$versionCode-n$versionName"
+        base.archivesName = "$applicationId-v$versionCode-n$versionName"
     }
 
     buildTypes {
@@ -73,10 +70,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = composeCompilerVersion
     }
 
     packaging {
