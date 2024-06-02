@@ -22,24 +22,36 @@
 package io.github.yamin8000.owl.ui.content.widget
 
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.action.ActionParameters
+import androidx.glance.action.actionParametersOf
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
+import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Row
 import androidx.glance.text.Text
 import io.github.yamin8000.owl.R
+import io.github.yamin8000.owl.ui.content.MainActivity
 
 internal class Widget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             GlanceTheme {
                 Row(
+                    modifier = GlanceModifier.background(GlanceTheme.colors.secondary).clickable(
+                        actionStartActivity<MainActivity>(
+                            actionParametersOf(
+                                ActionParameters.Key<String>("search") to "test"
+                            )
+                        )
+                    ),
                     verticalAlignment = Alignment.CenterVertically,
                     content = {
                         Image(
@@ -51,11 +63,5 @@ internal class Widget : GlanceAppWidget() {
                 )
             }
         }
-    }
-
-    @Preview
-    @Composable
-    fun Test() {
-        Text(text = "Some Text!")
     }
 }

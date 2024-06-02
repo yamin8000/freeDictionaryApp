@@ -26,6 +26,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -125,6 +126,8 @@ internal class MainActivity : ComponentActivity() {
         .build()
 
     private fun handleOutsideInputIntent(): String? {
+        //widget
+        //return intent.extras?.getString("search")
         return if (intent.type == "text/plain") {
             when (intent.action) {
                 Intent.ACTION_TRANSLATE, Intent.ACTION_DEFINE, Intent.ACTION_SEND -> {
@@ -137,9 +140,13 @@ internal class MainActivity : ComponentActivity() {
                     else null
                 }
 
-                else -> null
+                else -> {
+                    null
+                }
             }
-        } else null
+        } else {
+            null
+        }
     }
 
     @Composable
