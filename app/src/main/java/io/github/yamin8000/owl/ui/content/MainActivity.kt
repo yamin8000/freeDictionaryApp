@@ -26,7 +26,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -71,6 +70,7 @@ import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.log
 import io.github.yamin8000.owl.util.viewModelFactory
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
@@ -243,9 +243,9 @@ internal class MainActivity : ComponentActivity() {
                         FavouritesContent(
                             onFavouritesItemClick = onFavouritesItemClick,
                             onBackClick = onBackClick,
-                            favourites = favouritesVM.favourites.collectAsState().value.toList(),
-                            onRemoveAll = favouritesVM::removeAll,
-                            onRemove = favouritesVM::remove
+                            favourites = favouritesVM.favourites.collectAsState().value.toPersistentList(),
+                            onRemoveAll = remember { { favouritesVM.removeAll() } },
+                            onRemove = remember { { favouritesVM.remove(it) } }
                         )
                     }
 
@@ -256,9 +256,9 @@ internal class MainActivity : ComponentActivity() {
                         HistoryContent(
                             onHistoryItemClick = onHistoryItemClick,
                             onBackClick = onBackClick,
-                            history = historyVM.history.collectAsState().value.toList(),
-                            onRemoveAll = historyVM::removeAll,
-                            onRemove = historyVM::remove
+                            history = historyVM.history.collectAsState().value.toPersistentList(),
+                            onRemoveAll = remember { { historyVM.removeAll() } },
+                            onRemove = remember { { historyVM.remove(it) } }
                         )
                     }
 

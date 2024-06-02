@@ -25,10 +25,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.CrudContent
+import kotlinx.collections.immutable.PersistentList
 
 @Composable
 internal fun HistoryContent(
-    history: List<String>,
+    history: PersistentList<String>,
     onRemoveAll: () -> Unit,
     onRemove: (String) -> Unit,
     onHistoryItemClick: (String) -> Unit,

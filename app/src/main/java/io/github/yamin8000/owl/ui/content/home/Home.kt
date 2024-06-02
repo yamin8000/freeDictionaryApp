@@ -37,7 +37,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -65,7 +64,6 @@ import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.util.TermSuggestionsHelper
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
 
 @Composable
 internal fun HomeScreen(
@@ -91,14 +89,13 @@ internal fun HomeScreen(
         }
     })
 
-    val snackbarHostState = remember { SnackbarHostState() }
     val focusManager = LocalFocusManager.current
     val keyboardManager = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) {
         vm.searchState.collect { searchState ->
             when (searchState) {
                 is SearchState.RequestFailed -> {
-                    snackbarHostState.showSnackbar(getErrorMessage(searchState.code, context))
+                    vm.showSnackbar(getErrorMessage(searchState.code, context))
                 }
 
                 is SearchState.RequestFinished -> {
@@ -147,7 +144,7 @@ internal fun HomeScreen(
 
             Scaffold(
                 snackbarHost = {
-                    SnackbarHost(snackbarHostState) { data ->
+                    SnackbarHost(vm.snackbarHostState.collectAsState().value) { data ->
                         MySnackbar {
                             PersianText(
                                 text = data.visuals.message,
@@ -161,7 +158,7 @@ internal fun HomeScreen(
                     val onClick: (HomeTopBarItem) -> Unit = remember {
                         {
                             when (it) {
-                                HomeTopBarItem.Random -> vm.ioScope.launch { vm.searchForRandomWord() }
+                                HomeTopBarItem.Random -> vm.searchForRandomWord()
                                 else -> onTopBarClick(it)
                             }
                         }
@@ -170,23 +167,23 @@ internal fun HomeScreen(
                 },
                 bottomBar = {
                     val search = vm.searchTerm.collectAsState()
-                    val onSearch = remember(search.value) {
+                    val onSearch: () -> Unit = remember(search.value) {
                         { vm.searchForDefinition(search.value) }
                     }
                     val onSuggestionsClick: (String) -> Unit = remember {
                         {
                             vm.updateSearchTerm(it)
-                            vm.ioScope.launch { vm.searchForDefinition(it) }
+                            vm.searchForDefinition(it)
                         }
                     }
                     val onSearchTermChange: (String) -> Unit =
                         remember(vm.isWordSelectedFromKeyboardSuggestions.value) {
                             {
                                 vm.updateSearchTerm(it)
-                                vm.ioScope.launch { vm.handleSuggestions() }
+                                vm.handleSuggestions()
                                 if (vm.isWordSelectedFromKeyboardSuggestions.value) {
                                     vm.clearSuggestions()
-                                    vm.ioScope.launch { vm.searchForDefinition(it) }
+                                    vm.searchForDefinition(it)
                                 }
                             }
                         }
@@ -232,7 +229,7 @@ internal fun HomeScreen(
                                 val onWordChipClick: (String) -> Unit = remember {
                                     {
                                         vm.updateSearchTerm(it)
-                                        vm.ioScope.launch { vm.searchForDefinition(it) }
+                                        vm.searchForDefinition(it)
                                     }
                                 }
                                 WordDefinitionsList(
@@ -247,12 +244,8 @@ internal fun HomeScreen(
                                             onShareWord = remember { { vm.startWordSharing() } },
                                             onAddToFavourite = remember(searchResult.value) {
                                                 {
-                                                    vm.ioScope.launch {
-                                                        onAddToFavourite(word)
-                                                        snackbarHostState.showSnackbar(
-                                                            addedToFavourites
-                                                        )
-                                                    }
+                                                    onAddToFavourite(word)
+                                                    vm.showSnackbar(addedToFavourites)
                                                 }
                                             }
                                         )

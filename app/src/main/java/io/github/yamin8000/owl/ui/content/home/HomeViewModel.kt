@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.ui.content.home
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.ViewModel
@@ -58,7 +59,7 @@ internal class HomeViewModel(
     isStartingBlank: Boolean,
     private val termSuggestionsHelper: TermSuggestionsHelper
 ) : ViewModel() {
-    val ioScope = CoroutineScope(Dispatchers.IO)
+    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     private var job: Job? = null
 
@@ -82,6 +83,9 @@ internal class HomeViewModel(
 
     private val _searchState = MutableStateFlow<SearchState>(SearchState.Unknown)
     val searchState = _searchState.asSharedFlow()
+
+    private val _snackbarHostState = MutableStateFlow(SnackbarHostState())
+    val snackbarHostState = _snackbarHostState.asStateFlow()
 
     val isWordSelectedFromKeyboardSuggestions: State<Boolean>
         get() = derivedStateOf { _searchTerm.value.length > 1 && _searchTerm.value.last() == ' ' && !_searchTerm.value.all { it == ' ' } }
@@ -115,25 +119,23 @@ internal class HomeViewModel(
         _searchTerm.value = new
     }
 
-    suspend fun searchForRandomWord() {
+    fun searchForRandomWord() = viewModelScope.launch {
         searchForDefinition(getNewRandomWord())
     }
 
     fun searchForDefinition(
         searchTerm: String
-    ) {
-        viewModelScope.launch {
-            if (searchTerm.isNotBlank()) {
-                job = ioScope.launch {
-                    _searchResult.value = searchForDefinitionRequest(searchTerm)
-                    val entry = searchResult.value.firstOrNull()
-                    if (entry != null) {
-                        clearSuggestions()
-                    }
-                    _searchState.emit(SearchState.RequestFinished(searchTerm))
+    ) = ioScope.launch {
+        if (searchTerm.isNotBlank()) {
+            job = ioScope.launch {
+                _searchResult.value = searchForDefinitionRequest(searchTerm)
+                val entry = searchResult.value.firstOrNull()
+                if (entry != null) {
+                    clearSuggestions()
                 }
-            } else _searchState.emit(SearchState.RequestFailed(SearchState.EMPTY))
-        }
+                _searchState.emit(SearchState.RequestFinished(searchTerm))
+            }
+        } else _searchState.emit(SearchState.RequestFailed(SearchState.EMPTY))
     }
 
     private suspend fun searchForDefinitionRequest(
@@ -145,7 +147,8 @@ internal class HomeViewModel(
         val cache = findCachedDefinitionOrNull(searchTerm)
         if (cache == null) {
             return try {
-                val result = Web.getRetrofit().getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
+                val result =
+                    Web.getRetrofit().getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
                 val entry = result.firstOrNull()
                 if (entry != null) {
                     addWordToDatabase(entry)
@@ -297,7 +300,7 @@ internal class HomeViewModel(
         return Constants.db.entryDao().all().map { it.word }.shuffled().firstOrNull() ?: FREE
     }
 
-    suspend fun handleSuggestions() {
+    fun handleSuggestions() = ioScope.launch {
         clearSuggestions()
         if (_searchTerm.value.length >= Constants.DEFAULT_N_GRAM_SIZE) {
             val suggestions = termSuggestionsHelper.suggestTermsForSearch(_searchTerm.value)
@@ -312,5 +315,11 @@ internal class HomeViewModel(
     fun cancel() {
         _isSearching.value = false
         job?.cancel()
+    }
+
+    fun showSnackbar(message: String) {
+        viewModelScope.launch {
+            _snackbarHostState.value.showSnackbar(message)
+        }
     }
 }
