@@ -61,10 +61,28 @@ import io.github.yamin8000.owl.ui.composable.InternetAwareComposable
 import io.github.yamin8000.owl.ui.composable.LockScreenOrientation
 import io.github.yamin8000.owl.ui.composable.MySnackbar
 import io.github.yamin8000.owl.ui.composable.PersianText
+import io.github.yamin8000.owl.ui.theme.MyPreview
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.util.TermSuggestionsHelper
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.collections.immutable.toPersistentList
 
+@MyPreview
+@Composable
+private fun HomeScreenPreview() {
+    PreviewTheme {
+        HomeScreen(
+            searchTerm = "",
+            isStartingBlank = false,
+            isVibrating = false,
+            onTopBarClick = {},
+            onAddToHistory = {},
+            onAddToFavourite = {}
+        )
+    }
+}
+
+// TODO: Refactor to HomeScreen and HomeContent(stateless)
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -128,11 +146,7 @@ internal fun HomeScreen(
             if (listState.isScrollInProgress && isVibrating)
                 LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
 
-            InternetAwareComposable(
-                onlineChanged = {
-                    vm.updateIsOnline(it)
-                }
-            )
+            InternetAwareComposable(onlineChanged = { vm.updateIsOnline(it) })
 
             if (vm.isSharing.collectAsState().value) {
                 val temp = vm.searchResult.collectAsState().value.firstOrNull()
@@ -210,7 +224,7 @@ internal fun HomeScreen(
                                 content = {
                                     PersianText(
                                         text = stringResource(R.string.general_net_error),
-                                        modifier = Modifier.padding(16.dp),
+                                        modifier = Modifier.padding(8.dp),
                                         color = MaterialTheme.colorScheme.error
                                     )
                                 }

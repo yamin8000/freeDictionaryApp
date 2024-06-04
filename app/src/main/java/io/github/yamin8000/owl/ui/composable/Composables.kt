@@ -83,7 +83,7 @@ import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Ripple(
+internal fun Ripple(
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
     onClick: () -> Unit,
@@ -103,7 +103,7 @@ fun Ripple(
 }
 
 @Composable
-fun MySnackbar(
+internal fun MySnackbar(
     modifier: Modifier = Modifier,
     action: @Composable (() -> Unit)? = null,
     dismissAction: @Composable (() -> Unit)? = null,
@@ -132,7 +132,7 @@ fun MySnackbar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldWithTitle(
+internal fun ScaffoldWithTitle(
     title: String,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
@@ -181,7 +181,7 @@ fun ScaffoldWithTitle(
 }
 
 @Composable
-fun ClickableIcon(
+internal fun ClickableIcon(
     modifier: Modifier = Modifier,
     imageVector: ImageVector,
     contentDescription: String,
@@ -208,7 +208,7 @@ fun ClickableIcon(
 }
 
 @Composable
-fun InternetAwareComposable(
+internal fun InternetAwareComposable(
     dnsServers: List<String> = DNS_SERVERS,
     delay: Long = INTERNET_CHECK_DELAY,
     successContent: (@Composable () -> Unit)? = null,
@@ -238,7 +238,7 @@ fun InternetAwareComposable(
 }
 
 @Composable
-fun LockScreenOrientation(
+internal fun LockScreenOrientation(
     orientation: Int
 ) {
     val context = LocalContext.current
@@ -254,7 +254,7 @@ fun LockScreenOrientation(
 }
 
 @Composable
-fun DeleteMenu(
+internal fun DeleteMenu(
     modifier: Modifier = Modifier,
     expanded: Boolean,
     onDismiss: () -> Unit,
@@ -281,7 +281,7 @@ fun DeleteMenu(
 }
 
 @Composable
-fun EmptyList(
+internal fun EmptyList(
     modifier: Modifier = Modifier,
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list))
@@ -297,7 +297,7 @@ fun EmptyList(
 }
 
 @Composable
-fun AppIcon(
+internal fun AppIcon(
     modifier: Modifier = Modifier,
 ) {
     Icon(

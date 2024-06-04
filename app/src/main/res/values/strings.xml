@@ -52,7 +52,7 @@
     <string name="theme_dark">Dark</string>
     <string name="tts_language">Text-to-Speech Language</string>
     <string name="about">About</string>
-    <string name="version_name">Version</string>
+    <string name="version_name">Version %s</string>
     <string name="example">Example</string>
     <string name="definition">Definition</string>
     <string name="type">Type</string>

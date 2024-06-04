@@ -48,7 +48,7 @@
     <string name="theme_dark">Sötét</string>
     <string name="tts_language">Szövegből-Beszéd Nyelve</string>
     <string name="about">Az alkalmazásról</string>
-    <string name="version_name">Verzió</string>
+    <string name="version_name">Verzió %s</string>
     <string name="example">Példa</string>
     <string name="definition">Definíció</string>
     <string name="type">Típus</string>

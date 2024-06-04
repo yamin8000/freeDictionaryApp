@@ -22,6 +22,7 @@
 package io.github.yamin8000.owl.ui.content.home
 
 import android.content.Context
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -57,18 +58,39 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import io.github.yamin8000.owl.ui.composable.HighlightText
 import io.github.yamin8000.owl.ui.composable.PersianText
+import io.github.yamin8000.owl.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.ui.theme.MyPreview
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.ui.theme.Samim
 import io.github.yamin8000.owl.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.util.getCurrentLocale
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import java.util.Locale
+
+@MyPreview
+@Composable
+private fun MainBottomBarPreview() {
+    PreviewTheme {
+        MainBottomBar(
+            searchTerm = "test",
+            suggestions = persistentListOf(),
+            onSuggestionClick = {},
+            isSearching = false,
+            onSearchTermChange = {},
+            onSearch = {},
+            onCancel = {}
+        )
+    }
+}
 
 @Composable
 internal fun MainBottomBar(
@@ -111,7 +133,7 @@ internal fun MainBottomBar(
             if (isSearching) {
                 RainbowLinearProgress()
             }
-            Crossfade(
+            AnimatedContent(
                 targetState = isSearching,
                 label = "",
                 content = { target ->
@@ -142,14 +164,15 @@ private fun NormalBottomAppBar(
         modifier = modifier,
         content = {
             val onSearchClick = remember { onSearch }
-            val onTermChanged: (String) -> Unit =
-                remember { onSearchTermChange }
+            val onTermChanged: (String) -> Unit = remember {
+                onSearchTermChange
+            }
             TextField(
                 singleLine = true,
-                shape = CutCornerShape(topEnd = 10.dp, topStart = 10.dp),
+                shape = CutCornerShape(topEnd = 8.dp, topStart = 8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    .padding(horizontal = 16.dp),
                 label = {
                     PersianText(
                         stringResource(R.string.search),

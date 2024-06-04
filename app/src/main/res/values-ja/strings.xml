@@ -52,7 +52,7 @@
     <string name="theme_dark">ダーク</string>
     <string name="tts_language">テキストの読み上げ言語</string>
     <string name="about">詳細</string>
-    <string name="version_name">バージョン</string>
+    <string name="version_name">バージョン %s</string>
     <string name="example">例文</string>
     <string name="definition">意味</string>
     <string name="type">タイプ</string>

@@ -48,7 +48,7 @@
     <string name="theme_dark">تاریک</string>
     <string name="tts_language">زبان متن به گفتار</string>
     <string name="about">درباره</string>
-    <string name="version_name">نگارش</string>
+    <string name="version_name">نگارش %s</string>
     <string name="example">نمونه</string>
     <string name="definition">معنی</string>
     <string name="type">نوع</string>

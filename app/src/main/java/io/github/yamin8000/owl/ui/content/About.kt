@@ -25,6 +25,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -41,7 +42,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.R
@@ -82,28 +82,19 @@ internal fun AboutContent(
                         onClick = { uriHandler.openUri(licenseUri) },
                         content = {
                             Image(
-                                painterResource(id = R.drawable.ic_gplv3),
-                                stringResource(id = R.string.gplv3_image_description),
-                                modifier = Modifier
-                                    .padding(32.dp)
-                                    .fillMaxWidth(),
+                                painter = painterResource(id = R.drawable.ic_gplv3),
+                                contentDescription = stringResource(id = R.string.gplv3_image_description),
+                                modifier = Modifier.fillMaxWidth(),
                                 contentScale = ContentScale.FillWidth,
                                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
                             )
                         }
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(
-                            8.dp,
-                            Alignment.CenterHorizontally
-                        ),
-                        content = {
-                            PersianText(stringResource(R.string.version_name))
-                            PersianText(BuildConfig.VERSION_NAME)
-                        }
+                    PersianText(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        text = stringResource(R.string.version_name, BuildConfig.VERSION_NAME)
                     )
+                    Spacer(modifier = Modifier.padding(bottom = 16.dp))
                     PersianText(
                         text = stringResource(id = R.string.license_header),
                         modifier = Modifier.fillMaxWidth()

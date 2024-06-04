@@ -122,7 +122,6 @@ internal class MainActivity : ComponentActivity() {
     )
 
     private fun createDb() = Room.databaseBuilder(this, AppDatabase::class.java, "db")
-        //.fallbackToDestructiveMigration()
         .build()
 
     private fun handleOutsideInputIntent(): String? {
