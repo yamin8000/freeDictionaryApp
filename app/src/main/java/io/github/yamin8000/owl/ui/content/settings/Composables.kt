@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowDropDownCircle
+import androidx.compose.material.icons.twotone.Category
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -45,6 +46,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.ui.composable.PersianText
+import io.github.yamin8000.owl.ui.theme.MyPreview
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 
 @Composable
 internal fun SettingsItem(
@@ -68,7 +71,8 @@ internal fun SettingsItem(
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(vertical = 16.dp),
+                        //Extra padding for increasing touch area
+                        modifier = Modifier.padding(vertical = 8.dp),
                         content = content
                     )
                     Icon(
@@ -81,6 +85,19 @@ internal fun SettingsItem(
     )
 }
 
+@MyPreview
+@Composable
+private fun SwitchItemPreview() {
+    PreviewTheme {
+        SwitchItem(
+            imageVector = Icons.TwoTone.Category,
+            caption = "Item on/off",
+            checked = false,
+            onCheckedChange = {}
+        )
+    }
+}
+
 @Composable
 internal fun SwitchItem(
     modifier: Modifier = Modifier,
@@ -91,7 +108,7 @@ internal fun SwitchItem(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         content = {
             Icon(
@@ -123,12 +140,10 @@ internal fun SwitchWithText(
         }
     }
     Box(
-        modifier = modifier
-            .padding(4.dp)
-            .clickable(
-                role = Role.Switch,
-                onClick = onClick
-            ),
+        modifier = modifier.clickable(
+            role = Role.Switch,
+            onClick = onClick
+        ),
         content = {
             Row(
                 modifier = Modifier.fillMaxWidth(),

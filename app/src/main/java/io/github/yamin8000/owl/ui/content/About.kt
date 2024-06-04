@@ -41,12 +41,23 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.Ripple
 import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
+import io.github.yamin8000.owl.ui.theme.MyPreview
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
+
+@MyPreview
+@Composable
+private fun AboutContentPreview() {
+    PreviewTheme {
+        AboutContent { }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

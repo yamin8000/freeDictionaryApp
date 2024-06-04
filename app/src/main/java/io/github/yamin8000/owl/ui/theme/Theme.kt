@@ -23,19 +23,31 @@ package io.github.yamin8000.owl.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import kotlin.random.Random
 
 private val lightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -97,6 +109,47 @@ private val darkColors = darkColorScheme(
     inversePrimary = md_theme_dark_inversePrimary,
     surfaceTint = md_theme_dark_surfaceTint,
 )
+
+@Composable
+fun PreviewTheme(
+    isDarkTheme: Boolean = Random.nextBoolean(),
+    isOledTheme: Boolean = Random.nextBoolean(),
+    isDynamicColor: Boolean = Random.nextBoolean(),
+    content: @Composable () -> Unit
+) {
+    Column(
+        content = {
+            Text(
+                text = "isDark $isDarkTheme"
+            )
+            Text(
+                text = "isOledTheme $isOledTheme"
+            )
+            Text(
+                text = "isDynamicColor $isDynamicColor"
+            )
+            Box(
+                modifier = Modifier
+                    .height(10.dp)
+                    .fillMaxWidth()
+                    .background(Color.Red)
+            )
+            AppTheme(
+                isDarkTheme,
+                isOledTheme,
+                true,
+                isDynamicColor,
+                content
+            )
+
+        }
+    )
+}
+
+@Preview(
+    showBackground = true,
+)
+annotation class MyPreview
 
 @Composable
 fun AppTheme(

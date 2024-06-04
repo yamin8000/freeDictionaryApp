@@ -23,9 +23,9 @@ package io.github.yamin8000.owl.ui.composable
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,18 +58,18 @@ internal fun <T> CrudContent(
         onBackClick = onBackClick,
         content = {
             if (items.isNotEmpty()) {
-                LazyVerticalGrid(
+                LazyVerticalStaggeredGrid(
                     modifier = Modifier.padding(bottom = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    columns = GridCells.Fixed(2),
+                    verticalItemSpacing = 8.dp,
+                    columns = StaggeredGridCells.Fixed(2),
                     content = {
                         item(
-                            span = { GridItemSpan(maxCurrentLineSpan) },
+                            span = StaggeredGridItemSpan.FullLine,
                             content = { RemoveAllContent(onRemoveAllClick = remember { onRemoveAll }) }
                         )
                         items(
-                            span = { GridItemSpan(1) },
+                            span = { StaggeredGridItemSpan.SingleLane },
                             count = items.size,
                             itemContent = {
                                 val onClick = remember { { onItemClick(items[it]) } }

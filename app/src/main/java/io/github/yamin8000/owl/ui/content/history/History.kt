@@ -25,7 +25,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.composable.CrudContent
+import io.github.yamin8000.owl.ui.theme.MyPreview
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
+
+@MyPreview
+@Composable
+private fun HistoryContentPreview() {
+    PreviewTheme {
+        val history = listOf("test", "free", "1111111111111111111111111111111111111111").shuffled()
+            .toPersistentList()
+        HistoryContent(
+            history = history,
+            onRemoveAll = {},
+            onRemove = {},
+            onHistoryItemClick = {},
+            onBackClick = {}
+        )
+    }
+}
 
 @Composable
 internal fun HistoryContent(

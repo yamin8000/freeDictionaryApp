@@ -60,8 +60,29 @@ import io.github.yamin8000.owl.ui.composable.PersianText
 import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
 import io.github.yamin8000.owl.ui.composable.SettingsItemCard
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.ui.theme.MyPreview
+import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.util.TTS
 import java.util.Locale
+
+@MyPreview
+@Composable
+private fun SettingsContentPreview() {
+    PreviewTheme {
+        SettingsContent(
+            isVibrating = false,
+            onVibratingChange = {},
+            isStartingBlank = false,
+            onStartingBlankChange = {},
+            themeSetting = ThemeSetting.System,
+            onThemeSettingChange = {},
+            onSystemThemeChange = {},
+            ttsTag = "English",
+            onTtsTagChange = {},
+            onBackClick = {}
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -276,7 +297,6 @@ private fun ThemeSetting(
                     )
                     PersianText(
                         text = stringResource(currentTheme.persianNameStringResource),
-                        modifier = Modifier.padding()
                     )
                 }
             )
