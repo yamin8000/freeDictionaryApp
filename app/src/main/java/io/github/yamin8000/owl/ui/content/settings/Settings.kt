@@ -38,7 +38,6 @@ import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material.icons.twotone.Language
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.RadioButton
@@ -84,7 +83,6 @@ private fun SettingsContentPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsContent(
     modifier: Modifier = Modifier,
@@ -342,13 +340,13 @@ private fun ThemeChangerDialog(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .selectable(
-                                    selected = (theme == currentTheme),
+                                    selected = theme == currentTheme,
                                     role = Role.RadioButton,
                                     onClick = onThemeClick
                                 ),
                             content = {
                                 RadioButton(
-                                    selected = (theme == currentTheme),
+                                    selected = theme == currentTheme,
                                     onClick = null,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
