@@ -39,25 +39,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
+import kotlinx.collections.immutable.PersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun <T> CrudContent(
     title: String,
-    items: List<T>,
+    items: PersistentList<T>,
     onBackClick: () -> Unit,
     onRemoveAll: () -> Unit,
     onRemoveSingle: (T) -> Unit,
     onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
-    emptyContent: (@Composable () -> Unit) = { EmptyList() }
+    emptyContent: (@Composable () -> Unit) = { EmptyList() },
+    itemDisplayProvider: (T) -> String = { it.toString() }
 ) {
     ScaffoldWithTitle(
         modifier = modifier,
         title = title,
         onBackClick = onBackClick,
         content = {
-            if (items.isNotEmpty()) {
+            val isNotEmpty by remember(items) { mutableStateOf(items.isNotEmpty()) }
+            if (isNotEmpty) {
                 LazyVerticalStaggeredGrid(
                     modifier = Modifier.padding(bottom = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -71,11 +74,15 @@ internal fun <T> CrudContent(
                         items(
                             span = { StaggeredGridItemSpan.SingleLane },
                             count = items.size,
-                            itemContent = {
-                                val onClick = remember { { onItemClick(items[it]) } }
-                                val onLongClick = remember { { onRemoveSingle(items[it]) } }
+                            key = { index -> items[index].hashCode() },
+                            itemContent = { index ->
+                                val item by remember(items, index) {
+                                    mutableStateOf(items[index])
+                                }
+                                val onClick = remember { { onItemClick(item) } }
+                                val onLongClick = remember { { onRemoveSingle(item) } }
                                 CrudItem(
-                                    item = items[it].toString(),
+                                    item = itemDisplayProvider(item),
                                     onClick = onClick,
                                     onLongClick = onLongClick
                                 )

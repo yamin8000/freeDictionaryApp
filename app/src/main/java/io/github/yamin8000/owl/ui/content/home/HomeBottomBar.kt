@@ -137,17 +137,13 @@ internal fun MainBottomBar(
                 targetState = isSearching,
                 label = "",
                 content = { target ->
-                    if (target) {
-                        BottomAppBarDuringSearch(
-                            onCancel = onCancel
-                        )
-                    } else {
+                    if (!target) {
                         NormalBottomAppBar(
                             onSearch = onSearch,
                             onSearchTermChange = onSearchTermChange,
                             searchTerm = searchTerm
                         )
-                    }
+                    } else BottomAppBarDuringSearch(onCancel = onCancel)
                 }
             )
         })

@@ -29,6 +29,9 @@ import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -205,6 +208,8 @@ internal class MainActivity : ComponentActivity() {
             NavHost(
                 navController = navController,
                 startDestination = start,
+                enterTransition = { fadeIn(animationSpec = tween(100)) },
+                exitTransition = { fadeOut(animationSpec = tween(100)) },
                 builder = {
                     composable(start) {
                         var searchTerm = it.arguments?.getString(Nav.Arguments.Search.toString())

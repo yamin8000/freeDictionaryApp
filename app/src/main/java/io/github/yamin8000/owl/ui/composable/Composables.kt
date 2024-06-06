@@ -48,7 +48,6 @@ import androidx.compose.material3.SnackbarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -135,15 +134,16 @@ internal fun MySnackbar(
 internal fun ScaffoldWithTitle(
     title: String,
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     snackbarHost: @Composable () -> Unit = {},
     onBackClick: () -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val connection by remember { mutableStateOf(scrollBehavior.nestedScrollConnection) }
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .nestedScroll(connection),
         snackbarHost = snackbarHost,
         topBar = {
             Surface(
