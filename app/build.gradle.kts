@@ -89,13 +89,13 @@ dependencies {
     implementation(project(":network"))
     //core android/kotlin
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
     implementation("androidx.core:core-splashscreen:1.0.1")
     //compose
     val material3Version = "1.2.1"
-    val composeLibsVersion = "1.6.7"
-    val composeUiLibsVersion = "1.6.7"
+    val composeLibsVersion = "1.6.8"
+    val composeUiLibsVersion = "1.6.8"
     implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
@@ -113,7 +113,4 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
     //lottie
     implementation("com.airbnb.android:lottie-compose:6.4.1")
-    //widgets
-    implementation("androidx.glance:glance-appwidget:1.0.0")
-    implementation("androidx.glance:glance-material3:1.0.0")
 }
