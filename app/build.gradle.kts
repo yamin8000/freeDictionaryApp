@@ -105,7 +105,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
     //coil
-    val coilVersion = "2.6.0"
+    val coilVersion = "2.7.0"
     implementation("io.coil-kt:coil:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
     //navigation
