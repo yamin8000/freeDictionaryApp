@@ -40,7 +40,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +52,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import io.github.yamin8000.owl.R
@@ -148,8 +149,8 @@ internal fun HomeScreen(
 
             InternetAwareComposable(onlineChanged = { vm.updateIsOnline(it) })
 
-            if (vm.isSharing.collectAsState().value) {
-                val temp = vm.searchResult.collectAsState().value.firstOrNull()
+            if (vm.isSharing.collectAsStateWithLifecycle().value) {
+                val temp = vm.searchResult.collectAsStateWithLifecycle().value.firstOrNull()
                 if (temp != null) {
                     HandleShareIntent(temp)
                     vm.stopWordSharing()
@@ -158,7 +159,7 @@ internal fun HomeScreen(
 
             Scaffold(
                 snackbarHost = {
-                    SnackbarHost(vm.snackbarHostState.collectAsState().value) { data ->
+                    SnackbarHost(vm.snackbarHostState.collectAsStateWithLifecycle().value) { data ->
                         MySnackbar {
                             PersianText(
                                 text = data.visuals.message,
@@ -180,7 +181,7 @@ internal fun HomeScreen(
                     MainTopBar(onItemClick = onClick)
                 },
                 bottomBar = {
-                    val search = vm.searchTerm.collectAsState()
+                    val search = vm.searchTerm.collectAsStateWithLifecycle()
                     val onSearch: () -> Unit = remember(search.value) {
                         { vm.searchForDefinition(search.value) }
                     }
@@ -204,8 +205,8 @@ internal fun HomeScreen(
                     val onCancel = remember { { vm.cancel() } }
                     MainBottomBar(
                         searchTerm = search.value,
-                        suggestions = vm.searchSuggestions.collectAsState().value.toPersistentList(),
-                        isSearching = vm.isSearching.collectAsState().value,
+                        suggestions = vm.searchSuggestions.collectAsStateWithLifecycle().value.toPersistentList(),
+                        isSearching = vm.isSearching.collectAsStateWithLifecycle().value,
                         onSearch = onSearch,
                         onCancel = onCancel,
                         onSuggestionClick = onSuggestionsClick,
@@ -218,7 +219,7 @@ internal fun HomeScreen(
                         modifier = Modifier.padding(contentPadding),
                         content = {
                             AnimatedVisibility(
-                                visible = !vm.isOnline.collectAsState().value,
+                                visible = !vm.isOnline.collectAsStateWithLifecycle().value,
                                 enter = slideInVertically() + fadeIn(),
                                 exit = slideOutVertically() + fadeOut(),
                                 content = {
@@ -232,9 +233,9 @@ internal fun HomeScreen(
 
                             val addedToFavourites = stringResource(R.string.added_to_favourites)
 
-                            val searchResult = vm.searchResult.collectAsState()
-                            if (searchResult.value.isNotEmpty()) {
-                                val entry = searchResult.value.firstOrNull()
+                            val searchResult by vm.searchResult.collectAsStateWithLifecycle()
+                            if (searchResult.isNotEmpty()) {
+                                val entry = searchResult.firstOrNull()
                                 val word = entry?.word ?: ""
                                 val phonetic = entry?.phonetics
                                     ?.firstOrNull { it.text != null }
@@ -249,14 +250,14 @@ internal fun HomeScreen(
                                 WordDefinitionsList(
                                     word = word,
                                     listState = listState,
-                                    meanings = searchResult.value.first().meanings.toPersistentList(),
+                                    meanings = searchResult.first().meanings.toPersistentList(),
                                     onWordChipClick = onWordChipClick,
                                     wordCard = {
                                         WordCard(
                                             word = word,
                                             pronunciation = phonetic,
                                             onShareWord = remember { { vm.startWordSharing() } },
-                                            onAddToFavourite = remember(searchResult.value) {
+                                            onAddToFavourite = remember(searchResult) {
                                                 {
                                                     onAddToFavourite(word)
                                                     vm.showSnackbar(addedToFavourites)

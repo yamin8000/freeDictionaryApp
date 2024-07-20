@@ -39,13 +39,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.navigation.compose.NavHost
@@ -196,7 +196,7 @@ internal class MainActivity : ComponentActivity() {
             }
         })
 
-        val ttsTag = settingsVM.ttsLang.collectAsState().value
+        val ttsTag by settingsVM.ttsLang.collectAsStateWithLifecycle()
         val ttsHelper = remember(ttsTag) { TTS(context, Locale.forLanguageTag(ttsTag)) }
         val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
         LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
@@ -226,8 +226,8 @@ internal class MainActivity : ComponentActivity() {
                         }
                         HomeScreen(
                             searchTerm = searchTerm,
-                            isStartingBlank = settingsVM.isStartingBlank.collectAsState().value,
-                            isVibrating = settingsVM.isVibrating.collectAsState().value,
+                            isStartingBlank = settingsVM.isStartingBlank.collectAsStateWithLifecycle().value,
+                            isVibrating = settingsVM.isVibrating.collectAsStateWithLifecycle().value,
                             onTopBarClick = onTopBarClick,
                             onAddToHistory = addToHistory,
                             onAddToFavourite = addToFavourite
@@ -247,7 +247,7 @@ internal class MainActivity : ComponentActivity() {
                         FavouritesContent(
                             onFavouritesItemClick = onFavouritesItemClick,
                             onBackClick = onBackClick,
-                            favourites = favouritesVM.favourites.collectAsState().value.toPersistentList(),
+                            favourites = favouritesVM.favourites.collectAsStateWithLifecycle().value.toPersistentList(),
                             onRemoveAll = remember { { favouritesVM.removeAll() } },
                             onRemove = remember { { favouritesVM.remove(it) } }
                         )
@@ -260,7 +260,7 @@ internal class MainActivity : ComponentActivity() {
                         HistoryContent(
                             onHistoryItemClick = onHistoryItemClick,
                             onBackClick = onBackClick,
-                            history = historyVM.history.collectAsState().value.toPersistentList(),
+                            history = historyVM.history.collectAsStateWithLifecycle().value.toPersistentList(),
                             onRemoveAll = remember { { historyVM.removeAll() } },
                             onRemove = remember { { historyVM.remove(it) } }
                         )
@@ -268,14 +268,14 @@ internal class MainActivity : ComponentActivity() {
 
                     composable(Nav.Route.Settings.toString()) {
                         SettingsContent(
-                            isVibrating = settingsVM.isVibrating.collectAsState().value,
+                            isVibrating = settingsVM.isVibrating.collectAsStateWithLifecycle().value,
                             onVibratingChange = remember { { settingsVM.updateVibrationSetting(it) } },
-                            isStartingBlank = settingsVM.isStartingBlank.collectAsState().value,
+                            isStartingBlank = settingsVM.isStartingBlank.collectAsStateWithLifecycle().value,
                             onStartingBlankChange = remember { { settingsVM.updateStartingBlank(it) } },
-                            themeSetting = settingsVM.themeSetting.collectAsState().value,
+                            themeSetting = settingsVM.themeSetting.collectAsStateWithLifecycle().value,
                             onSystemThemeChange = onThemeChanged,
                             onThemeSettingChange = remember { { settingsVM.updateThemeSetting(it) } },
-                            ttsTag = settingsVM.ttsLang.collectAsState().value,
+                            ttsTag = settingsVM.ttsLang.collectAsStateWithLifecycle().value,
                             onTtsTagChange = remember { { settingsVM.updateTtsLang(it) } },
                             onBackClick = onBackClick
                         )
