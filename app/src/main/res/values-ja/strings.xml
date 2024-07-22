@@ -20,7 +20,6 @@
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false">freeDictionary</string>
     <string name="search">検索</string>
     <string name="search_hint">単語を入力してください</string>
     <string name="favourites">好きな単語</string>
@@ -34,9 +33,6 @@
     <string name="license_header">これはGNUライセンスに基づいた無料のアプリケーションです。詳細については次を参照してください：</string>
     <string name="gplv3_image_description">GPLv3 License Logo</string>
     <string name="about_app">英語から英語への辞書、以下をベースにしています。</string>
-    <string name="github_source" translatable="false">https://github.com/yamin8000/freeDictionaryApp</string>
-    <string name="license_link" translatable="false">https://raw.githubusercontent.com/yamin8000/freeDictionaryApp/master/LICENSE</string>
-    <string name="free_dictionary_link" translatable="false">https://dictionaryapi.dev/</string>
     <string name="added_to_favourites">お気に入りに追加されました</string>
     <string name="clear">消去</string>
     <string name="untracked_error">予期しないエラーが発生しました！</string>
@@ -56,7 +52,6 @@
     <string name="example">例文</string>
     <string name="definition">意味</string>
     <string name="type">タイプ</string>
-    <string name="this_text_extracted_from_free_dictionary" translatable="false">This text is extracted from the Free Dictionary API</string>
     <string name="general">一般</string>
     <string name="vibrate_on_scroll">スクロール時に振動</string>
     <string name="cancel">キャンセル</string>

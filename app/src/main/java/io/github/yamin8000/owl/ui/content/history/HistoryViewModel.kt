@@ -27,7 +27,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.yamin8000.owl.util.log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
