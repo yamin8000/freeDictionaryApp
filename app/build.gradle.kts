@@ -100,7 +100,7 @@ dependencies {
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiLibsVersion")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.activity:activity-compose:1.9.1")
     implementation("androidx.compose.material:material-icons-extended:$composeLibsVersion")
     implementation("androidx.compose.material3:material3:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
