@@ -104,7 +104,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeLibsVersion")
     implementation("androidx.compose.material3:material3:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
     //coil
     val coilVersion = "2.7.0"
     implementation("io.coil-kt:coil:$coilVersion")
