@@ -22,7 +22,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp") version "2.0.0-1.0.22"
+    id("com.google.devtools.ksp") version "2.0.10-1.0.24"
 }
 
 android {
