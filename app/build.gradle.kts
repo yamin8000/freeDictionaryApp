@@ -89,7 +89,7 @@ dependencies {
     implementation(project(":network"))
     //core android/kotlin
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
     implementation("androidx.core:core-splashscreen:1.0.1")
     //compose
@@ -100,11 +100,11 @@ dependencies {
     implementation("androidx.compose.material:material:$composeLibsVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiLibsVersion")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation("androidx.activity:activity-compose:1.9.1")
     implementation("androidx.compose.material:material-icons-extended:$composeLibsVersion")
     implementation("androidx.compose.material3:material3:$material3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
     //coil
     val coilVersion = "2.7.0"
     implementation("io.coil-kt:coil:$coilVersion")
@@ -113,5 +113,5 @@ dependencies {
     val navVersion = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$navVersion")
     //lottie
-    implementation("com.airbnb.android:lottie-compose:6.4.1")
+    implementation("com.airbnb.android:lottie-compose:6.5.0")
 }

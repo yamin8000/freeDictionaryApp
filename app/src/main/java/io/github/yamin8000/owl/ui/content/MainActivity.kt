@@ -204,7 +204,7 @@ internal class MainActivity : ComponentActivity() {
         CompositionLocalProvider(LocalTTS provides tts.value) {
             val start = "${Nav.Route.Home}/{${Nav.Arguments.Search}}"
             val navController = rememberNavController()
-            val onBackClick: () -> Unit = remember { { navController.popBackStack() } }
+            val onBackClick: () -> Unit = remember { { navController.navigateUp() } }
             NavHost(
                 navController = navController,
                 startDestination = start,
