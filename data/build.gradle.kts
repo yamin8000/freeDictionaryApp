@@ -20,9 +20,9 @@
  */
 
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp") version "2.0.0-1.0.22"
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp") version "2.0.10-1.0.24"
 }
 
 android {
@@ -56,5 +56,5 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     api("androidx.room:room-ktx:$roomVersion")
     //datastore
-    api("androidx.datastore:datastore-preferences:1.1.1")
+    api(libs.androidx.datastore.preferences)
 }

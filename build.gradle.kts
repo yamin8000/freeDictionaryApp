@@ -20,10 +20,9 @@
  */
 
 plugins {
-    val kotlinVersion = "2.0.0"
-    id("com.android.application") version "8.5.2" apply false
-    id("com.android.library") version "8.5.2" apply false
-    id("org.jetbrains.kotlin.android") version kotlinVersion apply false
-    id("org.jetbrains.kotlin.plugin.compose") version kotlinVersion apply false
-    id("com.google.devtools.ksp") version "$kotlinVersion-1.0.22"
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.compose.plugin) apply false
+    id("com.google.devtools.ksp") version "2.0.10-1.0.24"
 }

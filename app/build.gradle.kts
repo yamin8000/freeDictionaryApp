@@ -20,10 +20,10 @@
  */
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("kotlin-parcelize")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.plugin)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 private val appId = "io.github.yamin8000.owl"
@@ -88,30 +88,26 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":network"))
     //core android/kotlin
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.androidx.core.splashscreen)
     //compose
-    val material3Version = "1.2.1"
-    val composeLibsVersion = "1.6.8"
-    val composeUiLibsVersion = "1.6.8"
-    implementation("androidx.compose.ui:ui:$composeUiLibsVersion")
-    implementation("androidx.compose.material:material:$composeLibsVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeUiLibsVersion")
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeUiLibsVersion")
-    implementation("androidx.activity:activity-compose:1.9.1")
-    implementation("androidx.compose.material:material-icons-extended:$composeLibsVersion")
-    implementation("androidx.compose.material3:material3:$material3Version")
-    implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.window.size)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     //coil
     val coilVersion = "2.7.0"
     implementation("io.coil-kt:coil:$coilVersion")
     implementation("io.coil-kt:coil-compose:$coilVersion")
     //navigation
-    val navVersion = "2.7.7"
-    implementation("androidx.navigation:navigation-compose:$navVersion")
+    implementation(libs.androidx.navigation.compose)
     //lottie
     implementation("com.airbnb.android:lottie-compose:6.5.0")
 }
