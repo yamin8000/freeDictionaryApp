@@ -21,7 +21,6 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -62,7 +61,7 @@ class HomeViewModel @Inject constructor(
     val isWordSelectedFromKeyboardSuggestions: State<Boolean>
         get() = derivedStateOf { searchTerm.value.length > 1 && searchTerm.value.last() == ' ' && !searchTerm.value.all { it == ' ' } }
 
-    private val onlineCheckDelay = 3000L
+    private val onlineCheckDelay = 5000L
     private val dnsServers = listOf(
         "8.8.8.8",
         "8.8.4.4",
@@ -85,7 +84,12 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             repeat(Int.MAX_VALUE) {
                 _state.update { stateUpdate ->
-                    stateUpdate.copy(isOnline = dnsServers.any { dnsAccessible(it) })
+                    val isOnline = dnsServers.any { dnsAccessible(it) }
+                    if (isOnline) {
+                        stateUpdate.copy(error = null)
+                    } else {
+                        stateUpdate.copy(error = HomeError.NoInternet)
+                    }
                 }
                 delay(onlineCheckDelay)
             }
@@ -154,7 +158,7 @@ class HomeViewModel @Inject constructor(
                     }
 
                     is UnknownHostException -> {
-                        
+
                     }
 
                     else -> {
@@ -162,12 +166,12 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 _state.update {
-                    it.copy(snackBarEvent = HomeSnackbarEvent.SearchFailed)
+                    it.copy(error = HomeError.SearchFailed)
                 }
             }
         } else {
             _state.update {
-                it.copy(snackBarEvent = HomeSnackbarEvent.TermIsEmpty)
+                it.copy(error = HomeError.TermIsEmpty)
             }
         }
     }

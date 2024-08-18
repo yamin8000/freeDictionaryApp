@@ -97,20 +97,6 @@ fun HomeScreen(
     val focusManager = LocalFocusManager.current
     val keyboardManager = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(state.snackBarEvent) {
-        if (state.snackBarEvent != null) {
-            when (state.snackBarEvent) {
-                HomeSnackbarEvent.SearchFailed -> {
-                    state.snackbarHostState.showSnackbar(context.getString(R.string.general_net_error))
-                }
-
-                HomeSnackbarEvent.TermIsEmpty -> {
-                    state.snackbarHostState.showSnackbar(context.getString(R.string.no_search_term_entered))
-                }
-            }
-        }
-    }
-
     Surface(
         modifier = modifier.fillMaxSize(),
         content = {
@@ -139,10 +125,10 @@ fun HomeScreen(
                 },
                 topBar = {
                     MainTopBar(
-                        onNavigateToAbout = { navController.navigate(Nav.Route.About.toString()) },
-                        onNavigateToSettings = { navController.navigate(Nav.Route.Settings.toString()) },
-                        onNavigateToFavourites = { navController.navigate(Nav.Route.Favourites.toString()) },
-                        onNavigateToHistory = { navController.navigate(Nav.Route.History.toString()) },
+                        onNavigateToAbout = { navController.navigate(Nav.Route.About()) },
+                        onNavigateToSettings = { navController.navigate(Nav.Route.Settings()) },
+                        onNavigateToFavourites = { navController.navigate(Nav.Route.Favourites()) },
+                        onNavigateToHistory = { navController.navigate(Nav.Route.History()) },
                         onRandomClick = { vm.onEvent(HomeEvent.RandomWord) }
                     )
                 },
@@ -200,12 +186,27 @@ fun HomeScreen(
                         modifier = Modifier.padding(contentPadding),
                         content = {
                             AnimatedVisibility(
-                                visible = !state.isOnline,
+                                visible = state.error != null,
                                 enter = slideInVertically() + fadeIn(),
                                 exit = slideOutVertically() + fadeOut(),
                                 content = {
+                                    val error = when (state.error) {
+                                        HomeError.SearchFailed -> {
+                                            context.getString(R.string.general_net_error)
+                                        }
+
+                                        HomeError.TermIsEmpty -> {
+                                            context.getString(R.string.no_search_term_entered)
+                                        }
+
+                                        HomeError.NoInternet -> {
+                                            context.getString(R.string.general_net_error)
+                                        }
+
+                                        null -> ""
+                                    }
                                     PersianText(
-                                        text = stringResource(R.string.general_net_error),
+                                        text = error,
                                         modifier = Modifier.padding(8.dp),
                                         color = MaterialTheme.colorScheme.error
                                     )

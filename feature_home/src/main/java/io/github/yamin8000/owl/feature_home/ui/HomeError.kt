@@ -21,7 +21,8 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
-sealed interface HomeSnackbarEvent {
-    data object TermIsEmpty : HomeSnackbarEvent
-    data object SearchFailed : HomeSnackbarEvent
+sealed interface HomeError {
+    data object TermIsEmpty : HomeError
+    data object SearchFailed : HomeError
+    data object NoInternet : HomeError
 }
