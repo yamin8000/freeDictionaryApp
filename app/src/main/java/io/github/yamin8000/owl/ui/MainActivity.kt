@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.app.main
- *     MainActivity.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
- *     MainActivity.kt Last modified at 2024/5/6
+ *     MainActivity.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
+ *     MainActivity.kt Last modified at 2024/8/18
  *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.content
+package io.github.yamin8000.owl.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -60,6 +60,7 @@ import io.github.yamin8000.owl.core.historyDataStore
 import io.github.yamin8000.owl.core.settingsDataStore
 import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.feature_home.ui.HomeScreen
+import io.github.yamin8000.owl.ui.content.AboutContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
 import io.github.yamin8000.owl.ui.content.history.HistoryContent

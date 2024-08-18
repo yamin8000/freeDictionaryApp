@@ -38,7 +38,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.net.UnknownHostException
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -55,9 +58,6 @@ class HomeViewModel @Inject constructor(
 
     private val _searchSuggestions = MutableStateFlow(listOf<String>())
     val searchSuggestions = _searchSuggestions.asStateFlow()
-
-    private val _snackbarHostState = MutableStateFlow(SnackbarHostState())
-    val snackbarHostState = _snackbarHostState.asStateFlow()
 
     val isWordSelectedFromKeyboardSuggestions: State<Boolean>
         get() = derivedStateOf { searchTerm.value.length > 1 && searchTerm.value.last() == ' ' && !searchTerm.value.all { it == ' ' } }
@@ -119,6 +119,8 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.OnTermChanged -> {
                 savedStateHandle[Nav.Arguments.Search.toString()] = event.term
             }
+
+            HomeEvent.CancelSearch -> cancel()
         }
     }
 
@@ -133,14 +135,41 @@ class HomeViewModel @Inject constructor(
             _state.update {
                 it.copy(isSearching = true)
             }
-            val temp = useCase(searchTerm)
-            _state.update {
-                it.copy(searchResult = temp)
-            }
+            val (result, error) = useCase(searchTerm)
             _state.update {
                 it.copy(isSearching = false)
             }
-        }// else _searchState.emit(SearchState.RequestFailed(SearchState.EMPTY))
+            if (error == null) {
+                _state.update {
+                    it.copy(searchResult = result)
+                }
+            } else {
+                when (error) {
+                    is HttpException -> {
+
+                    }
+
+                    is CancellationException -> {
+
+                    }
+
+                    is UnknownHostException -> {
+                        
+                    }
+
+                    else -> {
+
+                    }
+                }
+                _state.update {
+                    it.copy(snackBarEvent = HomeSnackbarEvent.SearchFailed)
+                }
+            }
+        } else {
+            _state.update {
+                it.copy(snackBarEvent = HomeSnackbarEvent.TermIsEmpty)
+            }
+        }
     }
 
     /*private suspend fun searchForDefinitionRequest(
@@ -322,11 +351,5 @@ class HomeViewModel @Inject constructor(
             it.copy(isSearching = false)
         }
         job?.cancel()
-    }
-
-    fun showSnackbar(message: String) {
-        viewModelScope.launch {
-            _snackbarHostState.value.showSnackbar(message)
-        }
     }
 }

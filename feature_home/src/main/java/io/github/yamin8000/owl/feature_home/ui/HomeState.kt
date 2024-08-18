@@ -30,5 +30,6 @@ data class HomeState(
     val isSharing: Boolean = false,
     val searchSuggestions: List<String> = emptyList(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    val snackBarEvent: HomeSnackbarEvent? = null,
     val searchResult: List<Entry> = emptyList()
 )

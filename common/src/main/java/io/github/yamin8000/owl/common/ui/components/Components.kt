@@ -32,7 +32,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.ArrowBack
+import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,12 +58,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.yamin8000.owl.core.R
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import io.github.yamin8000.owl.strings.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -111,7 +120,7 @@ fun MySnackbar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ScaffoldWithTitle(
+fun ScaffoldWithTitle(
     title: String,
     modifier: Modifier = Modifier,
     snackbarHost: @Composable () -> Unit = {},
@@ -139,11 +148,11 @@ internal fun ScaffoldWithTitle(
                             )
                         },
                         actions = {
-                            /*ClickableIcon(
+                            ClickableIcon(
                                 imageVector = Icons.AutoMirrored.TwoTone.ArrowBack,
                                 contentDescription = stringResource(R.string.back),
                                 onClick = onBackClick
-                            )*/
+                            )
                         }
                     )
                 }
@@ -240,7 +249,7 @@ internal fun DeleteMenu(
     onDismiss: () -> Unit,
     onDelete: () -> Unit
 ) {
-    /*val delete = stringResource(R.string.delete)
+    val delete = stringResource(R.string.delete)
     DropdownMenu(
         modifier = modifier,
         expanded = expanded,
@@ -257,14 +266,14 @@ internal fun DeleteMenu(
                 }
             )
         }
-    )*/
+    )
 }
 
 @Composable
-internal fun EmptyList(
+fun EmptyList(
     modifier: Modifier = Modifier,
 ) {
-    /*val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(io.github.yamin8000.owl.core.R.raw.empty_list))
     val progress by animateLottieCompositionAsState(
         composition = composition,
         iterations = LottieConstants.IterateForever
@@ -273,5 +282,5 @@ internal fun EmptyList(
         modifier = modifier,
         composition = composition,
         progress = { progress },
-    )*/
+    )
 }

@@ -21,23 +21,48 @@
 
 package io.github.yamin8000.owl.ui.content
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
+import io.github.yamin8000.owl.BuildConfig
+import io.github.yamin8000.owl.strings.R
+import io.github.yamin8000.owl.R as RApp
+import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.Ripple
+import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
+import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 
-/*@MyPreview
+@MyPreview
 @Composable
 private fun AboutContentPreview() {
     PreviewTheme {
         AboutContent { }
     }
-}*/
+}
 
 @Composable
 internal fun AboutContent(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit
 ) {
-/*
     ScaffoldWithTitle(
         modifier = modifier,
         title = stringResource(R.string.about),
@@ -51,11 +76,11 @@ internal fun AboutContent(
                     val sourceUri = stringResource(R.string.github_source)
                     val freeDictionaryUri = stringResource(R.string.free_dictionary_link)
                     val licenseUri = stringResource(R.string.license_link)
-                    io.github.yamin8000.owl.coreui.components.Ripple(
+                    Ripple(
                         onClick = { uriHandler.openUri(licenseUri) },
                         content = {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_gplv3),
+                                painter = painterResource(id = RApp.drawable.ic_gplv3),
                                 contentDescription = stringResource(id = R.string.gplv3_image_description),
                                 modifier = Modifier.fillMaxWidth(),
                                 contentScale = ContentScale.FillWidth,
@@ -63,16 +88,16 @@ internal fun AboutContent(
                             )
                         }
                     )
-                    io.github.yamin8000.owl.coreui.components.PersianText(
+                    PersianText(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         text = stringResource(R.string.version_name, BuildConfig.VERSION_NAME)
                     )
                     Spacer(modifier = Modifier.padding(bottom = 16.dp))
-                    io.github.yamin8000.owl.coreui.components.PersianText(
+                    PersianText(
                         text = stringResource(id = R.string.license_header),
                         modifier = Modifier.fillMaxWidth()
                     )
-                    io.github.yamin8000.owl.coreui.components.Ripple(
+                    Ripple(
                         onClick = { uriHandler.openUri(sourceUri) },
                         content = {
                             Text(
@@ -81,11 +106,11 @@ internal fun AboutContent(
                             )
                         }
                     )
-                    io.github.yamin8000.owl.coreui.components.PersianText(
+                    PersianText(
                         text = stringResource(id = R.string.about_app),
                         modifier = Modifier.fillMaxWidth()
                     )
-                    io.github.yamin8000.owl.coreui.components.Ripple(
+                    Ripple(
                         onClick = { uriHandler.openUri(freeDictionaryUri) },
                         content = {
                             Text(
@@ -98,5 +123,4 @@ internal fun AboutContent(
             )
         }
     )
-*/
 }

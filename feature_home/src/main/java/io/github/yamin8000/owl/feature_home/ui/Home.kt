@@ -30,6 +30,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
@@ -37,16 +38,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import io.github.yamin8000.owl.common.ui.components.EmptyList
+import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.navigation.Nav
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
@@ -86,6 +93,24 @@ fun HomeScreen(
     //val termSuggestionsHelper = remember { TermSuggestionsHelper(context) }
 
     //LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+    val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val keyboardManager = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(state.snackBarEvent) {
+        if (state.snackBarEvent != null) {
+            when (state.snackBarEvent) {
+                HomeSnackbarEvent.SearchFailed -> {
+                    state.snackbarHostState.showSnackbar(context.getString(R.string.general_net_error))
+                }
+
+                HomeSnackbarEvent.TermIsEmpty -> {
+                    state.snackbarHostState.showSnackbar(context.getString(R.string.no_search_term_entered))
+                }
+            }
+        }
+    }
+
     Surface(
         modifier = modifier.fillMaxSize(),
         content = {
@@ -97,38 +122,31 @@ fun HomeScreen(
                 val temp = state.searchResult.firstOrNull()
                 if (temp != null) {
                     HandleShareIntent(temp)
-                    //vm.stopWordSharing()
                 }
             }
 
             Scaffold(
                 snackbarHost = {
-                    SnackbarHost(vm.snackbarHostState.collectAsStateWithLifecycle().value) { data ->
-                        /*MySnackbar {
+                    SnackbarHost(state.snackbarHostState) { data ->
+                        MySnackbar {
                             PersianText(
                                 text = data.visuals.message,
                                 modifier = Modifier.fillMaxWidth(),
                                 textAlign = TextAlign.Center
                             )
-                        }*/
+                        }
                     }
                 },
                 topBar = {
                     MainTopBar(
                         onNavigateToAbout = { navController.navigate(Nav.Route.About.toString()) },
-                        onNavigateToSettings = { navController.navigate(Nav.Route.About.toString()) },
-                        onNavigateToFavourites = { navController.navigate(Nav.Route.About.toString()) },
-                        onNavigateToHistory = { navController.navigate(Nav.Route.About.toString()) },
+                        onNavigateToSettings = { navController.navigate(Nav.Route.Settings.toString()) },
+                        onNavigateToFavourites = { navController.navigate(Nav.Route.Favourites.toString()) },
+                        onNavigateToHistory = { navController.navigate(Nav.Route.History.toString()) },
                         onRandomClick = { vm.onEvent(HomeEvent.RandomWord) }
                     )
                 },
                 bottomBar = {
-                    //val search = vm.searchTerm.collectAsStateWithLifecycle()
-                    /*val onSearch: () -> Unit = remember(search.value) {
-                        {
-                            //vm.searchForDefinition(search.value)
-                        }
-                    }*/
                     val onSuggestionsClick: (String) -> Unit = remember {
                         {
                             //vm.updateSearchTerm(it)
@@ -155,14 +173,22 @@ fun HomeScreen(
                         searchTerm = vm.searchTerm.collectAsState().value,
                         suggestions = vm.searchSuggestions.collectAsStateWithLifecycle().value.toPersistentList(),
                         isSearching = state.isSearching,
-                        onSearch = { vm.onEvent(HomeEvent.NewSearch) },
-                        onCancel = onCancel,
+                        onSearch = {
+                            vm.onEvent(HomeEvent.NewSearch)
+                            keyboardManager?.hide()
+                            focusManager.clearFocus()
+                        },
+                        onCancel = {
+                            vm.onEvent(HomeEvent.CancelSearch)
+                            keyboardManager?.hide()
+                            focusManager.clearFocus()
+                        },
                         onSuggestionClick = onSuggestionsClick,
                         onSearchTermChange = {
                             vm.onEvent(HomeEvent.OnTermChanged(it))
                             //vm.handleSuggestions()
                             if (vm.isWordSelectedFromKeyboardSuggestions.value) {
-                                vm.clearSuggestions()
+                                //vm.clearSuggestions()
                                 vm.onEvent(HomeEvent.NewSearch)
                             }
                         }
@@ -223,7 +249,7 @@ fun HomeScreen(
                                 )
                             } else {
                                 PersianText(stringResource(R.string.search_hint))
-                                //EmptyList()
+                                EmptyList()
                             }
                         }
                     )

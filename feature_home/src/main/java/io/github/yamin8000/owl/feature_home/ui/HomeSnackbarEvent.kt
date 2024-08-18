@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     SearchWordUseCase.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     SearchWordUseCase.kt Last modified at 2024/8/18
+ *     HomeSnackBarEvent.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
+ *     HomeSnackBarEvent.kt Last modified at 2024/8/18
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,20 +19,9 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.domain.usecase
+package io.github.yamin8000.owl.feature_home.ui
 
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
-import io.github.yamin8000.owl.feature_home.domain.repository.FreeDictionaryApiRepository
-import java.net.UnknownHostException
-
-class FreeDictionaryUseCase(
-    private val repository: FreeDictionaryApiRepository
-) {
-    suspend operator fun invoke(word: String): Pair<List<Entry>, Throwable?> {
-        return try {
-            return repository.searchWord(word) to null
-        } catch (e: Exception) {
-            listOf<Entry>() to e
-        }
-    }
+sealed interface HomeSnackbarEvent {
+    data object TermIsEmpty : HomeSnackbarEvent
+    data object SearchFailed : HomeSnackbarEvent
 }

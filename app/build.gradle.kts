@@ -88,6 +88,7 @@ android {
 dependencies {
     //modules
     implementation(project(":common"))
+    implementation(project(":strings"))
     implementation(project(":data"))
     implementation(project(":feature_home"))
     //core android/kotlin
@@ -112,8 +113,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:$coilVersion")
     //navigation
     implementation(libs.androidx.navigation.compose)
-    //lottie
-    implementation("com.airbnb.android:lottie-compose:6.5.0")
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
