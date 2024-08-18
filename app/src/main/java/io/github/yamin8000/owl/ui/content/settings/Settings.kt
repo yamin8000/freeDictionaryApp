@@ -55,9 +55,9 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.ui.theme.MyPreview
-import io.github.yamin8000.owl.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.util.TTS
 import java.util.Locale
 

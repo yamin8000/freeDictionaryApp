@@ -21,6 +21,8 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -39,18 +41,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.navigation.Nav
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.ui.components.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
 import io.github.yamin8000.owl.feature_home.ui.components.WordCard
@@ -62,12 +63,12 @@ import kotlinx.collections.immutable.toPersistentList
 @Composable
 private fun HomeScreenPreview() {
     PreviewTheme {
-        HomeScreen(
+        /*HomeScreen(
             isVibrating = false,
-            //onTopBarClick = {},
+            onTopBarClick = {},
             onAddToHistory = {},
             onAddToFavourite = {}
-        )
+        )*/
     }
 }
 
@@ -76,68 +77,29 @@ private fun HomeScreenPreview() {
 fun HomeScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = hiltViewModel(),
-    isVibrating: Boolean,
-    //onTopBarClick: (HomeTopBarItem) -> Unit,
+    navController: NavController,
     onAddToHistory: (String) -> Unit,
     onAddToFavourite: (String) -> Unit
 ) {
-    val context = LocalContext.current
     val state = vm.state.collectAsStateWithLifecycle().value
 
     //val termSuggestionsHelper = remember { TermSuggestionsHelper(context) }
-
-
-    val focusManager = LocalFocusManager.current
-    val keyboardManager = LocalSoftwareKeyboardController.current
-
-    /*
-        LaunchedEffect(Unit) {
-            vm.searchState.collect { searchState ->
-                when (searchState) {
-                    is SearchState.RequestFailed -> {
-                        //vm.showSnackbar(getErrorMessage(searchState.code, context))
-                    }
-
-                    is SearchState.RequestFinished -> {
-                        onAddToHistory(searchState.term)
-                        keyboardManager?.hide()
-                        focusManager.clearFocus()
-                    }
-
-                    SearchState.RequestSucceed -> {
-                        keyboardManager?.hide()
-                        focusManager.clearFocus()
-                    }
-
-                    SearchState.Cached -> {
-                        keyboardManager?.hide()
-                        focusManager.clearFocus()
-                    }
-
-                    SearchState.Unknown -> {}
-                }
-                vm.resetSearchState()
-            }
-        }
-    */
 
     //LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     Surface(
         modifier = modifier.fillMaxSize(),
         content = {
             val listState = rememberScrollState()
-            if (listState.isScrollInProgress && isVibrating)
-                LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            /*if (listState.isScrollInProgress && isVibrating)
+                LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)*/
 
-            //InternetAwareComposable(onlineChanged = { vm.updateIsOnline(it) })
-
-            /*if (vm.isSharing.collectAsStateWithLifecycle().value) {
-                val temp = vm.searchResult.collectAsStateWithLifecycle().value.firstOrNull()
+            if (state.isSharing) {
+                val temp = state.searchResult.firstOrNull()
                 if (temp != null) {
                     HandleShareIntent(temp)
-                    vm.stopWordSharing()
+                    //vm.stopWordSharing()
                 }
-            }*/
+            }
 
             Scaffold(
                 snackbarHost = {
@@ -151,7 +113,15 @@ fun HomeScreen(
                         }*/
                     }
                 },
-                topBar = { MainTopBar(onItemClick = { vm.onEvent(HomeEvent.RandomWord) }) },
+                topBar = {
+                    MainTopBar(
+                        onNavigateToAbout = { navController.navigate(Nav.Route.About.toString()) },
+                        onNavigateToSettings = { navController.navigate(Nav.Route.About.toString()) },
+                        onNavigateToFavourites = { navController.navigate(Nav.Route.About.toString()) },
+                        onNavigateToHistory = { navController.navigate(Nav.Route.About.toString()) },
+                        onRandomClick = { vm.onEvent(HomeEvent.RandomWord) }
+                    )
+                },
                 bottomBar = {
                     //val search = vm.searchTerm.collectAsStateWithLifecycle()
                     /*val onSearch: () -> Unit = remember(search.value) {
@@ -182,13 +152,20 @@ fun HomeScreen(
                         }
                     }
                     MainBottomBar(
-                        searchTerm = state.searchTerm,
+                        searchTerm = vm.searchTerm.collectAsState().value,
                         suggestions = vm.searchSuggestions.collectAsStateWithLifecycle().value.toPersistentList(),
-                        isSearching = vm.isSearching.collectAsStateWithLifecycle().value,
+                        isSearching = state.isSearching,
                         onSearch = { vm.onEvent(HomeEvent.NewSearch) },
                         onCancel = onCancel,
                         onSuggestionClick = onSuggestionsClick,
-                        onSearchTermChange = { vm.onEvent(HomeEvent.OnTermChanged(it)) }
+                        onSearchTermChange = {
+                            vm.onEvent(HomeEvent.OnTermChanged(it))
+                            //vm.handleSuggestions()
+                            if (vm.isWordSelectedFromKeyboardSuggestions.value) {
+                                vm.clearSuggestions()
+                                vm.onEvent(HomeEvent.NewSearch)
+                            }
+                        }
                     )
                 },
                 content = { contentPadding ->
@@ -234,11 +211,7 @@ fun HomeScreen(
                                         WordCard(
                                             word = word,
                                             pronunciation = phonetic,
-                                            onShareWord = remember {
-                                                {
-                                                    //vm.startWordSharing()
-                                                }
-                                            },
+                                            onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
                                             onAddToFavourite = remember(state.searchResult) {
                                                 {
                                                     onAddToFavourite(word)
@@ -260,7 +233,7 @@ fun HomeScreen(
     )
 }
 
-/*@Composable
+@Composable
 private fun HandleShareIntent(
     entry: Entry
 ) {
@@ -274,9 +247,9 @@ private fun HandleShareIntent(
     }
     val shareIntent = Intent.createChooser(sendIntent, null)
     context.startActivity(shareIntent)
-}*/
+}
 
-/*private fun createShareText(
+private fun createShareText(
     context: Context,
     entry: Entry
 ) = buildString {
@@ -307,7 +280,7 @@ private fun HandleShareIntent(
     appendLine(context.getString(R.string.github_source))
     appendLine(context.getString(R.string.this_text_extracted_from_free_dictionary))
     append(context.getString(R.string.free_dictionary_link))
-}*/
+}
 
 /*private fun getErrorMessage(
     code: Int,

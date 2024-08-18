@@ -23,16 +23,14 @@ package io.github.yamin8000.owl.ui.content
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.yamin8000.owl.ui.theme.MyPreview
-import io.github.yamin8000.owl.ui.theme.PreviewTheme
 
-@MyPreview
+/*@MyPreview
 @Composable
 private fun AboutContentPreview() {
     PreviewTheme {
         AboutContent { }
     }
-}
+}*/
 
 @Composable
 internal fun AboutContent(

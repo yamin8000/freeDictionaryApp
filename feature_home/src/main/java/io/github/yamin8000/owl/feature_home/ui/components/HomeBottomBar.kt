@@ -21,7 +21,6 @@
 
 package io.github.yamin8000.owl.feature_home.ui.components
 
-//import io.github.yamin8000.owl.ui.composable.ClickableIcon
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,9 +31,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Clear
+import androidx.compose.material.icons.twotone.Search
+import androidx.compose.material.icons.twotone.Stop
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -44,14 +48,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import io.github.yamin8000.owl.common.ui.components.ClickableIcon
 import io.github.yamin8000.owl.common.ui.components.HighlightText
+import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
+import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
@@ -150,36 +159,35 @@ private fun NormalBottomAppBar(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 label = {
-                    /*PersianText(
+                    PersianText(
                         stringResource(R.string.search),
                         modifier = Modifier.fillMaxWidth()
-                    )*/
+                    )
                 },
                 placeholder = {
-                    /*PersianText(
+                    PersianText(
                         text = stringResource(R.string.search_hint),
                         modifier = Modifier.fillMaxWidth(),
                         fontSize = 12.sp
-                    )*/
+                    )
                 },
                 leadingIcon = {
                     val onClearClick = remember { { onSearchTermChange("") } }
-                    /*ClickableIcon(
+                    ClickableIcon(
                         imageVector = Icons.TwoTone.Clear,
                         contentDescription = stringResource(R.string.clear),
                         onClick = onClearClick
-                    )*/
+                    )
                 },
                 trailingIcon = {
-                    /*ClickableIcon(
+                    ClickableIcon(
                         imageVector = Icons.TwoTone.Search,
                         contentDescription = stringResource(R.string.search),
                         onClick = onSearchClick
-                    )*/
+                    )
                 },
                 value = searchTerm,
                 onValueChange = onTermChanged,
-                //textStyle = getTextStyleBasedOnLocale(LocalContext.current),
                 keyboardActions = KeyboardActions(onSearch = { onSearchClick() }),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search,
@@ -203,10 +211,10 @@ private fun BottomAppBarDuringSearch(
             FloatingActionButton(
                 onClick = onCancel,
                 content = {
-                    /*Icon(
+                    Icon(
                         imageVector = Icons.TwoTone.Stop,
                         contentDescription = stringResource(R.string.cancel)
-                    )*/
+                    )
                 }
             )
         }
@@ -235,16 +243,3 @@ private fun RainbowLinearProgress(
         color = color
     )
 }
-
-/*
-private fun getTextStyleBasedOnLocale(
-    context: Context
-): TextStyle {
-    return if (getCurrentLocale(context).language == Locale("fa").language) {
-        TextStyle(
-            fontFamily = Samim,
-            textAlign = TextAlign.Right,
-            textDirection = TextDirection.Rtl
-        )
-    } else TextStyle()
-}*/

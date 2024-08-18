@@ -22,14 +22,17 @@
 package io.github.yamin8000.owl.feature_home.ui
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.ui.navigation.Nav
 import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -41,34 +44,23 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     //private val termSuggestionsHelper: TermSuggestionsHelper
     private val useCase: FreeDictionaryUseCase,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val ioScope = CoroutineScope(Dispatchers.IO)
-
-    private val sentSearchTerm = savedStateHandle.get<String>("")
-    private val isStartingBlank = savedStateHandle.get<Boolean>("") ?: true
+    val searchTerm = savedStateHandle.getStateFlow(Nav.Arguments.Search.toString(), "")
 
     private var _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
     private var job: Job? = null
 
-    private val _isSharing = MutableStateFlow(false)
-    val isSharing = _isSharing.asStateFlow()
-
-    private val _isSearching = MutableStateFlow(false)
-    val isSearching = _isSearching.asStateFlow()
-
     private val _searchSuggestions = MutableStateFlow(listOf<String>())
     val searchSuggestions = _searchSuggestions.asStateFlow()
-
-    private val _searchState = MutableStateFlow<SearchState>(SearchState.Unknown)
 
     private val _snackbarHostState = MutableStateFlow(SnackbarHostState())
     val snackbarHostState = _snackbarHostState.asStateFlow()
 
-    /*val isWordSelectedFromKeyboardSuggestions: State<Boolean>
-        get() = derivedStateOf { _searchTerm.value.length > 1 && _searchTerm.value.last() == ' ' && !_searchTerm.value.all { it == ' ' } }*/
+    val isWordSelectedFromKeyboardSuggestions: State<Boolean>
+        get() = derivedStateOf { searchTerm.value.length > 1 && searchTerm.value.last() == ' ' && !searchTerm.value.all { it == ' ' } }
 
     private val onlineCheckDelay = 3000L
     private val dnsServers = listOf(
@@ -95,6 +87,7 @@ class HomeViewModel @Inject constructor(
                 _state.update { stateUpdate ->
                     stateUpdate.copy(isOnline = dnsServers.any { dnsAccessible(it) })
                 }
+                delay(onlineCheckDelay)
             }
         }
     }
@@ -111,32 +104,22 @@ class HomeViewModel @Inject constructor(
 
     fun onEvent(event: HomeEvent) {
         when (event) {
-            is HomeEvent.NewSearch -> searchForDefinition(_state.value.searchTerm)
+            is HomeEvent.NewSearch -> {
+                job = searchForDefinition(searchTerm.value)
+            }
+
             HomeEvent.RandomWord -> searchForRandomWord()
             HomeEvent.SearchSucceed -> {}
-            HomeEvent.OnShareData -> {}
-            is HomeEvent.OnTermChanged -> {
+            HomeEvent.OnShareData -> {
                 _state.update {
-                    it.copy(searchTerm = event.term)
+                    it.copy(isSharing = true)
                 }
             }
+
+            is HomeEvent.OnTermChanged -> {
+                savedStateHandle[Nav.Arguments.Search.toString()] = event.term
+            }
         }
-    }
-
-    private suspend fun resetSearchState() {
-        _searchState.emit(SearchState.Unknown)
-    }
-
-    private fun startWordSharing() {
-        _isSharing.value = true
-    }
-
-    private fun stopWordSharing() {
-        _isSharing.value = false
-    }
-
-    private fun updateSearchTerm(new: String) {
-        //_searchTerm.value = new
     }
 
     private fun searchForRandomWord() = viewModelScope.launch {
@@ -155,7 +138,7 @@ class HomeViewModel @Inject constructor(
                 it.copy(searchResult = temp)
             }
             _state.update {
-                it.copy(isSearching = true)
+                it.copy(isSearching = false)
             }
         }// else _searchState.emit(SearchState.RequestFailed(SearchState.EMPTY))
     }
@@ -335,7 +318,9 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun cancel() {
-        _isSearching.value = false
+        _state.update {
+            it.copy(isSearching = false)
+        }
         job?.cancel()
     }
 

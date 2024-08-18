@@ -27,7 +27,7 @@ import io.github.yamin8000.owl.feature_home.domain.model.Entry
 data class HomeState(
     val isOnline: Boolean = false,
     val isSearching: Boolean = false,
-    val searchTerm: String = "",
+    val isSharing: Boolean = false,
     val searchSuggestions: List<String> = emptyList(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     val searchResult: List<Entry> = emptyList()

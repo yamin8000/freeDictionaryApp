@@ -24,8 +24,8 @@ package io.github.yamin8000.owl.ui.content.history
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.theme.MyPreview
-import io.github.yamin8000.owl.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 

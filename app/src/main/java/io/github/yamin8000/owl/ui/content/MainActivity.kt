@@ -52,6 +52,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.yamin8000.owl.common.ui.navigation.Nav
+import io.github.yamin8000.owl.common.ui.theme.AppTheme
 import io.github.yamin8000.owl.core.LocalTTS
 import io.github.yamin8000.owl.core.favouritesDataStore
 import io.github.yamin8000.owl.core.historyDataStore
@@ -65,8 +67,6 @@ import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
 import io.github.yamin8000.owl.ui.content.settings.SettingsContent
 import io.github.yamin8000.owl.ui.content.settings.SettingsViewModel
 import io.github.yamin8000.owl.ui.content.settings.ThemeSetting
-import io.github.yamin8000.owl.ui.navigation.Nav
-import io.github.yamin8000.owl.ui.theme.AppTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.log
@@ -207,23 +207,17 @@ internal class MainActivity : ComponentActivity() {
                 exitTransition = { fadeOut(animationSpec = tween(100)) },
                 builder = {
                     composable(start) {
-                        var searchTerm = it.arguments?.getString(Nav.Arguments.Search.toString())
+                        val searchTerm = it.arguments?.getString(Nav.Arguments.Search())
                         if (searchTerm == null && outsideInput != null)
-                            searchTerm = outsideInput.toString()
+                            it.savedStateHandle[Nav.Arguments.Search()] = outsideInput.toString()
                         val addToHistory: (String) -> Unit = remember {
                             { item -> historyVM.add(item) }
                         }
                         val addToFavourite: (String) -> Unit = remember {
                             { item -> favouritesVM.add(item) }
                         }
-                        /*val onTopBarClick: (io.github.yamin8000.owl.feature_home.ui.HomeTopBarItem) -> Unit = remember {
-                            { item -> navController.navigate(item.route()) }
-                        }*/
                         HomeScreen(
-                            //searchTerm = searchTerm,
-                            //isStartingBlank = settingsVM.isStartingBlank.collectAsStateWithLifecycle().value,
-                            isVibrating = settingsVM.isVibrating.collectAsStateWithLifecycle().value,
-                            //onTopBarClick = onTopBarClick,
+                            navController = navController,
                             onAddToHistory = addToHistory,
                             onAddToFavourite = addToFavourite
                         )
@@ -235,7 +229,7 @@ internal class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable(Nav.Route.Favourites.toString()) {
+                    composable(Nav.Route.Favourites()) {
                         val onFavouritesItemClick: (String) -> Unit = remember {
                             { favourite -> navController.navigate("${Nav.Route.Home}/${favourite}") }
                         }
@@ -248,7 +242,7 @@ internal class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable(Nav.Route.History.toString()) {
+                    composable(Nav.Route.History()) {
                         val onHistoryItemClick: (String) -> Unit = remember {
                             { history -> navController.navigate("${Nav.Route.Home}/${history}") }
                         }
@@ -261,7 +255,7 @@ internal class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable(Nav.Route.Settings.toString()) {
+                    composable(Nav.Route.Settings()) {
                         SettingsContent(
                             isVibrating = settingsVM.isVibrating.collectAsStateWithLifecycle().value,
                             onVibratingChange = remember { { settingsVM.updateVibrationSetting(it) } },

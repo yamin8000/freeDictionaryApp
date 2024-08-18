@@ -87,6 +87,7 @@ android {
 
 dependencies {
     //modules
+    implementation(project(":common"))
     implementation(project(":data"))
     implementation(project(":feature_home"))
     //core android/kotlin
@@ -97,7 +98,8 @@ dependencies {
     //compose
     implementation(libs.androidx.compose.ui)//
     implementation(libs.androidx.compose.material)//
-    implementation(libs.androidx.compose.ui.tooling.preview)//
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    //
     debugImplementation(libs.androidx.compose.ui.tooling)//
     implementation(libs.androidx.activity.compose)//
     implementation(libs.androidx.compose.material.icons.extended)//

@@ -28,10 +28,11 @@ import androidx.compose.material.icons.twotone.History
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -42,29 +43,33 @@ import io.github.yamin8000.owl.strings.R
 @Composable
 internal fun MainTopBar(
     modifier: Modifier = Modifier,
-    onItemClick: (HomeTopBarItem) -> Unit
+    onNavigateToAbout: () -> Unit,
+    onNavigateToSettings: () -> Unit,
+    onNavigateToFavourites: () -> Unit,
+    onNavigateToHistory: () -> Unit,
+    onRandomClick: () -> Unit
 ) {
     Surface(
         modifier = modifier,
         shadowElevation = 8.dp,
         content = {
             TopAppBar(
-                title = { },
+                title = {
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                },
                 actions = {
-                    val onHistoryClick = remember { { onItemClick(HomeTopBarItem.History) } }
-                    val onFavouriteClick = remember { { onItemClick(HomeTopBarItem.Favourites) } }
-                    val onRandomClick = remember { { onItemClick(HomeTopBarItem.Random) } }
-                    val onSettingsClick = remember { { onItemClick(HomeTopBarItem.Settings) } }
-                    val onInfoClick = remember { { onItemClick(HomeTopBarItem.Info) } }
                     ClickableIcon(
                         imageVector = Icons.TwoTone.History,
                         contentDescription = stringResource(R.string.search_history),
-                        onClick = onHistoryClick
+                        onClick = onNavigateToHistory
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Favorite,
                         contentDescription = stringResource(R.string.favourites),
-                        onClick = onFavouriteClick
+                        onClick = onNavigateToFavourites
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Casino,
@@ -74,12 +79,12 @@ internal fun MainTopBar(
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Settings,
                         contentDescription = stringResource(R.string.settings),
-                        onClick = onSettingsClick
+                        onClick = onNavigateToSettings
                     )
                     ClickableIcon(
                         imageVector = Icons.TwoTone.Info,
                         contentDescription = stringResource(R.string.about_app),
-                        onClick = onInfoClick
+                        onClick = onNavigateToAbout
                     )
                 }
             )
