@@ -21,7 +21,7 @@
 
 package io.github.yamin8000.owl.util
 
-import io.github.yamin8000.owl.data.db.AppDatabase
+import io.github.yamin8000.owl.feature_home.data.datasource.local.AppDatabase
 
 /**
  * App-wide constants
@@ -39,17 +39,7 @@ object Constants {
 
     val NOT_WORD_CHARS_REGEX = Regex("\\W+")
 
-    const val INTERNET_CHECK_DELAY = 3000L
-    val DNS_SERVERS = listOf(
-        "8.8.8.8",
-        "8.8.4.4",
-        "1.1.1.1",
-        "1.0.0.1",
-        "185.51.200.2",
-        "178.22.122.100",
-        "10.202.10.202",
-        "10.202.10.102"
-    )
+
 
     const val FREE = "free"
 }

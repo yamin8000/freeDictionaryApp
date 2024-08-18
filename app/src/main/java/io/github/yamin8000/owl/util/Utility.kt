@@ -33,27 +33,6 @@ import io.github.yamin8000.owl.BuildConfig
 import java.util.Locale
 
 /**
- * Finds current activity instance or null
- */
-fun Context.findActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.findActivity()
-    else -> null
-}
-
-/**
- * Returns current [Locale] of the device
- */
-@Suppress("DEPRECATION")
-fun getCurrentLocale(
-    context: Context
-): Locale {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        context.resources.configuration.locales.get(0)
-    } else context.resources.configuration.locale
-}
-
-/**
  * Extension method for [TextToSpeech] that
  * calls [TextToSpeech.speak] with some predefined parameters
  */
@@ -72,19 +51,6 @@ fun log(
     if (BuildConfig.DEBUG)
         Log.d(Constants.LOG_TAG, message)
 }
-
-/**
- * This method sanitize words from the given [data] set
- * by removing unnecessary characters like white spaces and numbers and etc and
- * making them lowercase and filtering out blank entries
- */
-fun sanitizeWords(
-    data: Set<String>
-): Set<String> = data.asSequence()
-    .map { it.replace(Constants.NOT_WORD_CHARS_REGEX, "") }
-    .map { it.lowercase() }
-    .filter { it.isNotBlank() }
-    .toSet()
 
 /**
  * General Purpose factory for [androidx.lifecycle.ViewModel]

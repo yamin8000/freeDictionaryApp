@@ -21,9 +21,11 @@
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.compose.plugin)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.compose.plugin)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.google.ksp)
+    alias(libs.plugins.hilt)
 }
 
 private val appId = "io.github.yamin8000.owl"
@@ -86,22 +88,22 @@ android {
 dependencies {
     //modules
     implementation(project(":data"))
-    implementation(project(":network"))
+    implementation(project(":feature_home"))
     //core android/kotlin
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)//
+    implementation(libs.jetbrains.kotlinx.immutable)//
     implementation(libs.androidx.core.splashscreen)
     //compose
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material3.window.size)
-    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.compose.ui)//
+    implementation(libs.androidx.compose.material)//
+    implementation(libs.androidx.compose.ui.tooling.preview)//
+    debugImplementation(libs.androidx.compose.ui.tooling)//
+    implementation(libs.androidx.activity.compose)//
+    implementation(libs.androidx.compose.material.icons.extended)//
+    implementation(libs.androidx.compose.material3)//
+    implementation(libs.androidx.compose.material3.window.size)//
+    implementation(libs.androidx.lifecycle.runtime.compose)//
     //coil
     val coilVersion = "2.7.0"
     implementation("io.coil-kt:coil:$coilVersion")
@@ -110,4 +112,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     //lottie
     implementation("com.airbnb.android:lottie-compose:6.5.0")
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

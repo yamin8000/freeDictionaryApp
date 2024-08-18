@@ -55,9 +55,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.PersianText
-import io.github.yamin8000.owl.ui.composable.ScaffoldWithTitle
-import io.github.yamin8000.owl.ui.composable.SettingsItemCard
 import io.github.yamin8000.owl.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.ui.theme.MyPreview
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
@@ -97,6 +94,7 @@ internal fun SettingsContent(
     onTtsTagChange: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
+/*
     ScaffoldWithTitle(
         modifier = modifier,
         title = stringResource(id = R.string.settings),
@@ -130,6 +128,7 @@ internal fun SettingsContent(
             )
         }
     )
+*/
 }
 
 @Composable
@@ -138,6 +137,7 @@ private fun TtsLanguageSetting(
     currentTtsTag: String,
     onTtsTagChange: (String) -> Unit
 ) {
+/*
     SettingsItemCard(
         modifier = modifier,
         title = stringResource(R.string.tts_language),
@@ -148,7 +148,11 @@ private fun TtsLanguageSetting(
                 onClick = showDialog,
                 content = {
                     Icon(imageVector = Icons.TwoTone.Language, contentDescription = null)
-                    PersianText(Locale.forLanguageTag(currentTtsTag).displayName)
+                    io.github.yamin8000.owl.coreui.components.PersianText(
+                        Locale.forLanguageTag(
+                            currentTtsTag
+                        ).displayName
+                    )
 
                     val context = LocalContext.current
                     var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
@@ -181,6 +185,7 @@ private fun TtsLanguageSetting(
             )
         }
     )
+*/
 }
 
 @Composable
@@ -194,7 +199,7 @@ private fun TtsLanguagesDialog(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
-        title = { PersianText(stringResource(R.string.tts_language)) },
+        //title = { PersianText(stringResource(R.string.tts_language)) },
         icon = { Icon(imageVector = Icons.TwoTone.Language, contentDescription = null) },
         confirmButton = {/*ignored*/ },
         text = {
@@ -223,6 +228,7 @@ private fun GeneralSettings(
     isStartingBlank: Boolean,
     onStartingBlankChange: (Boolean) -> Unit
 ) {
+/*
     SettingsItemCard(
         modifier = modifier.fillMaxWidth(),
         title = stringResource(R.string.general),
@@ -241,6 +247,7 @@ private fun GeneralSettings(
             )
         }
     )
+*/
 }
 
 @Composable
@@ -257,10 +264,12 @@ private fun TtsLanguageItem(
         onClick = onItemClick,
         enabled = !isSelected,
         content = {
+/*
             PersianText(
                 text = Locale.forLanguageTag(localeTag).displayName,
                 modifier = Modifier.padding(16.dp)
             )
+*/
         }
     )
 }
@@ -275,6 +284,7 @@ private fun ThemeSetting(
     val onDismissDialog = remember { { isShowingDialog = false } }
     val onShowDialog = remember { { isShowingDialog = true } }
 
+/*
     SettingsItemCard(
         modifier = modifier,
         title = stringResource(R.string.theme),
@@ -293,7 +303,7 @@ private fun ThemeSetting(
                         imageVector = Icons.TwoTone.DisplaySettings,
                         contentDescription = stringResource(R.string.theme)
                     )
-                    PersianText(
+                    io.github.yamin8000.owl.coreui.components.PersianText(
                         text = stringResource(currentTheme.persianNameStringResource),
                     )
                 }
@@ -302,6 +312,7 @@ private fun ThemeSetting(
                 DynamicThemeNotice()
         }
     )
+*/
 }
 
 @Composable
@@ -316,7 +327,7 @@ private fun ThemeChangerDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
         confirmButton = { /*ignored*/ },
-        title = { PersianText(stringResource(R.string.theme)) },
+        //title = { PersianText(stringResource(R.string.theme)) },
         icon = { Icon(imageVector = Icons.TwoTone.DisplaySettings, contentDescription = null) },
         text = {
             Column(
@@ -350,10 +361,10 @@ private fun ThemeChangerDialog(
                                     onClick = null,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
-                                PersianText(
+                                /*PersianText(
                                     text = stringResource(theme.persianNameStringResource),
                                     modifier = Modifier.padding(vertical = 16.dp)
-                                )
+                                )*/
                             }
                         )
                     }
@@ -367,9 +378,9 @@ private fun ThemeChangerDialog(
 private fun DynamicThemeNotice(
     modifier: Modifier = Modifier,
 ) {
-    PersianText(
+    /*PersianText(
         modifier = modifier,
         text = stringResource(R.string.dynamic_theme_notice),
         textAlign = TextAlign.Justify
-    )
+    )*/
 }

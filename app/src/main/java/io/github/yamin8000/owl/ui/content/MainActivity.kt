@@ -51,23 +51,21 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
+import dagger.hilt.android.AndroidEntryPoint
+import io.github.yamin8000.owl.core.LocalTTS
+import io.github.yamin8000.owl.core.favouritesDataStore
+import io.github.yamin8000.owl.core.historyDataStore
+import io.github.yamin8000.owl.core.settingsDataStore
 import io.github.yamin8000.owl.data.DataStoreRepository
-import io.github.yamin8000.owl.data.db.AppDatabase
-import io.github.yamin8000.owl.ui.LocalTTS
+import io.github.yamin8000.owl.feature_home.ui.HomeScreen
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
 import io.github.yamin8000.owl.ui.content.history.HistoryContent
 import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
-import io.github.yamin8000.owl.ui.content.home.HomeScreen
-import io.github.yamin8000.owl.ui.content.home.HomeTopBarItem
 import io.github.yamin8000.owl.ui.content.settings.SettingsContent
 import io.github.yamin8000.owl.ui.content.settings.SettingsViewModel
 import io.github.yamin8000.owl.ui.content.settings.ThemeSetting
-import io.github.yamin8000.owl.ui.favouritesDataStore
-import io.github.yamin8000.owl.ui.historyDataStore
 import io.github.yamin8000.owl.ui.navigation.Nav
-import io.github.yamin8000.owl.ui.settingsDataStore
 import io.github.yamin8000.owl.ui.theme.AppTheme
 import io.github.yamin8000.owl.util.Constants
 import io.github.yamin8000.owl.util.TTS
@@ -77,6 +75,7 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
+@AndroidEntryPoint
 internal class MainActivity : ComponentActivity() {
 
     private var outsideInput: String? = null
@@ -92,7 +91,6 @@ internal class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
-        Constants.db = createDb()
         outsideInput = handleOutsideInputIntent()
 
         try {
@@ -123,9 +121,6 @@ internal class MainActivity : ComponentActivity() {
         DataStoreRepository(settingsDataStore).getString(Constants.THEME)
             ?: ThemeSetting.System.name
     )
-
-    private fun createDb() = Room.databaseBuilder(this, AppDatabase::class.java, "db")
-        .build()
 
     private fun handleOutsideInputIntent(): String? {
         //widget
@@ -221,14 +216,14 @@ internal class MainActivity : ComponentActivity() {
                         val addToFavourite: (String) -> Unit = remember {
                             { item -> favouritesVM.add(item) }
                         }
-                        val onTopBarClick: (HomeTopBarItem) -> Unit = remember {
+                        /*val onTopBarClick: (io.github.yamin8000.owl.feature_home.ui.HomeTopBarItem) -> Unit = remember {
                             { item -> navController.navigate(item.route()) }
-                        }
+                        }*/
                         HomeScreen(
-                            searchTerm = searchTerm,
-                            isStartingBlank = settingsVM.isStartingBlank.collectAsStateWithLifecycle().value,
+                            //searchTerm = searchTerm,
+                            //isStartingBlank = settingsVM.isStartingBlank.collectAsStateWithLifecycle().value,
                             isVibrating = settingsVM.isVibrating.collectAsStateWithLifecycle().value,
-                            onTopBarClick = onTopBarClick,
+                            //onTopBarClick = onTopBarClick,
                             onAddToHistory = addToHistory,
                             onAddToFavourite = addToFavourite
                         )

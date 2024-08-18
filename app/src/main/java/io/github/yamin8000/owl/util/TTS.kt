@@ -30,9 +30,7 @@ import kotlin.coroutines.resume
 
 private var tts: TextToSpeech? = null
 
-/**
- * A helper/wrapper for [TextToSpeech]
- */
+/** A helper/wrapper for [TextToSpeech] */
 class TTS(
     private val context: Context,
     private val locale: Locale = Locale.US,
@@ -40,8 +38,8 @@ class TTS(
     private var ttsLang: Int = 0
 
     /**
-     * This method wraps around classic [TextToSpeech.OnInitListener] callback method
-     * and suspends it result with a [CancellableContinuation] coroutine
+     * This method wraps around classic [TextToSpeech.OnInitListener] callback
+     * method and suspends it result with a [CancellableContinuation] coroutine
      */
     suspend fun getTts(): TextToSpeech? {
         return suspendCancellableCoroutine { continuation ->

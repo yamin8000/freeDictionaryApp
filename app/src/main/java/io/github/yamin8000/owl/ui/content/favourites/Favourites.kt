@@ -22,9 +22,6 @@
 package io.github.yamin8000.owl.ui.content.favourites
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.ui.composable.CrudContent
 import io.github.yamin8000.owl.ui.theme.MyPreview
 import io.github.yamin8000.owl.ui.theme.PreviewTheme
 import kotlinx.collections.immutable.PersistentList
@@ -52,12 +49,14 @@ internal fun FavouritesContent(
     onFavouritesItemClick: (String) -> Unit,
     onBackClick: () -> Unit
 ) {
-    CrudContent(
-        title = stringResource(R.string.favourites),
-        items = favourites,
-        onBackClick = onBackClick,
-        onRemoveAll = onRemoveAll,
-        onRemoveSingle = onRemove,
-        onItemClick = onFavouritesItemClick
-    )
+    /*
+        CrudContent(
+            title = stringResource(R.string.favourites),
+            items = favourites,
+            onBackClick = onBackClick,
+            onRemoveAll = onRemoveAll,
+            onRemoveSingle = onRemove,
+            onItemClick = onFavouritesItemClick
+        )
+    */
 }
