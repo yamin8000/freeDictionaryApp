@@ -24,16 +24,20 @@ package io.github.yamin8000.owl.feature_settings.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.ui.util.TTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val useCases: SettingUseCases
+    private val useCases: SettingUseCases,
+    private val tts: TTS
 ) : ViewModel() {
     private val scope = viewModelScope
 
@@ -41,51 +45,42 @@ class SettingsViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        scope.launch {
-            _state.update {
-                it.copy(
+        runBlocking {
+            _state.update { settingsState ->
+                settingsState.copy(
                     themeType = useCases.getTheme(),
                     ttsLang = useCases.getTTS(),
                     isVibrating = useCases.getVibration(),
-                    isStartingBlank = useCases.getStartingBlank()
+                    isStartingBlank = useCases.getStartingBlank(),
                 )
+            }
+        }
+        scope.launch {
+            _state.update { settingsState ->
+                settingsState.copy(englishLanguages = tts.getTts(
+                    state.value.ttsLang ?: Locale.US.toLanguageTag()
+                )?.availableLanguages?.filter { it.language == Locale.ENGLISH.language }
+                    ?: listOf())
             }
         }
     }
 
-    fun updateTtsLang(
-        newTtsLang: String
-    ) {
-        /*scope.launch {
-            _ttsLang.value = newTtsLang
-            settings.setString(Constants.TTS_LANG, newTtsLang)
-        }*/
-    }
+    fun onEvent(event: SettingsEvent) {
+        when (event) {
+            is SettingsEvent.UpdateStartingBlankState -> {
+                _state.update { it.copy(isStartingBlank = event.value) }
+                scope.launch { useCases.setStartingBlank(event.value) }
+            }
 
-    /*fun updateThemeSetting(
-        newTheme: ThemeSetting
-    ) {
-        *//*scope.launch {
-            _themeSetting.value = newTheme
-            settings.setString(Constants.THEME, newTheme.name)
-        }*//*
-    }*/
+            is SettingsEvent.UpdateTtsLangState -> {
+                _state.update { it.copy(ttsLang = event.value) }
+                scope.launch { useCases.setTTS(event.value) }
+            }
 
-    fun updateVibrationSetting(
-        newVibrationSetting: Boolean
-    ) {
-        /*scope.launch {
-            _isVibrating.value = newVibrationSetting
-            settings.setBool(Constants.IS_VIBRATING, newVibrationSetting)
-        }*/
-    }
-
-    fun updateStartingBlank(
-        isStartingWithBlank: Boolean
-    ) {
-        /*scope.launch {
-            _isStartingBlank.value = isStartingWithBlank
-            settings.setBool(Constants.IS_STARTING_BLANK, isStartingWithBlank)
-        }*/
+            is SettingsEvent.UpdateVibrationState -> {
+                _state.update { it.copy(isVibrating = event.value) }
+                scope.launch { useCases.setVibration(event.value) }
+            }
+        }
     }
 }

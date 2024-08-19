@@ -21,26 +21,20 @@
 
 package io.github.yamin8000.owl.feature_settings.ui
 
-import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material.icons.twotone.Language
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,9 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -85,9 +77,11 @@ fun SettingsScreen(
                 content = {
                     GeneralSettings(
                         isVibrating = state.isVibrating,
-                        onVibratingChange = {},
+                        onVibratingChange = { vm.onEvent(SettingsEvent.UpdateVibrationState(it)) },
                         isStartingBlank = state.isStartingBlank,
-                        onStartingBlankChange = {}
+                        onStartingBlankChange = {
+                            vm.onEvent(SettingsEvent.UpdateStartingBlankState(it))
+                        }
                     )
                     /*ThemeSetting(
                         currentTheme = themeSetting,
@@ -98,7 +92,8 @@ fun SettingsScreen(
                     )*/
                     TtsLanguageSetting(
                         currentTtsTag = state.ttsLang ?: "",
-                        onTtsTagChange = {}
+                        languages = state.englishLanguages,
+                        onTtsTagChange = { vm.onEvent(SettingsEvent.UpdateTtsLangState(it)) }
                     )
                 }
             )
@@ -111,6 +106,7 @@ fun SettingsScreen(
 private fun TtsLanguageSetting(
     modifier: Modifier = Modifier,
     currentTtsTag: String,
+    languages: List<Locale>,
     onTtsTagChange: (String) -> Unit
 ) {
     SettingsItemCard(
@@ -129,17 +125,6 @@ private fun TtsLanguageSetting(
                         ).displayName
                     )
 
-                    val context = LocalContext.current
-                    var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
-
-                    /*LaunchedEffect(currentTtsTag) {
-                        englishLanguages = TTS(context, Locale.forLanguageTag(currentTtsTag))
-                            .getTts()
-                            ?.availableLanguages
-                            ?.filter { it.language == Locale.ENGLISH.language }
-                            ?: listOf()
-                    }*/
-
                     val hideDialog = remember { { isDialogShown = false } }
                     val onLanguageSelect: (String) -> Unit = remember {
                         {
@@ -151,7 +136,7 @@ private fun TtsLanguageSetting(
                     if (isDialogShown) {
                         TtsLanguagesDialog(
                             currentTtsTag = currentTtsTag,
-                            languages = englishLanguages,
+                            languages = languages,
                             onDismiss = hideDialog,
                             onLanguageSelect = onLanguageSelect
                         )

@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_settings.main
- *     SettingsState.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
- *     SettingsState.kt Last modified at 2024/8/19
+ *     SettingsModule.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
+ *     SettingsModule.kt Last modified at 2024/8/19
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_settings.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,15 +19,22 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_settings.ui
+package io.github.yamin8000.owl.feature_settings.di
 
-import io.github.yamin8000.owl.datastore.domain.model.ThemeType
-import java.util.Locale
+import android.app.Application
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import io.github.yamin8000.owl.common.ui.util.TTS
+import javax.inject.Singleton
 
-data class SettingsState(
-    val themeType: ThemeType = ThemeType.System,
-    val ttsLang: String? = null,
-    val isVibrating: Boolean = true,
-    val isStartingBlank: Boolean = true,
-    val englishLanguages: List<Locale> = emptyList()
-)
+@Module
+@InstallIn(SingletonComponent::class)
+object SettingsModule {
+    @Provides
+    @Singleton
+    fun providesTts(
+        app: Application,
+    ): TTS = TTS(app)
+}

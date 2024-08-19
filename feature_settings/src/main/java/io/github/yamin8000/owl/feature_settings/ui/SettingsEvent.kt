@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_settings.main
- *     SettingsState.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
- *     SettingsState.kt Last modified at 2024/8/19
+ *     SettingsEvent.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
+ *     SettingsEvent.kt Last modified at 2024/8/19
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_settings.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -21,13 +21,8 @@
 
 package io.github.yamin8000.owl.feature_settings.ui
 
-import io.github.yamin8000.owl.datastore.domain.model.ThemeType
-import java.util.Locale
-
-data class SettingsState(
-    val themeType: ThemeType = ThemeType.System,
-    val ttsLang: String? = null,
-    val isVibrating: Boolean = true,
-    val isStartingBlank: Boolean = true,
-    val englishLanguages: List<Locale> = emptyList()
-)
+sealed interface SettingsEvent {
+    data class UpdateVibrationState(val value: Boolean) : SettingsEvent
+    data class UpdateStartingBlankState(val value: Boolean) : SettingsEvent
+    data class UpdateTtsLangState(val value: String) : SettingsEvent
+}
