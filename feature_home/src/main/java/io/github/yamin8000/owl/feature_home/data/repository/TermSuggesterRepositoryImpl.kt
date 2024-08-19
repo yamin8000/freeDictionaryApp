@@ -1,16 +1,16 @@
 /*
- *     freeDictionaryApp/freeDictionaryApp.app.main
- *     TermSuggestionsHelper.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
- *     TermSuggestionsHelper.kt Last modified at 2024/3/23
- *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
+ *     freeDictionaryApp/freeDictionaryApp.feature_home.main
+ *     TermSuggesterRepositoryImpl.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
+ *     TermSuggesterRepositoryImpl.kt Last modified at 2024/8/19
+ *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
- *     freeDictionaryApp/freeDictionaryApp.app.main is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp/freeDictionaryApp.feature_home.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     freeDictionaryApp/freeDictionaryApp.app.main is distributed in the hope that it will be useful,
+ *     freeDictionaryApp/freeDictionaryApp.feature_home.main is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
@@ -19,14 +19,13 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.util
+package io.github.yamin8000.owl.feature_home.data.repository
 
-import android.content.Context
+import android.app.Application
 import android.content.res.Resources.NotFoundException
-import io.github.yamin8000.owl.R
-import io.github.yamin8000.owl.util.Constants.DEFAULT_N_GRAM_SIZE
-import io.github.yamin8000.owl.util.Constants.NOT_WORD_CHARS_REGEX
-import io.github.yamin8000.owl.util.Constants.db
+import io.github.yamin8000.owl.feature_home.R
+import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
+import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,38 +33,14 @@ import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
-/**
- * A helper class to provide term suggestions
- * using simple n-gram algorithms
- */
-class TermSuggestionsHelper(
-    private val context: Context,
-    userData: List<String> = listOf()
-) {
-    private val scope = CoroutineScope(Dispatchers.IO)
-    private var items = setOf<String>()
+class TermSuggesterRepositoryImpl(
+    private val dao: DAOs.TermDao,
+    private val app: Application
+) : TermSuggesterRepository {
+    val DEFAULT_N_GRAM_SIZE = 3
+    val NOT_WORD_CHARS_REGEX = Regex("\\W+")
 
-    init {
-        items = getBasic2000Data().plus(userData).toSet()
-        scope.launch { items = items.plus(getOldSearchData()) }
-    }
-
-    private fun getBasic2000Data() = try {
-        context.resources.openRawResource(R.raw.basic2000)
-            .bufferedReader()
-            .use { it.readText() }
-            .split(',')
-            .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
-    } catch (e: NotFoundException) {
-        listOf()
-    }
-
-    /**
-     * Suggest terms for [searchTerm] based on saved data (previous search data)
-     */
-    suspend fun suggestTermsForSearch(
-        searchTerm: String
-    ): List<String> {
+    override suspend fun suggestTerms(searchTerm: String): List<String> {
         items = items.plus(getOldSearchData())
 
         val term = searchTerm.lowercase().replace(NOT_WORD_CHARS_REGEX, "")
@@ -78,6 +53,24 @@ class TermSuggestionsHelper(
             }
         }
         return sortSuggestions(suggestions, term).filter { it.isNotBlank() }
+    }
+
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private var items = setOf<String>()
+
+    init {
+        items = getBasic2000Data().toSet()
+        scope.launch { items = items.plus(getOldSearchData()) }
+    }
+
+    private fun getBasic2000Data() = try {
+        app.resources.openRawResource(R.raw.basic2000)
+            .bufferedReader()
+            .use { it.readText() }
+            .split(',')
+            .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
+    } catch (e: NotFoundException) {
+        listOf()
     }
 
     private fun sortSuggestions(
@@ -121,5 +114,5 @@ class TermSuggestionsHelper(
         else size
     } else DEFAULT_N_GRAM_SIZE
 
-    private suspend fun getOldSearchData() = db.termDao().all().map { it.word }
+    private suspend fun getOldSearchData() = dao.all().map { it.word }
 }
