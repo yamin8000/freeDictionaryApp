@@ -27,7 +27,6 @@ import io.github.yamin8000.owl.feature_home.data.datasource.local.AppDatabase
  * App-wide constants
  */
 object Constants {
-    lateinit var db: AppDatabase
     const val LOG_TAG = "<==>"
 
     const val THEME = "theme"
@@ -35,9 +34,6 @@ object Constants {
     const val IS_VIBRATING = "is_vibrating"
     const val IS_STARTING_BLANK = "is_starting_blank"
 
-    const val DEFAULT_N_GRAM_SIZE = 3
-
-    val NOT_WORD_CHARS_REGEX = Regex("\\W+")
 
 
 

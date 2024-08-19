@@ -30,7 +30,9 @@ import dagger.hilt.components.SingletonComponent
 import io.github.yamin8000.owl.feature_home.data.datasource.local.AppDatabase
 import io.github.yamin8000.owl.feature_home.data.datasource.remote.FreeDictionaryAPI
 import io.github.yamin8000.owl.feature_home.data.repository.FreeDictionaryRetrofitApiRepository
+import io.github.yamin8000.owl.feature_home.data.repository.TermSuggesterRepositoryImpl
 import io.github.yamin8000.owl.feature_home.domain.repository.FreeDictionaryApiRepository
+import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -59,8 +61,8 @@ object HomeModule {
 
     @Provides
     @Singleton
-    fun providesFreeDictionaryApi(): FreeDictionaryAPI {
-        return providesRetrofit().create<FreeDictionaryAPI>()
+    fun providesFreeDictionaryApi(retrofit: Retrofit): FreeDictionaryAPI {
+        return retrofit.create<FreeDictionaryAPI>()
     }
 
     @Provides
@@ -73,5 +75,14 @@ object HomeModule {
     @Singleton
     fun providesFreeDictionaryApiUseCase(repository: FreeDictionaryApiRepository): FreeDictionaryUseCase {
         return FreeDictionaryUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providesTermSuggesterRepository(
+        db: AppDatabase,
+        app: Application
+    ): TermSuggesterRepository {
+        return TermSuggesterRepositoryImpl(db.termDao(), app)
     }
 }

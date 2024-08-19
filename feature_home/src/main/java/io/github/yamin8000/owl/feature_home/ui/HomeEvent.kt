@@ -23,9 +23,8 @@ package io.github.yamin8000.owl.feature_home.ui
 
 sealed interface HomeEvent {
     data object RandomWord : HomeEvent
-    data object NewSearch : HomeEvent
+    data class NewSearch(val searchTerm: String? = null) : HomeEvent
     data class OnTermChanged(val term: String) : HomeEvent
-    data object SearchSucceed : HomeEvent
     data object OnShareData : HomeEvent
     data object CancelSearch : HomeEvent
 }

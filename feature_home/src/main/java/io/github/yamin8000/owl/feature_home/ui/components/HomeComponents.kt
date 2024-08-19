@@ -35,6 +35,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ShortText
 import androidx.compose.material.icons.automirrored.twotone.TextSnippet
+import androidx.compose.material.icons.twotone.Category
 import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material.icons.twotone.RecordVoiceOver
 import androidx.compose.material.icons.twotone.Share
@@ -212,12 +213,12 @@ internal fun WordTypeText(
     type: String,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
-    /*SpeakableRippleTextWithIcon(
+    SpeakableRippleTextWithIcon(
         text = type,
         imageVector = Icons.TwoTone.Category,
         title = stringResource(R.string.type),
         onDoubleClick = onDoubleClick
-    )*/
+    )
 }
 
 @Composable

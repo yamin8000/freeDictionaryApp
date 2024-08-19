@@ -22,7 +22,7 @@
 package io.github.yamin8000.owl.feature_home.ui
 
 import android.content.Context
-import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -40,7 +40,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -50,49 +49,39 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import io.github.yamin8000.owl.common.ui.components.EmptyList
+import io.github.yamin8000.owl.common.ui.components.LockScreenOrientation
 import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.navigation.Nav
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
-import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.ui.components.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
+import io.github.yamin8000.owl.feature_home.ui.components.SuggestionsChips
 import io.github.yamin8000.owl.feature_home.ui.components.WordCard
 import io.github.yamin8000.owl.feature_home.ui.components.WordDefinitionsList
+import io.github.yamin8000.owl.feature_home.ui.util.ShareUtils.handleShareIntent
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
-@MyPreview
-@Composable
-private fun HomeScreenPreview() {
-    PreviewTheme {
-        /*HomeScreen(
-            isVibrating = false,
-            onTopBarClick = {},
-            onAddToHistory = {},
-            onAddToFavourite = {}
-        )*/
-    }
-}
-
-// TODO: Refactor to HomeScreen and HomeContent(stateless)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = hiltViewModel(),
     navController: NavController,
-    onAddToHistory: (String) -> Unit,
-    onAddToFavourite: (String) -> Unit
+    //onAddToHistory: (String) -> Unit,
+    //onAddToFavourite: (String) -> Unit
 ) {
     val state = vm.state.collectAsStateWithLifecycle().value
 
-    //val termSuggestionsHelper = remember { TermSuggestionsHelper(context) }
-
-    //LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val keyboardManager = LocalSoftwareKeyboardController.current
@@ -104,10 +93,9 @@ fun HomeScreen(
             /*if (listState.isScrollInProgress && isVibrating)
                 LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)*/
 
-            if (state.isSharing) {
-                val temp = state.searchResult.firstOrNull()
-                if (temp != null) {
-                    HandleShareIntent(temp)
+            ObserverEvent(vm.shareChannelFlow) { data ->
+                if (data != null) {
+                    handleShareIntent(context, data)
                 }
             }
 
@@ -133,34 +121,19 @@ fun HomeScreen(
                     )
                 },
                 bottomBar = {
-                    val onSuggestionsClick: (String) -> Unit = remember {
-                        {
-                            //vm.updateSearchTerm(it)
-                            //vm.searchForDefinition(it)
-                        }
-                    }
-                    /*val onSearchTermChange: (String) -> Unit =
-                        remember(vm.isWordSelectedFromKeyboardSuggestions.value) {
-                            {
-                                //vm.updateSearchTerm(it)
-                                //vm.handleSuggestions()
-                                if (vm.isWordSelectedFromKeyboardSuggestions.value) {
-                                    vm.clearSuggestions()
-                                    //vm.searchForDefinition(it)
-                                }
-                            }
-                        }*/
-                    val onCancel = remember {
-                        {
-                            //vm.cancel()
-                        }
-                    }
+                    val term = vm.searchTerm.collectAsState().value
                     MainBottomBar(
-                        searchTerm = vm.searchTerm.collectAsState().value,
-                        suggestions = vm.searchSuggestions.collectAsStateWithLifecycle().value.toPersistentList(),
+                        searchTerm = term,
+                        suggestionsChips = {
+                            SuggestionsChips(
+                                searchTerm = term,
+                                suggestions = state.searchSuggestions,
+                                onSuggestionClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
+                            )
+                        },
                         isSearching = state.isSearching,
                         onSearch = {
-                            vm.onEvent(HomeEvent.NewSearch)
+                            vm.onEvent(HomeEvent.NewSearch())
                             keyboardManager?.hide()
                             focusManager.clearFocus()
                         },
@@ -169,13 +142,10 @@ fun HomeScreen(
                             keyboardManager?.hide()
                             focusManager.clearFocus()
                         },
-                        onSuggestionClick = onSuggestionsClick,
                         onSearchTermChange = {
                             vm.onEvent(HomeEvent.OnTermChanged(it))
-                            //vm.handleSuggestions()
                             if (vm.isWordSelectedFromKeyboardSuggestions.value) {
-                                //vm.clearSuggestions()
-                                vm.onEvent(HomeEvent.NewSearch)
+                                vm.onEvent(HomeEvent.NewSearch(it))
                             }
                         }
                     )
@@ -185,37 +155,27 @@ fun HomeScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.padding(contentPadding),
                         content = {
+                            ObserverEvent(vm.errorChannelFlow) { event ->
+                                state.snackbarHostState.showSnackbar(
+                                    getErrorText(
+                                        context,
+                                        error = event
+                                    )
+                                )
+                            }
                             AnimatedVisibility(
-                                visible = state.error != null,
+                                visible = !state.isOnline,
                                 enter = slideInVertically() + fadeIn(),
                                 exit = slideOutVertically() + fadeOut(),
                                 content = {
-                                    val error = when (state.error) {
-                                        HomeError.SearchFailed -> {
-                                            context.getString(R.string.general_net_error)
-                                        }
-
-                                        HomeError.TermIsEmpty -> {
-                                            context.getString(R.string.no_search_term_entered)
-                                        }
-
-                                        HomeError.NoInternet -> {
-                                            context.getString(R.string.general_net_error)
-                                        }
-
-                                        null -> ""
-                                    }
                                     PersianText(
-                                        text = error,
+                                        text = context.getString(R.string.general_net_error),
                                         modifier = Modifier.padding(8.dp),
                                         color = MaterialTheme.colorScheme.error
                                     )
                                 }
                             )
 
-                            //val addedToFavourites = stringResource(R.string.added_to_favourites)
-
-                            //val searchResult by vm.searchResult.collectAsStateWithLifecycle()
                             if (state.searchResult.isNotEmpty()) {
                                 val entry = state.searchResult.firstOrNull()
                                 val word = entry?.word ?: ""
@@ -223,27 +183,23 @@ fun HomeScreen(
                                     ?.firstOrNull { it.text != null }
                                     ?.text ?: ""
 
-                                val onWordChipClick: (String) -> Unit = remember {
-                                    {
-                                        //vm.updateSearchTerm(it)
-                                        //vm.searchForDefinition(it)
-                                    }
-                                }
                                 WordDefinitionsList(
                                     word = word,
                                     listState = listState,
                                     meanings = state.searchResult.first().meanings.toPersistentList(),
-                                    onWordChipClick = onWordChipClick,
+                                    onWordChipClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
                                     wordCard = {
                                         WordCard(
                                             word = word,
                                             pronunciation = phonetic,
                                             onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
-                                            onAddToFavourite = remember(state.searchResult) {
-                                                {
-                                                    onAddToFavourite(word)
-                                                    //vm.showSnackbar(addedToFavourites)
-                                                }
+                                            onAddToFavourite = {
+                                                //onAddToFavourite(word)
+                                                /*state.snackbarHostState.showSnackbar(
+                                                    context.getString(
+                                                        R.string.added_to_favourites
+                                                    )
+                                                )*/
                                             }
                                         )
                                     }
@@ -261,63 +217,31 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HandleShareIntent(
-    entry: Entry
+private fun <T> ObserverEvent(
+    flow: Flow<T>,
+    onEvent: suspend (T) -> Unit
 ) {
-    val context = LocalContext.current
-    val text = createShareText(context, entry)
-
-    val sendIntent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, text)
-        type = "text/plain"
-    }
-    val shareIntent = Intent.createChooser(sendIntent, null)
-    context.startActivity(shareIntent)
-}
-
-private fun createShareText(
-    context: Context,
-    entry: Entry
-) = buildString {
-    append("Word: ")
-    append(entry.word)
-    appendLine()
-    append("Pronunciation(IPA): ")
-    append(entry.phonetics.firstOrNull { it.text != null }?.text ?: "-")
-    appendLine()
-    appendLine()
-    entry.meanings.forEachIndexed { index, (partOfSpeech, definitions, _, _) ->
-        appendLine("${index + 1})")
-        appendLine("Type: $partOfSpeech")
-        definitions.take(5).forEach { (definition, example, synonyms, antonyms) ->
-            appendLine("Definition: $definition")
-            if (example != null)
-                appendLine("Example: $example")
-            if (synonyms.isNotEmpty())
-                appendLine("Synonyms: ${synonyms.take(5).joinToString()}")
-            if (antonyms.isNotEmpty())
-                appendLine("Antonyms: ${antonyms.take(5).joinToString()}")
-            appendLine()
+    val lifeCycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(flow, lifeCycleOwner.lifecycle) {
+        lifeCycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            withContext(Dispatchers.Main.immediate) {
+                flow.collect(onEvent)
+            }
         }
-        appendLine()
     }
-    trim()
-    appendLine(context.getString(R.string.this_text_generated_using_owl))
-    appendLine(context.getString(R.string.github_source))
-    appendLine(context.getString(R.string.this_text_extracted_from_free_dictionary))
-    append(context.getString(R.string.free_dictionary_link))
 }
 
-/*private fun getErrorMessage(
-    code: Int,
-    context: Context
-) = when (code) {
-    401 -> context.getString(R.string.api_authorization_error)
-    404 -> context.getString(R.string.definition_not_found)
-    429 -> context.getString(R.string.api_throttled)
-    997 -> context.getString(R.string.cancelled)
-    998 -> context.getString(R.string.no_search_term_entered)
-    999 -> context.getString(R.string.untracked_error)
-    else -> context.getString(R.string.general_net_error)
-}*/
+private fun getErrorText(
+    context: Context,
+    error: HomeSnackbarType?
+) = when (error) {
+    HomeSnackbarType.SearchFailed -> context.getString(R.string.general_net_error)
+    HomeSnackbarType.TermIsEmpty -> context.getString(R.string.no_search_term_entered)
+    HomeSnackbarType.NoInternet -> context.getString(R.string.general_net_error)
+    HomeSnackbarType.ApiAuthorizationError -> context.getString(R.string.api_authorization_error)
+    HomeSnackbarType.ApiThrottled -> context.getString(R.string.api_throttled)
+    HomeSnackbarType.Cancelled -> context.getString(R.string.cancelled)
+    HomeSnackbarType.NotFound -> context.getString(R.string.definition_not_found)
+    HomeSnackbarType.Unknown -> context.getString(R.string.general_net_error)
+    null -> ""
+}

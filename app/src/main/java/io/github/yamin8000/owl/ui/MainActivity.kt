@@ -29,6 +29,7 @@ import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -48,10 +49,13 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.withCreationCallback
 import io.github.yamin8000.owl.common.ui.navigation.Nav
 import io.github.yamin8000.owl.common.ui.theme.AppTheme
 import io.github.yamin8000.owl.core.LocalTTS
@@ -59,7 +63,10 @@ import io.github.yamin8000.owl.core.favouritesDataStore
 import io.github.yamin8000.owl.core.historyDataStore
 import io.github.yamin8000.owl.core.settingsDataStore
 import io.github.yamin8000.owl.data.DataStoreRepository
+import io.github.yamin8000.owl.feature_home.di.HomeAssistedFactory
 import io.github.yamin8000.owl.feature_home.ui.HomeScreen
+import io.github.yamin8000.owl.feature_home.ui.HomeViewModel
+import io.github.yamin8000.owl.feature_home.ui.HomeViewModel_Factory
 import io.github.yamin8000.owl.ui.content.AboutContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
@@ -208,19 +215,23 @@ internal class MainActivity : ComponentActivity() {
                 exitTransition = { fadeOut(animationSpec = tween(100)) },
                 builder = {
                     composable(start) {
-                        val searchTerm = it.arguments?.getString(Nav.Arguments.Search())
-                        if (searchTerm == null && outsideInput != null)
-                            it.savedStateHandle[Nav.Arguments.Search()] = outsideInput.toString()
-                        val addToHistory: (String) -> Unit = remember {
+                        /*val addToHistory: (String) -> Unit = remember {
                             { item -> historyVM.add(item) }
                         }
                         val addToFavourite: (String) -> Unit = remember {
                             { item -> favouritesVM.add(item) }
-                        }
+                        }*/
                         HomeScreen(
                             navController = navController,
-                            onAddToHistory = addToHistory,
-                            onAddToFavourite = addToFavourite
+                            vm = viewModels<HomeViewModel>(
+                                extrasProducer = {
+                                    defaultViewModelCreationExtras.withCreationCallback<HomeAssistedFactory> { factory ->
+                                        factory.create(outsideInput ?: "")
+                                    }
+                                }
+                            ).value
+                            //onAddToHistory = addToHistory,
+                            //onAddToFavourite = addToFavourite
                         )
                     }
 

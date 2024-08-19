@@ -26,42 +26,52 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.ui.navigation.Nav
+import io.github.yamin8000.owl.feature_home.di.HomeAssistedFactory
+import io.github.yamin8000.owl.feature_home.domain.model.Entry
+import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.net.UnknownHostException
-import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
-    //private val termSuggestionsHelper: TermSuggestionsHelper
+@HiltViewModel(assistedFactory = HomeAssistedFactory::class)
+class HomeViewModel @AssistedInject constructor(
+    private val savedState: SavedStateHandle,
     private val useCase: FreeDictionaryUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val termSuggesterRepository: TermSuggesterRepository,
+    @Assisted private val outsideInput: String
 ) : ViewModel() {
-    val searchTerm = savedStateHandle.getStateFlow(Nav.Arguments.Search.toString(), "")
+    val searchTerm = savedState.getStateFlow(Nav.Arguments.Search(), outsideInput)
+
+    private var errorChannel = Channel<HomeSnackbarType>()
+    val errorChannelFlow = errorChannel.receiveAsFlow()
+
+    private var shareChannel = Channel<Entry?>()
+    val shareChannelFlow = shareChannel.receiveAsFlow()
 
     private var _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
-    private var job: Job? = null
-
-    private val _searchSuggestions = MutableStateFlow(listOf<String>())
-    val searchSuggestions = _searchSuggestions.asStateFlow()
+    private var searchJob: Job? = null
 
     val isWordSelectedFromKeyboardSuggestions: State<Boolean>
         get() = derivedStateOf { searchTerm.value.length > 1 && searchTerm.value.last() == ' ' && !searchTerm.value.all { it == ' ' } }
 
-    private val onlineCheckDelay = 5000L
+    private val onlineCheckDelay = 1000L
     private val dnsServers = listOf(
         "8.8.8.8",
         "8.8.4.4",
@@ -74,22 +84,14 @@ class HomeViewModel @Inject constructor(
     )
 
     init {
-        /*if (_searchTerm.value.isNotBlank()) {
-            ioScope.launch { searchForDefinition(_searchTerm.value) }
-        } else if (!isStartingBlank) {
-            _searchTerm.value = "free"
-            ioScope.launch { searchForDefinition(_searchTerm.value) }
-        }*/
+        if (searchTerm.value.isNotBlank()) {
+            searchForDefinition(searchTerm.value)
+        }
 
         viewModelScope.launch {
             repeat(Int.MAX_VALUE) {
                 _state.update { stateUpdate ->
-                    val isOnline = dnsServers.any { dnsAccessible(it) }
-                    if (isOnline) {
-                        stateUpdate.copy(error = null)
-                    } else {
-                        stateUpdate.copy(error = HomeError.NoInternet)
-                    }
+                    stateUpdate.copy(isOnline = dnsServers.any { dnsAccessible(it) })
                 }
                 delay(onlineCheckDelay)
             }
@@ -106,22 +108,25 @@ class HomeViewModel @Inject constructor(
         false
     }
 
-    fun onEvent(event: HomeEvent) {
+    fun onEvent(
+        event: HomeEvent
+    ) {
         when (event) {
             is HomeEvent.NewSearch -> {
-                job = searchForDefinition(searchTerm.value)
+                val term = event.searchTerm ?: searchTerm.value
+                searchJob = searchForDefinition(term)
             }
 
             HomeEvent.RandomWord -> searchForRandomWord()
-            HomeEvent.SearchSucceed -> {}
-            HomeEvent.OnShareData -> {
-                _state.update {
-                    it.copy(isSharing = true)
-                }
-            }
+            HomeEvent.OnShareData -> viewModelScope.launch { shareChannel.send(state.value.searchResult.firstOrNull()) }
 
             is HomeEvent.OnTermChanged -> {
-                savedStateHandle[Nav.Arguments.Search.toString()] = event.term
+                savedState[Nav.Arguments.Search.toString()] = event.term
+                viewModelScope.launch {
+                    _state.update {
+                        it.copy(searchSuggestions = termSuggesterRepository.suggestTerms(event.term))
+                    }
+                }
             }
 
             HomeEvent.CancelSearch -> cancel()
@@ -145,34 +150,29 @@ class HomeViewModel @Inject constructor(
             }
             if (error == null) {
                 _state.update {
-                    it.copy(searchResult = result)
+                    it.copy(
+                        searchResult = result,
+                        searchSuggestions = emptyList()
+                    )
                 }
-            } else {
-                when (error) {
-                    is HttpException -> {
+            } else handleError(error)
+        } else errorChannel.send(HomeSnackbarType.TermIsEmpty)
+    }
 
-                    }
-
-                    is CancellationException -> {
-
-                    }
-
-                    is UnknownHostException -> {
-
-                    }
-
-                    else -> {
-
-                    }
-                }
-                _state.update {
-                    it.copy(error = HomeError.SearchFailed)
-                }
+    private suspend fun handleError(
+        error: Throwable
+    ) {
+        when (error) {
+            is HttpException -> when (error.code()) {
+                401 -> errorChannel.send(HomeSnackbarType.ApiAuthorizationError)
+                404 -> errorChannel.send(HomeSnackbarType.NotFound)
+                429 -> errorChannel.send(HomeSnackbarType.ApiThrottled)
+                else -> errorChannel.send(HomeSnackbarType.Unknown)
             }
-        } else {
-            _state.update {
-                it.copy(error = HomeError.TermIsEmpty)
-            }
+
+            is CancellationException -> errorChannel.send(HomeSnackbarType.Cancelled)
+            is UnknownHostException -> errorChannel.send(HomeSnackbarType.NoInternet)
+            else -> errorChannel.send(HomeSnackbarType.Unknown)
         }
     }
 
@@ -346,14 +346,10 @@ class HomeViewModel @Inject constructor(
         }
     }*/
 
-    fun clearSuggestions() {
-        _searchSuggestions.value = listOf()
-    }
-
     private fun cancel() {
         _state.update {
             it.copy(isSearching = false)
         }
-        job?.cancel()
+        searchJob?.cancel()
     }
 }

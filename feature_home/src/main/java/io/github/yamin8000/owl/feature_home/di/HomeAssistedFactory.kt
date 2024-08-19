@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     HomeState.kt Copyrighted by Yamin Siahmargooei at 2024/8/17
- *     HomeState.kt Last modified at 2024/8/17
+ *     HomeAssistedFactory.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
+ *     HomeAssistedFactory.kt Last modified at 2024/8/19
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,16 +19,12 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.ui
+package io.github.yamin8000.owl.feature_home.di
 
-import androidx.compose.material3.SnackbarHostState
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
+import dagger.assisted.AssistedFactory
+import io.github.yamin8000.owl.feature_home.ui.HomeViewModel
 
-data class HomeState(
-    val isOnline: Boolean = false,
-    val isSearching: Boolean = false,
-    val searchSuggestions: List<String> = emptyList(),
-    val snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    val error: HomeSnackbarType? = null,
-    val searchResult: List<Entry> = emptyList()
-)
+@AssistedFactory
+interface HomeAssistedFactory {
+    fun create(outsideInput: String): HomeViewModel
+}

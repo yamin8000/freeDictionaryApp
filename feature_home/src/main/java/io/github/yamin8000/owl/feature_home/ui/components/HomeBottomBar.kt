@@ -24,6 +24,7 @@ package io.github.yamin8000.owl.feature_home.ui.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -61,8 +62,6 @@ import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.strings.R
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 
 @MyPreview
@@ -71,8 +70,13 @@ private fun MainBottomBarPreview() {
     PreviewTheme {
         MainBottomBar(
             searchTerm = "test",
-            suggestions = persistentListOf(),
-            onSuggestionClick = {},
+            suggestionsChips = {
+                SuggestionsChips(
+                    searchTerm = "test",
+                    suggestions = emptyList(),
+                    onSuggestionClick = {},
+                )
+            },
             isSearching = false,
             onSearchTermChange = {},
             onSearch = {},
@@ -85,8 +89,7 @@ private fun MainBottomBarPreview() {
 internal fun MainBottomBar(
     modifier: Modifier = Modifier,
     searchTerm: String,
-    suggestions: PersistentList<String>,
-    onSuggestionClick: (String) -> Unit,
+    suggestionsChips: @Composable ColumnScope.() -> Unit,
     isSearching: Boolean,
     onSearchTermChange: (String) -> Unit,
     onSearch: () -> Unit,
@@ -95,30 +98,7 @@ internal fun MainBottomBar(
     Column(
         modifier = modifier,
         content = {
-            if (suggestions.isNotEmpty()) {
-                LazyRow(
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    content = {
-                        items(
-                            items = suggestions,
-                            itemContent = {
-                                val onClick = remember { { onSuggestionClick(it) } }
-                                ElevatedSuggestionChip(
-                                    border = defaultGradientBorder(),
-                                    onClick = onClick,
-                                    label = {
-                                        HighlightText(
-                                            fullText = it,
-                                            highlightedText = searchTerm
-                                        )
-                                    }
-                                )
-                            }
-                        )
-                    }
-                )
-            }
+            suggestionsChips()
             if (isSearching) {
                 RainbowLinearProgress()
             }
@@ -135,7 +115,41 @@ internal fun MainBottomBar(
                     } else BottomAppBarDuringSearch(onCancel = onCancel)
                 }
             )
-        })
+        }
+    )
+}
+
+@Composable
+internal fun SuggestionsChips(
+    modifier: Modifier = Modifier,
+    searchTerm: String,
+    suggestions: List<String>,
+    onSuggestionClick: (String) -> Unit,
+) {
+    if (suggestions.isNotEmpty()) {
+        LazyRow(
+            modifier = modifier.padding(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            content = {
+                items(
+                    items = suggestions,
+                    itemContent = {
+                        val onClick = remember { { onSuggestionClick(it) } }
+                        ElevatedSuggestionChip(
+                            border = defaultGradientBorder(),
+                            onClick = onClick,
+                            label = {
+                                HighlightText(
+                                    fullText = it,
+                                    highlightedText = searchTerm
+                                )
+                            }
+                        )
+                    }
+                )
+            }
+        )
+    }
 }
 
 @Composable

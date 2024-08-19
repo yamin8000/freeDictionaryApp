@@ -49,6 +49,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,6 +58,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -67,6 +69,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import io.github.yamin8000.owl.common.ui.util.ContextUtils.findActivity
 import io.github.yamin8000.owl.strings.R
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -196,38 +199,8 @@ fun ClickableIcon(
     )
 }
 
-/*@Composable
-internal fun InternetAwareComposable(
-    dnsServers: List<String> = DNS_SERVERS,
-    delay: Long = INTERNET_CHECK_DELAY,
-    successContent: (@Composable () -> Unit)? = null,
-    errorContent: (@Composable () -> Unit)? = null,
-    onlineChanged: ((Boolean) -> Unit)? = null
-) {
-    suspend fun dnsAccessible(
-        dnsServer: String
-    ) = try {
-        withContext(Dispatchers.IO) {
-            Runtime.getRuntime().exec("/system/bin/ping -c 1 $dnsServer").waitFor()
-        } == 0
-    } catch (e: Exception) {
-        false
-    }
-
-    var isOnline by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        while (true) {
-            isOnline = dnsServers.any { dnsAccessible(it) }
-            onlineChanged?.invoke(isOnline)
-            delay(delay)
-        }
-    }
-    if (isOnline) successContent?.invoke()
-    else errorContent?.invoke()
-}*/
-
-/*@Composable
-internal fun LockScreenOrientation(
+@Composable
+fun LockScreenOrientation(
     orientation: Int
 ) {
     val context = LocalContext.current
@@ -240,7 +213,7 @@ internal fun LockScreenOrientation(
             activity.requestedOrientation = originalOrientation
         }
     }
-}*/
+}
 
 @Composable
 internal fun DeleteMenu(
