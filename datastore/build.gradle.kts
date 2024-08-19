@@ -31,7 +31,6 @@ android {
 
     defaultConfig {
         minSdk = 21
-        ksp.arg("room.schemaLocation", "$projectDir/schemas")
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -46,9 +45,10 @@ android {
 }
 
 dependencies {
-    //moshi
-    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
-    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
     //datastore
     api(libs.androidx.datastore.preferences)
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

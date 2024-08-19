@@ -3,16 +3,14 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.compose.plugin)
-    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
-    namespace = "io.github.yamin8000.owl.feature_home"
+    namespace = "io.github.yamin8000.owl.feature_settings"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 21
-        ksp.arg("room.schemaLocation", "$projectDir/schemas")
     }
 
     compileOptions {
@@ -47,16 +45,4 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    //room
-    implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
-    ksp(libs.androidx.room.compiler)
-    api(libs.androidx.room.ktx)
-    //retrofit
-    api(libs.retrofit.main)
-    implementation(libs.retrofit.converter.moshi)
-    kapt(libs.retrofit.type.keeper)
-    //moshi
-    implementation(libs.moshi.kotlin)
-    ksp(libs.moshi.kotlin.codegen)
 }

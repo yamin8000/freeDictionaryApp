@@ -318,6 +318,7 @@ fun SpeakableRippleTextWithIcon(
     imageVector: ImageVector,
     title: String? = null,
     content: @Composable (() -> Unit)? = null,
+    onClick: () -> Unit,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -341,6 +342,6 @@ fun SpeakableRippleTextWithIcon(
         title = title,
         imageVector = imageVector,
         onDoubleClick = onDoubleClick,
-        onClick = { }
+        onClick = onClick
     )
 }

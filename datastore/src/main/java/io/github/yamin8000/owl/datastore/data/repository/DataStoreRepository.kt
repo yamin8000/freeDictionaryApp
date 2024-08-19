@@ -1,16 +1,16 @@
 /*
- *     freeDictionaryApp/freeDictionaryApp.data.main
- *     DataStoreRepository.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
- *     DataStoreRepository.kt Last modified at 2024/3/23
- *     This file is part of freeDictionaryApp/freeDictionaryApp.data.main.
+ *     freeDictionaryApp/freeDictionaryApp.datastore.main
+ *     DataStoreRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
+ *     DataStoreRepository.kt Last modified at 2024/8/19
+ *     This file is part of freeDictionaryApp/freeDictionaryApp.datastore.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
- *     freeDictionaryApp/freeDictionaryApp.data.main is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp/freeDictionaryApp.datastore.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     freeDictionaryApp/freeDictionaryApp.data.main is distributed in the hope that it will be useful,
+ *     freeDictionaryApp/freeDictionaryApp.datastore.main is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.data
+package io.github.yamin8000.owl.datastore.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -27,21 +27,21 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import io.github.yamin8000.owl.datastore.domain.repository.BaseDatastoreRepository
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
-@Suppress("unused")
 class DataStoreRepository(
     private val datastore: DataStore<Preferences>
-) {
+) : BaseDatastoreRepository {
 
-    suspend fun getString(
+    override suspend fun getString(
         key: String
     ) = datastore.data.map {
         it[stringPreferencesKey(key)]
     }.firstOrNull()
 
-    suspend fun setString(
+    override suspend fun setString(
         key: String,
         value: String
     ) {
@@ -50,13 +50,13 @@ class DataStoreRepository(
         }
     }
 
-    suspend fun getInt(
+    override suspend fun getInt(
         key: String
     ) = datastore.data.map {
         it[intPreferencesKey(key)]
     }.firstOrNull()
 
-    suspend fun setInt(
+    override suspend fun setInt(
         key: String,
         value: Int
     ) {
@@ -65,13 +65,13 @@ class DataStoreRepository(
         }
     }
 
-    suspend fun getBool(
+    override suspend fun getBool(
         key: String
     ) = datastore.data.map {
         it[booleanPreferencesKey(key)]
     }.firstOrNull()
 
-    suspend fun setBool(
+    override suspend fun setBool(
         key: String,
         value: Boolean
     ) {

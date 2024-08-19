@@ -28,14 +28,5 @@ import io.github.yamin8000.owl.feature_home.data.datasource.local.AppDatabase
  */
 object Constants {
     const val LOG_TAG = "<==>"
-
-    const val THEME = "theme"
-    const val TTS_LANG = "tts_lang"
-    const val IS_VIBRATING = "is_vibrating"
-    const val IS_STARTING_BLANK = "is_starting_blank"
-
-
-
-
     const val FREE = "free"
 }

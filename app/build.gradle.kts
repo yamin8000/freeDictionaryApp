@@ -89,8 +89,9 @@ dependencies {
     //modules
     implementation(project(":common"))
     implementation(project(":strings"))
-    implementation(project(":data"))
+    implementation(project(":datastore"))
     implementation(project(":feature_home"))
+    implementation(project(":feature_settings"))
     //core android/kotlin
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)//
@@ -107,10 +108,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)//
     implementation(libs.androidx.compose.material3.window.size)//
     implementation(libs.androidx.lifecycle.runtime.compose)//
-    //coil
-    val coilVersion = "2.7.0"
-    implementation("io.coil-kt:coil:$coilVersion")
-    implementation("io.coil-kt:coil-compose:$coilVersion")
     //navigation
     implementation(libs.androidx.navigation.compose)
     //hilt

@@ -119,7 +119,6 @@ internal fun WordCard(
                             if (pronunciation != null) {
                                 PronunciationText(
                                     pronunciation = pronunciation,
-                                    word = word
                                 )
                             }
                         }
@@ -155,26 +154,19 @@ internal fun WordText(
 ) {
     SpeakableRippleTextWithIcon(
         text = word,
-        imageVector = Icons.AutoMirrored.TwoTone.ShortText
+        imageVector = Icons.AutoMirrored.TwoTone.ShortText,
+        onClick = {}
     )
 }
 
 @Composable
 internal fun PronunciationText(
     pronunciation: String,
-    word: String
 ) {
-    //val tts = LocalTTS.current
-    val onClick = remember() {
-        {
-            //tts?.speak(word)
-            Unit
-        }
-    }
     CopyAbleRippleTextWithIcon(
         text = pronunciation,
         imageVector = Icons.TwoTone.RecordVoiceOver,
-        onClick = onClick
+        onClick = {}
     )
 }
 
@@ -189,7 +181,8 @@ internal fun WordExampleText(
         imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
         title = stringResource(R.string.example),
         content = { HighlightText(fullText = example, highlightedText = word) },
-        onDoubleClick = onDoubleClick
+        onDoubleClick = onDoubleClick,
+        onClick = {}
     )
 }
 
@@ -204,7 +197,8 @@ internal fun WordDefinitionText(
         imageVector = Icons.AutoMirrored.TwoTone.ShortText,
         title = stringResource(R.string.definition),
         content = { HighlightText(fullText = definition, highlightedText = word) },
-        onDoubleClick = onDoubleClick
+        onDoubleClick = onDoubleClick,
+        onClick = {}
     )
 }
 
@@ -217,7 +211,8 @@ internal fun WordTypeText(
         text = type,
         imageVector = Icons.TwoTone.Category,
         title = stringResource(R.string.type),
-        onDoubleClick = onDoubleClick
+        onDoubleClick = onDoubleClick,
+        onClick = {}
     )
 }
 
@@ -258,14 +253,16 @@ internal fun MeaningCard(
                             SpeakableRippleTextWithIcon(
                                 text = antonym,
                                 imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
-                                title = stringResource(R.string.antonym)
+                                title = stringResource(R.string.antonym),
+                                onClick = {}
                             )
                         }
                         synonyms.forEach { synonym ->
                             SpeakableRippleTextWithIcon(
                                 text = synonym,
                                 imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
-                                title = stringResource(R.string.synonym)
+                                title = stringResource(R.string.synonym),
+                                onClick = {}
                             )
                         }
                     }

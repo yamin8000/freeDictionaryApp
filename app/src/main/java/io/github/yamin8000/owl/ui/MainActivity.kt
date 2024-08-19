@@ -25,7 +25,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -33,24 +32,15 @@ import androidx.activity.viewModels
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -58,37 +48,25 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.withCreationCallback
 import io.github.yamin8000.owl.common.ui.navigation.Nav
 import io.github.yamin8000.owl.common.ui.theme.AppTheme
-import io.github.yamin8000.owl.core.LocalTTS
 import io.github.yamin8000.owl.core.favouritesDataStore
 import io.github.yamin8000.owl.core.historyDataStore
-import io.github.yamin8000.owl.core.settingsDataStore
-import io.github.yamin8000.owl.data.DataStoreRepository
 import io.github.yamin8000.owl.feature_home.di.HomeAssistedFactory
 import io.github.yamin8000.owl.feature_home.ui.HomeScreen
 import io.github.yamin8000.owl.feature_home.ui.HomeViewModel
-import io.github.yamin8000.owl.feature_home.ui.HomeViewModel_Factory
+import io.github.yamin8000.owl.feature_settings.ui.SettingsScreen
 import io.github.yamin8000.owl.ui.content.AboutContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
 import io.github.yamin8000.owl.ui.content.history.HistoryContent
 import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
-import io.github.yamin8000.owl.ui.content.settings.SettingsContent
-import io.github.yamin8000.owl.ui.content.settings.SettingsViewModel
-import io.github.yamin8000.owl.ui.content.settings.ThemeSetting
-import io.github.yamin8000.owl.util.Constants
-import io.github.yamin8000.owl.util.TTS
 import io.github.yamin8000.owl.util.log
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.runBlocking
-import java.util.Locale
 
 @AndroidEntryPoint
 internal class MainActivity : ComponentActivity() {
 
     private var outsideInput: String? = null
-
-    private var theme: ThemeSetting = ThemeSetting.System
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @ExperimentalMaterial3Api
@@ -102,33 +80,26 @@ internal class MainActivity : ComponentActivity() {
         outsideInput = handleOutsideInputIntent()
 
         try {
-            runBlocking { theme = getCurrentTheme() }
+            //runBlocking { theme = getCurrentTheme() }
         } catch (e: InterruptedException) {
             log(e.stackTraceToString())
         }
 
         setContent {
-            var currentTheme by remember { mutableStateOf(theme) }
             MainContent(
-                currentTheme = currentTheme,
                 content = {
                     Scaffold {
-                        val onThemeChanged: (ThemeSetting) -> Unit = remember {
-                            {
-                                currentTheme = it
-                            }
-                        }
-                        MainNav(onThemeChanged = onThemeChanged)
+                        MainNav()
                     }
                 }
             )
         }
     }
 
-    private suspend fun getCurrentTheme() = ThemeSetting.valueOf(
+    /*private suspend fun getCurrentTheme() = io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.valueOf(
         DataStoreRepository(settingsDataStore).getString(Constants.THEME)
-            ?: ThemeSetting.System.name
-    )
+            ?: io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.System.name
+    )*/
 
     private fun handleOutsideInputIntent(): String? {
         //widget
@@ -156,36 +127,30 @@ internal class MainActivity : ComponentActivity() {
 
     @Composable
     private fun MainContent(
-        currentTheme: ThemeSetting,
+        //currentTheme: io.github.yamin8000.owl.feature_settings.ui.ThemeSetting,
         content: @Composable () -> Unit
     ) {
         AppTheme(
-            isDarkTheme = isDarkTheme(currentTheme, isSystemInDarkTheme()),
-            isOledTheme = currentTheme == ThemeSetting.Darker,
-            isDynamicColor = currentTheme == ThemeSetting.System,
+            isDarkTheme = false,
+            isOledTheme = false,
+            isDynamicColor = false,
             content = content
         )
     }
 
-    private fun isDarkTheme(
-        themeSetting: ThemeSetting,
+    /*private fun isDarkTheme(
+        themeSetting: io.github.yamin8000.owl.feature_settings.ui.ThemeSetting,
         isSystemInDarkTheme: Boolean
     ) = when (themeSetting) {
-        ThemeSetting.Light -> false
-        ThemeSetting.System -> isSystemInDarkTheme
-        ThemeSetting.Dark, ThemeSetting.Darker -> true
-    }
+        io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.Light -> false
+        io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.System -> isSystemInDarkTheme
+        io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.Dark, io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.Darker -> true
+    }*/
 
     @Composable
     private fun MainNav(
-        onThemeChanged: (ThemeSetting) -> Unit
     ) {
         val context = LocalContext.current
-        val settingsVM: SettingsViewModel = viewModel(factory = viewModelFactory {
-            initializer {
-                SettingsViewModel(DataStoreRepository(context.settingsDataStore))
-            }
-        })
 
         val historyVM: HistoryViewModel = viewModel(factory = viewModelFactory {
             initializer {
@@ -199,90 +164,83 @@ internal class MainActivity : ComponentActivity() {
             }
         })
 
-        val ttsTag by settingsVM.ttsLang.collectAsStateWithLifecycle()
-        val ttsHelper = remember(ttsTag) { TTS(context, Locale.forLanguageTag(ttsTag)) }
-        val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
-        LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
+        //val ttsTag by settingsVM.ttsLang.collectAsStateWithLifecycle()
+        //val ttsHelper = remember(ttsTag) { TTS(context, Locale.forLanguageTag(ttsTag)) }
+        //val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
+        //LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
 
-        CompositionLocalProvider(LocalTTS provides tts.value) {
-            val start = "${Nav.Route.Home}/{${Nav.Arguments.Search}}"
-            val navController = rememberNavController()
-            val onBackClick: () -> Unit = remember { { navController.navigateUp() } }
-            NavHost(
-                navController = navController,
-                startDestination = start,
-                enterTransition = { fadeIn(animationSpec = tween(100)) },
-                exitTransition = { fadeOut(animationSpec = tween(100)) },
-                builder = {
-                    composable(start) {
-                        /*val addToHistory: (String) -> Unit = remember {
-                            { item -> historyVM.add(item) }
-                        }
-                        val addToFavourite: (String) -> Unit = remember {
-                            { item -> favouritesVM.add(item) }
-                        }*/
-                        HomeScreen(
-                            navController = navController,
-                            vm = viewModels<HomeViewModel>(
-                                extrasProducer = {
-                                    defaultViewModelCreationExtras.withCreationCallback<HomeAssistedFactory> { factory ->
-                                        factory.create(outsideInput ?: "")
-                                    }
+        /*CompositionLocalProvider(LocalTTS provides tts.value) {
+        }*/
+
+        val start = "${Nav.Route.Home}/{${Nav.Arguments.Search}}"
+        val navController = rememberNavController()
+        val onBackClick: () -> Unit = remember { { navController.navigateUp() } }
+        NavHost(
+            navController = navController,
+            startDestination = start,
+            enterTransition = { fadeIn(animationSpec = tween(100)) },
+            exitTransition = { fadeOut(animationSpec = tween(100)) },
+            builder = {
+                composable(start) {
+                    /*val addToHistory: (String) -> Unit = remember {
+                        { item -> historyVM.add(item) }
+                    }
+                    val addToFavourite: (String) -> Unit = remember {
+                        { item -> favouritesVM.add(item) }
+                    }*/
+                    HomeScreen(
+                        navController = navController,
+                        vm = viewModels<HomeViewModel>(
+                            extrasProducer = {
+                                defaultViewModelCreationExtras.withCreationCallback<HomeAssistedFactory> { factory ->
+                                    factory.create(outsideInput ?: "")
                                 }
-                            ).value
-                            //onAddToHistory = addToHistory,
-                            //onAddToFavourite = addToFavourite
-                        )
-                    }
-
-                    composable(Nav.Route.About.toString()) {
-                        AboutContent(
-                            onBackClick = onBackClick
-                        )
-                    }
-
-                    composable(Nav.Route.Favourites()) {
-                        val onFavouritesItemClick: (String) -> Unit = remember {
-                            { favourite -> navController.navigate("${Nav.Route.Home}/${favourite}") }
-                        }
-                        FavouritesContent(
-                            onFavouritesItemClick = onFavouritesItemClick,
-                            onBackClick = onBackClick,
-                            favourites = favouritesVM.favourites.collectAsStateWithLifecycle().value.toPersistentList(),
-                            onRemoveAll = remember { { favouritesVM.removeAll() } },
-                            onRemove = remember { { favouritesVM.remove(it) } }
-                        )
-                    }
-
-                    composable(Nav.Route.History()) {
-                        val onHistoryItemClick: (String) -> Unit = remember {
-                            { history -> navController.navigate("${Nav.Route.Home}/${history}") }
-                        }
-                        HistoryContent(
-                            onHistoryItemClick = onHistoryItemClick,
-                            onBackClick = onBackClick,
-                            history = historyVM.history.collectAsStateWithLifecycle().value.toPersistentList(),
-                            onRemoveAll = remember { { historyVM.removeAll() } },
-                            onRemove = remember { { historyVM.remove(it) } }
-                        )
-                    }
-
-                    composable(Nav.Route.Settings()) {
-                        SettingsContent(
-                            isVibrating = settingsVM.isVibrating.collectAsStateWithLifecycle().value,
-                            onVibratingChange = remember { { settingsVM.updateVibrationSetting(it) } },
-                            isStartingBlank = settingsVM.isStartingBlank.collectAsStateWithLifecycle().value,
-                            onStartingBlankChange = remember { { settingsVM.updateStartingBlank(it) } },
-                            themeSetting = settingsVM.themeSetting.collectAsStateWithLifecycle().value,
-                            onSystemThemeChange = onThemeChanged,
-                            onThemeSettingChange = remember { { settingsVM.updateThemeSetting(it) } },
-                            ttsTag = settingsVM.ttsLang.collectAsStateWithLifecycle().value,
-                            onTtsTagChange = remember { { settingsVM.updateTtsLang(it) } },
-                            onBackClick = onBackClick
-                        )
-                    }
+                            }
+                        ).value
+                        //onAddToHistory = addToHistory,
+                        //onAddToFavourite = addToFavourite
+                    )
                 }
-            )
-        }
+
+                composable(Nav.Route.About.toString()) {
+                    AboutContent(
+                        onBackClick = onBackClick
+                    )
+                }
+
+                composable(Nav.Route.Favourites()) {
+                    val onFavouritesItemClick: (String) -> Unit = remember {
+                        { favourite -> navController.navigate("${Nav.Route.Home}/${favourite}") }
+                    }
+                    FavouritesContent(
+                        onFavouritesItemClick = onFavouritesItemClick,
+                        onBackClick = onBackClick,
+                        favourites = favouritesVM.favourites.collectAsStateWithLifecycle().value.toPersistentList(),
+                        onRemoveAll = remember { { favouritesVM.removeAll() } },
+                        onRemove = remember { { favouritesVM.remove(it) } }
+                    )
+                }
+
+                composable(Nav.Route.History()) {
+                    val onHistoryItemClick: (String) -> Unit = remember {
+                        { history -> navController.navigate("${Nav.Route.Home}/${history}") }
+                    }
+                    HistoryContent(
+                        onHistoryItemClick = onHistoryItemClick,
+                        onBackClick = onBackClick,
+                        history = historyVM.history.collectAsStateWithLifecycle().value.toPersistentList(),
+                        onRemoveAll = remember { { historyVM.removeAll() } },
+                        onRemove = remember { { historyVM.remove(it) } }
+                    )
+                }
+
+                composable(Nav.Route.Settings()) {
+                    SettingsScreen(
+                        onBackClick = onBackClick
+                    )
+                }
+            }
+        )
+
     }
 }

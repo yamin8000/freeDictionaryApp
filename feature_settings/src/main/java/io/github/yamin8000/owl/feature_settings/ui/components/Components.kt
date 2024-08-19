@@ -1,16 +1,16 @@
 /*
- *     freeDictionaryApp/freeDictionaryApp.app.main
- *     Composables.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
- *     Composables.kt Last modified at 2024/5/6
- *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
+ *     freeDictionaryApp/freeDictionaryApp.feature_settings.main
+ *     Components.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
+ *     Components.kt Last modified at 2024/8/18
+ *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_settings.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
- *     freeDictionaryApp/freeDictionaryApp.app.main is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp/freeDictionaryApp.feature_settings.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     freeDictionaryApp/freeDictionaryApp.app.main is distributed in the hope that it will be useful,
+ *     freeDictionaryApp/freeDictionaryApp.feature_settings.main is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.content.settings
+package io.github.yamin8000.owl.feature_settings.ui.components
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
@@ -45,6 +45,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 
@@ -149,7 +150,7 @@ internal fun SwitchWithText(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 content = {
-                    //PersianText(caption)
+                    PersianText(caption)
                     Switch(
                         checked = checked,
                         onCheckedChange = null

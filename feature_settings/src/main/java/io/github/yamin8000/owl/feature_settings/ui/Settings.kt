@@ -1,16 +1,16 @@
 /*
- *     freeDictionaryApp/freeDictionaryApp.app.main
- *     Settings.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
- *     Settings.kt Last modified at 2024/5/6
- *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
+ *     freeDictionaryApp/freeDictionaryApp.feature_settings.main
+ *     Settings.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
+ *     Settings.kt Last modified at 2024/8/18
+ *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_settings.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
- *     freeDictionaryApp/freeDictionaryApp.app.main is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp/freeDictionaryApp.feature_settings.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     freeDictionaryApp/freeDictionaryApp.app.main is distributed in the hope that it will be useful,
+ *     freeDictionaryApp/freeDictionaryApp.feature_settings.main is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.content.settings
+package io.github.yamin8000.owl.feature_settings.ui
 
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +42,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,47 +53,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import io.github.yamin8000.owl.R
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
+import io.github.yamin8000.owl.common.ui.components.SettingsItemCard
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
-import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
-import io.github.yamin8000.owl.util.TTS
+import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItem
+import io.github.yamin8000.owl.feature_settings.ui.components.SwitchItem
+import io.github.yamin8000.owl.strings.R
 import java.util.Locale
 
-@MyPreview
 @Composable
-private fun SettingsContentPreview() {
-    PreviewTheme {
-        SettingsContent(
-            isVibrating = false,
-            onVibratingChange = {},
-            isStartingBlank = false,
-            onStartingBlankChange = {},
-            themeSetting = ThemeSetting.System,
-            onThemeSettingChange = {},
-            onSystemThemeChange = {},
-            ttsTag = "English",
-            onTtsTagChange = {},
-            onBackClick = {}
-        )
-    }
-}
-
-@Composable
-internal fun SettingsContent(
+fun SettingsScreen(
     modifier: Modifier = Modifier,
-    isVibrating: Boolean,
-    onVibratingChange: (Boolean) -> Unit,
-    isStartingBlank: Boolean,
-    onStartingBlankChange: (Boolean) -> Unit,
-    themeSetting: ThemeSetting,
-    onThemeSettingChange: (ThemeSetting) -> Unit,
-    onSystemThemeChange: (ThemeSetting) -> Unit,
-    ttsTag: String,
-    onTtsTagChange: (String) -> Unit,
+    vm: SettingsViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
-/*
+    val state = vm.state.collectAsStateWithLifecycle().value
     ScaffoldWithTitle(
         modifier = modifier,
         title = stringResource(id = R.string.settings),
@@ -108,27 +84,27 @@ internal fun SettingsContent(
                     .padding(bottom = 16.dp),
                 content = {
                     GeneralSettings(
-                        isVibrating = isVibrating,
-                        onVibratingChange = onVibratingChange,
-                        isStartingBlank = isStartingBlank,
-                        onStartingBlankChange = onStartingBlankChange
+                        isVibrating = state.isVibrating,
+                        onVibratingChange = {},
+                        isStartingBlank = state.isStartingBlank,
+                        onStartingBlankChange = {}
                     )
-                    ThemeSetting(
+                    /*ThemeSetting(
                         currentTheme = themeSetting,
                         onCurrentThemeChange = { newTheme ->
                             onThemeSettingChange(newTheme)
                             onSystemThemeChange(newTheme)
                         }
-                    )
+                    )*/
                     TtsLanguageSetting(
-                        currentTtsTag = ttsTag,
-                        onTtsTagChange = onTtsTagChange
+                        currentTtsTag = state.ttsLang ?: "",
+                        onTtsTagChange = {}
                     )
                 }
             )
         }
     )
-*/
+
 }
 
 @Composable
@@ -137,7 +113,6 @@ private fun TtsLanguageSetting(
     currentTtsTag: String,
     onTtsTagChange: (String) -> Unit
 ) {
-/*
     SettingsItemCard(
         modifier = modifier,
         title = stringResource(R.string.tts_language),
@@ -148,7 +123,7 @@ private fun TtsLanguageSetting(
                 onClick = showDialog,
                 content = {
                     Icon(imageVector = Icons.TwoTone.Language, contentDescription = null)
-                    io.github.yamin8000.owl.coreui.components.PersianText(
+                    PersianText(
                         Locale.forLanguageTag(
                             currentTtsTag
                         ).displayName
@@ -157,13 +132,13 @@ private fun TtsLanguageSetting(
                     val context = LocalContext.current
                     var englishLanguages by remember { mutableStateOf(listOf<Locale>()) }
 
-                    LaunchedEffect(currentTtsTag) {
+                    /*LaunchedEffect(currentTtsTag) {
                         englishLanguages = TTS(context, Locale.forLanguageTag(currentTtsTag))
                             .getTts()
                             ?.availableLanguages
                             ?.filter { it.language == Locale.ENGLISH.language }
                             ?: listOf()
-                    }
+                    }*/
 
                     val hideDialog = remember { { isDialogShown = false } }
                     val onLanguageSelect: (String) -> Unit = remember {
@@ -185,7 +160,6 @@ private fun TtsLanguageSetting(
             )
         }
     )
-*/
 }
 
 @Composable
@@ -228,7 +202,6 @@ private fun GeneralSettings(
     isStartingBlank: Boolean,
     onStartingBlankChange: (Boolean) -> Unit
 ) {
-/*
     SettingsItemCard(
         modifier = modifier.fillMaxWidth(),
         title = stringResource(R.string.general),
@@ -247,7 +220,6 @@ private fun GeneralSettings(
             )
         }
     )
-*/
 }
 
 @Composable
@@ -264,16 +236,15 @@ private fun TtsLanguageItem(
         onClick = onItemClick,
         enabled = !isSelected,
         content = {
-/*
             PersianText(
                 text = Locale.forLanguageTag(localeTag).displayName,
                 modifier = Modifier.padding(16.dp)
             )
-*/
         }
     )
 }
 
+/*
 @Composable
 private fun ThemeSetting(
     modifier: Modifier = Modifier,
@@ -284,7 +255,6 @@ private fun ThemeSetting(
     val onDismissDialog = remember { { isShowingDialog = false } }
     val onShowDialog = remember { { isShowingDialog = true } }
 
-/*
     SettingsItemCard(
         modifier = modifier,
         title = stringResource(R.string.theme),
@@ -303,18 +273,21 @@ private fun ThemeSetting(
                         imageVector = Icons.TwoTone.DisplaySettings,
                         contentDescription = stringResource(R.string.theme)
                     )
-                    io.github.yamin8000.owl.coreui.components.PersianText(
+                    */
+/*PersianText(
                         text = stringResource(currentTheme.persianNameStringResource),
-                    )
+                    )*//*
+
                 }
             )
             if (currentTheme == ThemeSetting.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                 DynamicThemeNotice()
         }
     )
-*/
 }
+*/
 
+/*
 @Composable
 private fun ThemeChangerDialog(
     modifier: Modifier = Modifier,
@@ -326,7 +299,9 @@ private fun ThemeChangerDialog(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
-        confirmButton = { /*ignored*/ },
+        confirmButton = { */
+/*ignored*//*
+ },
         //title = { PersianText(stringResource(R.string.theme)) },
         icon = { Icon(imageVector = Icons.TwoTone.DisplaySettings, contentDescription = null) },
         text = {
@@ -361,10 +336,12 @@ private fun ThemeChangerDialog(
                                     onClick = null,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
-                                /*PersianText(
+                                */
+/*PersianText(
                                     text = stringResource(theme.persianNameStringResource),
                                     modifier = Modifier.padding(vertical = 16.dp)
-                                )*/
+                                )*//*
+
                             }
                         )
                     }
@@ -373,14 +350,15 @@ private fun ThemeChangerDialog(
         }
     )
 }
+*/
 
 @Composable
 private fun DynamicThemeNotice(
     modifier: Modifier = Modifier,
 ) {
-    /*PersianText(
+    PersianText(
         modifier = modifier,
         text = stringResource(R.string.dynamic_theme_notice),
         textAlign = TextAlign.Justify
-    )*/
+    )
 }

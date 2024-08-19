@@ -51,7 +51,7 @@ import kotlin.coroutines.cancellation.CancellationException
 @HiltViewModel(assistedFactory = HomeAssistedFactory::class)
 class HomeViewModel @AssistedInject constructor(
     private val savedState: SavedStateHandle,
-    private val useCase: FreeDictionaryUseCase,
+    private val freeDictionaryUseCase: FreeDictionaryUseCase,
     private val termSuggesterRepository: TermSuggesterRepository,
     @Assisted private val outsideInput: String
 ) : ViewModel() {
@@ -144,7 +144,7 @@ class HomeViewModel @AssistedInject constructor(
             _state.update {
                 it.copy(isSearching = true)
             }
-            val (result, error) = useCase(searchTerm)
+            val (result, error) = freeDictionaryUseCase(searchTerm)
             _state.update {
                 it.copy(isSearching = false)
             }

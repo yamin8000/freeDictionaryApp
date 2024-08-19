@@ -35,7 +35,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "freeDictionaryApp"
 include(":app")
-include(":data")
+include(":datastore")
 include(":common")
 include(":feature_home")
 include(":strings")
+include(":feature_settings")
