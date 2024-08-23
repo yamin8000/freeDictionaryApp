@@ -170,14 +170,6 @@ internal class MainActivity : ComponentActivity() {
             }
         })
 
-        //val ttsTag by settingsVM.ttsLang.collectAsStateWithLifecycle()
-        //val ttsHelper = remember(ttsTag) { TTS(context, Locale.forLanguageTag(ttsTag)) }
-        //val tts: MutableState<TextToSpeech?> = remember { mutableStateOf(null) }
-        //LaunchedEffect(Unit) { tts.value = ttsHelper.getTts() }
-
-        /*CompositionLocalProvider(LocalTTS provides tts.value) {
-        }*/
-
         val start = "${Nav.Route.Home}/{${Nav.Arguments.Search}}"
         val navController = rememberNavController()
         val onBackClick: () -> Unit = remember { { navController.navigateUp() } }
