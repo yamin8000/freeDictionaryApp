@@ -22,16 +22,26 @@
 package io.github.yamin8000.owl.ui.content
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -40,24 +50,24 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.BuildConfig
-import io.github.yamin8000.owl.strings.R
-import io.github.yamin8000.owl.R as RApp
 import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
-import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.strings.R
+import io.github.yamin8000.owl.R as RApp
 
-@MyPreview
+/*@MyPreview
 @Composable
 private fun AboutContentPreview() {
     PreviewTheme {
         AboutContent { }
     }
-}
+}*/
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AboutContent(
     modifier: Modifier = Modifier,
@@ -76,8 +86,38 @@ internal fun AboutContent(
                     val sourceUri = stringResource(R.string.github_source)
                     val freeDictionaryUri = stringResource(R.string.free_dictionary_link)
                     val licenseUri = stringResource(R.string.license_link)
+
+                    var state by remember { mutableStateOf(false) }
+
+                    if (state) {
+                        ModalBottomSheet(
+                            onDismissRequest = { state = false },
+                            containerColor = MaterialTheme.colorScheme.background,
+                            dragHandle = {},
+                            content = {
+                                Box(
+                                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                                    content = {
+                                        Column {
+                                            Text("Test")
+                                            Text("Test")
+                                            Text("Test")
+                                            Text("Test")
+                                            Text("Test")
+                                            Text("Test")
+                                            Text("Test")
+                                        }
+                                    }
+                                )
+                            }
+                        )
+                    }
+
                     Ripple(
-                        onClick = { uriHandler.openUri(licenseUri) },
+                        onClick = {
+                            state = true
+                            //uriHandler.openUri(licenseUri)
+                        },
                         content = {
                             Image(
                                 painter = painterResource(id = RApp.drawable.ic_gplv3),
@@ -123,4 +163,32 @@ internal fun AboutContent(
             )
         }
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun Test() {
+    var state by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+
+    LaunchedEffect(Unit) {
+        sheetState.expand()
+    }
+
+    ModalBottomSheet(
+        onDismissRequest = { state = false },
+        containerColor = MaterialTheme.colorScheme.background,
+        sheetState = sheetState,
+        content = {
+            Text("Test")
+            Text("Test")
+            Text("Test")
+            Text("Test")
+            Text("Test")
+            Text("Test")
+            Text("Test")
+        }
+    )
+
 }

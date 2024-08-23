@@ -29,7 +29,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.yamin8000.owl.common.ui.navigation.Nav
 import io.github.yamin8000.owl.feature_home.di.HomeAssistedFactory
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
@@ -55,7 +54,7 @@ class HomeViewModel @AssistedInject constructor(
     private val termSuggesterRepository: TermSuggesterRepository,
     @Assisted private val outsideInput: String
 ) : ViewModel() {
-    val searchTerm = savedState.getStateFlow(Nav.Arguments.Search(), outsideInput)
+    val searchTerm = savedState.getStateFlow("Search", outsideInput)
 
     private var errorChannel = Channel<HomeSnackbarType>()
     val errorChannelFlow = errorChannel.receiveAsFlow()
@@ -121,7 +120,7 @@ class HomeViewModel @AssistedInject constructor(
             HomeEvent.OnShareData -> viewModelScope.launch { shareChannel.send(state.value.searchResult.firstOrNull()) }
 
             is HomeEvent.OnTermChanged -> {
-                savedState[Nav.Arguments.Search.toString()] = event.term
+                savedState["Search"] = event.term
                 viewModelScope.launch {
                     _state.update {
                         it.copy(searchSuggestions = termSuggesterRepository.suggestTerms(event.term))

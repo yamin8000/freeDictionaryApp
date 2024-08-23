@@ -21,20 +21,26 @@
 
 package io.github.yamin8000.owl.feature_settings.ui
 
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material.icons.twotone.Language
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,6 +58,7 @@ import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 import io.github.yamin8000.owl.common.ui.components.SettingsItemCard
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItem
 import io.github.yamin8000.owl.feature_settings.ui.components.SwitchItem
 import io.github.yamin8000.owl.strings.R
@@ -60,6 +68,7 @@ import java.util.Locale
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     vm: SettingsViewModel = hiltViewModel(),
+    onThemeChanged: (ThemeType) -> Unit,
     onBackClick: () -> Unit
 ) {
     val state = vm.state.collectAsStateWithLifecycle().value
@@ -83,13 +92,13 @@ fun SettingsScreen(
                             vm.onEvent(SettingsEvent.UpdateStartingBlankState(it))
                         }
                     )
-                    /*ThemeSetting(
-                        currentTheme = themeSetting,
-                        onCurrentThemeChange = { newTheme ->
-                            onThemeSettingChange(newTheme)
-                            onSystemThemeChange(newTheme)
+                    ThemeSetting(
+                        theme = state.theme,
+                        onThemeChanged = { newTheme ->
+                            vm.onEvent(SettingsEvent.UpdateTheme(newTheme))
+                            onThemeChanged(newTheme)
                         }
-                    )*/
+                    )
                     TtsLanguageSetting(
                         currentTtsTag = state.ttsLang ?: "",
                         languages = state.englishLanguages,
@@ -229,12 +238,11 @@ private fun TtsLanguageItem(
     )
 }
 
-/*
 @Composable
 private fun ThemeSetting(
     modifier: Modifier = Modifier,
-    currentTheme: ThemeSetting,
-    onCurrentThemeChange: (ThemeSetting) -> Unit
+    theme: ThemeType,
+    onThemeChanged: (ThemeType) -> Unit
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
     val onDismissDialog = remember { { isShowingDialog = false } }
@@ -246,8 +254,8 @@ private fun ThemeSetting(
         content = {
             if (isShowingDialog) {
                 ThemeChangerDialog(
-                    currentTheme = currentTheme,
-                    onCurrentThemeChange = onCurrentThemeChange,
+                    currentTheme = theme,
+                    onCurrentThemeChange = onThemeChanged,
                     onDismiss = onDismissDialog
                 )
             }
@@ -258,36 +266,28 @@ private fun ThemeSetting(
                         imageVector = Icons.TwoTone.DisplaySettings,
                         contentDescription = stringResource(R.string.theme)
                     )
-                    */
-/*PersianText(
-                        text = stringResource(currentTheme.persianNameStringResource),
-                    )*//*
-
+                    PersianText(text = theme.toString())
                 }
             )
-            if (currentTheme == ThemeSetting.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            if (theme == ThemeType.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                 DynamicThemeNotice()
         }
     )
 }
-*/
 
-/*
 @Composable
 private fun ThemeChangerDialog(
     modifier: Modifier = Modifier,
-    currentTheme: ThemeSetting,
-    onCurrentThemeChange: (ThemeSetting) -> Unit,
+    currentTheme: ThemeType,
+    onCurrentThemeChange: (ThemeType) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val themes = remember { ThemeSetting.entries.toTypedArray() }
+    val themes = remember { ThemeType.entries() }
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
-        confirmButton = { */
-/*ignored*//*
- },
-        //title = { PersianText(stringResource(R.string.theme)) },
+        confirmButton = {},
+        title = { PersianText(stringResource(R.string.theme)) },
         icon = { Icon(imageVector = Icons.TwoTone.DisplaySettings, contentDescription = null) },
         text = {
             Column(
@@ -321,11 +321,10 @@ private fun ThemeChangerDialog(
                                     onClick = null,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
-                                */
-/*PersianText(
-                                    text = stringResource(theme.persianNameStringResource),
+                                PersianText(
+                                    text = theme.toString(),
                                     modifier = Modifier.padding(vertical = 16.dp)
-                                )*//*
+                                )
 
                             }
                         )
@@ -335,7 +334,6 @@ private fun ThemeChangerDialog(
         }
     )
 }
-*/
 
 @Composable
 private fun DynamicThemeNotice(

@@ -48,7 +48,7 @@ class SettingsViewModel @Inject constructor(
         runBlocking {
             _state.update { settingsState ->
                 settingsState.copy(
-                    themeType = useCases.getTheme(),
+                    theme = useCases.getTheme(),
                     ttsLang = useCases.getTTS(),
                     isVibrating = useCases.getVibration(),
                     isStartingBlank = useCases.getStartingBlank(),
@@ -80,6 +80,11 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvent.UpdateVibrationState -> {
                 _state.update { it.copy(isVibrating = event.value) }
                 scope.launch { useCases.setVibration(event.value) }
+            }
+
+            is SettingsEvent.UpdateTheme -> {
+                _state.update { it.copy(theme = event.newTheme) }
+                scope.launch { useCases.setTheme(event.newTheme) }
             }
         }
     }

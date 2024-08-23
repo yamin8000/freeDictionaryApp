@@ -32,9 +32,11 @@ import androidx.activity.viewModels
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -46,10 +48,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.withCreationCallback
-import io.github.yamin8000.owl.common.ui.navigation.Nav
 import io.github.yamin8000.owl.common.ui.theme.AppTheme
 import io.github.yamin8000.owl.core.favouritesDataStore
 import io.github.yamin8000.owl.core.historyDataStore
+import io.github.yamin8000.owl.datastore.domain.model.ThemeType
+import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.di.HomeAssistedFactory
 import io.github.yamin8000.owl.feature_home.ui.HomeScreen
 import io.github.yamin8000.owl.feature_home.ui.HomeViewModel
@@ -59,14 +62,22 @@ import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
 import io.github.yamin8000.owl.ui.content.history.HistoryContent
 import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
+import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.util.log
 import io.github.yamin8000.owl.util.viewModelFactory
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class MainActivity : ComponentActivity() {
 
-    private var outsideInput: String? = null
+    private var intentSearch: String? = null
+
+    @Inject
+    lateinit var settings: SettingUseCases
+
+    private lateinit var initTheme: ThemeType
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @ExperimentalMaterial3Api
@@ -77,33 +88,40 @@ internal class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
-        outsideInput = handleOutsideInputIntent()
+        intentSearch = handleOutsideInputIntent()
 
-        try {
-            //runBlocking { theme = getCurrentTheme() }
-        } catch (e: InterruptedException) {
-            log(e.stackTraceToString())
-        }
+        handleTheme()
 
         setContent {
-            MainContent(
+            val (theme, onThemeChanged) = remember { mutableStateOf(initTheme) }
+            AppTheme(
+                isDarkTheme = isDarkTheme(theme, isSystemInDarkTheme()),
+                isOledTheme = theme == ThemeType.Darker,
+                isDynamicColor = theme == ThemeType.System,
                 content = {
                     Scaffold {
-                        MainNav()
+                        MainNav(onThemeChanged = onThemeChanged)
                     }
                 }
             )
         }
     }
 
-    /*private suspend fun getCurrentTheme() = io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.valueOf(
-        DataStoreRepository(settingsDataStore).getString(Constants.THEME)
-            ?: io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.System.name
-    )*/
+    private fun handleTheme() {
+        try {
+            runBlocking {
+                initTheme = settings.getTheme()
+            }
+        } catch (e: InterruptedException) {
+            log(e.stackTraceToString())
+        }
+
+        if (!this::initTheme.isInitialized) {
+            initTheme = ThemeType.System
+        }
+    }
 
     private fun handleOutsideInputIntent(): String? {
-        //widget
-        //return intent.extras?.getString("search")
         return if (intent.type == "text/plain") {
             when (intent.action) {
                 Intent.ACTION_TRANSLATE, Intent.ACTION_DEFINE, Intent.ACTION_SEND -> {
@@ -125,30 +143,18 @@ internal class MainActivity : ComponentActivity() {
         }
     }
 
-    @Composable
-    private fun MainContent(
-        //currentTheme: io.github.yamin8000.owl.feature_settings.ui.ThemeSetting,
-        content: @Composable () -> Unit
-    ) {
-        AppTheme(
-            isDarkTheme = false,
-            isOledTheme = false,
-            isDynamicColor = false,
-            content = content
-        )
-    }
-
-    /*private fun isDarkTheme(
-        themeSetting: io.github.yamin8000.owl.feature_settings.ui.ThemeSetting,
+    private fun isDarkTheme(
+        theme: ThemeType,
         isSystemInDarkTheme: Boolean
-    ) = when (themeSetting) {
-        io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.Light -> false
-        io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.System -> isSystemInDarkTheme
-        io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.Dark, io.github.yamin8000.owl.feature_settings.ui.ThemeSetting.Darker -> true
-    }*/
+    ) = when (theme) {
+        ThemeType.Light -> false
+        ThemeType.System -> isSystemInDarkTheme
+        ThemeType.Dark, ThemeType.Darker -> true
+    }
 
     @Composable
     private fun MainNav(
+        onThemeChanged: (ThemeType) -> Unit
     ) {
         val context = LocalContext.current
 
@@ -182,23 +188,18 @@ internal class MainActivity : ComponentActivity() {
             exitTransition = { fadeOut(animationSpec = tween(100)) },
             builder = {
                 composable(start) {
-                    /*val addToHistory: (String) -> Unit = remember {
-                        { item -> historyVM.add(item) }
-                    }
-                    val addToFavourite: (String) -> Unit = remember {
-                        { item -> favouritesVM.add(item) }
-                    }*/
                     HomeScreen(
-                        navController = navController,
+                        onNavigateToAbout = { navController.navigate(Nav.Route.About()) },
+                        onNavigateToSettings = { navController.navigate(Nav.Route.Settings()) },
+                        onNavigateToFavourites = { navController.navigate(Nav.Route.Favourites()) },
+                        onNavigateToHistory = { navController.navigate(Nav.Route.History()) },
                         vm = viewModels<HomeViewModel>(
                             extrasProducer = {
                                 defaultViewModelCreationExtras.withCreationCallback<HomeAssistedFactory> { factory ->
-                                    factory.create(outsideInput ?: "")
+                                    factory.create(intentSearch ?: "")
                                 }
                             }
-                        ).value
-                        //onAddToHistory = addToHistory,
-                        //onAddToFavourite = addToFavourite
+                        ).value,
                     )
                 }
 
@@ -236,11 +237,11 @@ internal class MainActivity : ComponentActivity() {
 
                 composable(Nav.Route.Settings()) {
                     SettingsScreen(
-                        onBackClick = onBackClick
+                        onBackClick = onBackClick,
+                        onThemeChanged = onThemeChanged
                     )
                 }
             }
         )
-
     }
 }

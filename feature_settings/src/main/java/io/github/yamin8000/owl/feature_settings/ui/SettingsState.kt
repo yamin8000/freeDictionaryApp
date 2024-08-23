@@ -25,7 +25,7 @@ import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import java.util.Locale
 
 data class SettingsState(
-    val themeType: ThemeType = ThemeType.System,
+    val theme: ThemeType = ThemeType.System,
     val ttsLang: String? = null,
     val isVibrating: Boolean = true,
     val isStartingBlank: Boolean = true,

@@ -31,7 +31,7 @@ import io.github.yamin8000.owl.datastore.domain.repository.BaseDatastoreReposito
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
-class DataStoreRepository(
+open class BaseDataStoreRepository(
     private val datastore: DataStore<Preferences>
 ) : BaseDatastoreRepository {
 

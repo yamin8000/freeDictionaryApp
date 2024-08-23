@@ -26,5 +26,5 @@ import io.github.yamin8000.owl.feature_home.ui.HomeViewModel
 
 @AssistedFactory
 interface HomeAssistedFactory {
-    fun create(outsideInput: String): HomeViewModel
+    fun create(intentSearch: String): HomeViewModel
 }

@@ -28,6 +28,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.yamin8000.owl.datastore.data.datasource.Datastore.settingsDataStore
 import io.github.yamin8000.owl.datastore.data.repository.SettingsDatastoreRepository
+import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.datastore.domain.repository.SettingsRepository
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetStartingBlank
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetTTS

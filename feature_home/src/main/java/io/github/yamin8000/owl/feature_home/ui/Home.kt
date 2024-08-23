@@ -53,12 +53,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavController
 import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.LockScreenOrientation
 import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.components.PersianText
-import io.github.yamin8000.owl.common.ui.navigation.Nav
 import io.github.yamin8000.owl.feature_home.ui.components.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
 import io.github.yamin8000.owl.feature_home.ui.components.SuggestionsChips
@@ -75,9 +73,10 @@ import kotlinx.coroutines.withContext
 fun HomeScreen(
     modifier: Modifier = Modifier,
     vm: HomeViewModel = hiltViewModel(),
-    navController: NavController,
-    //onAddToHistory: (String) -> Unit,
-    //onAddToFavourite: (String) -> Unit
+    onNavigateToAbout: () -> Unit,
+    onNavigateToSettings: () -> Unit,
+    onNavigateToFavourites: () -> Unit,
+    onNavigateToHistory: () -> Unit,
 ) {
     val state = vm.state.collectAsStateWithLifecycle().value
 
@@ -113,10 +112,10 @@ fun HomeScreen(
                 },
                 topBar = {
                     MainTopBar(
-                        onNavigateToAbout = { navController.navigate(Nav.Route.About()) },
-                        onNavigateToSettings = { navController.navigate(Nav.Route.Settings()) },
-                        onNavigateToFavourites = { navController.navigate(Nav.Route.Favourites()) },
-                        onNavigateToHistory = { navController.navigate(Nav.Route.History()) },
+                        onNavigateToAbout = onNavigateToAbout,
+                        onNavigateToSettings = onNavigateToSettings,
+                        onNavigateToFavourites = onNavigateToFavourites,
+                        onNavigateToHistory = onNavigateToHistory,
                         onRandomClick = { vm.onEvent(HomeEvent.RandomWord) }
                     )
                 },

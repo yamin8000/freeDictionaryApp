@@ -21,16 +21,11 @@
 
 package io.github.yamin8000.owl.util
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import android.os.Build
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.InitializerViewModelFactoryBuilder
 import io.github.yamin8000.owl.BuildConfig
-import java.util.Locale
 
 /**
  * Extension method for [TextToSpeech] that

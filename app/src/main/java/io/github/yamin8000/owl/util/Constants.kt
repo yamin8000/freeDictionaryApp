@@ -21,12 +21,9 @@
 
 package io.github.yamin8000.owl.util
 
-import io.github.yamin8000.owl.feature_home.data.datasource.local.AppDatabase
-
 /**
  * App-wide constants
  */
 object Constants {
     const val LOG_TAG = "<==>"
-    const val FREE = "free"
 }

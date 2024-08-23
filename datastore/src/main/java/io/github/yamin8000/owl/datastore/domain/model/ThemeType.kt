@@ -37,5 +37,7 @@ sealed interface ThemeType {
                 else -> System
             }
         }
+
+        fun entries() = listOf(Dark, Light, System, Darker)
     }
 }
