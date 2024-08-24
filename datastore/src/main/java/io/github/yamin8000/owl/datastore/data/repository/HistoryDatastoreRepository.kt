@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.datastore.main
- *     DataStoreRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
- *     DataStoreRepository.kt Last modified at 2024/8/19
+ *     HistoryDatastoreRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/24
+ *     HistoryDatastoreRepository.kt Last modified at 2024/8/24
  *     This file is part of freeDictionaryApp/freeDictionaryApp.datastore.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -23,60 +23,35 @@ package io.github.yamin8000.owl.datastore.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import io.github.yamin8000.owl.datastore.domain.repository.BaseDatastoreRepository
-import kotlinx.coroutines.flow.firstOrNull
+import io.github.yamin8000.owl.datastore.domain.repository.HistoryRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-open class BaseDataStoreRepository(
+class HistoryDatastoreRepository(
     private val datastore: DataStore<Preferences>
-) : BaseDatastoreRepository {
+) : HistoryRepository, BaseDatastoreRepository by BasicDatastoreRepository(datastore) {
 
-    override suspend fun getString(
-        key: String
-    ) = datastore.data.map {
-        it[stringPreferencesKey(key)]
-    }.firstOrNull()
-
-    override suspend fun setString(
-        key: String,
-        value: String
-    ) {
-        datastore.edit {
-            it[stringPreferencesKey(key)] = value
-        }
+    override suspend fun add(history: String) {
+        datastore.edit { it[stringPreferencesKey(history)] = history }
     }
 
-    override suspend fun getInt(
-        key: String
-    ) = datastore.data.map {
-        it[intPreferencesKey(key)]
-    }.firstOrNull()
-
-    override suspend fun setInt(
-        key: String,
-        value: Int
-    ) {
-        datastore.edit {
-            it[intPreferencesKey(key)] = value
-        }
+    override suspend fun remove(history: String) {
+        datastore.edit { it.remove(stringPreferencesKey(history)) }
     }
 
-    override suspend fun getBool(
-        key: String
-    ) = datastore.data.map {
-        it[booleanPreferencesKey(key)]
-    }.firstOrNull()
+    override suspend fun removeAll() {
+        datastore.edit { it.clear() }
+    }
 
-    override suspend fun setBool(
-        key: String,
-        value: Boolean
-    ) {
-        datastore.edit {
-            it[booleanPreferencesKey(key)] = value
+    override suspend fun all(): Flow<List<String>> {
+        val test = datastore.data.map { preferences ->
+            preferences.asMap().map { entry ->
+                entry.value.toString()
+            }
         }
+        return test
     }
 }

@@ -52,9 +52,9 @@ class HomeViewModel @AssistedInject constructor(
     private val savedState: SavedStateHandle,
     private val freeDictionaryUseCase: FreeDictionaryUseCase,
     private val termSuggesterRepository: TermSuggesterRepository,
-    @Assisted private val outsideInput: String
+    @Assisted private val search: String
 ) : ViewModel() {
-    val searchTerm = savedState.getStateFlow("Search", outsideInput)
+    val searchTerm = savedState.getStateFlow("Search", search)
 
     private var errorChannel = Channel<HomeSnackbarType>()
     val errorChannelFlow = errorChannel.receiveAsFlow()

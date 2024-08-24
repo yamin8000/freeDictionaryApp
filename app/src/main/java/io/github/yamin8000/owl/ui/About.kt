@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui.content
+package io.github.yamin8000.owl.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

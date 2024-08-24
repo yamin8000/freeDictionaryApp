@@ -36,8 +36,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,20 +50,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.withCreationCallback
+import io.github.yamin8000.karlancer.feature_history.ui.HistoryScreen
 import io.github.yamin8000.owl.common.ui.theme.AppTheme
 import io.github.yamin8000.owl.core.favouritesDataStore
-import io.github.yamin8000.owl.core.historyDataStore
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.di.HomeAssistedFactory
 import io.github.yamin8000.owl.feature_home.ui.HomeScreen
 import io.github.yamin8000.owl.feature_home.ui.HomeViewModel
 import io.github.yamin8000.owl.feature_settings.ui.SettingsScreen
-import io.github.yamin8000.owl.ui.content.AboutContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesContent
 import io.github.yamin8000.owl.ui.content.favourites.FavouritesViewModel
-import io.github.yamin8000.owl.ui.content.history.HistoryContent
-import io.github.yamin8000.owl.ui.content.history.HistoryViewModel
 import io.github.yamin8000.owl.ui.navigation.Nav
 import io.github.yamin8000.owl.util.log
 import io.github.yamin8000.owl.util.viewModelFactory
@@ -158,19 +157,13 @@ internal class MainActivity : ComponentActivity() {
     ) {
         val context = LocalContext.current
 
-        val historyVM: HistoryViewModel = viewModel(factory = viewModelFactory {
-            initializer {
-                HistoryViewModel(context.historyDataStore)
-            }
-        })
-
         val favouritesVM: FavouritesViewModel = viewModel(factory = viewModelFactory {
             initializer {
                 FavouritesViewModel(context.favouritesDataStore)
             }
         })
 
-        val start = "${Nav.Route.Home}/{${Nav.Arguments.Search}}"
+        val start = "${Nav.Route.Home}/{Search}"
         val navController = rememberNavController()
         val onBackClick: () -> Unit = remember { { navController.navigateUp() } }
         NavHost(
@@ -180,6 +173,8 @@ internal class MainActivity : ComponentActivity() {
             exitTransition = { fadeOut(animationSpec = tween(100)) },
             builder = {
                 composable(start) {
+                    val argSearch = it.arguments?.getString("Search")
+                    it.savedStateHandle["Search"] = argSearch
                     HomeScreen(
                         onNavigateToAbout = { navController.navigate(Nav.Route.About()) },
                         onNavigateToSettings = { navController.navigate(Nav.Route.Settings()) },
@@ -188,7 +183,9 @@ internal class MainActivity : ComponentActivity() {
                         vm = viewModels<HomeViewModel>(
                             extrasProducer = {
                                 defaultViewModelCreationExtras.withCreationCallback<HomeAssistedFactory> { factory ->
-                                    factory.create(intentSearch ?: "")
+                                    factory.create(
+                                        argSearch ?: ""
+                                    )
                                 }
                             }
                         ).value,
@@ -214,16 +211,18 @@ internal class MainActivity : ComponentActivity() {
                     )
                 }
 
-                composable(Nav.Route.History()) {
+                composable(Nav.Route.History()) { backstack ->
                     val onHistoryItemClick: (String) -> Unit = remember {
                         { history -> navController.navigate("${Nav.Route.Home}/${history}") }
                     }
-                    HistoryContent(
-                        onHistoryItemClick = onHistoryItemClick,
+                    val homeStack = remember(backstack) {
+                        navController.getBackStackEntry(start)
+                    }
+                    HistoryScreen(
                         onBackClick = onBackClick,
-                        history = historyVM.history.collectAsStateWithLifecycle().value.toPersistentList(),
-                        onRemoveAll = remember { { historyVM.removeAll() } },
-                        onRemove = remember { { historyVM.remove(it) } }
+                        onHistoryItemClick = {
+                            navController.navigate("${Nav.Route.Home}/${it}")
+                        }
                     )
                 }
 

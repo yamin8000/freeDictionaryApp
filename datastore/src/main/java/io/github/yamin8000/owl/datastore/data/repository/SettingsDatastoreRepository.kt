@@ -30,7 +30,8 @@ import io.github.yamin8000.owl.datastore.domain.repository.SettingsRepository
 
 class SettingsDatastoreRepository(
     private val datastore: DataStore<Preferences>
-) : SettingsRepository, BaseDatastoreRepository by BaseDataStoreRepository(datastore) {
+) : SettingsRepository, BaseDatastoreRepository by BasicDatastoreRepository(datastore) {
+
     override suspend fun getTheme(): ThemeType {
         return ThemeType.toType(getString(SettingsKeys.THEME))
     }

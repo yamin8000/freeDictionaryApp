@@ -92,22 +92,23 @@ dependencies {
     implementation(project(":datastore"))
     implementation(project(":feature_home"))
     implementation(project(":feature_settings"))
+    implementation(project(":feature_history"))
     //core android/kotlin
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)//
-    implementation(libs.jetbrains.kotlinx.immutable)//
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.jetbrains.kotlinx.immutable)
     implementation(libs.androidx.core.splashscreen)
     //compose
-    implementation(libs.androidx.compose.ui)//
-    implementation(libs.androidx.compose.material)//
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.ui.tooling.preview)
     //
-    debugImplementation(libs.androidx.compose.ui.tooling)//
-    implementation(libs.androidx.activity.compose)//
-    implementation(libs.androidx.compose.material.icons.extended)//
-    implementation(libs.androidx.compose.material3)//
-    implementation(libs.androidx.compose.material3.window.size)//
-    implementation(libs.androidx.lifecycle.runtime.compose)//
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.window.size)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     //navigation
     implementation(libs.androidx.navigation.compose)
     //hilt

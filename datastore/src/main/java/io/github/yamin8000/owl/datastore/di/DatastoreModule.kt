@@ -26,10 +26,17 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.yamin8000.owl.datastore.data.datasource.Datastore.historyDataStore
 import io.github.yamin8000.owl.datastore.data.datasource.Datastore.settingsDataStore
+import io.github.yamin8000.owl.datastore.data.repository.HistoryDatastoreRepository
 import io.github.yamin8000.owl.datastore.data.repository.SettingsDatastoreRepository
-import io.github.yamin8000.owl.datastore.domain.model.ThemeType
+import io.github.yamin8000.owl.datastore.domain.repository.HistoryRepository
 import io.github.yamin8000.owl.datastore.domain.repository.SettingsRepository
+import io.github.yamin8000.owl.datastore.domain.usecase.history.AddHistory
+import io.github.yamin8000.owl.datastore.domain.usecase.history.GetAllHistory
+import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
+import io.github.yamin8000.owl.datastore.domain.usecase.history.RemoveAllHistory
+import io.github.yamin8000.owl.datastore.domain.usecase.history.RemoveHistory
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetStartingBlank
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetTTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetTheme
@@ -66,15 +73,20 @@ object DatastoreModule {
         )
     }
 
-    /*@Provides
+    @Provides
     @Singleton
-    fun provideHistoryRepository(app: Application): BaseDatastoreRepository {
-        return DataStoreRepository(app.historyDataStore)
+    fun provideHistoryRepository(app: Application): HistoryRepository {
+        return HistoryDatastoreRepository(app.historyDataStore)
     }
 
     @Provides
     @Singleton
-    fun provideFavouritesRepository(app: Application): BaseDatastoreRepository {
-        return DataStoreRepository(app.favouritesDataStore)
-    }*/
+    fun providesHistoryUseCases(repository: HistoryRepository): HistoryUseCases {
+        return HistoryUseCases(
+            addHistory = AddHistory(repository),
+            removeHistory = RemoveHistory(repository),
+            removeAllHistory = RemoveAllHistory(repository),
+            getAllHistory = GetAllHistory(repository)
+        )
+    }
 }
