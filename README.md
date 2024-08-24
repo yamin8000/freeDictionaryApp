@@ -68,7 +68,7 @@ Just use the search input to search the word.
 - Material3/Material You
 - Clean Architecture
 - Dependency Injection with Hilt/Dagger
-- MVVM
+- MVI
 - Retrofit, Moshi with KSP, Coil
 - Datastore, Room with KSP
 
