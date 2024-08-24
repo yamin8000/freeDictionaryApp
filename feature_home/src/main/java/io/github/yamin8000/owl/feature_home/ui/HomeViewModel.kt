@@ -29,7 +29,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.yamin8000.owl.feature_home.di.HomeAssistedFactory
+import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
+import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
+import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
@@ -47,14 +49,17 @@ import retrofit2.HttpException
 import java.net.UnknownHostException
 import kotlin.coroutines.cancellation.CancellationException
 
-@HiltViewModel(assistedFactory = HomeAssistedFactory::class)
+@HiltViewModel(assistedFactory = HomeViewModelFactory::class)
 class HomeViewModel @AssistedInject constructor(
     private val savedState: SavedStateHandle,
     private val freeDictionaryUseCase: FreeDictionaryUseCase,
     private val termSuggesterRepository: TermSuggesterRepository,
-    @Assisted private val search: String
+    private val settingsUseCases: SettingUseCases,
+    private val historyUseCases: HistoryUseCases,
+    @Assisted("intent") private val intentSearch: String?,
+    @Assisted("navigation") private val navigationSearch: String?
 ) : ViewModel() {
-    val searchTerm = savedState.getStateFlow("Search", search)
+    val searchTerm = savedState.getStateFlow("Search", intentSearch ?: navigationSearch ?: "")
 
     private var errorChannel = Channel<HomeSnackbarType>()
     val errorChannelFlow = errorChannel.receiveAsFlow()
@@ -70,7 +75,7 @@ class HomeViewModel @AssistedInject constructor(
     val isWordSelectedFromKeyboardSuggestions: State<Boolean>
         get() = derivedStateOf { searchTerm.value.length > 1 && searchTerm.value.last() == ' ' && !searchTerm.value.all { it == ' ' } }
 
-    private val onlineCheckDelay = 1000L
+    private val internetCheckDelay = 5000L
     private val dnsServers = listOf(
         "8.8.8.8",
         "8.8.4.4",
@@ -83,28 +88,19 @@ class HomeViewModel @AssistedInject constructor(
     )
 
     init {
-        if (searchTerm.value.isNotBlank()) {
-            searchForDefinition(searchTerm.value)
-        }
-
         viewModelScope.launch {
-            repeat(Int.MAX_VALUE) {
-                _state.update { stateUpdate ->
-                    stateUpdate.copy(isOnline = dnsServers.any { dnsAccessible(it) })
-                }
-                delay(onlineCheckDelay)
+            _state.update { it.copy(isVibrating = settingsUseCases.getVibration()) }
+            if (!settingsUseCases.getStartingBlank()) {
+                savedState["Search"] = "free"
+            }
+            if (searchTerm.value.isNotBlank()) {
+                searchForDefinition(searchTerm.value)
+            }
+            while (true) {
+                onEvent(HomeEvent.OnCheckInternet)
+                delay(internetCheckDelay)
             }
         }
-    }
-
-    private suspend fun dnsAccessible(
-        dnsServer: String
-    ) = try {
-        withContext(Dispatchers.IO) {
-            Runtime.getRuntime().exec("/system/bin/ping -c 1 $dnsServer").waitFor()
-        } == 0
-    } catch (e: Exception) {
-        false
     }
 
     fun onEvent(
@@ -129,7 +125,28 @@ class HomeViewModel @AssistedInject constructor(
             }
 
             HomeEvent.CancelSearch -> cancel()
+            HomeEvent.OnCheckInternet -> {
+                viewModelScope.launch {
+                    _state.update { stateUpdate ->
+                        stateUpdate.copy(isOnline = dnsServers.any { dnsAccessible(it) })
+                    }
+                }
+            }
+
+            is HomeEvent.OnAddToFavourite -> {
+
+            }
         }
+    }
+
+    private suspend fun dnsAccessible(
+        dnsServer: String
+    ) = try {
+        withContext(Dispatchers.IO) {
+            Runtime.getRuntime().exec("/system/bin/ping -c 1 $dnsServer").waitFor()
+        } == 0
+    } catch (e: Exception) {
+        false
     }
 
     private fun searchForRandomWord() = viewModelScope.launch {
@@ -140,6 +157,7 @@ class HomeViewModel @AssistedInject constructor(
         searchTerm: String
     ) = viewModelScope.launch {
         if (searchTerm.isNotBlank()) {
+            historyUseCases.addHistory(searchTerm)
             _state.update {
                 it.copy(isSearching = true)
             }

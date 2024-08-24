@@ -93,6 +93,7 @@ dependencies {
     implementation(project(":feature_home"))
     implementation(project(":feature_settings"))
     implementation(project(":feature_history"))
+    implementation(project(":feature_favourites"))
     //core android/kotlin
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

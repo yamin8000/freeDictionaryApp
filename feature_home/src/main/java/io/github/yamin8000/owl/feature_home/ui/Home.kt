@@ -42,8 +42,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -89,8 +91,9 @@ fun HomeScreen(
         modifier = modifier.fillMaxSize(),
         content = {
             val listState = rememberScrollState()
-            /*if (listState.isScrollInProgress && isVibrating)
-                LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)*/
+            if (listState.isScrollInProgress && state.isVibrating) {
+                LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            }
 
             ObserverEvent(vm.shareChannelFlow) { data ->
                 if (data != null) {
@@ -193,6 +196,7 @@ fun HomeScreen(
                                             pronunciation = phonetic,
                                             onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
                                             onAddToFavourite = {
+                                                vm.onEvent(HomeEvent.OnAddToFavourite(word))
                                                 //onAddToFavourite(word)
                                                 /*state.snackbarHostState.showSnackbar(
                                                     context.getString(

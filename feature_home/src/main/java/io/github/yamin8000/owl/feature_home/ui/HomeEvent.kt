@@ -27,4 +27,6 @@ sealed interface HomeEvent {
     data class OnTermChanged(val term: String) : HomeEvent
     data object OnShareData : HomeEvent
     data object CancelSearch : HomeEvent
+    data object OnCheckInternet : HomeEvent
+    data class OnAddToFavourite(val word: String) : HomeEvent
 }

@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     HomeAssistedFactory.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
- *     HomeAssistedFactory.kt Last modified at 2024/8/19
+ *     HomeViewModelFactory.kt Copyrighted by Yamin Siahmargooei at 2024/8/25
+ *     HomeViewModelFactory.kt Last modified at 2024/8/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -21,10 +21,14 @@
 
 package io.github.yamin8000.owl.feature_home.di
 
+import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import io.github.yamin8000.owl.feature_home.ui.HomeViewModel
 
 @AssistedFactory
-interface HomeAssistedFactory {
-    fun create(search: String): HomeViewModel
+interface HomeViewModelFactory {
+    fun create(
+        @Assisted("intent") intentSearch: String?,
+        @Assisted("navigation") navigationSearch: String?,
+    ): HomeViewModel
 }

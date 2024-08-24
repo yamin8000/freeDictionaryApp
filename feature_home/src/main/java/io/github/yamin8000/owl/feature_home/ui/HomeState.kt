@@ -30,5 +30,6 @@ data class HomeState(
     val searchSuggestions: List<String> = emptyList(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     val error: HomeSnackbarType? = null,
-    val searchResult: List<Entry> = emptyList()
+    val searchResult: List<Entry> = emptyList(),
+    val isVibrating: Boolean = false
 )

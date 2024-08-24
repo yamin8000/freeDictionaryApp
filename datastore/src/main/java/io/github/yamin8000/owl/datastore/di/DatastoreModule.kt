@@ -26,12 +26,20 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.yamin8000.owl.datastore.data.datasource.Datastore.favouritesDataStore
 import io.github.yamin8000.owl.datastore.data.datasource.Datastore.historyDataStore
 import io.github.yamin8000.owl.datastore.data.datasource.Datastore.settingsDataStore
+import io.github.yamin8000.owl.datastore.data.repository.FavouriteDatastoreRepository
 import io.github.yamin8000.owl.datastore.data.repository.HistoryDatastoreRepository
 import io.github.yamin8000.owl.datastore.data.repository.SettingsDatastoreRepository
+import io.github.yamin8000.owl.datastore.domain.repository.FavouriteRepository
 import io.github.yamin8000.owl.datastore.domain.repository.HistoryRepository
 import io.github.yamin8000.owl.datastore.domain.repository.SettingsRepository
+import io.github.yamin8000.owl.datastore.domain.usecase.favourites.AddFavourite
+import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseCases
+import io.github.yamin8000.owl.datastore.domain.usecase.favourites.GetAllFavourite
+import io.github.yamin8000.owl.datastore.domain.usecase.favourites.RemoveAllFavourite
+import io.github.yamin8000.owl.datastore.domain.usecase.favourites.RemoveFavourite
 import io.github.yamin8000.owl.datastore.domain.usecase.history.AddHistory
 import io.github.yamin8000.owl.datastore.domain.usecase.history.GetAllHistory
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
@@ -87,6 +95,23 @@ object DatastoreModule {
             removeHistory = RemoveHistory(repository),
             removeAllHistory = RemoveAllHistory(repository),
             getAllHistory = GetAllHistory(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavouriteRepository(app: Application): FavouriteRepository {
+        return FavouriteDatastoreRepository(app.favouritesDataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun providesFavouriteUseCases(repository: FavouriteRepository): FavouriteUseCases {
+        return FavouriteUseCases(
+            addFavourite = AddFavourite(repository),
+            removeFavourite = RemoveFavourite(repository),
+            removeAllFavourite = RemoveAllFavourite(repository),
+            getAllFavourite = GetAllFavourite(repository)
         )
     }
 }
