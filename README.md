@@ -66,7 +66,9 @@ Just use the search input to search the word.
 - Kotlin(JVM)
 - Compose UI
 - Material3/Material You
-- Simple MVVM
+- Clean Architecture
+- Dependency Injection with Hilt/Dagger
+- MVVM
 - Retrofit, Moshi with KSP, Coil
 - Datastore, Room with KSP
 
