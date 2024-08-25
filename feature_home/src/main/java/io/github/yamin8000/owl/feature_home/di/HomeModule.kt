@@ -47,6 +47,7 @@ import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRep
 import io.github.yamin8000.owl.feature_home.domain.repository.remote.FreeDictionaryApiRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetCachedWord
+import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWordUseCase
 import io.github.yamin8000.owl.feature_home.domain.usecase.WordCacheUseCases
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -174,4 +175,10 @@ object HomeModule {
             definitionRepository
         )
     )
+
+    @Provides
+    @Singleton
+    fun providesRandomWordUseCase(
+        repository: BaseRepository<TermEntity>
+    ): GetRandomWordUseCase = GetRandomWordUseCase(repository)
 }

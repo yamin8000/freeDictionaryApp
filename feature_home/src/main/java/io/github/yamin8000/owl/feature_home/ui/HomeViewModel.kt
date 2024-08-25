@@ -35,6 +35,7 @@ import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
+import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWordUseCase
 import io.github.yamin8000.owl.feature_home.domain.usecase.WordCacheUseCases
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -60,6 +61,7 @@ class HomeViewModel @AssistedInject constructor(
     private val settingsUseCases: SettingUseCases,
     private val historyUseCases: HistoryUseCases,
     private val cacheUseCases: WordCacheUseCases,
+    private val randomWordUseCase: GetRandomWordUseCase,
     @Assisted("intent") private val intentSearch: String?,
     @Assisted("navigation") private val navigationSearch: String?
 ) : ViewModel() {
@@ -175,7 +177,7 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun searchForRandomWord() = scope.launch {
-        //searchForDefinition(getNewRandomWord())
+        searchForDefinition(randomWordUseCase())
     }
 
     private fun searchForDefinition(
@@ -302,10 +304,6 @@ class HomeViewModel @AssistedInject constructor(
         .flatten()
         .map { it.trim() }
         .toMutableSet()*/
-
-    /*private suspend fun getNewRandomWord(): String {
-        return Constants.db.entryDao().all().map { it.word }.shuffled().firstOrNull() ?: FREE
-    }*/
 
     private fun cancel() {
         _state.update {
