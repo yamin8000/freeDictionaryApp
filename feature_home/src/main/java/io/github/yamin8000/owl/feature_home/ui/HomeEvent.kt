@@ -29,4 +29,5 @@ sealed interface HomeEvent {
     data object CancelSearch : HomeEvent
     data object OnCheckInternet : HomeEvent
     data class OnAddToFavourite(val word: String) : HomeEvent
+    data object UpdateTTS : HomeEvent
 }

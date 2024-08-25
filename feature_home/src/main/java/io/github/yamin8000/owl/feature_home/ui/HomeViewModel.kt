@@ -29,6 +29,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.ui.util.TTS
+import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
@@ -60,8 +62,10 @@ class HomeViewModel @AssistedInject constructor(
     private val termSuggesterRepository: TermSuggesterRepository,
     private val settingsUseCases: SettingUseCases,
     private val historyUseCases: HistoryUseCases,
+    private val favouriteUseCases: FavouriteUseCases,
     private val cacheUseCases: WordCacheUseCases,
     private val randomWordUseCase: GetRandomWordUseCase,
+    val tts: TTS,
     @Assisted("intent") private val intentSearch: String?,
     @Assisted("navigation") private val navigationSearch: String?
 ) : ViewModel() {
@@ -161,7 +165,19 @@ class HomeViewModel @AssistedInject constructor(
             }
 
             is HomeEvent.OnAddToFavourite -> {
+                scope.launch {
+                    favouriteUseCases.addFavourite(event.word)
+                    errorChannel.send(HomeSnackbarType.AddedToFavourite)
+                }
+            }
 
+            HomeEvent.UpdateTTS -> {
+                scope.launch {
+                    val ttsTag = settingsUseCases.getTTS()
+                    if (ttsTag != null) {
+                        tts.createEngine(ttsTag)
+                    }
+                }
             }
         }
     }

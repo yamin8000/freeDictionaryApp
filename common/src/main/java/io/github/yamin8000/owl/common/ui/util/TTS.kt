@@ -23,29 +23,45 @@ package io.github.yamin8000.owl.common.ui.util
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Locale
-import kotlin.coroutines.resume
 
 /** A helper/wrapper for [TextToSpeech] */
 class TTS(
     private val context: Context,
+    private val languageTag: String
 ) {
-    private var ttsLang: Int = 0
+    private var tts: TextToSpeech? = null
 
-    suspend fun getTts(languageTag: String): TextToSpeech? {
-        var tts: TextToSpeech? = null
-        return suspendCancellableCoroutine { continuation ->
-            if (tts == null) {
-                tts = TextToSpeech(context) {
-                    if (it == TextToSpeech.SUCCESS) {
-                        ttsLang = tts?.setLanguage(Locale.forLanguageTag(languageTag)) ?: 0
-                        if (ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                            continuation.resume(null)
-                        } else continuation.resume(tts)
-                    } else continuation.resume(null)
-                }
-            } else continuation.resume(tts)
+    private val scope = CoroutineScope(Dispatchers.Main)
+
+    init {
+        scope.launch {
+            createEngine()
         }
     }
+
+    fun createEngine(tag: String = languageTag) {
+        tts = TextToSpeech(context) {
+            if (it == TextToSpeech.SUCCESS) {
+                tts?.setLanguage(Locale.forLanguageTag(tag))
+            }
+        }
+    }
+
+    /**
+     * Extension method for [TextToSpeech] that calls [TextToSpeech.speak] with
+     * some predefined parameters
+     */
+    fun speak(text: String) {
+        val current = this.languageTag
+        println(current)
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun englishLanguages() = tts?.availableLanguages
+        ?.filter { it.language == Locale.ENGLISH.language }
+        ?: listOf()
 }

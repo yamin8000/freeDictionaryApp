@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.compose.plugin)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -25,6 +26,7 @@ android {
 
 dependencies {
     implementation(project(":strings"))
+    implementation(project(":datastore"))
     //core android/kotlin
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

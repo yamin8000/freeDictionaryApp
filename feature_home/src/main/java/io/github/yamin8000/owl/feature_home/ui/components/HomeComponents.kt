@@ -50,13 +50,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.common.ui.components.ClickableIcon
-import io.github.yamin8000.owl.common.ui.components.CopyAbleRippleTextWithIcon
 import io.github.yamin8000.owl.common.ui.components.HighlightText
 import io.github.yamin8000.owl.common.ui.components.SpeakableRippleTextWithIcon
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
-import io.github.yamin8000.owl.strings.R
 import io.github.yamin8000.owl.feature_home.domain.model.Meaning
+import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.PersistentList
 
 @Composable
@@ -116,8 +115,9 @@ internal fun WordCard(
                         horizontalAlignment = Alignment.Start,
                         content = {
                             WordText(word)
-                            if (pronunciation != null) {
+                            if (!pronunciation.isNullOrBlank()) {
                                 PronunciationText(
+                                    word = word,
                                     pronunciation = pronunciation,
                                 )
                             }
@@ -155,18 +155,18 @@ internal fun WordText(
     SpeakableRippleTextWithIcon(
         text = word,
         imageVector = Icons.AutoMirrored.TwoTone.ShortText,
-        onClick = {}
     )
 }
 
 @Composable
 internal fun PronunciationText(
     pronunciation: String,
+    word: String,
 ) {
-    CopyAbleRippleTextWithIcon(
+    SpeakableRippleTextWithIcon(
         text = pronunciation,
+        ttsText = word,
         imageVector = Icons.TwoTone.RecordVoiceOver,
-        onClick = {}
     )
 }
 
@@ -182,7 +182,6 @@ internal fun WordExampleText(
         title = stringResource(R.string.example),
         content = { HighlightText(fullText = example, highlightedText = word) },
         onDoubleClick = onDoubleClick,
-        onClick = {}
     )
 }
 
@@ -198,7 +197,6 @@ internal fun WordDefinitionText(
         title = stringResource(R.string.definition),
         content = { HighlightText(fullText = definition, highlightedText = word) },
         onDoubleClick = onDoubleClick,
-        onClick = {}
     )
 }
 
@@ -212,7 +210,6 @@ internal fun WordTypeText(
         imageVector = Icons.TwoTone.Category,
         title = stringResource(R.string.type),
         onDoubleClick = onDoubleClick,
-        onClick = {}
     )
 }
 
@@ -254,7 +251,6 @@ internal fun MeaningCard(
                                 text = antonym,
                                 imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
                                 title = stringResource(R.string.antonym),
-                                onClick = {}
                             )
                         }
                         synonyms.forEach { synonym ->
@@ -262,7 +258,6 @@ internal fun MeaningCard(
                                 text = synonym,
                                 imageVector = Icons.AutoMirrored.TwoTone.TextSnippet,
                                 title = stringResource(R.string.synonym),
-                                onClick = {}
                             )
                         }
                     }

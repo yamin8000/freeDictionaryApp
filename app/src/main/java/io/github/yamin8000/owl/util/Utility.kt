@@ -21,35 +21,13 @@
 
 package io.github.yamin8000.owl.util
 
-import android.speech.tts.TextToSpeech
 import android.util.Log
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.InitializerViewModelFactoryBuilder
 import io.github.yamin8000.owl.BuildConfig
 
-/**
- * Extension method for [TextToSpeech] that
- * calls [TextToSpeech.speak] with some predefined parameters
- */
-fun TextToSpeech.speak(
-    text: String
-) {
-    speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
-}
-
-/**
- * Prints [message] to logcat if app is in debug build
- */
+/** Prints [message] to logcat if app is in debug build */
 fun log(
     message: String
 ) {
     if (BuildConfig.DEBUG)
         Log.d(Constants.LOG_TAG, message)
 }
-
-/**
- * General Purpose factory for [androidx.lifecycle.ViewModel]
- */
-inline fun viewModelFactory(
-    builder: InitializerViewModelFactoryBuilder.() -> Unit
-): ViewModelProvider.Factory = InitializerViewModelFactoryBuilder().apply(builder).build()

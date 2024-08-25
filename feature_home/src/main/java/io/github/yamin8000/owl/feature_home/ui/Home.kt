@@ -38,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -59,6 +60,7 @@ import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.LockScreenOrientation
 import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.util.LocalTTS
 import io.github.yamin8000.owl.feature_home.ui.components.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
 import io.github.yamin8000.owl.feature_home.ui.components.SuggestionsChips
@@ -87,136 +89,139 @@ fun HomeScreen(
     val focusManager = LocalFocusManager.current
     val keyboardManager = LocalSoftwareKeyboardController.current
 
-    Surface(
-        modifier = modifier.fillMaxSize(),
-        content = {
-            val listState = rememberScrollState()
-            if (listState.isScrollInProgress && state.isVibrating) {
-                LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            }
+    val owner = LocalLifecycleOwner.current
+    LaunchedEffect(Unit) {
+        owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            vm.onEvent(HomeEvent.UpdateTTS)
+        }
+    }
 
-            ObserverEvent(vm.shareChannelFlow) { data ->
-                if (data != null) {
-                    handleShareIntent(context, data)
+    CompositionLocalProvider(LocalTTS provides vm.tts) {
+        Surface(
+            modifier = modifier.fillMaxSize(),
+            content = {
+                val listState = rememberScrollState()
+                if (listState.isScrollInProgress && state.isVibrating) {
+                    LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 }
-            }
 
-            Scaffold(
-                snackbarHost = {
-                    SnackbarHost(state.snackbarHostState) { data ->
-                        MySnackbar {
-                            PersianText(
-                                text = data.visuals.message,
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                ObserverEvent(vm.shareChannelFlow) { data ->
+                    if (data != null) {
+                        handleShareIntent(context, data)
                     }
-                },
-                topBar = {
-                    MainTopBar(
-                        onNavigateToAbout = onNavigateToAbout,
-                        onNavigateToSettings = onNavigateToSettings,
-                        onNavigateToFavourites = onNavigateToFavourites,
-                        onNavigateToHistory = onNavigateToHistory,
-                        onRandomClick = { vm.onEvent(HomeEvent.RandomWord) }
-                    )
-                },
-                bottomBar = {
-                    val term = vm.searchTerm.collectAsState().value
-                    MainBottomBar(
-                        searchTerm = term,
-                        suggestionsChips = {
-                            SuggestionsChips(
-                                searchTerm = term,
-                                suggestions = state.searchSuggestions,
-                                onSuggestionClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
-                            )
-                        },
-                        isSearching = state.isSearching,
-                        onSearch = {
-                            vm.onEvent(HomeEvent.NewSearch())
-                            keyboardManager?.hide()
-                            focusManager.clearFocus()
-                        },
-                        onCancel = {
-                            vm.onEvent(HomeEvent.CancelSearch)
-                            keyboardManager?.hide()
-                            focusManager.clearFocus()
-                        },
-                        onSearchTermChange = {
-                            vm.onEvent(HomeEvent.OnTermChanged(it))
-                            if (vm.isWordSelectedFromKeyboardSuggestions.value) {
-                                vm.onEvent(HomeEvent.NewSearch(it))
-                            }
-                        }
-                    )
-                },
-                content = { contentPadding ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(contentPadding),
-                        content = {
-                            ObserverEvent(vm.errorChannelFlow) { event ->
-                                state.snackbarHostState.showSnackbar(
-                                    getErrorText(
-                                        context,
-                                        error = event
-                                    )
+                }
+
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(state.snackbarHostState) { data ->
+                            MySnackbar {
+                                PersianText(
+                                    text = data.visuals.message,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center
                                 )
                             }
-                            AnimatedVisibility(
-                                visible = !state.isOnline,
-                                enter = slideInVertically() + fadeIn(),
-                                exit = slideOutVertically() + fadeOut(),
-                                content = {
-                                    PersianText(
-                                        text = context.getString(R.string.general_net_error),
-                                        modifier = Modifier.padding(8.dp),
-                                        color = MaterialTheme.colorScheme.error
+                        }
+                    },
+                    topBar = {
+                        MainTopBar(
+                            onNavigateToAbout = onNavigateToAbout,
+                            onNavigateToSettings = onNavigateToSettings,
+                            onNavigateToFavourites = onNavigateToFavourites,
+                            onNavigateToHistory = onNavigateToHistory,
+                            onRandomClick = { vm.onEvent(HomeEvent.RandomWord) }
+                        )
+                    },
+                    bottomBar = {
+                        val term = vm.searchTerm.collectAsState().value
+                        MainBottomBar(
+                            searchTerm = term,
+                            suggestionsChips = {
+                                SuggestionsChips(
+                                    searchTerm = term,
+                                    suggestions = state.searchSuggestions,
+                                    onSuggestionClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
+                                )
+                            },
+                            isSearching = state.isSearching,
+                            onSearch = {
+                                vm.onEvent(HomeEvent.NewSearch())
+                                keyboardManager?.hide()
+                                focusManager.clearFocus()
+                            },
+                            onCancel = {
+                                vm.onEvent(HomeEvent.CancelSearch)
+                                keyboardManager?.hide()
+                                focusManager.clearFocus()
+                            },
+                            onSearchTermChange = {
+                                vm.onEvent(HomeEvent.OnTermChanged(it))
+                                if (vm.isWordSelectedFromKeyboardSuggestions.value) {
+                                    vm.onEvent(HomeEvent.NewSearch(it))
+                                }
+                            }
+                        )
+                    },
+                    content = { contentPadding ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(contentPadding),
+                            content = {
+                                ObserverEvent(vm.errorChannelFlow) { event ->
+                                    state.snackbarHostState.showSnackbar(
+                                        getErrorText(
+                                            context,
+                                            error = event
+                                        )
                                     )
                                 }
-                            )
-
-                            if (state.searchResult.isNotEmpty()) {
-                                val entry = state.searchResult.firstOrNull()
-                                val word = entry?.word ?: ""
-                                val phonetic = entry?.phonetics
-                                    ?.firstOrNull { it.text != null }
-                                    ?.text ?: ""
-
-                                WordDefinitionsList(
-                                    word = word,
-                                    listState = listState,
-                                    meanings = state.searchResult.first().meanings.toPersistentList(),
-                                    onWordChipClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
-                                    wordCard = {
-                                        WordCard(
-                                            word = word,
-                                            pronunciation = phonetic,
-                                            onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
-                                            onAddToFavourite = {
-                                                vm.onEvent(HomeEvent.OnAddToFavourite(word))
-                                                //onAddToFavourite(word)
-                                                /*state.snackbarHostState.showSnackbar(
-                                                    context.getString(
-                                                        R.string.added_to_favourites
-                                                    )
-                                                )*/
-                                            }
+                                AnimatedVisibility(
+                                    visible = !state.isOnline,
+                                    enter = slideInVertically() + fadeIn(),
+                                    exit = slideOutVertically() + fadeOut(),
+                                    content = {
+                                        PersianText(
+                                            text = context.getString(R.string.general_net_error),
+                                            modifier = Modifier.padding(8.dp),
+                                            color = MaterialTheme.colorScheme.error
                                         )
                                     }
                                 )
-                            } else {
-                                PersianText(stringResource(R.string.search_hint))
-                                EmptyList()
+
+                                if (state.searchResult.isNotEmpty()) {
+                                    val entry = state.searchResult.firstOrNull()
+                                    val word = entry?.word ?: ""
+                                    val phonetic = entry?.phonetics
+                                        ?.firstOrNull { it.text != null }
+                                        ?.text ?: ""
+
+                                    WordDefinitionsList(
+                                        word = word,
+                                        listState = listState,
+                                        meanings = state.searchResult.first().meanings.toPersistentList(),
+                                        onWordChipClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
+                                        wordCard = {
+                                            WordCard(
+                                                word = word,
+                                                pronunciation = phonetic,
+                                                onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
+                                                onAddToFavourite = {
+                                                    vm.onEvent(HomeEvent.OnAddToFavourite(word))
+                                                }
+                                            )
+                                        }
+                                    )
+                                } else {
+                                    PersianText(stringResource(R.string.search_hint))
+                                    EmptyList()
+                                }
                             }
-                        }
-                    )
-                }
-            )
-        }
-    )
+                        )
+                    }
+                )
+            }
+        )
+    }
 }
 
 @Composable
@@ -246,5 +251,6 @@ private fun getErrorText(
     HomeSnackbarType.Cancelled -> context.getString(R.string.cancelled)
     HomeSnackbarType.NotFound -> context.getString(R.string.definition_not_found)
     HomeSnackbarType.Unknown -> context.getString(R.string.general_net_error)
+    HomeSnackbarType.AddedToFavourite -> context.getString(R.string.added_to_favourites)
     null -> ""
 }

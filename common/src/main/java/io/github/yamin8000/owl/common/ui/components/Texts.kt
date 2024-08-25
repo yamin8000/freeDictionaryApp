@@ -83,6 +83,7 @@ import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.Samim
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.common.ui.util.ContextUtils.findActivity
+import io.github.yamin8000.owl.common.ui.util.LocalTTS
 import io.github.yamin8000.owl.common.ui.util.LocaleUtils.getCurrentLocale
 import io.github.yamin8000.owl.common.ui.util.StringUtils.sanitizeWords
 import io.github.yamin8000.owl.strings.R
@@ -315,10 +316,10 @@ fun CopyAbleRippleTextWithIcon(
 @Composable
 fun SpeakableRippleTextWithIcon(
     text: String,
+    ttsText: String = text,
     imageVector: ImageVector,
     title: String? = null,
     content: @Composable (() -> Unit)? = null,
-    onClick: () -> Unit,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -327,15 +328,15 @@ fun SpeakableRippleTextWithIcon(
         context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
-    /*val tts = LocalTTS.current
-    val onClick = remember(tts, audio, text) {
+    val tts = LocalTTS.current
+    val onClick = remember(tts, audio, ttsText) {
         {
             if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0)
                 Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
-            tts?.speak(text)
+            tts?.speak(ttsText)
             Unit
         }
-    }*/
+    }
     CopyAbleRippleTextWithIcon(
         text = text,
         content = content,

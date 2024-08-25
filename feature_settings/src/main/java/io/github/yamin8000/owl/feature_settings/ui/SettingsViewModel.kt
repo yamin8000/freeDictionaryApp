@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,10 +56,7 @@ class SettingsViewModel @Inject constructor(
         }
         scope.launch {
             _state.update { settingsState ->
-                settingsState.copy(englishLanguages = tts.getTts(
-                    state.value.ttsLang ?: Locale.US.toLanguageTag()
-                )?.availableLanguages?.filter { it.language == Locale.ENGLISH.language }
-                    ?: listOf())
+                settingsState.copy(englishLanguages = tts.englishLanguages())
             }
         }
     }

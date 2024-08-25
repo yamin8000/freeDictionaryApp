@@ -30,4 +30,5 @@ sealed interface HomeSnackbarType {
     data object ApiThrottled : HomeSnackbarType
     data object Cancelled : HomeSnackbarType
     data object Unknown : HomeSnackbarType
+    data object AddedToFavourite : HomeSnackbarType
 }
