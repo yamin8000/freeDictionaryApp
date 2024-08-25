@@ -33,4 +33,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --parallel --configuration-cache --build-cache
