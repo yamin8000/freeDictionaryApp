@@ -25,9 +25,6 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 
-/**
- * Advanced Dao
- */
 abstract class AdvancedDao<T>(tableName: String) : BaseDao<T>(tableName) {
 
     @RawQuery

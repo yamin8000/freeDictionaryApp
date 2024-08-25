@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     SearchWordUseCase.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     SearchWordUseCase.kt Last modified at 2024/8/18
+ *     DefinitionRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/25
+ *     DefinitionRepository.kt Last modified at 2024/8/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,15 +19,11 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.domain.usecase
+package io.github.yamin8000.owl.feature_home.domain.repository.local
 
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
-import io.github.yamin8000.owl.feature_home.domain.repository.remote.FreeDictionaryApiRepository
+import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.DefinitionEntity
+import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 
-class FreeDictionaryUseCase(
-    private val repository: FreeDictionaryApiRepository
-) {
-    suspend operator fun invoke(word: String): List<Entry> {
-        return repository.searchWord(word)
-    }
+interface DefinitionRepository : BaseRepository<DefinitionEntity> {
+    suspend fun findAllByMeaningId(meaningId: Long): List<DefinitionEntity>
 }

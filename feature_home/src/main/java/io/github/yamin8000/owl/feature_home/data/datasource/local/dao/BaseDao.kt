@@ -25,9 +25,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Update
 
-/**
- * Basic CRUD Dao
- */
 abstract class BaseDao<T>(tableName: String) {
 
     protected val baseQuery = "select * from `$tableName`"

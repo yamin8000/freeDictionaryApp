@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     FreeDictionaryApiRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     FreeDictionaryApiRepository.kt Last modified at 2024/8/18
+ *     BaseRoomRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/25
+ *     BaseRoomRepository.kt Last modified at 2024/8/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,11 +19,28 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.domain.repository
+package io.github.yamin8000.owl.feature_home.data.repository.local
 
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
+import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.AdvancedDao
+import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 
+abstract class BaseRoomRepository<T>(
+    private val dao: AdvancedDao<T>
+) : BaseRepository<T> {
 
-interface FreeDictionaryApiRepository {
-    suspend fun searchWord(word: String): List<Entry>
+    override suspend fun add(item: T) {
+        dao.insert(item)
+    }
+
+    override suspend fun remove(item: T) {
+        dao.delete(item)
+    }
+
+    override suspend fun find(id: Long): T? {
+        return dao.find(id)
+    }
+
+    override suspend fun all(): List<T> {
+        return dao.all()
+    }
 }

@@ -35,6 +35,9 @@ import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
+import io.github.yamin8000.owl.feature_home.domain.usecase.WordCacheUseCases
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -56,9 +59,31 @@ class HomeViewModel @AssistedInject constructor(
     private val termSuggesterRepository: TermSuggesterRepository,
     private val settingsUseCases: SettingUseCases,
     private val historyUseCases: HistoryUseCases,
+    private val cacheUseCases: WordCacheUseCases,
     @Assisted("intent") private val intentSearch: String?,
     @Assisted("navigation") private val navigationSearch: String?
 ) : ViewModel() {
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        _state.update { it.copy(isSearching = false) }
+        viewModelScope.launch {
+            when (throwable) {
+                is HttpException -> when (throwable.code()) {
+                    401 -> errorChannel.send(HomeSnackbarType.ApiAuthorizationError)
+                    404 -> errorChannel.send(HomeSnackbarType.NotFound)
+                    429 -> errorChannel.send(HomeSnackbarType.ApiThrottled)
+                    else -> errorChannel.send(HomeSnackbarType.Unknown)
+                }
+
+                is CancellationException -> errorChannel.send(HomeSnackbarType.Cancelled)
+                is UnknownHostException -> errorChannel.send(HomeSnackbarType.NoInternet)
+                else -> errorChannel.send(HomeSnackbarType.Unknown)
+            }
+        }
+    }
+
+    private val scope = CoroutineScope(viewModelScope.coroutineContext + exceptionHandler)
+
     val searchTerm = savedState.getStateFlow("Search", intentSearch ?: navigationSearch ?: "")
 
     private var errorChannel = Channel<HomeSnackbarType>()
@@ -88,7 +113,7 @@ class HomeViewModel @AssistedInject constructor(
     )
 
     init {
-        viewModelScope.launch {
+        scope.launch {
             _state.update { it.copy(isVibrating = settingsUseCases.getVibration()) }
             if (!settingsUseCases.getStartingBlank()) {
                 savedState["Search"] = "free"
@@ -113,11 +138,11 @@ class HomeViewModel @AssistedInject constructor(
             }
 
             HomeEvent.RandomWord -> searchForRandomWord()
-            HomeEvent.OnShareData -> viewModelScope.launch { shareChannel.send(state.value.searchResult.firstOrNull()) }
+            HomeEvent.OnShareData -> scope.launch { shareChannel.send(state.value.searchResult.firstOrNull()) }
 
             is HomeEvent.OnTermChanged -> {
                 savedState["Search"] = event.term
-                viewModelScope.launch {
+                scope.launch {
                     _state.update {
                         it.copy(searchSuggestions = termSuggesterRepository.suggestTerms(event.term))
                     }
@@ -126,7 +151,7 @@ class HomeViewModel @AssistedInject constructor(
 
             HomeEvent.CancelSearch -> cancel()
             HomeEvent.OnCheckInternet -> {
-                viewModelScope.launch {
+                scope.launch {
                     _state.update { stateUpdate ->
                         stateUpdate.copy(isOnline = dnsServers.any { dnsAccessible(it) })
                     }
@@ -149,127 +174,54 @@ class HomeViewModel @AssistedInject constructor(
         false
     }
 
-    private fun searchForRandomWord() = viewModelScope.launch {
+    private fun searchForRandomWord() = scope.launch {
         //searchForDefinition(getNewRandomWord())
     }
 
     private fun searchForDefinition(
         searchTerm: String
-    ) = viewModelScope.launch {
+    ) = scope.launch {
         if (searchTerm.isNotBlank()) {
             historyUseCases.addHistory(searchTerm)
-            _state.update {
-                it.copy(isSearching = true)
-            }
-            val (result, error) = freeDictionaryUseCase(searchTerm)
-            _state.update {
-                it.copy(isSearching = false)
-            }
-            if (error == null) {
-                _state.update {
-                    it.copy(
-                        searchResult = result,
-                        searchSuggestions = emptyList()
-                    )
-                }
-            } else handleError(error)
+
+            _state.update { it.copy(isSearching = true) }
+
+            val cachedWord = cacheUseCases.getCachedWord(searchTerm)
+            if (cachedWord != null) loadCachedWord(cachedWord)
+            else searchForDefinitionUsingApi(searchTerm)
+
+            _state.update { it.copy(isSearching = false) }
         } else errorChannel.send(HomeSnackbarType.TermIsEmpty)
     }
 
-    private suspend fun handleError(
-        error: Throwable
-    ) {
-        when (error) {
-            is HttpException -> when (error.code()) {
-                401 -> errorChannel.send(HomeSnackbarType.ApiAuthorizationError)
-                404 -> errorChannel.send(HomeSnackbarType.NotFound)
-                429 -> errorChannel.send(HomeSnackbarType.ApiThrottled)
-                else -> errorChannel.send(HomeSnackbarType.Unknown)
-            }
+    private fun loadCachedWord(cachedWord: Entry) {
+        _state.update {
+            it.copy(
+                searchResult = listOf(cachedWord),
+                searchSuggestions = emptyList()
+            )
+        }
+    }
 
-            is CancellationException -> errorChannel.send(HomeSnackbarType.Cancelled)
-            is UnknownHostException -> errorChannel.send(HomeSnackbarType.NoInternet)
-            else -> errorChannel.send(HomeSnackbarType.Unknown)
+    private suspend fun searchForDefinitionUsingApi(
+        searchTerm: String
+    ) {
+        _state.update {
+            it.copy(
+                searchResult = freeDictionaryUseCase(searchTerm),
+                searchSuggestions = emptyList()
+            )
         }
     }
 
     /*private suspend fun searchForDefinitionRequest(
         searchTerm: String
     ): List<Entry> {
-        _isSearching.value = true
-        _searchTerm.value = searchTerm
-
-        val cache = findCachedDefinitionOrNull(searchTerm)
+        *//*val cache = findCachedDefinitionOrNull(searchTerm)
         if (cache == null) {
-            return try {
-                val result =
-                    Web.getRetrofit().getAPI<APIs.FreeDictionaryAPI>().search(searchTerm.trim())
-                val entry = result.firstOrNull()
-                if (entry != null) {
-                    addWordToDatabase(entry)
-                    cacheEntryData(entry)
-                }
-                _searchState.emit(SearchState.RequestSucceed)
-                result
-            } catch (e: HttpException) {
-                log(e.stackTraceToString())
-                _searchState.emit(SearchState.RequestFailed(e.code()))
-                listOf()
-            } catch (e: CancellationException) {
-                log(e.stackTraceToString())
-                _searchState.emit(SearchState.RequestFailed(SearchState.CANCEL))
-                listOf()
-            } catch (e: Exception) {
-                log(e.stackTraceToString())
-                _searchState.emit(SearchState.RequestFailed(SearchState.UNKNOWN))
-                listOf()
-            } finally {
-                _isSearching.value = false
-            }
         } else {
-            _isSearching.value = false
-            _searchState.emit(SearchState.Cached)
             return listOf(cache)
-        }
-    }*/
-
-    /*private suspend fun findCachedDefinitionOrNull(
-        searchTerm: String
-    ): Entry? {
-        val entry = Constants.db.entryDao()
-            .where("word", searchTerm.trim().lowercase())
-            .firstOrNull()
-        return if (entry != null) retrieveCachedWordData(entry) else null
-    }*/
-
-    /*private suspend fun retrieveCachedWordData(
-        entry: EntryEntity
-    ): Entry {
-        val phonetics = Constants.db.phoneticDao().where("entryId", entry.id)
-        val meanings = Constants.db.meaningDao().where("entryId", entry.id)
-        val definitions = Constants.db.definitionDao().all()
-
-        return Entry(
-            word = entry.word,
-            phonetics = phonetics.map { Phonetic(text = it.value) },
-            license = License("", ""),
-            sourceUrls = listOf(),
-            meanings = meanings.map { (_, partOfSpeech, id) ->
-                Meaning(
-                    partOfSpeech = partOfSpeech,
-                    antonyms = listOf(),
-                    synonyms = listOf(),
-                    definitions = definitions.filter { it.meaningId == id }.map {
-                        Definition(
-                            definition = it.definition,
-                            example = it.example,
-                            antonyms = listOf(),
-                            synonyms = listOf()
-                        )
-                    }
-                )
-            }
-        )
+        }*//*
     }*/
 
     /*private suspend fun addWordToDatabase(
@@ -306,9 +258,9 @@ class HomeViewModel @AssistedInject constructor(
                 )
             }
         }
-    }*/
+    }
 
-    /*private suspend fun cacheEntryData(
+    private suspend fun cacheEntryData(
         entry: Entry
     ) {
         val termDao = Constants.db.termDao()
@@ -322,9 +274,9 @@ class HomeViewModel @AssistedInject constructor(
         newData = sanitizeWords(newData).filter { it !in oldData }.toMutableSet()
 
         addWordDataToCache(newData)
-    }*/
+    }
 
-    /*private suspend fun addWordDataToCache(
+    private suspend fun addWordDataToCache(
         newData: Set<String>
     ) {
         val termDao = Constants.db.termDao()
@@ -334,9 +286,9 @@ class HomeViewModel @AssistedInject constructor(
             if (temp == null)
                 termDao.insert(TermEntity(item.trim().lowercase()))
         }
-    }*/
+    }
 
-    /*private fun extractDataFromEntry(
+    private fun extractDataFromEntry(
         meanings: List<Meaning>
     ) = meanings.asSequence()
         .flatMap { (partOfSpeech, definitions, _, _) ->
@@ -353,14 +305,6 @@ class HomeViewModel @AssistedInject constructor(
 
     /*private suspend fun getNewRandomWord(): String {
         return Constants.db.entryDao().all().map { it.word }.shuffled().firstOrNull() ?: FREE
-    }*/
-
-    /*fun handleSuggestions() = ioScope.launch {
-        clearSuggestions()
-        if (_searchTerm.value.length >= Constants.DEFAULT_N_GRAM_SIZE) {
-            val suggestions = termSuggestionsHelper.suggestTermsForSearch(_searchTerm.value)
-            _searchSuggestions.value = suggestions.take(Constants.DEFAULT_N_GRAM_SIZE * 3)
-        }
     }*/
 
     private fun cancel() {

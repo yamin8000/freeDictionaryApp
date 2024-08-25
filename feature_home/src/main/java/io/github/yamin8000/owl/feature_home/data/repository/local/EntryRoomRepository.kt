@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     SearchWordUseCase.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     SearchWordUseCase.kt Last modified at 2024/8/18
+ *     EntryRoomRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/25
+ *     EntryRoomRepository.kt Last modified at 2024/8/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,15 +19,17 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.domain.usecase
+package io.github.yamin8000.owl.feature_home.data.repository.local
 
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
-import io.github.yamin8000.owl.feature_home.domain.repository.remote.FreeDictionaryApiRepository
+import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
+import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.EntryEntity
+import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
 
-class FreeDictionaryUseCase(
-    private val repository: FreeDictionaryApiRepository
-) {
-    suspend operator fun invoke(word: String): List<Entry> {
-        return repository.searchWord(word)
+class EntryRoomRepository(
+    private val dao: DAOs.EntryDao
+) : BaseRoomRepository<EntryEntity>(dao), EntryRepository {
+
+    override suspend fun findByTerm(term: String): EntryEntity? {
+        return dao.where("word", term.lowercase().trim()).firstOrNull()
     }
 }

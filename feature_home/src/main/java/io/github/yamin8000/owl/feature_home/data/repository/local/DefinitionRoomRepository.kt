@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     FreeDictionaryRetrofitApiRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     FreeDictionaryRetrofitApiRepository.kt Last modified at 2024/8/18
+ *     DefinitionRoomRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/25
+ *     DefinitionRoomRepository.kt Last modified at 2024/8/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,17 +19,17 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.data.repository
+package io.github.yamin8000.owl.feature_home.data.repository.local
 
-import io.github.yamin8000.owl.feature_home.data.datasource.remote.FreeDictionaryAPI
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
-import io.github.yamin8000.owl.feature_home.domain.repository.FreeDictionaryApiRepository
-import javax.inject.Inject
+import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
+import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.DefinitionEntity
+import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRepository
 
-class FreeDictionaryRetrofitApiRepository @Inject constructor(
-    private val api: FreeDictionaryAPI
-) : FreeDictionaryApiRepository {
-    override suspend fun searchWord(word: String): List<Entry> {
-        return api.search(word)
+class DefinitionRoomRepository(
+    private val dao: DAOs.DefinitionDao
+) : DefinitionRepository, BaseRoomRepository<DefinitionEntity>(dao) {
+
+    override suspend fun findAllByMeaningId(meaningId: Long): List<DefinitionEntity> {
+        return dao.where("meaningId", meaningId)
     }
 }
