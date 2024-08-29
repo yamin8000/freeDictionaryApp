@@ -24,7 +24,7 @@ package io.github.yamin8000.owl.feature_home.domain.usecase
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.remote.FreeDictionaryApiRepository
 
-class FreeDictionaryUseCase(
+class SearchFreeDictionary(
     private val repository: FreeDictionaryApiRepository
 ) {
     suspend operator fun invoke(word: String): List<Entry> {

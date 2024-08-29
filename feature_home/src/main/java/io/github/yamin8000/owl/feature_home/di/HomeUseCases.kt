@@ -32,7 +32,7 @@ import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepos
 import io.github.yamin8000.owl.feature_home.domain.repository.local.PhoneticRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetCachedWord
-import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWordUseCase
+import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
 import io.github.yamin8000.owl.feature_home.domain.usecase.WordCacheUseCases
 import javax.inject.Singleton
 
@@ -60,5 +60,5 @@ object HomeUseCases {
     @Singleton
     fun providesRandomWordUseCase(
         repository: BaseRepository<TermEntity>
-    ): GetRandomWordUseCase = GetRandomWordUseCase(repository)
+    ): GetRandomWord = GetRandomWord(repository)
 }

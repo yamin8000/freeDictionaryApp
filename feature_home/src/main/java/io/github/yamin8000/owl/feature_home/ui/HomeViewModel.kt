@@ -36,8 +36,8 @@ import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
-import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
-import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWordUseCase
+import io.github.yamin8000.owl.feature_home.domain.usecase.SearchFreeDictionary
+import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
 import io.github.yamin8000.owl.feature_home.domain.usecase.WordCacheUseCases
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -58,13 +58,13 @@ import kotlin.coroutines.cancellation.CancellationException
 @HiltViewModel(assistedFactory = HomeViewModelFactory::class)
 class HomeViewModel @AssistedInject constructor(
     private val savedState: SavedStateHandle,
-    private val freeDictionaryUseCase: FreeDictionaryUseCase,
+    private val searchFreeDictionaryUseCase: SearchFreeDictionary,
     private val termSuggesterRepository: TermSuggesterRepository,
     private val settingsUseCases: SettingUseCases,
     private val historyUseCases: HistoryUseCases,
     private val favouriteUseCases: FavouriteUseCases,
     private val cacheUseCases: WordCacheUseCases,
-    private val randomWordUseCase: GetRandomWordUseCase,
+    private val randomWordUseCase: GetRandomWord,
     val tts: TTS,
     @Assisted("intent") private val intentSearch: String?,
     @Assisted("navigation") private val navigationSearch: String?
@@ -226,7 +226,7 @@ class HomeViewModel @AssistedInject constructor(
     ) {
         _state.update {
             it.copy(
-                searchResult = freeDictionaryUseCase(searchTerm),
+                searchResult = searchFreeDictionaryUseCase(searchTerm),
                 searchSuggestions = emptyList()
             )
         }

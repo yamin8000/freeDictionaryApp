@@ -24,7 +24,7 @@ package io.github.yamin8000.owl.feature_home.domain.usecase
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 
-class GetRandomWordUseCase(
+class GetRandomWord(
     private val repository: BaseRepository<TermEntity>
 ) {
     suspend operator fun invoke(): String {

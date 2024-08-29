@@ -28,7 +28,7 @@ import dagger.hilt.components.SingletonComponent
 import io.github.yamin8000.owl.feature_home.data.datasource.remote.FreeDictionaryAPI
 import io.github.yamin8000.owl.feature_home.data.repository.remote.FreeDictionaryRetrofitApiRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.remote.FreeDictionaryApiRepository
-import io.github.yamin8000.owl.feature_home.domain.usecase.FreeDictionaryUseCase
+import io.github.yamin8000.owl.feature_home.domain.usecase.SearchFreeDictionary
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
@@ -62,7 +62,7 @@ object HomeWeb {
 
     @Provides
     @Singleton
-    fun providesFreeDictionaryApiUseCase(repository: FreeDictionaryApiRepository): FreeDictionaryUseCase {
-        return FreeDictionaryUseCase(repository)
+    fun providesFreeDictionaryApiUseCase(repository: FreeDictionaryApiRepository): SearchFreeDictionary {
+        return SearchFreeDictionary(repository)
     }
 }
