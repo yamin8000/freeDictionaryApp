@@ -7,6 +7,7 @@
 
 [![Android CI](https://github.com/yamin8000/freeDictionaryApp/actions/workflows/android.yml/badge.svg)](https://github.com/yamin8000/freeDictionaryApp/actions/workflows/android.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=yamin8000_freeDictionaryApp&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=yamin8000_freeDictionaryApp)
+[![CodeFactor](https://www.codefactor.io/repository/github/yamin8000/freedictionaryapp/badge)](https://www.codefactor.io/repository/github/yamin8000/freedictionaryapp)
 
 **freeDictionary** is a simple Android application
 for [freeDictionaryAPI](https://dictionaryapi.dev/) a reincarnation
