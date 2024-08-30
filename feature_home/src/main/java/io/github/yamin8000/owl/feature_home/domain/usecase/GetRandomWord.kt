@@ -21,11 +21,10 @@
 
 package io.github.yamin8000.owl.feature_home.domain.usecase
 
-import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
-import io.github.yamin8000.owl.feature_home.data.repository.local.BaseRoomRepository
+import io.github.yamin8000.owl.feature_home.domain.repository.local.TermRepository
 
 class GetRandomWord(
-    private val repository: BaseRoomRepository<String, TermEntity>
+    private val repository: TermRepository
 ) {
     suspend operator fun invoke(): String {
         return repository.all().shuffled().firstOrNull() ?: "free"

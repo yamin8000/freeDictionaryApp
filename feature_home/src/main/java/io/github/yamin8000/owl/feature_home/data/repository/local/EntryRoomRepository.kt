@@ -21,6 +21,8 @@
 
 package io.github.yamin8000.owl.feature_home.data.repository.local
 
+import io.github.yamin8000.owl.common.ui.util.StringUtils.sanitizeWord
+import io.github.yamin8000.owl.common.util.DateTimeUtils.epoch
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.EntryEntity
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
@@ -34,8 +36,17 @@ class EntryRoomRepository(
     private val meaningRepository: MeaningRepository
 ) : EntryRepository, BaseRoomRepository<Entry, EntryEntity>(dao) {
 
+    override suspend fun add(item: Entry): Long {
+        return dao.insert(
+            EntryEntity(
+                word = item.word,
+                createdAt = epoch()
+            )
+        )
+    }
+
     override suspend fun findByTerm(term: String): Entry? {
-        return mapToDomain(dao.where("word", term.lowercase().trim()).firstOrNull())
+        return mapToDomain(dao.where("word", sanitizeWord(term)).firstOrNull())
     }
 
     override suspend fun mapToDomain(item: EntryEntity?): Entry? {
@@ -49,7 +60,7 @@ class EntryRoomRepository(
         } else null
     }
 
-    override suspend fun mapToEntity(item: Entry): EntryEntity? {
+    override suspend fun findEntity(item: Entry): EntryEntity? {
         return if (item.id != null) dao.find(item.id)
         else null
     }

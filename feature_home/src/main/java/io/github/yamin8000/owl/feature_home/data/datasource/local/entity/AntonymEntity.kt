@@ -39,6 +39,7 @@ data class AntonymEntity(
     @ColumnInfo(index = true)
     val definitionId: Long,
     val value: String,
+    val createdAt: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )

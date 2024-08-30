@@ -21,17 +21,32 @@
 
 package io.github.yamin8000.owl.feature_home.data.repository.local
 
+import io.github.yamin8000.owl.common.ui.util.StringUtils.sanitizeWord
+import io.github.yamin8000.owl.common.util.DateTimeUtils.epoch
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
+import io.github.yamin8000.owl.feature_home.domain.repository.local.TermRepository
 
 class TermRoomRepository(
     private val dao: DAOs.TermDao
-) : BaseRoomRepository<String, TermEntity>(dao) {
+) : TermRepository, BaseRoomRepository<String, TermEntity>(dao) {
+
     override suspend fun mapToDomain(item: TermEntity?): String? {
         return item?.word
     }
 
-    override suspend fun mapToEntity(item: String): TermEntity? {
-        return dao.where("word", item).firstOrNull()
+    override suspend fun findEntity(item: String): TermEntity? {
+        return dao.where("word", sanitizeWord(item)).firstOrNull()
+    }
+
+    override suspend fun add(item: String): Long {
+        return if (dao.where("word", sanitizeWord(item)).firstOrNull() == null) {
+            dao.insert(
+                TermEntity(
+                    word = item,
+                    createdAt = epoch()
+                )
+            )
+        } else -1
     }
 }

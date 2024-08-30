@@ -29,5 +29,6 @@ data class Definition(
     val example: String?,
     val synonyms: List<String>,
     val antonyms: List<String>,
+    val meaningId: Long? = null,
     val id: Long? = null
 )

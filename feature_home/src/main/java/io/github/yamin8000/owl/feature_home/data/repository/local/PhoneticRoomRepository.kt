@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_home.data.repository.local
 
+import io.github.yamin8000.owl.common.util.DateTimeUtils.epoch
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.PhoneticEntity
 import io.github.yamin8000.owl.feature_home.domain.model.Phonetic
@@ -38,12 +39,25 @@ class PhoneticRoomRepository(
         return if (item != null) {
             Phonetic(
                 text = item.value,
+                entryId = item.entryId,
                 id = item.id
             )
         } else null
     }
 
-    override suspend fun mapToEntity(item: Phonetic): PhoneticEntity? {
+    override suspend fun findEntity(item: Phonetic): PhoneticEntity? {
         return if (item.id != null) phoneticDao.find(item.id) else null
+    }
+
+    override suspend fun add(item: Phonetic): Long {
+        return if (item.entryId != null) {
+            phoneticDao.insert(
+                PhoneticEntity(
+                    value = item.text,
+                    entryId = item.entryId,
+                    createdAt = epoch()
+                )
+            )
+        } else -1
     }
 }

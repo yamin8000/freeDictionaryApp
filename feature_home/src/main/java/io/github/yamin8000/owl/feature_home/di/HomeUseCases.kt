@@ -31,7 +31,9 @@ import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRe
 import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.PhoneticRepository
-import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
+import io.github.yamin8000.owl.feature_home.domain.repository.local.TermRepository
+import io.github.yamin8000.owl.feature_home.domain.usecase.CacheWord
+import io.github.yamin8000.owl.feature_home.domain.usecase.CacheWordData
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetCachedWord
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
 import io.github.yamin8000.owl.feature_home.domain.usecase.WordCacheUseCases
@@ -47,16 +49,22 @@ object HomeUseCases {
         entryRepository: EntryRepository,
         phoneticRepository: PhoneticRepository,
         meaningRepository: MeaningRepository,
-        definitionRepository: DefinitionRepository
+        definitionRepository: DefinitionRepository,
+        termRepository: TermRepository
     ) = WordCacheUseCases(
-        getCachedWord = GetCachedWord(
-            entryRepository
-        )
+        getCachedWord = GetCachedWord(entryRepository),
+        cacheWord = CacheWord(
+            entryRepository = entryRepository,
+            meaningRepository = meaningRepository,
+            definitionRepository = definitionRepository,
+            phoneticRepository = phoneticRepository
+        ),
+        cacheWordData = CacheWordData(termRepository)
     )
 
     @Provides
     @Singleton
     fun providesRandomWordUseCase(
-        repository: BaseRoomRepository<String, TermEntity>
+        repository: TermRepository
     ): GetRandomWord = GetRandomWord(repository)
 }

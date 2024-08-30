@@ -22,6 +22,7 @@
 package io.github.yamin8000.owl.feature_home.domain.usecase
 
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
+import io.github.yamin8000.owl.feature_home.domain.model.Meaning
 import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
@@ -41,28 +42,25 @@ class CacheWord(
     }
 
     private suspend fun addWordEntryToDatabase(wordEntry: Entry) {
-        /*val entryId = entryRepository.add(
-            EntryEntity(word = entry.word.trim().lowercase())
-        )
-        phoneticDao.insertAll(
-            entry.phonetics.map { PhoneticEntity(value = it.text, entryId = entryId) }
-        )
+        val entryId = entryRepository.add(wordEntry)
 
-        entry.meanings.forEach { (partOfSpeech, definitions, _, _) ->
-            val meaningEntity = MeaningEntity(
-                entryId = entryId,
-                partOfSpeech = partOfSpeech
+        wordEntry.phonetics.forEach { phonetic ->
+            phoneticRepository.add(phonetic.copy(entryId = entryId))
+        }
+
+        wordEntry.meanings.forEach { (partOfSpeech, definitions, _, _) ->
+            val meaningId = meaningRepository.add(
+                Meaning(
+                    entryId = entryId,
+                    partOfSpeech = partOfSpeech,
+                    definitions = listOf(),
+                    antonyms = listOf(),
+                    synonyms = listOf()
+                )
             )
-            val meaningId = meaningDao.insert(meaningEntity)
-            definitionDao.insertAll(
-                definitions.map {
-                    DefinitionEntity(
-                        meaningId = meaningId,
-                        definition = it.definition,
-                        example = it.example
-                    )
-                }
-            )
-        }*/
+            definitions.forEach { definition ->
+                definitionRepository.add(definition.copy(meaningId = meaningId))
+            }
+        }
     }
 }

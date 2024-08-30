@@ -27,13 +27,9 @@ import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRep
 abstract class BaseRoomRepository<T, E>(
     private val dao: AdvancedDao<E>
 ) : BaseRepository<T> {
-    override suspend fun add(item: T): Long {
-        val entity = mapToEntity(item)
-        return if (entity != null) dao.insert(entity) else -1
-    }
 
     override suspend fun remove(item: T): Int {
-        val entity = mapToEntity(item)
+        val entity = findEntity(item)
         return if (entity != null) dao.delete(entity) else -1
     }
 
@@ -47,5 +43,5 @@ abstract class BaseRoomRepository<T, E>(
 
     abstract suspend fun mapToDomain(item: E?): T?
 
-    abstract suspend fun mapToEntity(item: T): E?
+    abstract suspend fun findEntity(item: T): E?
 }

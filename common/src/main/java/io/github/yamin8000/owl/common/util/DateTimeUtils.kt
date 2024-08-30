@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.common.main
- *     StringUtils.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     StringUtils.kt Last modified at 2024/8/18
+ *     DateTimeUtils.kt Copyrighted by Yamin Siahmargooei at 2024/8/30
+ *     DateTimeUtils.kt Last modified at 2024/8/30
  *     This file is part of freeDictionaryApp/freeDictionaryApp.common.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,24 +19,11 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.common.ui.util
+package io.github.yamin8000.owl.common.util
 
-object StringUtils {
-    /**
-     * This method sanitize words from the given [data] set by removing
-     * unnecessary characters like white spaces and numbers and etc
-     * and making them lowercase and filtering out blank entries
-     */
-    fun sanitizeWords(
-        data: Set<String>
-    ): Set<String> = data.asSequence()
-        .map { sanitizeWord(it) }
-        .filter { it.isNotBlank() }
-        .toSet()
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
-    fun sanitizeWord(
-        data: String
-    ): String = data.replace(Regex("\\W+"), "")
-        .lowercase()
-        .trim()
+object DateTimeUtils {
+    fun epoch() = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
 }

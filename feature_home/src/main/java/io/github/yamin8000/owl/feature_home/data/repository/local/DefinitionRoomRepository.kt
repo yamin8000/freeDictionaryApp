@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_home.data.repository.local
 
+import io.github.yamin8000.owl.common.util.DateTimeUtils.epoch
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.DefinitionEntity
 import io.github.yamin8000.owl.feature_home.domain.model.Definition
@@ -42,13 +43,28 @@ class DefinitionRoomRepository(
                 definition = item.definition,
                 example = item.example,
                 antonyms = antonymDao.where("definitionId", item.id).map { it.value },
-                synonyms = synonymDao.where("definitionId", item.id).map { it.value }
+                synonyms = synonymDao.where("definitionId", item.id).map { it.value },
+                meaningId = item.meaningId,
+                id = item.id
             )
         } else null
     }
 
-    override suspend fun mapToEntity(item: Definition): DefinitionEntity? {
+    override suspend fun findEntity(item: Definition): DefinitionEntity? {
         return if (item.id != null) definitionDao.find(item.id)
         else return null
+    }
+
+    override suspend fun add(item: Definition): Long {
+        return if (item.meaningId != null) {
+            definitionDao.insert(
+                DefinitionEntity(
+                    definition = item.definition,
+                    example = item.definition,
+                    createdAt = epoch(),
+                    meaningId = item.meaningId
+                )
+            )
+        } else -1
     }
 }

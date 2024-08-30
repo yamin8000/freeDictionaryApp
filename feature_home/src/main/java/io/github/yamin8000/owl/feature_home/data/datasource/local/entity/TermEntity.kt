@@ -27,6 +27,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class TermEntity(
     val word: String,
+    val createdAt: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )

@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_home.data.repository.local
 
+import io.github.yamin8000.owl.common.util.DateTimeUtils.epoch
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.MeaningEntity
 import io.github.yamin8000.owl.feature_home.domain.model.Meaning
@@ -41,6 +42,7 @@ class MeaningRoomRepository(
         return if (item != null) {
             Meaning(
                 id = item.id,
+                entryId = item.entryId,
                 partOfSpeech = item.partOfSpeech,
                 definitions = definitionRepository.findAllByMeaningId(item.id),
                 synonyms = listOf(),
@@ -49,8 +51,20 @@ class MeaningRoomRepository(
         } else null
     }
 
-    override suspend fun mapToEntity(item: Meaning): MeaningEntity? {
+    override suspend fun findEntity(item: Meaning): MeaningEntity? {
         return if (item.id != null) meaningDao.find(item.id)
         else null
+    }
+
+    override suspend fun add(item: Meaning): Long {
+        return if (item.entryId != null) {
+            meaningDao.insert(
+                MeaningEntity(
+                    entryId = item.entryId,
+                    partOfSpeech = item.partOfSpeech,
+                    createdAt = epoch(),
+                )
+            )
+        } else -1
     }
 }

@@ -24,17 +24,20 @@ package io.github.yamin8000.owl.feature_home.data.datasource.local
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import io.github.yamin8000.owl.common.util.DateTimeUtils
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
+import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.AntonymEntity
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.DefinitionEntity
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.EntryEntity
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.MeaningEntity
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.PhoneticEntity
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.SynonymEntity
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
-import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.AntonymEntity
 
 @Database(
-    version = 7,
+    version = 8,
     entities = [
         AntonymEntity::class, DefinitionEntity::class, EntryEntity::class,
         MeaningEntity::class, PhoneticEntity::class, SynonymEntity::class,
@@ -53,3 +56,21 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun synonymDao(): DAOs.SynonymDao
     abstract fun termDao(): DAOs.TermDao
 }
+
+val MIGRATION_7_8 = object : Migration(7, 8) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        val now = DateTimeUtils.epoch()
+        db.execSQL(addDateColumn("AntonymEntity", now))
+        db.execSQL(addDateColumn("DefinitionEntity", now))
+        db.execSQL(addDateColumn("EntryEntity", now))
+        db.execSQL(addDateColumn("MeaningEntity", now))
+        db.execSQL(addDateColumn("PhoneticEntity", now))
+        db.execSQL(addDateColumn("SynonymEntity", now))
+        db.execSQL(addDateColumn("TermEntity", now))
+    }
+}
+
+private fun addDateColumn(
+    tableName: String,
+    epoch: Long
+): String = "ALTER TABLE `$tableName` ADD COLUMN createdAt INTEGER NOT NULL DEFAULT 0"

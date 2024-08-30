@@ -29,5 +29,6 @@ data class Phonetic(
     val audio: String? = null,
     val sourceUrl: String? = null,
     val license: License? = null,
+    val entryId: Long? = null,
     val id: Long? = null
 )

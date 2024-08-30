@@ -39,6 +39,7 @@ data class PhoneticEntity(
     val value: String?,
     @ColumnInfo(index = true)
     val entryId: Long,
+    val createdAt: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )

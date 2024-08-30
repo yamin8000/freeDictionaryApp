@@ -22,5 +22,7 @@
 package io.github.yamin8000.owl.feature_home.domain.usecase
 
 data class WordCacheUseCases(
-    val getCachedWord: GetCachedWord
+    val getCachedWord: GetCachedWord,
+    val cacheWord: CacheWord,
+    val cacheWordData: CacheWordData
 )

@@ -40,6 +40,7 @@ data class DefinitionEntity(
     val meaningId: Long,
     val definition: String,
     val example: String?,
+    val createdAt: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )

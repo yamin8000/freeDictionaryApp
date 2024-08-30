@@ -38,8 +38,8 @@ android {
         applicationId = appId
         minSdk = 21
         targetSdk = 35
-        versionCode = 42
-        versionName = "1.6.5"
+        versionCode = 43
+        versionName = "1.7.0rc"
         vectorDrawables.useSupportLibrary = true
         base.archivesName = "$applicationId-v$versionCode-n$versionName"
     }
@@ -60,6 +60,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -95,6 +96,7 @@ dependencies {
     implementation(project(":feature_history"))
     implementation(project(":feature_favourites"))
     //core android/kotlin
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.jetbrains.kotlinx.immutable)

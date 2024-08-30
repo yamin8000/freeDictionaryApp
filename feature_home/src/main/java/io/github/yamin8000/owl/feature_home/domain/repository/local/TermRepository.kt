@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     Meaning.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     Meaning.kt Last modified at 2024/8/18
+ *     TermRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/30
+ *     TermRepository.kt Last modified at 2024/8/30
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,16 +19,8 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.domain.model
+package io.github.yamin8000.owl.feature_home.domain.repository.local
 
-import com.squareup.moshi.JsonClass
+import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 
-@JsonClass(generateAdapter = true)
-data class Meaning(
-    val partOfSpeech: String,
-    val definitions: List<Definition>,
-    val synonyms: List<String>,
-    val antonyms: List<String>,
-    val entryId: Long? = null,
-    val id: Long? = null
-)
+interface TermRepository : BaseRepository<String>

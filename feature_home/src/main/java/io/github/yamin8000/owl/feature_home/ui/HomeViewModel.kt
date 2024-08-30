@@ -36,8 +36,8 @@ import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
-import io.github.yamin8000.owl.feature_home.domain.usecase.SearchFreeDictionary
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
+import io.github.yamin8000.owl.feature_home.domain.usecase.SearchFreeDictionary
 import io.github.yamin8000.owl.feature_home.domain.usecase.WordCacheUseCases
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -72,6 +72,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         _state.update { it.copy(isSearching = false) }
+        println(throwable.stackTraceToString())
         viewModelScope.launch {
             when (throwable) {
                 is HttpException -> when (throwable.code()) {
@@ -205,8 +206,13 @@ class HomeViewModel @AssistedInject constructor(
             _state.update { it.copy(isSearching = true) }
 
             val cachedWord = cacheUseCases.getCachedWord(searchTerm)
-            if (cachedWord != null) loadCachedWord(cachedWord)
-            else searchForDefinitionUsingApi(searchTerm)
+            if (cachedWord == null) {
+                val newWord = searchForDefinitionUsingApi(searchTerm)
+                if (newWord != null) {
+                    cacheUseCases.cacheWord(newWord)
+                    cacheUseCases.cacheWordData(newWord)
+                }
+            } else loadCachedWord(cachedWord)
 
             _state.update { it.copy(isSearching = false) }
         } else errorChannel.send(HomeSnackbarType.TermIsEmpty)
@@ -223,59 +229,16 @@ class HomeViewModel @AssistedInject constructor(
 
     private suspend fun searchForDefinitionUsingApi(
         searchTerm: String
-    ) {
+    ): Entry? {
+        val word = searchFreeDictionaryUseCase(searchTerm)
         _state.update {
             it.copy(
-                searchResult = searchFreeDictionaryUseCase(searchTerm),
+                searchResult = word,
                 searchSuggestions = emptyList()
             )
         }
+        return word.firstOrNull()
     }
-
-    /*
-
-    private suspend fun cacheEntryData(
-        entry: Entry
-    ) {
-        val termDao = Constants.db.termDao()
-
-        val oldData = termDao.all().map { it.word }.toSet()
-        var newData = extractDataFromEntry(entry.meanings)
-
-        if (!oldData.contains(entry.word))
-            newData.add(entry.word)
-
-        newData = sanitizeWords(newData).filter { it !in oldData }.toMutableSet()
-
-        addWordDataToCache(newData)
-    }
-
-    private suspend fun addWordDataToCache(
-        newData: Set<String>
-    ) {
-        val termDao = Constants.db.termDao()
-
-        newData.forEach { item ->
-            val temp = termDao.where("word", item.trim().lowercase()).firstOrNull()
-            if (temp == null)
-                termDao.insert(TermEntity(item.trim().lowercase()))
-        }
-    }
-
-    private fun extractDataFromEntry(
-        meanings: List<Meaning>
-    ) = meanings.asSequence()
-        .flatMap { (partOfSpeech, definitions, _, _) ->
-            listOf(partOfSpeech)
-                .plus(definitions.map { it.definition })
-                .plus(definitions.map { it.example })
-                .plus(definitions.flatMap { it.synonyms })
-                .plus(definitions.flatMap { it.antonyms })
-        }.filterNotNull()
-        .map { it.split(Regex("\\s+")) }
-        .flatten()
-        .map { it.trim() }
-        .toMutableSet()*/
 
     private fun cancel() {
         _state.update {

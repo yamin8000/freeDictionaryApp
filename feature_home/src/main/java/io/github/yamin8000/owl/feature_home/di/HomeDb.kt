@@ -28,10 +28,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.yamin8000.owl.feature_home.data.datasource.local.AppDatabase
+import io.github.yamin8000.owl.feature_home.data.datasource.local.MIGRATION_7_8
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
-import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
 import io.github.yamin8000.owl.feature_home.data.repository.TermSuggesterRepositoryImpl
-import io.github.yamin8000.owl.feature_home.data.repository.local.BaseRoomRepository
 import io.github.yamin8000.owl.feature_home.data.repository.local.DefinitionRoomRepository
 import io.github.yamin8000.owl.feature_home.data.repository.local.EntryRoomRepository
 import io.github.yamin8000.owl.feature_home.data.repository.local.MeaningRoomRepository
@@ -42,6 +41,7 @@ import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRe
 import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.PhoneticRepository
+import io.github.yamin8000.owl.feature_home.domain.repository.local.TermRepository
 import javax.inject.Singleton
 
 @Module
@@ -52,6 +52,7 @@ object HomeDb {
     @Singleton
     fun providesDb(app: Application): AppDatabase {
         return Room.databaseBuilder(app, AppDatabase::class.java, "db")
+            .addMigrations(MIGRATION_7_8)
             .build()
     }
 
@@ -81,7 +82,7 @@ object HomeDb {
 
     @Provides
     @Singleton
-    fun providesTermRepository(dao: DAOs.TermDao): BaseRoomRepository<String, TermEntity> {
+    fun providesTermRepository(dao: DAOs.TermDao): TermRepository {
         return TermRoomRepository(dao)
     }
 
