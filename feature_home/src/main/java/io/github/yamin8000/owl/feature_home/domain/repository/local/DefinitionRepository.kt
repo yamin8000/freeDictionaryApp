@@ -21,9 +21,9 @@
 
 package io.github.yamin8000.owl.feature_home.domain.repository.local
 
-import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.DefinitionEntity
+import io.github.yamin8000.owl.feature_home.domain.model.Definition
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 
-interface DefinitionRepository : BaseRepository<DefinitionEntity> {
-    suspend fun findAllByMeaningId(meaningId: Long): List<DefinitionEntity>
+interface DefinitionRepository : BaseRepository<Definition> {
+    suspend fun findAllByMeaningId(meaningId: Long): List<Definition>
 }

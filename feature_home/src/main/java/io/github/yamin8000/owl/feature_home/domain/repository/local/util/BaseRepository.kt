@@ -22,8 +22,8 @@
 package io.github.yamin8000.owl.feature_home.domain.repository.local.util
 
 interface BaseRepository<T> {
-    suspend fun add(item: T)
-    suspend fun remove(item: T)
+    suspend fun add(item: T): Long
+    suspend fun remove(item: T): Int
     suspend fun find(id: Long): T?
     suspend fun all(): List<T>
 }

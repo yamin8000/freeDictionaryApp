@@ -25,5 +25,13 @@ import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
 
 class TermRoomRepository(
-    dao: DAOs.TermDao
-) : BaseRoomRepository<TermEntity>(dao)
+    private val dao: DAOs.TermDao
+) : BaseRoomRepository<String, TermEntity>(dao) {
+    override suspend fun mapToDomain(item: TermEntity?): String? {
+        return item?.word
+    }
+
+    override suspend fun mapToEntity(item: String): TermEntity? {
+        return dao.where("word", item).firstOrNull()
+    }
+}

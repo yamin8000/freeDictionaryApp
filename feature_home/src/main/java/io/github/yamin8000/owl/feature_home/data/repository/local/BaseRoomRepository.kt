@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     BaseRoomRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/25
- *     BaseRoomRepository.kt Last modified at 2024/8/25
+ *     BaseRoomRepository.kt Copyrighted by Yamin Siahmargooei at 2024/8/30
+ *     BaseRoomRepository.kt Last modified at 2024/8/30
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -24,23 +24,28 @@ package io.github.yamin8000.owl.feature_home.data.repository.local
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.AdvancedDao
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 
-abstract class BaseRoomRepository<T>(
-    private val dao: AdvancedDao<T>
+abstract class BaseRoomRepository<T, E>(
+    private val dao: AdvancedDao<E>
 ) : BaseRepository<T> {
-
-    override suspend fun add(item: T) {
-        dao.insert(item)
+    override suspend fun add(item: T): Long {
+        val entity = mapToEntity(item)
+        return if (entity != null) dao.insert(entity) else -1
     }
 
-    override suspend fun remove(item: T) {
-        dao.delete(item)
+    override suspend fun remove(item: T): Int {
+        val entity = mapToEntity(item)
+        return if (entity != null) dao.delete(entity) else -1
     }
 
     override suspend fun find(id: Long): T? {
-        return dao.find(id)
+        return mapToDomain(dao.find(id))
     }
 
     override suspend fun all(): List<T> {
-        return dao.all()
+        return dao.all().mapNotNull { mapToDomain(it) }
     }
+
+    abstract suspend fun mapToDomain(item: E?): T?
+
+    abstract suspend fun mapToEntity(item: T): E?
 }

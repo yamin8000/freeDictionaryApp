@@ -250,7 +250,7 @@ private fun getErrorText(
     HomeSnackbarType.ApiThrottled -> context.getString(R.string.api_throttled)
     HomeSnackbarType.Cancelled -> context.getString(R.string.cancelled)
     HomeSnackbarType.NotFound -> context.getString(R.string.definition_not_found)
-    HomeSnackbarType.Unknown -> context.getString(R.string.general_net_error)
+    HomeSnackbarType.Unknown -> context.getString(R.string.untracked_error)
     HomeSnackbarType.AddedToFavourite -> context.getString(R.string.added_to_favourites)
     null -> ""
 }

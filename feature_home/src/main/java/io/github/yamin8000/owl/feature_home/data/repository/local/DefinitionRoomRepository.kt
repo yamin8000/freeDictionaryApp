@@ -23,13 +23,32 @@ package io.github.yamin8000.owl.feature_home.data.repository.local
 
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.DefinitionEntity
+import io.github.yamin8000.owl.feature_home.domain.model.Definition
 import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRepository
 
 class DefinitionRoomRepository(
-    private val dao: DAOs.DefinitionDao
-) : DefinitionRepository, BaseRoomRepository<DefinitionEntity>(dao) {
+    private val definitionDao: DAOs.DefinitionDao,
+    private val antonymDao: DAOs.AntonymDao,
+    private val synonymDao: DAOs.SynonymDao
+) : DefinitionRepository, BaseRoomRepository<Definition, DefinitionEntity>(definitionDao) {
 
-    override suspend fun findAllByMeaningId(meaningId: Long): List<DefinitionEntity> {
-        return dao.where("meaningId", meaningId)
+    override suspend fun findAllByMeaningId(meaningId: Long): List<Definition> {
+        return definitionDao.where("meaningId", meaningId).mapNotNull { mapToDomain(it) }
+    }
+
+    override suspend fun mapToDomain(item: DefinitionEntity?): Definition? {
+        return if (item != null) {
+            Definition(
+                definition = item.definition,
+                example = item.example,
+                antonyms = antonymDao.where("definitionId", item.id).map { it.value },
+                synonyms = synonymDao.where("definitionId", item.id).map { it.value }
+            )
+        } else null
+    }
+
+    override suspend fun mapToEntity(item: Definition): DefinitionEntity? {
+        return if (item.id != null) definitionDao.find(item.id)
+        else return null
     }
 }

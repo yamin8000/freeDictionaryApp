@@ -22,12 +22,12 @@
 package io.github.yamin8000.owl.feature_home.domain.usecase
 
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
-import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
+import io.github.yamin8000.owl.feature_home.data.repository.local.BaseRoomRepository
 
 class GetRandomWord(
-    private val repository: BaseRepository<TermEntity>
+    private val repository: BaseRoomRepository<String, TermEntity>
 ) {
     suspend operator fun invoke(): String {
-        return repository.all().map { it.word }.shuffled().firstOrNull() ?: "free"
+        return repository.all().shuffled().firstOrNull() ?: "free"
     }
 }

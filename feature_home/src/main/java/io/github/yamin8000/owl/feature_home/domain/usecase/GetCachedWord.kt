@@ -21,52 +21,13 @@
 
 package io.github.yamin8000.owl.feature_home.domain.usecase
 
-import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.EntryEntity
-import io.github.yamin8000.owl.feature_home.domain.model.Definition
 import io.github.yamin8000.owl.feature_home.domain.model.Entry
-import io.github.yamin8000.owl.feature_home.domain.model.License
-import io.github.yamin8000.owl.feature_home.domain.model.Meaning
-import io.github.yamin8000.owl.feature_home.domain.model.Phonetic
-import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRepository
-import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
-import io.github.yamin8000.owl.feature_home.domain.repository.local.PhoneticRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
 
 class GetCachedWord(
-    private val entryRepository: EntryRepository,
-    private val phoneticRepository: PhoneticRepository,
-    private val meaningRepository: MeaningRepository,
-    private val definitionRepository: DefinitionRepository
+    private val entryRepository: EntryRepository
 ) {
     suspend operator fun invoke(term: String): Entry? {
-        val entry = entryRepository.findByTerm(term)
-        return if (entry != null) createEntry(entry) else null
-    }
-
-    private suspend fun createEntry(entry: EntryEntity): Entry {
-        val phonetics = phoneticRepository.findAllByEntryId(entry.id)
-        val meanings = meaningRepository.findAllByEntryId(entry.id)
-
-        return Entry(
-            word = entry.word,
-            phonetics = phonetics.map { Phonetic(text = it.value) },
-            license = License("", ""),
-            sourceUrls = listOf(),
-            meanings = meanings.map { meaning ->
-                Meaning(
-                    partOfSpeech = meaning.partOfSpeech,
-                    antonyms = listOf(),
-                    synonyms = listOf(),
-                    definitions = definitionRepository.findAllByMeaningId(meaning.id).map {
-                        Definition(
-                            definition = it.definition,
-                            example = it.example,
-                            antonyms = listOf(),
-                            synonyms = listOf()
-                        )
-                    }
-                )
-            }
-        )
+        return entryRepository.findByTerm(term)
     }
 }

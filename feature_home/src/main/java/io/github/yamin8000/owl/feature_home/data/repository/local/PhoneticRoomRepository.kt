@@ -23,12 +23,27 @@ package io.github.yamin8000.owl.feature_home.data.repository.local
 
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.PhoneticEntity
-import io.github.yamin8000.owl.feature_home.domain.repository.local.util.HasEntry
-import io.github.yamin8000.owl.feature_home.domain.repository.local.util.HasEntryRepository
+import io.github.yamin8000.owl.feature_home.domain.model.Phonetic
 import io.github.yamin8000.owl.feature_home.domain.repository.local.PhoneticRepository
 
 class PhoneticRoomRepository(
-    dao: DAOs.PhoneticDao
-) : PhoneticRepository,
-    BaseRoomRepository<PhoneticEntity>(dao),
-    HasEntry<PhoneticEntity> by HasEntryRepository(dao)
+    private val phoneticDao: DAOs.PhoneticDao
+) : PhoneticRepository, BaseRoomRepository<Phonetic, PhoneticEntity>(phoneticDao) {
+
+    override suspend fun findAllByEntryId(entryId: Long): List<Phonetic> {
+        return phoneticDao.where("entryId", entryId).mapNotNull { mapToDomain(it) }
+    }
+
+    override suspend fun mapToDomain(item: PhoneticEntity?): Phonetic? {
+        return if (item != null) {
+            Phonetic(
+                text = item.value,
+                id = item.id
+            )
+        } else null
+    }
+
+    override suspend fun mapToEntity(item: Phonetic): PhoneticEntity? {
+        return if (item.id != null) phoneticDao.find(item.id) else null
+    }
+}

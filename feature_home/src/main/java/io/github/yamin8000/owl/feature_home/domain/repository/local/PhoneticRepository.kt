@@ -21,8 +21,8 @@
 
 package io.github.yamin8000.owl.feature_home.domain.repository.local
 
-import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.PhoneticEntity
+import io.github.yamin8000.owl.feature_home.domain.model.Phonetic
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.HasEntry
 
-interface PhoneticRepository : BaseRepository<PhoneticEntity>, HasEntry<PhoneticEntity>
+interface PhoneticRepository : BaseRepository<Phonetic>, HasEntry<Phonetic>

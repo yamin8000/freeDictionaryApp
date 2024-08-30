@@ -21,8 +21,8 @@
 
 package io.github.yamin8000.owl.feature_home.domain.repository.local
 
-import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.MeaningEntity
+import io.github.yamin8000.owl.feature_home.domain.model.Meaning
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.HasEntry
 
-interface MeaningRepository : BaseRepository<MeaningEntity>, HasEntry<MeaningEntity>
+interface MeaningRepository : BaseRepository<Meaning>, HasEntry<Meaning>

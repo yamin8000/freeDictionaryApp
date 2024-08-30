@@ -28,6 +28,7 @@ data class Entry(
     val word: String,
     val phonetics: List<Phonetic>,
     val meanings: List<Meaning>,
-    val license: License,
-    val sourceUrls: List<String>
+    val license: License? = null,
+    val sourceUrls: List<String>? = null,
+    val id: Long? = null
 )

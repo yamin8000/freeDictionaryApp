@@ -23,12 +23,34 @@ package io.github.yamin8000.owl.feature_home.data.repository.local
 
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.MeaningEntity
+import io.github.yamin8000.owl.feature_home.domain.model.Meaning
+import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.HasEntry
-import io.github.yamin8000.owl.feature_home.domain.repository.local.util.HasEntryRepository
 
 class MeaningRoomRepository(
-    val dao: DAOs.MeaningDao
-) : MeaningRepository,
-    BaseRoomRepository<MeaningEntity>(dao),
-    HasEntry<MeaningEntity> by HasEntryRepository(dao)
+    private val meaningDao: DAOs.MeaningDao,
+    private val definitionRepository: DefinitionRepository
+) : MeaningRepository, BaseRoomRepository<Meaning, MeaningEntity>(meaningDao), HasEntry<Meaning> {
+
+    override suspend fun findAllByEntryId(entryId: Long): List<Meaning> {
+        return meaningDao.where("entryId", entryId).mapNotNull { mapToDomain(it) }
+    }
+
+    override suspend fun mapToDomain(item: MeaningEntity?): Meaning? {
+        return if (item != null) {
+            Meaning(
+                id = item.id,
+                partOfSpeech = item.partOfSpeech,
+                definitions = definitionRepository.findAllByMeaningId(item.id),
+                synonyms = listOf(),
+                antonyms = listOf()
+            )
+        } else null
+    }
+
+    override suspend fun mapToEntity(item: Meaning): MeaningEntity? {
+        return if (item.id != null) meaningDao.find(item.id)
+        else null
+    }
+}

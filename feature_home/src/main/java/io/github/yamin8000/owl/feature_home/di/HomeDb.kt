@@ -31,6 +31,7 @@ import io.github.yamin8000.owl.feature_home.data.datasource.local.AppDatabase
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
 import io.github.yamin8000.owl.feature_home.data.repository.TermSuggesterRepositoryImpl
+import io.github.yamin8000.owl.feature_home.data.repository.local.BaseRoomRepository
 import io.github.yamin8000.owl.feature_home.data.repository.local.DefinitionRoomRepository
 import io.github.yamin8000.owl.feature_home.data.repository.local.EntryRoomRepository
 import io.github.yamin8000.owl.feature_home.data.repository.local.MeaningRoomRepository
@@ -41,7 +42,6 @@ import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRe
 import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.PhoneticRepository
-import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 import javax.inject.Singleton
 
 @Module
@@ -63,9 +63,15 @@ object HomeDb {
 
     @Provides
     @Singleton
-    fun providesEntryRepository(dao: DAOs.EntryDao): EntryRepository {
-        return EntryRoomRepository(dao)
-    }
+    fun providesEntryRepository(
+        entryDao: DAOs.EntryDao,
+        phoneticRepository: PhoneticRepository,
+        meaningRepository: MeaningRepository
+    ): EntryRepository = EntryRoomRepository(
+        dao = entryDao,
+        phoneticRepository = phoneticRepository,
+        meaningRepository = meaningRepository
+    )
 
     @Provides
     @Singleton
@@ -75,7 +81,7 @@ object HomeDb {
 
     @Provides
     @Singleton
-    fun providesTermRepository(dao: DAOs.TermDao): BaseRepository<TermEntity> {
+    fun providesTermRepository(dao: DAOs.TermDao): BaseRoomRepository<String, TermEntity> {
         return TermRoomRepository(dao)
     }
 
@@ -87,9 +93,27 @@ object HomeDb {
 
     @Provides
     @Singleton
-    fun providesDefinitionRepository(dao: DAOs.DefinitionDao): DefinitionRepository {
-        return DefinitionRoomRepository(dao)
+    fun providesSynonymDao(app: AppDatabase): DAOs.SynonymDao {
+        return app.synonymDao()
     }
+
+    @Provides
+    @Singleton
+    fun providesAntonymDao(app: AppDatabase): DAOs.AntonymDao {
+        return app.antonymDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesDefinitionRepository(
+        definitionDao: DAOs.DefinitionDao,
+        synonymDao: DAOs.SynonymDao,
+        antonymDao: DAOs.AntonymDao
+    ): DefinitionRepository = DefinitionRoomRepository(
+        definitionDao = definitionDao,
+        antonymDao = antonymDao,
+        synonymDao = synonymDao
+    )
 
     @Provides
     @Singleton
@@ -99,9 +123,13 @@ object HomeDb {
 
     @Provides
     @Singleton
-    fun providesMeaningRepository(dao: DAOs.MeaningDao): MeaningRepository {
-        return MeaningRoomRepository(dao)
-    }
+    fun providesMeaningRepository(
+        meaningDao: DAOs.MeaningDao,
+        definitionRepository: DefinitionRepository
+    ): MeaningRepository = MeaningRoomRepository(
+        meaningDao = meaningDao,
+        definitionRepository = definitionRepository
+    )
 
     @Provides
     @Singleton

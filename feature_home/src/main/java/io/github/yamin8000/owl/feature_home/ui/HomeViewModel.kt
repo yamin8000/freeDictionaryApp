@@ -232,51 +232,7 @@ class HomeViewModel @AssistedInject constructor(
         }
     }
 
-    /*private suspend fun searchForDefinitionRequest(
-        searchTerm: String
-    ): List<Entry> {
-        *//*val cache = findCachedDefinitionOrNull(searchTerm)
-        if (cache == null) {
-        } else {
-            return listOf(cache)
-        }*//*
-    }*/
-
-    /*private suspend fun addWordToDatabase(
-        entry: Entry
-    ) {
-        val wordDao = Constants.db.entryDao()
-        val meaningDao = Constants.db.meaningDao()
-        val definitionDao = Constants.db.definitionDao()
-        val phoneticDao = Constants.db.phoneticDao()
-
-        val cachedWord = wordDao.where("word", entry.word.trim().lowercase()).firstOrNull()
-        if (cachedWord == null) {
-            val entryId = wordDao.insert(
-                EntryEntity(word = entry.word.trim().lowercase())
-            )
-            phoneticDao.insertAll(
-                entry.phonetics.map { PhoneticEntity(value = it.text, entryId = entryId) }
-            )
-
-            entry.meanings.forEach { (partOfSpeech, definitions, _, _) ->
-                val meaningEntity = MeaningEntity(
-                    entryId = entryId,
-                    partOfSpeech = partOfSpeech
-                )
-                val meaningId = meaningDao.insert(meaningEntity)
-                definitionDao.insertAll(
-                    definitions.map {
-                        DefinitionEntity(
-                            meaningId = meaningId,
-                            definition = it.definition,
-                            example = it.example
-                        )
-                    }
-                )
-            }
-        }
-    }
+    /*
 
     private suspend fun cacheEntryData(
         entry: Entry

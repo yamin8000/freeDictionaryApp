@@ -26,6 +26,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.TermEntity
+import io.github.yamin8000.owl.feature_home.data.repository.local.BaseRoomRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
@@ -49,16 +50,13 @@ object HomeUseCases {
         definitionRepository: DefinitionRepository
     ) = WordCacheUseCases(
         getCachedWord = GetCachedWord(
-            entryRepository,
-            phoneticRepository,
-            meaningRepository,
-            definitionRepository
+            entryRepository
         )
     )
 
     @Provides
     @Singleton
     fun providesRandomWordUseCase(
-        repository: BaseRepository<TermEntity>
+        repository: BaseRoomRepository<String, TermEntity>
     ): GetRandomWord = GetRandomWord(repository)
 }

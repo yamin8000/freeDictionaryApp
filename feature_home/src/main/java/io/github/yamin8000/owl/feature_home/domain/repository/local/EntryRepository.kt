@@ -21,9 +21,9 @@
 
 package io.github.yamin8000.owl.feature_home.domain.repository.local
 
-import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.EntryEntity
+import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.local.util.BaseRepository
 
-interface EntryRepository : BaseRepository<EntryEntity> {
-    suspend fun findByTerm(term: String): EntryEntity?
+interface EntryRepository : BaseRepository<Entry> {
+    suspend fun findByTerm(term: String): Entry?
 }

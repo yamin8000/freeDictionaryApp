@@ -23,13 +23,34 @@ package io.github.yamin8000.owl.feature_home.data.repository.local
 
 import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.data.datasource.local.entity.EntryEntity
+import io.github.yamin8000.owl.feature_home.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
+import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
+import io.github.yamin8000.owl.feature_home.domain.repository.local.PhoneticRepository
 
 class EntryRoomRepository(
-    private val dao: DAOs.EntryDao
-) : BaseRoomRepository<EntryEntity>(dao), EntryRepository {
+    private val dao: DAOs.EntryDao,
+    private val phoneticRepository: PhoneticRepository,
+    private val meaningRepository: MeaningRepository
+) : EntryRepository, BaseRoomRepository<Entry, EntryEntity>(dao) {
 
-    override suspend fun findByTerm(term: String): EntryEntity? {
-        return dao.where("word", term.lowercase().trim()).firstOrNull()
+    override suspend fun findByTerm(term: String): Entry? {
+        return mapToDomain(dao.where("word", term.lowercase().trim()).firstOrNull())
+    }
+
+    override suspend fun mapToDomain(item: EntryEntity?): Entry? {
+        return if (item != null) {
+            Entry(
+                id = item.id,
+                word = item.word,
+                phonetics = phoneticRepository.findAllByEntryId(item.id),
+                meanings = meaningRepository.findAllByEntryId(item.id)
+            )
+        } else null
+    }
+
+    override suspend fun mapToEntity(item: Entry): EntryEntity? {
+        return if (item.id != null) dao.find(item.id)
+        else null
     }
 }
