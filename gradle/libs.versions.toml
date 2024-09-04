@@ -1,5 +1,5 @@
 [versions]
-activityCompose = "1.9.1"
+activityCompose = "1.9.2"
 composeLibs = "1.6.8"
 coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
