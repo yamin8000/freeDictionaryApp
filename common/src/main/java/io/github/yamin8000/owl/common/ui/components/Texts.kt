@@ -40,7 +40,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -222,7 +221,7 @@ fun CopyAbleRippleText(
                 onLongClick = onLongClick
             )
     )
-    if (isDialogShown) {
+    if (isDialogShown && onDoubleClick != null) {
         Dialog(
             onDismissRequest = onDismissDialog,
             content = {
@@ -240,7 +239,7 @@ fun CopyAbleRippleText(
                                 items(words) { item ->
                                     val onItemClick = remember(onDoubleClick, item) {
                                         {
-                                            onDoubleClick?.invoke(item)
+                                            onDoubleClick(item)
                                             isDialogShown = false
                                         }
                                     }

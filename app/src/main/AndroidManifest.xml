@@ -43,7 +43,7 @@
         </activity>
 
         <activity
-            android:name=".ui.FloatingActivity"
+            android:name=".ui.OverlayActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|locale|screenLayout|screenSize"
             android:excludeFromRecents="true"
             android:exported="true"

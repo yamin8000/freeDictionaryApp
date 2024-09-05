@@ -23,7 +23,7 @@ package io.github.yamin8000.owl.feature_home.ui.util
 
 import android.content.Context
 import android.content.Intent
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
+import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.strings.R
 
 object ShareUtils {

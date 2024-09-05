@@ -38,8 +38,8 @@ android {
         applicationId = appId
         minSdk = 21
         targetSdk = 35
-        versionCode = 43
-        versionName = "1.7.0"
+        versionCode = 44
+        versionName = "1.7.1"
         vectorDrawables.useSupportLibrary = true
         base.archivesName = "$applicationId-v$versionCode-n$versionName"
     }
@@ -96,6 +96,7 @@ dependencies {
     implementation(project(":feature_settings"))
     implementation(project(":feature_history"))
     implementation(project(":feature_favourites"))
+    implementation(project(":feature_overlay"))
     //core android/kotlin
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)

@@ -24,7 +24,7 @@ package io.github.yamin8000.owl.feature_home.data.repository
 import android.app.Application
 import android.content.res.Resources.NotFoundException
 import io.github.yamin8000.owl.feature_home.R
-import io.github.yamin8000.owl.feature_home.data.datasource.local.dao.DAOs
+import io.github.yamin8000.owl.search.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,8 +37,8 @@ class TermSuggesterRepositoryImpl(
     private val dao: DAOs.TermDao,
     private val app: Application
 ) : TermSuggesterRepository {
-    val DEFAULT_N_GRAM_SIZE = 3
-    val NOT_WORD_CHARS_REGEX = Regex("\\W+")
+    private val DEFAULT_N_GRAM_SIZE = 3
+    private val NOT_WORD_CHARS_REGEX = Regex("\\W+")
 
     override suspend fun suggestTerms(searchTerm: String): List<String> {
         items = items.plus(getOldSearchData())

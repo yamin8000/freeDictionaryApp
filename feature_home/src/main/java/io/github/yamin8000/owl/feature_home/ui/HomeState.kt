@@ -22,7 +22,7 @@
 package io.github.yamin8000.owl.feature_home.ui
 
 import androidx.compose.material3.SnackbarHostState
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
+import io.github.yamin8000.owl.search.domain.model.Entry
 
 data class HomeState(
     val isOnline: Boolean = false,

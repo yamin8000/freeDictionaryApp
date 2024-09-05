@@ -58,6 +58,8 @@ internal class MainActivity : BaseActivity() {
 
         enableEdgeToEdge()
 
+        intentSearch = intent.getStringExtra("Search")
+
         showContent {
             Scaffold {
                 MainNav(onThemeChanged = { appTheme = it })

@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.compose.plugin)
-    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.hilt)
 }
 
@@ -13,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk = 21
-        ksp.arg("room.schemaLocation", "$projectDir/schemas")
     }
 
     compileOptions {
@@ -31,6 +29,7 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":strings"))
     implementation(project(":datastore"))
+    implementation(project(":search"))
     //core android/kotlin
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
@@ -50,16 +49,4 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    //room
-    implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
-    ksp(libs.androidx.room.compiler)
-    api(libs.androidx.room.ktx)
-    //retrofit
-    api(libs.retrofit.main)
-    implementation(libs.retrofit.converter.moshi)
-    kapt(libs.retrofit.type.keeper)
-    //moshi
-    implementation(libs.moshi.kotlin)
-    ksp(libs.moshi.kotlin.codegen)
 }

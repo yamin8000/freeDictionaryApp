@@ -34,11 +34,11 @@ import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseC
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
-import io.github.yamin8000.owl.feature_home.domain.model.Entry
+import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
-import io.github.yamin8000.owl.feature_home.domain.usecase.SearchFreeDictionary
-import io.github.yamin8000.owl.feature_home.domain.usecase.WordCacheUseCases
+import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
+import io.github.yamin8000.owl.search.domain.usecase.WordCacheUseCases
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -122,7 +122,7 @@ class HomeViewModel @AssistedInject constructor(
     init {
         scope.launch {
             _state.update { it.copy(isVibrating = settingsUseCases.getVibration()) }
-            if (!settingsUseCases.getStartingBlank()) {
+            if (!settingsUseCases.getStartingBlank() && searchTerm.value.isBlank()) {
                 savedState["Search"] = "free"
             }
             if (searchTerm.value.isNotBlank()) {

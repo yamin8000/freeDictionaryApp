@@ -21,7 +21,7 @@
 
 package io.github.yamin8000.owl.feature_home.domain.usecase
 
-import io.github.yamin8000.owl.feature_home.domain.repository.local.TermRepository
+import io.github.yamin8000.owl.search.domain.repository.local.TermRepository
 
 class GetRandomWord(
     private val repository: TermRepository

@@ -42,7 +42,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -66,13 +65,13 @@ import io.github.yamin8000.owl.common.ui.components.LockScreenOrientation
 import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.util.LocalTTS
-import io.github.yamin8000.owl.feature_home.domain.model.Meaning
 import io.github.yamin8000.owl.feature_home.ui.components.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
-import io.github.yamin8000.owl.feature_home.ui.components.MeaningCard
 import io.github.yamin8000.owl.feature_home.ui.components.SuggestionsChips
-import io.github.yamin8000.owl.feature_home.ui.components.WordCard
 import io.github.yamin8000.owl.feature_home.ui.util.ShareUtils.handleShareIntent
+import io.github.yamin8000.owl.search.domain.model.Meaning
+import io.github.yamin8000.owl.search.ui.components.MeaningCard
+import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
