@@ -1,0 +1,2 @@
+- Navigation bug fix
+- Android 15 support
