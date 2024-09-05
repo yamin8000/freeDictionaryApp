@@ -146,6 +146,7 @@ class HomeViewModel @AssistedInject constructor(
 
             is HomeEvent.NewSearch -> {
                 val term = event.searchTerm ?: searchTerm.value
+                savedState["Search"] = term
                 searchJob = searchForDefinition(term)
             }
 
