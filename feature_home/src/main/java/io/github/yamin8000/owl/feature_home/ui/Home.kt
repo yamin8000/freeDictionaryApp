@@ -29,6 +29,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,8 +42,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -63,6 +66,7 @@ import io.github.yamin8000.owl.common.ui.components.LockScreenOrientation
 import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.util.LocalTTS
+import io.github.yamin8000.owl.feature_home.domain.model.Meaning
 import io.github.yamin8000.owl.feature_home.ui.components.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
 import io.github.yamin8000.owl.feature_home.ui.components.MeaningCard
@@ -70,6 +74,7 @@ import io.github.yamin8000.owl.feature_home.ui.components.SuggestionsChips
 import io.github.yamin8000.owl.feature_home.ui.components.WordCard
 import io.github.yamin8000.owl.feature_home.ui.util.ShareUtils.handleShareIntent
 import io.github.yamin8000.owl.strings.R
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -170,67 +175,90 @@ fun HomeScreen(
                         )
                     },
                     content = { contentPadding ->
-                        LazyColumn(
-                            modifier = Modifier
-                                .padding(contentPadding)
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            content = {
-                                item {
-                                    AnimatedVisibility(
-                                        visible = !state.isOnline,
-                                        enter = slideInVertically() + fadeIn(),
-                                        exit = slideOutVertically() + fadeOut(),
-                                        content = {
-                                            PersianText(
-                                                text = context.getString(R.string.general_net_error),
-                                                modifier = Modifier.padding(8.dp),
-                                                color = MaterialTheme.colorScheme.error
-                                            )
-                                        }
-                                    )
+                        if (state.searchResult != null) {
+                            SearchList(
+                                modifier = Modifier.padding(contentPadding),
+                                meanings = state.searchResult.meanings.toPersistentList(),
+                                onAddToFavourite = { vm.onEvent(HomeEvent.OnAddToFavourite(state.word)) },
+                                onWordChipClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
+                                onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
+                                isOnline = state.isOnline,
+                                word = state.word,
+                                phonetic = state.phonetic
+                            )
+                        } else {
+                            Column(
+                                modifier = modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                content = {
+                                    PersianText(stringResource(R.string.search_hint))
+                                    EmptyList()
                                 }
-
-                                if (state.searchResult != null) {
-                                    item {
-                                        WordCard(
-                                            word = state.word,
-                                            pronunciation = state.phonetic,
-                                            onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
-                                            onAddToFavourite = {
-                                                vm.onEvent(HomeEvent.OnAddToFavourite(state.word))
-                                            }
-                                        )
-                                    }
-
-                                    itemsIndexed(
-                                        items = state.searchResult.meanings,
-                                        key = { index, item -> item.id ?: index },
-                                        itemContent = { _, meaning ->
-                                            MeaningCard(
-                                                modifier = Modifier.animateItem(),
-                                                word = state.word,
-                                                meaning = meaning,
-                                                onWordChipClick = {
-                                                    vm.onEvent(HomeEvent.NewSearch(it))
-                                                }
-                                            )
-                                        }
-                                    )
-                                } else {
-                                    item {
-                                        PersianText(stringResource(R.string.search_hint))
-                                        EmptyList()
-                                    }
-                                }
-                            }
-                        )
+                            )
+                        }
                     }
                 )
             }
         )
     }
+}
+
+@Composable
+private fun SearchList(
+    modifier: Modifier = Modifier,
+    isOnline: Boolean,
+    word: String,
+    phonetic: String,
+    onAddToFavourite: () -> Unit,
+    onShareWord: () -> Unit,
+    onWordChipClick: (String) -> Unit,
+    meanings: List<Meaning>
+) {
+    val context = LocalContext.current
+    val internetError = remember { context.getString(R.string.general_net_error) }
+    LazyColumn(
+        modifier = modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        content = {
+            item(key = isOnline) {
+                AnimatedVisibility(
+                    visible = !isOnline,
+                    enter = slideInVertically() + fadeIn(),
+                    exit = slideOutVertically() + fadeOut(),
+                    content = {
+                        PersianText(
+                            text = internetError,
+                            modifier = Modifier.padding(8.dp),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                )
+            }
+            item(key = word + phonetic) {
+                WordCard(
+                    word = word,
+                    pronunciation = phonetic,
+                    onShareWord = onShareWord,
+                    onAddToFavourite = onAddToFavourite
+                )
+            }
+
+            itemsIndexed(
+                items = meanings,
+                key = { index, item -> item.id ?: index },
+                itemContent = { _, meaning ->
+                    MeaningCard(
+                        modifier = Modifier.animateItem(),
+                        word = word,
+                        meaning = meaning,
+                        onWordChipClick = onWordChipClick
+                    )
+                }
+            )
+        }
+    )
 }
 
 @Composable
