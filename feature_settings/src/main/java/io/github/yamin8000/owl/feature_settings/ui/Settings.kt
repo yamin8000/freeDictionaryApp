@@ -56,10 +56,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
-import io.github.yamin8000.owl.common.ui.components.SettingsItemCard
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItem
+import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItemCard
 import io.github.yamin8000.owl.feature_settings.ui.components.SwitchItem
 import io.github.yamin8000.owl.strings.R
 import java.util.Locale
@@ -100,7 +100,7 @@ fun SettingsScreen(
                         }
                     )
                     TtsLanguageSetting(
-                        currentTtsTag = state.ttsLang ?: "",
+                        currentTtsTag = state.ttsLang,
                         languages = state.englishLanguages,
                         onTtsTagChange = { vm.onEvent(SettingsEvent.UpdateTtsLangState(it)) }
                     )

@@ -22,16 +22,13 @@
 package io.github.yamin8000.owl.feature_home.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ShortText
 import androidx.compose.material.icons.automirrored.twotone.TextSnippet
@@ -39,10 +36,9 @@ import androidx.compose.material.icons.twotone.Category
 import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material.icons.twotone.RecordVoiceOver
 import androidx.compose.material.icons.twotone.Share
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -56,35 +52,6 @@ import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.feature_home.domain.model.Meaning
 import io.github.yamin8000.owl.strings.R
-import kotlinx.collections.immutable.PersistentList
-
-@Composable
-internal fun WordDefinitionsList(
-    modifier: Modifier = Modifier,
-    word: String,
-    listState: ScrollState,
-    meanings: PersistentList<Meaning>,
-    onWordChipClick: (String) -> Unit,
-    wordCard: @Composable ColumnScope.() -> Unit
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .verticalScroll(listState)
-            .padding(16.dp),
-        content = {
-            wordCard()
-            meanings.forEach { meaning ->
-                MeaningCard(
-                    word = word,
-                    meaning = meaning,
-                    onWordChipClick = onWordChipClick
-                )
-            }
-        }
-    )
-}
 
 @Composable
 internal fun WordCard(
@@ -101,7 +68,7 @@ internal fun WordCard(
             .fillMaxWidth()
             .indication(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(),
+                indication = ripple(),
             ),
         content = {
             Row(
@@ -220,7 +187,7 @@ internal fun MeaningCard(
     meaning: Meaning,
     onWordChipClick: (String) -> Unit
 ) {
-    Card(
+    OutlinedCard(
         shape = DefaultCutShape,
         modifier = modifier.fillMaxWidth(),
         border = defaultGradientBorder(),

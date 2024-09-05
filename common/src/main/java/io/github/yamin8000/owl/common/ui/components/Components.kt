@@ -48,6 +48,7 @@ import androidx.compose.material3.SnackbarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -86,7 +87,7 @@ fun Ripple(
         modifier = modifier
             .combinedClickable(
                 interactionSource = interactionSource,
-                indication = rememberRipple(),
+                indication = ripple(),
                 onClick = onClick,
                 onLongClick = onLongClick
             )

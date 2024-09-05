@@ -26,7 +26,7 @@ import io.github.yamin8000.owl.datastore.domain.repository.SettingsRepository
 class GetTTS(
     private val repository: SettingsRepository
 ) {
-    suspend operator fun invoke(): String? {
-        return repository.getTtsLang()
+    suspend operator fun invoke(): String {
+        return repository.getTtsLang() ?: "en-US"
     }
 }

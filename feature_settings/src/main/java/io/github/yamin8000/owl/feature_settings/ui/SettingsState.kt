@@ -26,7 +26,7 @@ import java.util.Locale
 
 data class SettingsState(
     val theme: ThemeType = ThemeType.System,
-    val ttsLang: String? = null,
+    val ttsLang: String = "en-US",
     val isVibrating: Boolean = true,
     val isStartingBlank: Boolean = true,
     val englishLanguages: List<Locale> = emptyList()

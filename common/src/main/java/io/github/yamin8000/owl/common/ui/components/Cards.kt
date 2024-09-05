@@ -22,60 +22,22 @@
 package io.github.yamin8000.owl.common.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
-
-@Composable
-fun SettingsItemCard(
-    modifier: Modifier = Modifier,
-    columnModifier: Modifier = Modifier,
-    title: String,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        horizontalAlignment = Alignment.Start,
-        content = {
-            PersianText(
-                text = title,
-                fontSize = 18.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Card(
-                modifier = modifier,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
-                shape = DefaultCutShape,
-                content = {
-                    Column(
-                        modifier = columnModifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        content = content
-                    )
-                }
-            )
-        }
-    )
-}
 
 @Composable
 fun RemovableCard(
@@ -84,7 +46,7 @@ fun RemovableCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
-    Card(
+    OutlinedCard(
         modifier = modifier,
         shape = DefaultCutShape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),

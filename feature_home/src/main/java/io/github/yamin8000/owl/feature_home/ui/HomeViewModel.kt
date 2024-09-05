@@ -139,13 +139,15 @@ class HomeViewModel @AssistedInject constructor(
         event: HomeEvent
     ) {
         when (event) {
+            HomeEvent.RandomWord -> searchForRandomWord()
+            HomeEvent.OnShareData -> scope.launch { shareChannel.send(state.value.searchResult) }
+            HomeEvent.CancelSearch -> cancel()
+            HomeEvent.UpdateTTS -> scope.launch { tts.createEngine(settingsUseCases.getTTS()) }
+
             is HomeEvent.NewSearch -> {
                 val term = event.searchTerm ?: searchTerm.value
                 searchJob = searchForDefinition(term)
             }
-
-            HomeEvent.RandomWord -> searchForRandomWord()
-            HomeEvent.OnShareData -> scope.launch { shareChannel.send(state.value.searchResult.firstOrNull()) }
 
             is HomeEvent.OnTermChanged -> {
                 savedState["Search"] = event.term
@@ -156,7 +158,6 @@ class HomeViewModel @AssistedInject constructor(
                 }
             }
 
-            HomeEvent.CancelSearch -> cancel()
             HomeEvent.OnCheckInternet -> {
                 scope.launch {
                     _state.update { stateUpdate ->
@@ -172,26 +173,14 @@ class HomeViewModel @AssistedInject constructor(
                 }
             }
 
-            HomeEvent.UpdateTTS -> {
-                scope.launch {
-                    val ttsTag = settingsUseCases.getTTS()
-                    if (ttsTag != null) {
-                        tts.createEngine(ttsTag)
-                    }
-                }
-            }
         }
     }
 
     private suspend fun dnsAccessible(
         dnsServer: String
-    ) = try {
-        withContext(Dispatchers.IO) {
-            Runtime.getRuntime().exec("/system/bin/ping -c 1 $dnsServer").waitFor()
-        } == 0
-    } catch (e: Exception) {
-        false
-    }
+    ) = withContext(Dispatchers.IO + exceptionHandler) {
+        Runtime.getRuntime().exec("/system/bin/ping -c 1 $dnsServer").waitFor()
+    } == 0
 
     private fun searchForRandomWord() = scope.launch {
         searchForDefinition(randomWordUseCase())
@@ -219,9 +208,12 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun loadCachedWord(cachedWord: Entry) {
+        val phonetic = cachedWord.phonetics.firstOrNull { it.text != null }?.text ?: ""
         _state.update {
             it.copy(
-                searchResult = listOf(cachedWord),
+                searchResult = cachedWord,
+                word = cachedWord.word,
+                phonetic = phonetic,
                 searchSuggestions = emptyList()
             )
         }
@@ -230,14 +222,17 @@ class HomeViewModel @AssistedInject constructor(
     private suspend fun searchForDefinitionUsingApi(
         searchTerm: String
     ): Entry? {
-        val word = searchFreeDictionaryUseCase(searchTerm)
+        val entry = searchFreeDictionaryUseCase(searchTerm).firstOrNull()
+        val phonetic = entry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
         _state.update {
             it.copy(
-                searchResult = word,
+                searchResult = entry,
+                word = entry?.word ?: "",
+                phonetic = phonetic,
                 searchSuggestions = emptyList()
             )
         }
-        return word.firstOrNull()
+        return entry
     }
 
     private fun cancel() {

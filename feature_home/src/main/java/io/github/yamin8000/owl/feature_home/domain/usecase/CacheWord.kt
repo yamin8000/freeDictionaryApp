@@ -27,6 +27,7 @@ import io.github.yamin8000.owl.feature_home.domain.repository.local.DefinitionRe
 import io.github.yamin8000.owl.feature_home.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.feature_home.domain.repository.local.PhoneticRepository
+import kotlinx.collections.immutable.persistentListOf
 
 class CacheWord(
     private val entryRepository: EntryRepository,
@@ -53,9 +54,9 @@ class CacheWord(
                 Meaning(
                     entryId = entryId,
                     partOfSpeech = partOfSpeech,
-                    definitions = listOf(),
-                    antonyms = listOf(),
-                    synonyms = listOf()
+                    definitions = persistentListOf(),
+                    antonyms = persistentListOf(),
+                    synonyms = persistentListOf()
                 )
             )
             definitions.forEach { definition ->
