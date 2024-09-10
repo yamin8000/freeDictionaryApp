@@ -101,7 +101,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.jetbrains.kotlinx.immutable)
     implementation(libs.androidx.core.splashscreen)
     //compose
     implementation(libs.androidx.compose.ui)

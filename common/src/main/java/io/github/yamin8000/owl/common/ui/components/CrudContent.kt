@@ -38,12 +38,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.strings.R
-import kotlinx.collections.immutable.PersistentList
 
 @Composable
 fun <T> CrudContent(
     title: String,
-    items: PersistentList<T>,
+    items: List<T>,
     onBackClick: () -> Unit,
     onRemoveAll: () -> Unit,
     onRemoveSingle: (T) -> Unit,

@@ -73,7 +73,6 @@ import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -177,7 +176,7 @@ fun HomeScreen(
                         if (state.searchResult != null) {
                             SearchList(
                                 modifier = Modifier.padding(contentPadding),
-                                meanings = state.searchResult.meanings.toPersistentList(),
+                                meanings = state.searchResult.meanings,
                                 onAddToFavourite = { vm.onEvent(HomeEvent.OnAddToFavourite(state.word)) },
                                 onWordChipClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
                                 onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
