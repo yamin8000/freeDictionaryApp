@@ -17,7 +17,7 @@ android-application = "8.6.0"
 ksp = "2.0.20-1.0.24"
 retrofit = "2.11.0"
 room = "2.6.1"
-desugar_jdk_libs = "2.1.1"
+desugar_jdk_libs = "2.1.2"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
