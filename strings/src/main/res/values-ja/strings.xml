@@ -66,4 +66,6 @@
     <string name="back">戻る</string>
     <string name="remove_all_prompt">本当に全て削除しますか？</string>
     <string name="cancelled">キャンセル</string>
+    <string name="close">Close</string>
+    <string name="more_in_app">More in app…</string>
 </resources>

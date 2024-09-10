@@ -66,4 +66,6 @@
     <string name="back">بازگشت</string>
     <string name="remove_all_prompt">آیا می‌خواهید همه را پاک کنید؟</string>
     <string name="cancelled">لغو شد.</string>
+    <string name="close">بستن</string>
+    <string name="more_in_app">بیشتر در برنامه…</string>
 </resources>
