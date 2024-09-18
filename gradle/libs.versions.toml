@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.9.2"
-composeLibs = "1.7.0"
+composeLibs = "1.7.2"
 coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"
