@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import kotlin.random.Random
 
-private val lightColors = lightColorScheme(
+val lightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -78,7 +78,7 @@ private val lightColors = lightColorScheme(
 )
 
 
-private val darkColors = darkColorScheme(
+val darkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
