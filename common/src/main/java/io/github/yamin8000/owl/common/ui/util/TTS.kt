@@ -46,7 +46,7 @@ class TTS(
     fun createEngine(tag: String = languageTag) {
         tts = TextToSpeech(context) {
             if (it == TextToSpeech.SUCCESS) {
-                tts?.setLanguage(Locale.forLanguageTag(tag))
+                tts?.language = Locale.forLanguageTag(tag)
             }
         }
     }

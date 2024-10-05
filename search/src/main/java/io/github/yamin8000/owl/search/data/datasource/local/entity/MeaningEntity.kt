@@ -24,7 +24,6 @@ package io.github.yamin8000.owl.search.data.datasource.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-
 import androidx.room.PrimaryKey
 
 @Entity(

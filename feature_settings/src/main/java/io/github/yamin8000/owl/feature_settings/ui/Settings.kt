@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_settings.ui
 
+import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
@@ -262,11 +264,12 @@ private fun ThemeSetting(
             SettingsItem(
                 onClick = onShowDialog,
                 content = {
+                    val context = LocalContext.current
                     Icon(
                         imageVector = Icons.TwoTone.DisplaySettings,
                         contentDescription = stringResource(R.string.theme)
                     )
-                    PersianText(text = theme.toString())
+                    PersianText(text = theme.toStringResource(context))
                 }
             )
             if (theme == ThemeType.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
@@ -316,16 +319,16 @@ private fun ThemeChangerDialog(
                                     onClick = onThemeClick
                                 ),
                             content = {
+                                val context = LocalContext.current
                                 RadioButton(
                                     selected = theme == currentTheme,
                                     onClick = null,
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
                                 PersianText(
-                                    text = theme.toString(),
+                                    text = theme.toStringResource(context),
                                     modifier = Modifier.padding(vertical = 16.dp)
                                 )
-
                             }
                         )
                     }
@@ -344,4 +347,13 @@ private fun DynamicThemeNotice(
         text = stringResource(R.string.dynamic_theme_notice),
         textAlign = TextAlign.Justify
     )
+}
+
+private fun ThemeType.toStringResource(
+    context: Context
+) = when (this) {
+    ThemeType.Dark -> context.getString(R.string.theme_dark)
+    ThemeType.Darker -> context.getString(R.string.theme_oled)
+    ThemeType.Light -> context.getString(R.string.theme_light)
+    ThemeType.System -> context.getString(R.string.theme_system)
 }

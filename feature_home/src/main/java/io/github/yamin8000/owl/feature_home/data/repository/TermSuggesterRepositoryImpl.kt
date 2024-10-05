@@ -37,13 +37,13 @@ class TermSuggesterRepositoryImpl(
     private val dao: DAOs.TermDao,
     private val app: Application
 ) : TermSuggesterRepository {
-    private val DEFAULT_N_GRAM_SIZE = 3
-    private val NOT_WORD_CHARS_REGEX = Regex("\\W+")
+    private val defaultNGramSize = 3
+    private val notWordsRegex = Regex("\\W+")
 
     override suspend fun suggestTerms(searchTerm: String): List<String> {
         items = items.plus(getOldSearchData())
 
-        val term = searchTerm.lowercase().replace(NOT_WORD_CHARS_REGEX, "")
+        val term = searchTerm.lowercase().replace(notWordsRegex, "")
         val nGramSize = nGramSizeProvider(term)
         if (items.contains(term)) return listOf(term)
         val searchTermGrams = term.windowed(nGramSize)
@@ -68,7 +68,7 @@ class TermSuggesterRepositoryImpl(
             .bufferedReader()
             .use { it.readText() }
             .split(',')
-            .map { it.replace(NOT_WORD_CHARS_REGEX, "") }
+            .map { it.replace(notWordsRegex, "") }
     } catch (e: NotFoundException) {
         listOf()
     }
@@ -108,11 +108,11 @@ class TermSuggesterRepositoryImpl(
 
     private fun nGramSizeProvider(
         searchTerm: String
-    ) = if (searchTerm.length > DEFAULT_N_GRAM_SIZE) {
-        val size = ceil(searchTerm.length.toFloat() / DEFAULT_N_GRAM_SIZE).roundToInt()
-        if (size < DEFAULT_N_GRAM_SIZE) DEFAULT_N_GRAM_SIZE
+    ) = if (searchTerm.length > defaultNGramSize) {
+        val size = ceil(searchTerm.length.toFloat() / defaultNGramSize).roundToInt()
+        if (size < defaultNGramSize) defaultNGramSize
         else size
-    } else DEFAULT_N_GRAM_SIZE
+    } else defaultNGramSize
 
     private suspend fun getOldSearchData() = dao.all().map { it.word }
 }

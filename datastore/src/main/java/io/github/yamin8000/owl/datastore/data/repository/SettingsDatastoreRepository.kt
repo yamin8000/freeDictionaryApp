@@ -49,7 +49,7 @@ class SettingsDatastoreRepository(
     }
 
     override suspend fun getIsVibrating(): Boolean {
-        return getBool(SettingsKeys.IS_VIBRATING) ?: true
+        return getBool(SettingsKeys.IS_VIBRATING) != false
     }
 
     override suspend fun setIsVibrating(value: Boolean) {
@@ -57,7 +57,7 @@ class SettingsDatastoreRepository(
     }
 
     override suspend fun getIsStartingBlank(): Boolean {
-        return getBool(SettingsKeys.IS_STARTING_BLANK) ?: true
+        return getBool(SettingsKeys.IS_STARTING_BLANK) != false
     }
 
     override suspend fun setIsStartingBlank(value: Boolean) {
