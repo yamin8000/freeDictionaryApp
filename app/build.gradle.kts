@@ -68,7 +68,6 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
-        languageVersion = "1.9"
     }
 
     buildFeatures {
@@ -80,10 +79,6 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-
-    kotlin.sourceSets.configureEach {
-        languageSettings.enableLanguageFeature("DataObjects")
     }
 }
 
