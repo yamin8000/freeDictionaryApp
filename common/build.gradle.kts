@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "io.github.yamin8000.owl.core"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21

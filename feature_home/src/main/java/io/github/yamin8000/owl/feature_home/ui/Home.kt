@@ -30,6 +30,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -216,9 +217,10 @@ private fun SearchList(
     val context = LocalContext.current
     val internetError = remember { context.getString(R.string.general_net_error) }
     LazyColumn(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(16.dp),
         content = {
             item(key = isOnline) {
                 AnimatedVisibility(

@@ -39,7 +39,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
@@ -128,7 +127,7 @@ fun PreviewTheme(
             )
             Box(
                 modifier = Modifier
-                    .height(10.dp)
+                    .height(16.dp)
                     .fillMaxWidth()
                     .background(Color.Red)
             )
@@ -186,8 +185,6 @@ fun AppTheme(
     if (!isPreviewing) {
         val activity = LocalView.current.context as Activity
         SideEffect {
-            activity.window.statusBarColor = colors.surface.toArgb()
-            activity.window.navigationBarColor = colors.surface.toArgb()
             val wic = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
             wic.isAppearanceLightStatusBars = !isDarkTheme
             wic.isAppearanceLightNavigationBars = !isDarkTheme
