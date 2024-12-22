@@ -60,7 +60,7 @@ class DefinitionRoomRepository(
             definitionDao.insert(
                 DefinitionEntity(
                     definition = item.definition,
-                    example = item.definition,
+                    example = item.example,
                     createdAt = epoch(),
                     meaningId = item.meaningId
                 )
