@@ -34,12 +34,17 @@ android {
     namespace = appId
     compileSdk = 35
 
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
     defaultConfig {
         applicationId = appId
         minSdk = 21
         targetSdk = 35
-        versionCode = 45
-        versionName = "1.7.2"
+        versionCode = 46
+        versionName = "1.7.3"
         vectorDrawables.useSupportLibrary = true
         base.archivesName = "$applicationId-v$versionCode-n$versionName"
     }
