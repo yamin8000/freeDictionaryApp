@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     RainbowLinearProgress.kt Copyrighted by Yamin Siahmargooei at 2024/12/5
- *     RainbowLinearProgress.kt Last modified at 2024/12/5
+ *     RainbowLinearProgress.kt Copyrighted by Yamin Siahmargooei at 2025/1/16
+ *     RainbowLinearProgress.kt Last modified at 2025/1/16
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.ui.components
+package io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.LinearProgressIndicator
@@ -30,11 +30,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import kotlinx.coroutines.delay
+
+@MyPreview
+@Composable
+private fun Preview() {
+    PreviewTheme {
+        RainbowLinearProgress()
+    }
+}
 
 @Composable
 internal fun RainbowLinearProgress(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    colorChangeDuration: Long = 250
 ) {
     fun randomBeam(): Int = (16..255).random()
     val colors = buildList {
@@ -46,7 +57,7 @@ internal fun RainbowLinearProgress(
     LaunchedEffect(Unit) {
         while (true) {
             color = colors.random()
-            delay(250)
+            delay(colorChangeDuration)
         }
     }
     LinearProgressIndicator(

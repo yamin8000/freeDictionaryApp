@@ -48,6 +48,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
@@ -71,7 +72,7 @@ fun OverlayScreen(
     val screenHeight = remember(configuration) {
         configuration.screenHeightDp.dp
     }
-    val buttonsOffset = 64.dp
+    val buttonsOffset = Sizes.xxLarge
     val windowHeight = remember(isPortrait, screenHeight) {
         if (isPortrait) screenHeight / 2 else screenHeight - buttonsOffset
     }
@@ -89,7 +90,7 @@ fun OverlayScreen(
                     Surface(
                         modifier = Modifier
                             .height(windowHeight)
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = Sizes.Large),
                         shape = DefaultCutShape,
                         border = defaultGradientBorder(),
                         content = {
@@ -134,8 +135,8 @@ private fun SearchList(
     meanings: List<Meaning>
 ) {
     LazyColumn(
-        modifier = modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.padding(Sizes.Large),
+        verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             if (isSearching) {
@@ -175,7 +176,7 @@ private fun ButtonsRow(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(Sizes.Large),
         content = {
             Button(
                 onClick = onDismissRequest,

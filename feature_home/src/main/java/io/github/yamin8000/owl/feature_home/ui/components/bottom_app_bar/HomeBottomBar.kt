@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     HomeBottomBar.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     HomeBottomBar.kt Last modified at 2024/8/17
+ *     HomeBottomBar.kt Copyrighted by Yamin Siahmargooei at 2025/1/16
+ *     HomeBottomBar.kt Last modified at 2024/12/5
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.ui.components
+package io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column

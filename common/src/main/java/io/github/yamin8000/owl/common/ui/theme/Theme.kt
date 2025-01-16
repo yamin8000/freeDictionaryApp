@@ -42,7 +42,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import kotlin.random.Random
 
@@ -127,7 +126,7 @@ fun PreviewTheme(
             )
             Box(
                 modifier = Modifier
-                    .height(16.dp)
+                    .height(Sizes.Large)
                     .fillMaxWidth()
                     .background(Color.Red)
             )
@@ -138,7 +137,6 @@ fun PreviewTheme(
                 isDynamicColor,
                 content
             )
-
         }
     )
 }

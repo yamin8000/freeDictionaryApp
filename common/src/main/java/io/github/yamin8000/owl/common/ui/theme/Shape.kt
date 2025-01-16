@@ -30,47 +30,38 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 
-val DefaultCutShape = CutCornerShape(8.dp)
+val DefaultCutShape = CutCornerShape(Sizes.Medium)
 
 @Composable
-fun defaultGradientBorder(): BorderStroke {
-    var flip = false
-    LaunchedEffect(Unit) {
-        while (true) {
-            flip = !flip
-            delay(1000)
-        }
-    }
-
+fun defaultGradientBorder(
+    duration: Int = 5000
+): BorderStroke {
     val animation = rememberInfiniteTransition(label = "")
     val start by animation.animateColor(
         initialValue = MaterialTheme.colorScheme.primary,
         targetValue = MaterialTheme.colorScheme.tertiary,
+        label = "",
         animationSpec = infiniteRepeatable(
-            tween(5000),
+            tween(duration),
             repeatMode = RepeatMode.Reverse
-        ),
-        label = ""
+        )
     )
 
     val end by animation.animateColor(
         initialValue = MaterialTheme.colorScheme.tertiary,
         targetValue = MaterialTheme.colorScheme.primary,
+        label = "",
         animationSpec = infiniteRepeatable(
-            tween(5000),
+            tween(duration),
             repeatMode = RepeatMode.Reverse
-        ),
-        label = ""
+        )
     )
 
     return BorderStroke(
-        1.dp,
-        Brush.verticalGradient(listOf(start, end))
+        width = Sizes.xxSmall,
+        brush = Brush.verticalGradient(listOf(start, end))
     )
 }

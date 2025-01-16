@@ -54,6 +54,7 @@ import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 
 @Composable
 internal fun SettingsItemCard(
@@ -63,7 +64,7 @@ internal fun SettingsItemCard(
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(Sizes.Small),
         horizontalAlignment = Alignment.Start,
         content = {
             PersianText(
@@ -77,8 +78,8 @@ internal fun SettingsItemCard(
                 shape = DefaultCutShape,
                 content = {
                     Column(
-                        modifier = columnModifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = columnModifier.padding(Sizes.Large),
+                        verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         content = content
                     )
@@ -108,10 +109,10 @@ internal fun SettingsItem(
                 verticalAlignment = Alignment.CenterVertically,
                 content = {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+                        horizontalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.Start),
                         verticalAlignment = Alignment.CenterVertically,
                         //Extra padding for increasing touch area
-                        modifier = Modifier.padding(vertical = 8.dp),
+                        modifier = Modifier.padding(vertical = Sizes.Medium),
                         content = content
                     )
                     Icon(
@@ -147,7 +148,7 @@ internal fun SwitchItem(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
+        horizontalArrangement = Arrangement.spacedBy(Sizes.Small, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         content = {
             Icon(

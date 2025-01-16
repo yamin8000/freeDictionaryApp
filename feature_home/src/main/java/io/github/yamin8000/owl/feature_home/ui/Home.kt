@@ -21,23 +21,13 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
-import android.content.Context
 import android.content.pm.ActivityInfo
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
@@ -45,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -65,18 +54,16 @@ import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.LockScreenOrientation
 import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.common.ui.util.LocalTTS
-import io.github.yamin8000.owl.feature_home.ui.components.MainBottomBar
+import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
-import io.github.yamin8000.owl.feature_home.ui.components.SuggestionsChips
+import io.github.yamin8000.owl.feature_home.ui.components.SearchList
+import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.SuggestionsChips
 import io.github.yamin8000.owl.feature_home.ui.util.ShareUtils.handleShareIntent
-import io.github.yamin8000.owl.search.domain.model.Meaning
-import io.github.yamin8000.owl.search.ui.components.MeaningCard
-import io.github.yamin8000.owl.search.ui.components.WordCard
+import io.github.yamin8000.owl.feature_home.ui.util.Utils.ObserverEvent
+import io.github.yamin8000.owl.feature_home.ui.util.Utils.getErrorText
 import io.github.yamin8000.owl.strings.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 
 @Composable
 fun HomeScreen(
@@ -187,8 +174,8 @@ fun HomeScreen(
                             )
                         } else {
                             Column(
-                                modifier = modifier.padding(16.dp),
-                                verticalArrangement = Arrangement.spacedBy(16.dp),
+                                modifier = modifier.padding(Sizes.Large),
+                                verticalArrangement = Arrangement.spacedBy(Sizes.Large),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 content = {
                                     PersianText(stringResource(R.string.search_hint))
@@ -201,93 +188,4 @@ fun HomeScreen(
             }
         )
     }
-}
-
-@Composable
-private fun SearchList(
-    modifier: Modifier = Modifier,
-    isOnline: Boolean,
-    word: String,
-    phonetic: String,
-    onAddToFavourite: () -> Unit,
-    onShareWord: () -> Unit,
-    onWordChipClick: (String) -> Unit,
-    meanings: List<Meaning>
-) {
-    val context = LocalContext.current
-    val internetError = remember { context.getString(R.string.general_net_error) }
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(16.dp),
-        content = {
-            item(key = isOnline) {
-                AnimatedVisibility(
-                    visible = !isOnline,
-                    enter = slideInVertically() + fadeIn(),
-                    exit = slideOutVertically() + fadeOut(),
-                    content = {
-                        PersianText(
-                            text = internetError,
-                            modifier = Modifier.padding(8.dp),
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                )
-            }
-            item(key = word + phonetic) {
-                WordCard(
-                    word = word,
-                    pronunciation = phonetic,
-                    onShareWord = onShareWord,
-                    onAddToFavourite = onAddToFavourite
-                )
-            }
-
-            itemsIndexed(
-                items = meanings,
-                key = { index, item -> item.id ?: index },
-                itemContent = { _, meaning ->
-                    MeaningCard(
-                        modifier = Modifier.animateItem(),
-                        word = word,
-                        meaning = meaning,
-                        onWordChipClick = onWordChipClick
-                    )
-                }
-            )
-        }
-    )
-}
-
-@Composable
-private fun <T> ObserverEvent(
-    flow: Flow<T>,
-    onEvent: suspend (T) -> Unit
-) {
-    val lifeCycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(flow, lifeCycleOwner.lifecycle) {
-        lifeCycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            withContext(Dispatchers.Main.immediate) {
-                flow.collect(onEvent)
-            }
-        }
-    }
-}
-
-private fun getErrorText(
-    context: Context,
-    error: HomeSnackbarType?
-) = when (error) {
-    HomeSnackbarType.SearchFailed -> context.getString(R.string.general_net_error)
-    HomeSnackbarType.TermIsEmpty -> context.getString(R.string.no_search_term_entered)
-    HomeSnackbarType.NoInternet -> context.getString(R.string.general_net_error)
-    HomeSnackbarType.ApiAuthorizationError -> context.getString(R.string.api_authorization_error)
-    HomeSnackbarType.ApiThrottled -> context.getString(R.string.api_throttled)
-    HomeSnackbarType.Cancelled -> context.getString(R.string.cancelled)
-    HomeSnackbarType.NotFound -> context.getString(R.string.definition_not_found)
-    HomeSnackbarType.Unknown -> context.getString(R.string.untracked_error)
-    HomeSnackbarType.AddedToFavourite -> context.getString(R.string.added_to_favourites)
-    null -> ""
 }

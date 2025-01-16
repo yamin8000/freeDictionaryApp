@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     BottomAppBarDuringSearch.kt Copyrighted by Yamin Siahmargooei at 2024/12/5
- *     BottomAppBarDuringSearch.kt Last modified at 2024/12/5
+ *     BottomAppBarDuringSearch.kt Copyrighted by Yamin Siahmargooei at 2025/1/16
+ *     BottomAppBarDuringSearch.kt Last modified at 2025/1/16
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,17 +19,27 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.ui.components
+package io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Stop
+import androidx.compose.material.icons.twotone.Cancel
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.strings.R
+
+@MyPreview
+@Composable
+private fun Preview() {
+    PreviewTheme {
+        BottomAppBarDuringSearch {}
+    }
+}
 
 @Composable
 internal fun BottomAppBarDuringSearch(
@@ -44,7 +54,7 @@ internal fun BottomAppBarDuringSearch(
                 onClick = onCancel,
                 content = {
                     Icon(
-                        imageVector = Icons.TwoTone.Stop,
+                        imageVector = Icons.TwoTone.Cancel,
                         contentDescription = stringResource(R.string.cancel)
                     )
                 }

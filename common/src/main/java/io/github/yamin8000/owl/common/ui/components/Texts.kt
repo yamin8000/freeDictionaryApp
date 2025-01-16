@@ -64,10 +64,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -88,34 +86,6 @@ import io.github.yamin8000.owl.common.ui.util.LocaleUtils.getCurrentLocale
 import io.github.yamin8000.owl.common.ui.util.StringUtils.sanitizeWords
 import io.github.yamin8000.owl.strings.R
 import java.util.Locale
-
-@Composable
-fun HighlightText(
-    modifier: Modifier = Modifier,
-    fullText: String,
-    highlightedText: String,
-    highlightedTextStyle: SpanStyle = SpanStyle(
-        fontWeight = FontWeight.ExtraBold,
-        textDecoration = TextDecoration.Underline
-    )
-) {
-    if (highlightedText.isNotBlank() && fullText.contains(highlightedText, true)) {
-        val start = fullText.indexOf(highlightedText, 0, true)
-        val end = start + highlightedText.length
-        Text(
-            modifier = modifier,
-            text = buildAnnotatedString {
-                append(fullText)
-                addStyle(highlightedTextStyle, start, end)
-            }
-        )
-    } else {
-        Text(
-            text = fullText,
-            modifier = modifier
-        )
-    }
-}
 
 @Composable
 fun PersianText(

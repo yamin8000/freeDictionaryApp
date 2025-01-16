@@ -59,6 +59,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.components.PersianText
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItem
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItemCard
@@ -81,10 +82,10 @@ fun SettingsScreen(
         content = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = Sizes.Large),
                 content = {
                     GeneralSettings(
                         isVibrating = state.isVibrating,
@@ -175,7 +176,7 @@ private fun TtsLanguagesDialog(
         text = {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
                 content = {
                     items(languages) {
                         TtsLanguageItem(
@@ -234,7 +235,7 @@ private fun TtsLanguageItem(
         content = {
             PersianText(
                 text = Locale.forLanguageTag(localeTag).displayName,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(Sizes.Large)
             )
         }
     )
@@ -297,7 +298,7 @@ private fun ThemeChangerDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(Sizes.Large)
                     .selectableGroup()
                     .fillMaxWidth(),
                 content = {
@@ -323,11 +324,11 @@ private fun ThemeChangerDialog(
                                 RadioButton(
                                     selected = theme == currentTheme,
                                     onClick = null,
-                                    modifier = Modifier.padding(start = 8.dp)
+                                    modifier = Modifier.padding(start = Sizes.Medium)
                                 )
                                 PersianText(
                                     text = theme.toStringResource(context),
-                                    modifier = Modifier.padding(vertical = 16.dp)
+                                    modifier = Modifier.padding(vertical = Sizes.Large)
                                 )
                             }
                         )

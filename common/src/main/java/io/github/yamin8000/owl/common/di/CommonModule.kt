@@ -26,7 +26,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.github.yamin8000.owl.common.ui.util.LocaleUtils.getCurrentLocale
 import io.github.yamin8000.owl.common.ui.util.TTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import kotlinx.coroutines.runBlocking
@@ -46,7 +45,7 @@ object CommonModule {
             settingUseCases.getTTS()
             return@runBlocking TTS(
                 app,
-                settingUseCases.getTTS() ?: getCurrentLocale(app).toLanguageTag()
+                settingUseCases.getTTS()
             )
         }
     }

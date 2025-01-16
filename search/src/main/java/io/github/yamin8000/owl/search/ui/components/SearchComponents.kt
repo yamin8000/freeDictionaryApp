@@ -49,6 +49,7 @@ import io.github.yamin8000.owl.common.ui.components.ClickableIcon
 import io.github.yamin8000.owl.common.ui.components.HighlightText
 import io.github.yamin8000.owl.common.ui.components.SpeakableRippleTextWithIcon
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.strings.R
@@ -77,8 +78,8 @@ fun WordCard(
                     Column(
                         modifier = Modifier
                             .weight(2f)
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                            .padding(Sizes.Large),
+                        verticalArrangement = Arrangement.spacedBy(Sizes.Small),
                         horizontalAlignment = Alignment.Start,
                         content = {
                             WordText(word)
@@ -93,8 +94,8 @@ fun WordCard(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                            .padding(Sizes.Large),
+                        verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
                         horizontalAlignment = Alignment.End,
                         content = {
                             if (onAddToFavourite != null) {
@@ -154,8 +155,8 @@ fun MeaningCard(
         border = defaultGradientBorder(),
         content = {
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(Sizes.Large),
+                verticalArrangement = Arrangement.spacedBy(Sizes.Large),
                 content = {
                     WordTypeText(
                         meaning.partOfSpeech,
