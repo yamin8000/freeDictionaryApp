@@ -45,7 +45,7 @@
 
         <activity
             android:name="io.github.yamin8000.owl.ui.MainActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|locale|screenLayout|screenSize"
+            android:configChanges="orientation|keyboardHidden|keyboard|locale|screenLayout|screenSize"
             android:exported="true"
             android:theme="@style/Theme.Owl.Splash">
             <intent-filter>
