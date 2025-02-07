@@ -68,10 +68,6 @@ internal fun NormalBottomAppBar(
     BottomAppBar(
         modifier = modifier,
         content = {
-            val onSearchClick = remember { onSearch }
-            val onTermChanged: (String) -> Unit = remember {
-                onSearchTermChange
-            }
             TextField(
                 singleLine = true,
                 shape = CutCornerShape(topEnd = Sizes.Medium, topStart = Sizes.Medium),
@@ -105,12 +101,12 @@ internal fun NormalBottomAppBar(
                         enabled = searchTerm.isNotBlank(),
                         imageVector = Icons.TwoTone.Search,
                         contentDescription = stringResource(R.string.search),
-                        onClick = onSearchClick
+                        onClick = onSearch
                     )
                 },
                 value = searchTerm,
-                onValueChange = onTermChanged,
-                keyboardActions = KeyboardActions(onSearch = { onSearchClick() }),
+                onValueChange = onSearchTermChange,
+                keyboardActions = KeyboardActions(onSearch = { onSearch() }),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search,
                     keyboardType = KeyboardType.Text,

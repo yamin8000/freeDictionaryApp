@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.common.main
- *     CrudContent.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     CrudContent.kt Last modified at 2024/8/17
+ *     CrudContent.kt Copyrighted by Yamin Siahmargooei at 2025/2/7
+ *     CrudContent.kt Last modified at 2025/2/7
  *     This file is part of freeDictionaryApp/freeDictionaryApp.common.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.common.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,25 +19,21 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.common.ui.components
+package io.github.yamin8000.owl.common.ui.components.crud
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.strings.R
+import io.github.yamin8000.owl.common.ui.components.EmptyList
+import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 
 @Composable
 fun <T> CrudContent(
@@ -92,51 +88,3 @@ fun <T> CrudContent(
     )
 }
 
-@Composable
-private fun CrudItem(
-    modifier: Modifier = Modifier,
-    item: String,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit
-) {
-    RemovableCard(
-        modifier = modifier,
-        item = item,
-        onClick = onClick,
-        onLongClick = onLongClick
-    )
-}
-
-@Composable
-private fun RemoveAllContent(
-    onRemoveAllClick: () -> Unit
-) {
-    var isShowingDialog by remember { mutableStateOf(false) }
-    val hideDialog = remember { { isShowingDialog = false } }
-    val showDialog = remember { { isShowingDialog = true } }
-
-    if (isShowingDialog) {
-        AlertDialog(
-            onDismissRequest = hideDialog,
-            title = { PersianText(stringResource(R.string.clear_all)) },
-            text = { PersianText(stringResource(R.string.remove_all_prompt)) },
-            confirmButton = {
-                Button(
-                    onClick = onRemoveAllClick,
-                    content = { PersianText(stringResource(R.string.yes)) }
-                )
-            },
-            dismissButton = {
-                Button(
-                    onClick = hideDialog,
-                    content = { PersianText(stringResource(R.string.no)) }
-                )
-            }
-        )
-    }
-    Button(
-        onClick = showDialog,
-        shape = DefaultCutShape,
-        content = { PersianText(text = stringResource(R.string.clear_all)) }
-    )
-}

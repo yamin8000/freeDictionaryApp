@@ -31,7 +31,7 @@ import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 
 @MyPreview
 @Composable
-private fun MainBottomBarPreview() {
+private fun Preview() {
     PreviewTheme {
         MainBottomBar(
             searchTerm = "test",

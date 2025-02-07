@@ -74,8 +74,8 @@ fun HighlightText(
         )
     } else {
         Text(
-            text = fullText,
-            modifier = modifier
+            modifier = modifier,
+            text = fullText
         )
     }
 }

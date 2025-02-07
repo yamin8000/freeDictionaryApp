@@ -22,27 +22,17 @@
 package io.github.yamin8000.owl.feature_overlay.ui
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,10 +40,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
-import io.github.yamin8000.owl.search.domain.model.Meaning
-import io.github.yamin8000.owl.search.ui.components.MeaningCard
-import io.github.yamin8000.owl.search.ui.components.WordCard
-import io.github.yamin8000.owl.strings.R
+import io.github.yamin8000.owl.feature_overlay.ui.components.ButtonsRow
+import io.github.yamin8000.owl.feature_overlay.ui.components.SearchList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,81 +98,6 @@ fun OverlayScreen(
                         navigateToApp = { navigateToApp(state.word) }
                     )
                 }
-            )
-        }
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun Preview() {
-    SearchList(
-        isSearching = true,
-        word = "duh",
-        phonetic = "duh",
-        meanings = emptyList()
-    )
-}
-
-@Composable
-private fun SearchList(
-    modifier: Modifier = Modifier,
-    isSearching: Boolean,
-    word: String,
-    phonetic: String,
-    meanings: List<Meaning>
-) {
-    LazyColumn(
-        modifier = modifier.padding(Sizes.Large),
-        verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        content = {
-            if (isSearching) {
-                item {
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-            item {
-                WordCard(
-                    word = word,
-                    pronunciation = phonetic
-                )
-            }
-            items(meanings) { meaning ->
-                MeaningCard(
-                    word = word,
-                    meaning = meaning
-                )
-            }
-            /*item {
-                ButtonsRow(
-                    onDismissRequest = onDismissRequest,
-                    navigateToApp = navigateToApp
-                )
-            }*/
-        }
-    )
-}
-
-@Composable
-private fun ButtonsRow(
-    modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit,
-    navigateToApp: () -> Unit
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(Sizes.Large),
-        content = {
-            Button(
-                onClick = onDismissRequest,
-                content = { Text(stringResource(R.string.close)) }
-            )
-            Button(
-                onClick = navigateToApp,
-                content = { Text(stringResource(R.string.more_in_app)) }
             )
         }
     )

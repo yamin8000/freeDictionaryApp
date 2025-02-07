@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.common.main
- *     Cards.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     Cards.kt Last modified at 2024/8/17
+ *     RemovableCard.kt Copyrighted by Yamin Siahmargooei at 2025/2/7
+ *     RemovableCard.kt Last modified at 2024/9/5
  *     This file is part of freeDictionaryApp/freeDictionaryApp.common.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.common.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.common.ui.components
+package io.github.yamin8000.owl.common.ui.components.crud
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,8 +36,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import io.github.yamin8000.owl.common.ui.components.DeleteMenu
+import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 
 @Composable
 fun RemovableCard(
@@ -49,36 +51,31 @@ fun RemovableCard(
     OutlinedCard(
         modifier = modifier,
         shape = DefaultCutShape,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.tertiary),
+        border = BorderStroke(Sizes.xxSmall, MaterialTheme.colorScheme.tertiary),
         content = {
             var isMenuExpanded by remember { mutableStateOf(false) }
-            val showMenu = remember { { isMenuExpanded = true } }
-            val hideMenu = remember { { isMenuExpanded = false } }
             Ripple(
                 onClick = onClick,
-                onLongClick = showMenu,
+                onLongClick = { isMenuExpanded = true },
                 content = {
                     Text(
                         text = item,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(Sizes.Medium)
                             .fillMaxWidth()
                     )
                 }
             )
             val haptic = LocalHapticFeedback.current
-            val onDelete = remember {
-                {
+            DeleteMenu(
+                expanded = isMenuExpanded,
+                onDismiss = { isMenuExpanded = false },
+                onDelete = {
                     isMenuExpanded = false
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onLongClick()
                 }
-            }
-            DeleteMenu(
-                expanded = isMenuExpanded,
-                onDismiss = hideMenu,
-                onDelete = onDelete
             )
         }
     )

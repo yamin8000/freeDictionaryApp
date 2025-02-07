@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.common.main
- *     Components.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     Components.kt Last modified at 2024/8/17
+ *     CrudItem.kt Copyrighted by Yamin Siahmargooei at 2025/2/7
+ *     CrudItem.kt Last modified at 2025/2/7
  *     This file is part of freeDictionaryApp/freeDictionaryApp.common.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.common.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,25 +19,22 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.common.ui.components
+package io.github.yamin8000.owl.common.ui.components.crud
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalContext
-import io.github.yamin8000.owl.common.ui.util.ContextUtils.findActivity
+import androidx.compose.ui.Modifier
 
 @Composable
-fun LockScreenOrientation(
-    orientation: Int
+internal fun CrudItem(
+    modifier: Modifier = Modifier,
+    item: String,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    DisposableEffect(Unit) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
-        val originalOrientation = activity.requestedOrientation
-        activity.requestedOrientation = orientation
-        onDispose {
-            // restore original orientation when view disappears
-            activity.requestedOrientation = originalOrientation
-        }
-    }
+    RemovableCard(
+        modifier = modifier,
+        item = item,
+        onClick = onClick,
+        onLongClick = onLongClick
+    )
 }

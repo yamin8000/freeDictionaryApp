@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.common.main
- *     Components.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     Components.kt Last modified at 2024/8/17
+ *     EmptyList.kt Copyrighted by Yamin Siahmargooei at 2025/2/7
+ *     EmptyList.kt Last modified at 2025/2/7
  *     This file is part of freeDictionaryApp/freeDictionaryApp.common.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.common.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -22,22 +22,27 @@
 package io.github.yamin8000.owl.common.ui.components
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalContext
-import io.github.yamin8000.owl.common.ui.util.ContextUtils.findActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import io.github.yamin8000.owl.core.R
 
 @Composable
-fun LockScreenOrientation(
-    orientation: Int
+fun EmptyList(
+    modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    DisposableEffect(Unit) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
-        val originalOrientation = activity.requestedOrientation
-        activity.requestedOrientation = orientation
-        onDispose {
-            // restore original orientation when view disappears
-            activity.requestedOrientation = originalOrientation
-        }
-    }
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+    LottieAnimation(
+        modifier = modifier,
+        composition = composition,
+        progress = { progress },
+    )
 }

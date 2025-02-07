@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.common.main
- *     Components.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     Components.kt Last modified at 2024/8/17
+ *     ClickableIcon.kt Copyrighted by Yamin Siahmargooei at 2025/2/7
+ *     ClickableIcon.kt Last modified at 2025/2/7
  *     This file is part of freeDictionaryApp/freeDictionaryApp.common.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.common.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -21,23 +21,35 @@
 
 package io.github.yamin8000.owl.common.ui.components
 
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalContext
-import io.github.yamin8000.owl.common.ui.util.ContextUtils.findActivity
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 
 @Composable
-fun LockScreenOrientation(
-    orientation: Int
+fun ClickableIcon(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    imageVector: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    DisposableEffect(Unit) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose {}
-        val originalOrientation = activity.requestedOrientation
-        activity.requestedOrientation = orientation
-        onDispose {
-            // restore original orientation when view disappears
-            activity.requestedOrientation = originalOrientation
+    val haptic = LocalHapticFeedback.current
+    IconButton(
+        modifier = modifier,
+        enabled = enabled,
+        onClick = {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            onClick()
+        },
+        content = {
+            Icon(
+                imageVector = imageVector,
+                contentDescription = contentDescription,
+            )
         }
-    }
+    )
 }

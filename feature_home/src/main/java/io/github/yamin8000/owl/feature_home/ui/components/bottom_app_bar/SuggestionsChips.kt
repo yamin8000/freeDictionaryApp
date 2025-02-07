@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.yamin8000.owl.common.ui.components.HighlightText
@@ -43,7 +42,7 @@ private fun Preview() {
     PreviewTheme {
         SuggestionsChips(
             searchTerm = "ing",
-            suggestions = listOf("eating", "drinking"),
+            suggestions = listOf("eating", "drinking", "drink"),
             onSuggestionClick = {}
         )
     }
@@ -68,11 +67,10 @@ internal fun SuggestionsChips(
                 items(
                     items = suggestions,
                     itemContent = {
-                        val onClick = remember { { onSuggestionClick(it) } }
                         ElevatedSuggestionChip(
                             shape = DefaultCutShape,
                             border = defaultGradientBorder(1000),
-                            onClick = onClick,
+                            onClick = { onSuggestionClick(it) },
                             label = {
                                 HighlightText(
                                     fullText = it,
