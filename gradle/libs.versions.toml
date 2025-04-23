@@ -16,7 +16,7 @@ kotlin = "2.1.10"
 android-application = "8.9.0"
 ksp = "2.1.10-1.0.30"
 retrofit = "2.11.0"
-room = "2.6.1"
+room = "2.7.1"
 desugar_jdk_libs = "2.1.5"
 
 [libraries]
