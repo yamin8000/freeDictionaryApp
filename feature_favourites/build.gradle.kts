@@ -26,21 +26,6 @@ android {
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":strings"))
-    implementation(project(":datastore"))
-    //core android/kotlin
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    //compose
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.material)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material3.window.size)
-    implementation(libs.androidx.lifecycle.runtime.compose)
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
