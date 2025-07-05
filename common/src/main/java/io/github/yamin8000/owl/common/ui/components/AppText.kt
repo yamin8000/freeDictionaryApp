@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import io.github.yamin8000.owl.common.ui.theme.Samim
 import io.github.yamin8000.owl.common.util.LocaleUtils
 
 @Composable
@@ -46,7 +47,7 @@ fun AppText(
         fontSize = fontSize,
         fontStyle = fontStyle,
         fontWeight = fontWeight,
-        fontFamily = fontFamily,
+        fontFamily = if (hasAnyRtlCharacter) Samim else fontFamily,
         letterSpacing = letterSpacing,
         textDecoration = textDecoration,
         textAlign = textAlign,

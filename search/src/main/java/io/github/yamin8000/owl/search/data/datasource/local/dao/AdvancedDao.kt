@@ -25,6 +25,7 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 
+@Suppress("unused")
 abstract class AdvancedDao<T>(tableName: String) : BaseDao<T>(tableName) {
 
     @RawQuery
