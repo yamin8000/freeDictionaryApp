@@ -37,7 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
@@ -69,7 +69,7 @@ internal fun SearchList(
                     exit = slideOutVertically() + fadeOut(),
                     content = {
                         val internetError = remember { context.getString(R.string.general_net_error) }
-                        PersianText(
+                        AppText(
                             modifier = Modifier.padding(Sizes.Medium),
                             color = MaterialTheme.colorScheme.error,
                             text = internetError

@@ -31,9 +31,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 
 @Composable
 fun <T> CrudContent(
@@ -55,9 +55,9 @@ fun <T> CrudContent(
             val isNotEmpty by remember(items) { mutableStateOf(items.isNotEmpty()) }
             if (isNotEmpty) {
                 LazyVerticalStaggeredGrid(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalItemSpacing = 8.dp,
+                    modifier = Modifier.padding(bottom = Sizes.Large),
+                    horizontalArrangement = Arrangement.spacedBy(Sizes.Medium),
+                    verticalItemSpacing = Sizes.Medium,
                     columns = StaggeredGridCells.Fixed(2),
                     content = {
                         item(

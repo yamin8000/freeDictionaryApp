@@ -21,15 +21,38 @@
 
 package io.github.yamin8000.owl.common.ui.components
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
+
+@MyPreview
+@Composable
+private fun Preview() {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(Sizes.xxLarge),
+        content = {
+            DeleteMenu(
+                expanded = true,
+                onDelete = {},
+                onDismiss = {}
+            )
+        }
+    )
+}
 
 @Composable
 internal fun DeleteMenu(
@@ -46,7 +69,7 @@ internal fun DeleteMenu(
         content = {
             DropdownMenuItem(
                 onClick = onDelete,
-                text = { PersianText(delete) },
+                text = { AppText(delete) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.TwoTone.Delete,

@@ -24,7 +24,7 @@ package io.github.yamin8000.owl.common.ui.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
-import io.github.yamin8000.owl.common.ui.util.ContextUtils.findActivity
+import io.github.yamin8000.owl.common.util.ContextUtils.findActivity
 
 @Composable
 fun LockScreenOrientation(

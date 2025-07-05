@@ -44,7 +44,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -53,9 +52,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.LockScreenOrientation
 import io.github.yamin8000.owl.common.ui.components.MySnackbar
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.Sizes
-import io.github.yamin8000.owl.common.ui.util.LocalTTS
+import io.github.yamin8000.owl.common.util.LocalTTS
 import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
 import io.github.yamin8000.owl.feature_home.ui.components.SearchList
@@ -113,7 +112,7 @@ fun HomeScreen(
                     snackbarHost = {
                         SnackbarHost(state.snackbarHostState) { data ->
                             MySnackbar {
-                                PersianText(
+                                AppText(
                                     text = data.visuals.message,
                                     modifier = Modifier.fillMaxWidth(),
                                     textAlign = TextAlign.Center
@@ -178,7 +177,7 @@ fun HomeScreen(
                                 verticalArrangement = Arrangement.spacedBy(Sizes.Large),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 content = {
-                                    PersianText(stringResource(R.string.search_hint))
+                                    AppText(stringResource(R.string.search_hint))
                                     EmptyList()
                                 }
                             )

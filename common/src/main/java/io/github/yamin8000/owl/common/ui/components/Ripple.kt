@@ -39,12 +39,11 @@ fun Ripple(
     onClick: () -> Unit,
     onLongClick: () -> Unit = {}
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     Box(
         content = content,
         modifier = modifier
             .combinedClickable(
-                interactionSource = interactionSource,
+                interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(),
                 onClick = onClick,
                 onLongClick = onLongClick

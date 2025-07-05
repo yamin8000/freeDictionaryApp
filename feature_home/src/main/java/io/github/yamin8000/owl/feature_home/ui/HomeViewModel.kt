@@ -29,7 +29,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.yamin8000.owl.common.ui.util.TTS
+import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases

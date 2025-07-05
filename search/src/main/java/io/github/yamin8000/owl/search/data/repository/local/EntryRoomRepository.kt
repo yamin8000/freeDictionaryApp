@@ -21,7 +21,7 @@
 
 package io.github.yamin8000.owl.search.data.repository.local
 
-import io.github.yamin8000.owl.common.ui.util.StringUtils.sanitizeWord
+import io.github.yamin8000.owl.common.util.StringUtils.sanitizeWord
 import io.github.yamin8000.owl.common.util.DateTimeUtils.epoch
 import io.github.yamin8000.owl.search.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.search.data.datasource.local.entity.EntryEntity

@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,12 +63,12 @@ fun ScaffoldWithTitle(
         snackbarHost = snackbarHost,
         topBar = {
             Surface(
-                shadowElevation = 8.dp,
+                shadowElevation = Sizes.Large,
                 content = {
                     TopAppBar(
                         scrollBehavior = scrollBehavior,
                         title = {
-                            PersianText(
+                            AppText(
                                 text = title,
                                 fontSize = 20.sp,
                                 textAlign = TextAlign.Center
@@ -89,7 +90,12 @@ fun ScaffoldWithTitle(
                 content = content,
                 modifier = Modifier
                     .padding(it)
-                    .padding(start = 16.dp, end = 16.dp, bottom = 0.dp, top = 4.dp)
+                    .padding(
+                        start = Sizes.Large,
+                        end = Sizes.Large,
+                        bottom = 0.dp,
+                        top = Sizes.Small
+                    )
             )
         }
     )

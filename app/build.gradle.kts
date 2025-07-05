@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /*
  *     freeDictionaryApp/freeDictionaryApp.app
  *     build.gradle.kts Copyrighted by Yamin Siahmargooei at 2024/5/9
@@ -71,8 +73,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+        }
     }
 
     buildFeatures {

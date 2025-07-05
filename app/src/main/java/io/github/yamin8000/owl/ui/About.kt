@@ -40,11 +40,11 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
 import io.github.yamin8000.owl.BuildConfig
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
 import io.github.yamin8000.owl.R as RApp
 
@@ -60,7 +60,7 @@ internal fun AboutContent(
         content = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
                 content = {
                     val uriHandler = LocalUriHandler.current
                     val sourceUri = stringResource(R.string.github_source)
@@ -79,12 +79,12 @@ internal fun AboutContent(
                             )
                         }
                     )
-                    PersianText(
+                    AppText(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         text = stringResource(R.string.version_name, BuildConfig.VERSION_NAME)
                     )
-                    Spacer(modifier = Modifier.padding(bottom = 16.dp))
-                    PersianText(
+                    Spacer(modifier = Modifier.padding(bottom = Sizes.Large))
+                    AppText(
                         text = stringResource(id = R.string.license_header),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -97,7 +97,7 @@ internal fun AboutContent(
                             )
                         }
                     )
-                    PersianText(
+                    AppText(
                         text = stringResource(id = R.string.about_app),
                         modifier = Modifier.fillMaxWidth()
                     )

@@ -24,7 +24,7 @@ package io.github.yamin8000.owl.feature_settings.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.yamin8000.owl.common.ui.util.TTS
+import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

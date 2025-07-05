@@ -33,7 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
@@ -82,7 +82,7 @@ internal fun ThemeSetting(
                         imageVector = Icons.TwoTone.DisplaySettings,
                         contentDescription = stringResource(R.string.theme)
                     )
-                    PersianText(text = theme.toStringResource(context))
+                    AppText(text = theme.toStringResource(context))
                 }
             )
             if (theme == ThemeType.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

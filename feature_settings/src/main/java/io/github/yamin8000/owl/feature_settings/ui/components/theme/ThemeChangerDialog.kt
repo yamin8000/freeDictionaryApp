@@ -40,7 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
@@ -72,7 +72,7 @@ internal fun ThemeChangerDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
         confirmButton = {},
-        title = { PersianText(stringResource(R.string.theme)) },
+        title = { AppText(stringResource(R.string.theme)) },
         icon = { Icon(imageVector = Icons.TwoTone.DisplaySettings, contentDescription = null) },
         text = {
             Column(
@@ -110,7 +110,7 @@ internal fun ThemeChangerDialog(
                                     selected = theme == currentTheme,
                                     onClick = null
                                 )
-                                PersianText(
+                                AppText(
                                     modifier = Modifier.padding(vertical = Sizes.Large),
                                     text = theme.toStringResource(context)
                                 )

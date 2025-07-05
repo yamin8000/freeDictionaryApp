@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.common.ui.util
+package io.github.yamin8000.owl.common.util
 
 import android.content.Context
 import android.speech.tts.TextToSpeech

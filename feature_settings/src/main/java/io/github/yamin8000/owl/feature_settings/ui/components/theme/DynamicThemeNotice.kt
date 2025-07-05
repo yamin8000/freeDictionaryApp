@@ -25,14 +25,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.strings.R
 
 @Composable
 internal fun DynamicThemeNotice(
     modifier: Modifier = Modifier,
 ) {
-    PersianText(
+    AppText(
         modifier = modifier,
         text = stringResource(R.string.dynamic_theme_notice),
         textAlign = TextAlign.Justify

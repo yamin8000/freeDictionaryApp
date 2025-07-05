@@ -21,7 +21,7 @@
 
 package io.github.yamin8000.owl.search.domain.usecase
 
-import io.github.yamin8000.owl.common.ui.util.StringUtils.sanitizeWords
+import io.github.yamin8000.owl.common.util.StringUtils.sanitizeWords
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.domain.repository.local.TermRepository

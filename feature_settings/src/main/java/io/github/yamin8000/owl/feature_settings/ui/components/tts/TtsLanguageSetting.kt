@@ -31,7 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItem
@@ -71,7 +71,7 @@ internal fun TtsLanguageSetting(
                         imageVector = Icons.TwoTone.Language,
                         contentDescription = stringResource(R.string.tts_language)
                     )
-                    PersianText(
+                    AppText(
                         text = Locale.forLanguageTag(currentTtsTag).displayName
                     )
 

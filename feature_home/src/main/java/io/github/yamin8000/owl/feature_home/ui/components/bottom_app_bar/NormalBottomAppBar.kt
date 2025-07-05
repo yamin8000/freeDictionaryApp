@@ -40,7 +40,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import io.github.yamin8000.owl.common.ui.components.ClickableIcon
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
@@ -75,13 +75,13 @@ internal fun NormalBottomAppBar(
                     .fillMaxWidth()
                     .padding(horizontal = Sizes.Large),
                 label = {
-                    PersianText(
+                    AppText(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.search)
                     )
                 },
                 placeholder = {
-                    PersianText(
+                    AppText(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.search_hint),
                         style = MaterialTheme.typography.labelMedium

@@ -35,7 +35,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 
@@ -76,7 +76,7 @@ internal fun SwitchWithText(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 content = {
-                    PersianText(
+                    AppText(
                         text = caption,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

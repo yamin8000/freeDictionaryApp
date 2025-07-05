@@ -31,7 +31,7 @@ import androidx.compose.material3.SnackbarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 
 @Composable
 fun MySnackbar(
@@ -47,12 +47,12 @@ fun MySnackbar(
 ) {
     Snackbar(
         modifier = modifier
-            .padding(vertical = 16.dp, horizontal = 16.dp)
+            .padding(vertical = Sizes.Large, horizontal = Sizes.Large)
             .padding(WindowInsets.ime.asPaddingValues()),
         action = action,
         dismissAction = dismissAction,
         actionOnNewLine = actionOnNewLine,
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(Sizes.Medium),
         containerColor = containerColor,
         contentColor = contentColor,
         actionContentColor = actionContentColor,

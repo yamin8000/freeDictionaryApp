@@ -26,7 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
@@ -58,7 +58,7 @@ internal fun TtsLanguageItem(
         onClick = { onClick(localeTag) },
         enabled = !isSelected,
         content = {
-            PersianText(
+            AppText(
                 modifier = Modifier.padding(Sizes.Large),
                 text = Locale.forLanguageTag(localeTag).displayName
             )

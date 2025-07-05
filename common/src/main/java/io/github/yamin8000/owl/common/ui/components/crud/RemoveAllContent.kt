@@ -29,7 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import io.github.yamin8000.owl.common.ui.components.PersianText
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.strings.R
 
@@ -38,23 +38,22 @@ internal fun RemoveAllContent(
     onRemoveAllClick: () -> Unit
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
-    val hideDialog = remember { { isShowingDialog = false } }
 
     if (isShowingDialog) {
         AlertDialog(
-            onDismissRequest = hideDialog,
-            title = { PersianText(stringResource(R.string.clear_all)) },
-            text = { PersianText(stringResource(R.string.remove_all_prompt)) },
+            onDismissRequest = { isShowingDialog = false },
+            title = { AppText(stringResource(R.string.clear_all)) },
+            text = { AppText(stringResource(R.string.remove_all_prompt)) },
             confirmButton = {
                 Button(
                     onClick = onRemoveAllClick,
-                    content = { PersianText(stringResource(R.string.yes)) }
+                    content = { AppText(stringResource(R.string.yes)) }
                 )
             },
             dismissButton = {
                 Button(
-                    onClick = hideDialog,
-                    content = { PersianText(stringResource(R.string.no)) }
+                    onClick = { isShowingDialog = false },
+                    content = { AppText(stringResource(R.string.no)) }
                 )
             }
         )
@@ -62,6 +61,6 @@ internal fun RemoveAllContent(
     Button(
         onClick = { isShowingDialog = true },
         shape = DefaultCutShape,
-        content = { PersianText(text = stringResource(R.string.clear_all)) }
+        content = { AppText(text = stringResource(R.string.clear_all)) }
     )
 }

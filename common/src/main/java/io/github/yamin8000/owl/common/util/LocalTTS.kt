@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.common.main
- *     LocaleUtils.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     LocaleUtils.kt Last modified at 2024/8/18
+ *     LocalTTS.kt Copyrighted by Yamin Siahmargooei at 2024/8/25
+ *     LocalTTS.kt Last modified at 2024/8/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.common.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,20 +19,8 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.common.ui.util
+package io.github.yamin8000.owl.common.util
 
-import android.content.Context
-import android.os.Build
-import java.util.Locale
+import androidx.compose.runtime.compositionLocalOf
 
-object LocaleUtils {
-    /** Returns current [Locale] of the device */
-    @Suppress("DEPRECATION")
-    fun getCurrentLocale(
-        context: Context
-    ): Locale {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            context.resources.configuration.locales.get(0)
-        } else context.resources.configuration.locale
-    }
-}
+val LocalTTS = compositionLocalOf<TTS?> { null }
