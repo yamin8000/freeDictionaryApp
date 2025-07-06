@@ -1,7 +1,7 @@
 <div align="center">
 <img src="app/src/main/ic_launcher-playstore.png"
     alt="Get it on F-Droid"
-    height="100">
+    height="75">
 <h1>freeDictionary</h1>
 </div>
 
@@ -69,7 +69,7 @@ Just use the search input to search the word.
 - Material3/Material You
 - Clean Architecture
 - Dependency Injection with Hilt/Dagger
-- MVI
+- MVI / MVVM
 - Retrofit, Moshi with KSP, Coil
 - Datastore, Room with KSP
 
