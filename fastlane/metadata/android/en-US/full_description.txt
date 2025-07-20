@@ -1,3 +1,5 @@
+<i>freeDictionaryApp</i> is a simple android application for <a href='https://owlbot.info/'>OwlBot</a> dictionary. You can just use the search input to search the word.
+
 <b>Features</b>
 <ol>
     <li>English to English dictionary</li>
@@ -9,5 +11,4 @@
     <li>Search for a random word</li>
 </ol>
 
-<b>Dictionary Source</b>
-https://dictionaryapi.dev
+<b>Dictionary Source:</b> https://dictionaryapi.dev
