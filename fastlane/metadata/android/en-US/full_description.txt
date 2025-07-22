@@ -1,3 +1,5 @@
+<i>freeDictionaryApp</i> is a simple android application for <a href='https://dictionaryapi.dev/'>Free Dictionary API</a>. You can just use the search input to search the word.
+
 <b>Features</b>
 <ol>
     <li>English to English dictionary</li>
@@ -8,6 +10,3 @@
     <li>Save searched data for offline uses</li>
     <li>Search for a random word</li>
 </ol>
-
-<b>Dictionary Source</b>
-https://dictionaryapi.dev
