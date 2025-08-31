@@ -44,9 +44,21 @@ import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
+import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
 import io.github.yamin8000.owl.R as RApp
+
+@MyPreview
+@Composable
+private fun Preview() {
+    PreviewTheme {
+        AboutContent(
+            onBackClick = {}
+        )
+    }
+}
 
 @Composable
 internal fun AboutContent(
@@ -60,7 +72,10 @@ internal fun AboutContent(
         content = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
+                verticalArrangement = Arrangement.spacedBy(
+                    Sizes.Medium,
+                    Alignment.CenterVertically
+                ),
                 content = {
                     val uriHandler = LocalUriHandler.current
                     val sourceUri = stringResource(R.string.github_source)
@@ -75,7 +90,7 @@ internal fun AboutContent(
                                 contentDescription = stringResource(id = R.string.gplv3_image_description),
                                 modifier = Modifier.fillMaxWidth(),
                                 contentScale = ContentScale.FillWidth,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
                             )
                         }
                     )

@@ -27,6 +27,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -77,8 +78,15 @@ internal class MainActivity : BaseActivity() {
         NavHost(
             navController = navController,
             startDestination = start,
-            enterTransition = { fadeIn(animationSpec = tween(100)) },
-            exitTransition = { fadeOut(animationSpec = tween(100)) },
+            enterTransition = {
+                fadeIn(animationSpec = tween(250)) + scaleIn(
+                    animationSpec = tween(250),
+                    initialScale = .9f
+                )
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(250))
+            },
             builder = {
                 composable(start) {
                     val argSearch = it.arguments?.getString("Search")

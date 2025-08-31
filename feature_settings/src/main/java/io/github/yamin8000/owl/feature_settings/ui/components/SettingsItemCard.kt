@@ -62,7 +62,7 @@ internal fun SettingsItemCard(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Sizes.Small),
+        verticalArrangement = Arrangement.spacedBy(Sizes.Small, Alignment.CenterVertically),
         horizontalAlignment = Alignment.Start,
         content = {
             AppText(
@@ -76,8 +76,11 @@ internal fun SettingsItemCard(
                 content = {
                     Column(
                         modifier = Modifier.padding(Sizes.Large),
-                        verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
                         horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(
+                            Sizes.Medium,
+                            Alignment.CenterVertically
+                        ),
                         content = content
                     )
                 }

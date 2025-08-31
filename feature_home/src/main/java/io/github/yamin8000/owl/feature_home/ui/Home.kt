@@ -174,8 +174,11 @@ fun HomeScreen(
                         } else {
                             Column(
                                 modifier = modifier.padding(Sizes.Large),
-                                verticalArrangement = Arrangement.spacedBy(Sizes.Large),
                                 horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(
+                                    Sizes.Large,
+                                    Alignment.CenterVertically
+                                ),
                                 content = {
                                     AppText(stringResource(R.string.search_hint))
                                     EmptyList()

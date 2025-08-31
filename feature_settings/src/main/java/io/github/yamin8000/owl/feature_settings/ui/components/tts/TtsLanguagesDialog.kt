@@ -60,13 +60,15 @@ internal fun TtsLanguagesDialog(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
-        //title = { PersianText(stringResource(R.string.tts_language)) },
         icon = { Icon(imageVector = Icons.TwoTone.Language, contentDescription = null) },
         confirmButton = {/*ignored*/ },
         text = {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
+                verticalArrangement = Arrangement.spacedBy(
+                    Sizes.Medium,
+                    Alignment.CenterVertically
+                ),
                 content = {
                     items(languages) {
                         TtsLanguageItem(

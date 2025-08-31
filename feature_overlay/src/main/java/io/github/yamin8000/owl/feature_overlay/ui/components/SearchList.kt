@@ -61,7 +61,7 @@ internal fun SearchList(
 ) {
     LazyColumn(
         modifier = modifier.padding(Sizes.Large),
-        verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
+        verticalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
             if (isSearching) {

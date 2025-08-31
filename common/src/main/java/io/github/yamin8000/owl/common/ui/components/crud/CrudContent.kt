@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
@@ -56,8 +57,11 @@ fun <T> CrudContent(
             if (isNotEmpty) {
                 LazyVerticalStaggeredGrid(
                     modifier = Modifier.padding(bottom = Sizes.Large),
-                    horizontalArrangement = Arrangement.spacedBy(Sizes.Medium),
                     verticalItemSpacing = Sizes.Medium,
+                    horizontalArrangement = Arrangement.spacedBy(
+                        Sizes.Medium,
+                        Alignment.CenterHorizontally
+                    ),
                     columns = StaggeredGridCells.Fixed(2),
                     content = {
                         item(

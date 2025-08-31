@@ -135,8 +135,14 @@ fun CopyAbleRippleText(
                         }
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(2),
-                            verticalArrangement = Arrangement.spacedBy(Sizes.Small),
-                            horizontalArrangement = Arrangement.spacedBy(Sizes.Small),
+                            verticalArrangement = Arrangement.spacedBy(
+                                Sizes.Small,
+                                Alignment.CenterVertically
+                            ),
+                            horizontalArrangement = Arrangement.spacedBy(
+                                Sizes.Small,
+                                Alignment.CenterHorizontally
+                            ),
                             modifier = Modifier.padding(Sizes.Medium),
                             content = {
                                 items(words) { item ->
@@ -178,12 +184,15 @@ fun CopyAbleRippleTextWithIcon(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(Sizes.Medium),
+        horizontalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
         content = {
             if (title != null) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(Sizes.Medium),
+                    verticalArrangement = Arrangement.spacedBy(
+                        Sizes.Medium,
+                        Alignment.CenterVertically
+                    ),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth(0.25f),
                     content = {
