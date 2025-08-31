@@ -151,7 +151,7 @@ fun AppTheme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     isOledTheme: Boolean = false,
     isPreviewing: Boolean = false,
-    isDynamicColor: Boolean,
+    isDynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val isDynamicColorReadyDevice = isDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S

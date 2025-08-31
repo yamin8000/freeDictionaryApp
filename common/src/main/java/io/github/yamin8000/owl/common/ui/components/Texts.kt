@@ -75,6 +75,7 @@ import io.github.yamin8000.owl.strings.R
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CopyAbleRippleText(
+    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
     content: @Composable (() -> Unit)? = null,
@@ -105,7 +106,7 @@ fun CopyAbleRippleText(
                 }
             )
         },
-        modifier = Modifier
+        modifier = modifier
             .clip(DefaultCutShape)
             .combinedClickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -167,6 +168,7 @@ fun CopyAbleRippleText(
 
 @Composable
 fun CopyAbleRippleTextWithIcon(
+    modifier: Modifier = Modifier,
     title: String? = null,
     text: String,
     imageVector: ImageVector,
@@ -175,6 +177,7 @@ fun CopyAbleRippleTextWithIcon(
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     Row(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(Sizes.Medium),
         verticalAlignment = Alignment.CenterVertically,
         content = {
@@ -214,6 +217,7 @@ fun CopyAbleRippleTextWithIcon(
 
 @Composable
 fun SpeakableRippleTextWithIcon(
+    modifier: Modifier = Modifier,
     text: String,
     ttsText: String = text,
     imageVector: ImageVector,
@@ -224,18 +228,19 @@ fun SpeakableRippleTextWithIcon(
     val context = LocalContext.current
     val increaseVolumeText = context.getString(R.string.increase_volume_notice)
     val audio = remember {
-        context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
     }
 
     val tts = LocalTTS.current
     CopyAbleRippleTextWithIcon(
+        modifier = modifier,
         text = text,
         content = content,
         title = title,
         imageVector = imageVector,
         onDoubleClick = onDoubleClick,
         onClick = {
-            if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
+            if (audio?.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
                 Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
             }
             tts?.speak(ttsText)

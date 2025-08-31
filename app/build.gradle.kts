@@ -34,7 +34,7 @@ private val appId = "io.github.yamin8000.owl"
 
 android {
     namespace = appId
-    compileSdk = 35
+    compileSdk = 36
 
     dependenciesInfo {
         includeInApk = false
@@ -44,7 +44,7 @@ android {
     defaultConfig {
         applicationId = appId
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 46
         versionName = "1.7.3"
         vectorDrawables.useSupportLibrary = true

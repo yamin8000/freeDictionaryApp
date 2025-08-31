@@ -37,12 +37,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import io.github.yamin8000.owl.common.ui.components.AppText
+import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
+import kotlin.random.Random
+
+@MyPreview
+@Composable
+private fun Preview() {
+    PreviewTheme {
+        SearchList(
+            isOnline = Random.nextBoolean(),
+            word = LoremIpsum(1).values.first(),
+            phonetic = LoremIpsum(1).values.first(),
+            onAddToFavourite = {},
+            onShareWord = {},
+            onWordChipClick = {},
+            meanings = Meaning.mockList(),
+        )
+    }
+}
 
 @Composable
 internal fun SearchList(
@@ -58,9 +78,9 @@ internal fun SearchList(
     val context = LocalContext.current
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Sizes.Large),
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(Sizes.Large),
+        verticalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.CenterVertically),
+        contentPadding = PaddingValues(Sizes.Medium),
         content = {
             item(key = isOnline) {
                 AnimatedVisibility(
@@ -68,7 +88,8 @@ internal fun SearchList(
                     enter = slideInVertically() + fadeIn(),
                     exit = slideOutVertically() + fadeOut(),
                     content = {
-                        val internetError = remember { context.getString(R.string.general_net_error) }
+                        val internetError =
+                            remember { context.getString(R.string.general_net_error) }
                         AppText(
                             modifier = Modifier.padding(Sizes.Medium),
                             color = MaterialTheme.colorScheme.error,
@@ -77,13 +98,16 @@ internal fun SearchList(
                     }
                 )
             }
-            item(key = word + phonetic) {
-                WordCard(
-                    word = word,
-                    pronunciation = phonetic,
-                    onShareWord = onShareWord,
-                    onAddToFavourite = onAddToFavourite
-                )
+
+            if (word.isNotBlank()) {
+                item(key = word + phonetic) {
+                    WordCard(
+                        word = word,
+                        pronunciation = phonetic,
+                        onShareWord = onShareWord,
+                        onAddToFavourite = onAddToFavourite
+                    )
+                }
             }
 
             itemsIndexed(

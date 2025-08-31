@@ -30,7 +30,9 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
@@ -39,12 +41,14 @@ import io.github.yamin8000.owl.search.ui.components.WordCard
 @MyPreview
 @Composable
 private fun Preview() {
-    SearchList(
-        isSearching = true,
-        word = "duh",
-        phonetic = "duh",
-        meanings = emptyList()
-    )
+    PreviewTheme {
+        SearchList(
+            isSearching = true,
+            word = LoremIpsum(1).values.first(),
+            phonetic = LoremIpsum(1).values.first(),
+            meanings = emptyList()
+        )
+    }
 }
 
 @Composable
@@ -79,12 +83,6 @@ internal fun SearchList(
                     meaning = meaning
                 )
             }
-            /*item {
-                ButtonsRow(
-                    onDismissRequest = onDismissRequest,
-                    navigateToApp = navigateToApp
-                )
-            }*/
         }
     )
 }

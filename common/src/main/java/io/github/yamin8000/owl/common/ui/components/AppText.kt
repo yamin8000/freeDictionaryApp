@@ -21,17 +21,17 @@ import io.github.yamin8000.owl.common.util.LocaleUtils
 @Composable
 fun AppText(
     text: String,
-    modifier: Modifier = Modifier.Companion,
-    color: Color = Color.Companion.Unspecified,
-    fontSize: TextUnit = TextUnit.Companion.Unspecified,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
     fontWeight: FontWeight? = null,
     fontFamily: FontFamily? = null,
-    letterSpacing: TextUnit = TextUnit.Companion.Unspecified,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
-    lineHeight: TextUnit = TextUnit.Companion.Unspecified,
-    overflow: TextOverflow = TextOverflow.Companion.Clip,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
     softWrap: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     minLines: Int = 1,
@@ -57,6 +57,6 @@ fun AppText(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = style.copy(textDirection = if (hasAnyRtlCharacter) TextDirection.Companion.Rtl else TextDirection.Companion.Ltr)
+        style = style.copy(textDirection = if (hasAnyRtlCharacter) TextDirection.Rtl else TextDirection.Companion.Ltr)
     )
 }

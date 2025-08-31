@@ -21,7 +21,10 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.squareup.moshi.JsonClass
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @JsonClass(generateAdapter = true)
 data class Meaning(
@@ -31,4 +34,25 @@ data class Meaning(
     val antonyms: List<String>,
     val entryId: Long? = null,
     val id: Long? = null
-)
+) {
+    companion object {
+        fun mock() = Meaning(
+            partOfSpeech = LoremIpsum(1).values.joinToString(" "),
+            definitions = Definition.mockList(),
+            synonyms = buildList {
+                repeat(Random.nextInt(0..3)) {
+                    add(LoremIpsum(Random.nextInt(0..3)).values.joinToString(" "))
+                }
+            },
+            antonyms = buildList {
+                repeat(Random.nextInt(0..3)) {
+                    add(LoremIpsum(Random.nextInt(0..3)).values.joinToString(" "))
+                }
+            }
+        )
+
+        fun mockList(n: Int = Random.nextInt(0..3)) = buildList {
+            repeat(n) { add(mock()) }
+        }
+    }
+}
