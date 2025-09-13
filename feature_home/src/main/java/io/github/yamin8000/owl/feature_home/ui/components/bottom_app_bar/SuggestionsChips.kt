@@ -50,10 +50,10 @@ private fun Preview() {
 
 @Composable
 internal fun SuggestionsChips(
-    modifier: Modifier = Modifier,
     searchTerm: String,
     suggestions: List<String>,
     onSuggestionClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (suggestions.isNotEmpty()) {
         LazyRow(

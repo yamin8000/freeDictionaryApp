@@ -43,10 +43,10 @@ import io.github.yamin8000.owl.common.ui.theme.Sizes
 
 @Composable
 fun RemovableCard(
-    modifier: Modifier = Modifier,
     item: String,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     OutlinedCard(
         modifier = modifier,

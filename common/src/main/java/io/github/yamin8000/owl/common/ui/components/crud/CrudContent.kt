@@ -45,8 +45,8 @@ fun <T> CrudContent(
     onRemoveSingle: (T) -> Unit,
     onItemClick: (T) -> Unit,
     modifier: Modifier = Modifier,
-    emptyContent: (@Composable () -> Unit) = { EmptyList() },
-    itemDisplayProvider: (T) -> String = { it.toString() }
+    itemDisplayProvider: (T) -> String = { it.toString() },
+    emptyContent: (@Composable () -> Unit) = { EmptyList() }
 ) {
     ScaffoldWithTitle(
         modifier = modifier,
@@ -76,12 +76,10 @@ fun <T> CrudContent(
                                 val item by remember(items, index) {
                                     mutableStateOf(items[index])
                                 }
-                                val onClick = remember { { onItemClick(item) } }
-                                val onLongClick = remember { { onRemoveSingle(item) } }
                                 CrudItem(
                                     item = itemDisplayProvider(item),
-                                    onClick = onClick,
-                                    onLongClick = onLongClick
+                                    onClick = { onItemClick(item) },
+                                    onLongClick = { onRemoveSingle(item) }
                                 )
                             }
                         )

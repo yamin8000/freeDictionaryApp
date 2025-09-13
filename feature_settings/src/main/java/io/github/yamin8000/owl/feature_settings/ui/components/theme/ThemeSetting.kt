@@ -55,13 +55,11 @@ private fun Preview() {
 
 @Composable
 internal fun ThemeSetting(
-    modifier: Modifier = Modifier,
     theme: ThemeType,
-    onThemeChanged: (ThemeType) -> Unit
+    onThemeChanged: (ThemeType) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
-    val onDismissDialog = remember { { isShowingDialog = false } }
-    val onShowDialog = remember { { isShowingDialog = true } }
 
     SettingsItemCard(
         modifier = modifier,
@@ -71,11 +69,11 @@ internal fun ThemeSetting(
                 ThemeChangerDialog(
                     currentTheme = theme,
                     onCurrentThemeChange = onThemeChanged,
-                    onDismiss = onDismissDialog
+                    onDismiss = { isShowingDialog = false }
                 )
             }
             SettingsItem(
-                onClick = onShowDialog,
+                onClick = { isShowingDialog = true },
                 content = {
                     val context = LocalContext.current
                     Icon(

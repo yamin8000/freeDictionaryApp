@@ -47,11 +47,11 @@ private fun Preview() {
 
 @Composable
 internal fun GeneralSettings(
-    modifier: Modifier = Modifier,
     isVibrating: Boolean,
     onVibratingChange: (Boolean) -> Unit,
     isStartingBlank: Boolean,
-    onStartingBlankChange: (Boolean) -> Unit
+    onStartingBlankChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     SettingsItemCard(
         modifier = modifier.fillMaxWidth(),

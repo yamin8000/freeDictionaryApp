@@ -32,9 +32,9 @@ import io.github.yamin8000.owl.strings.R
 
 @Composable
 internal fun WordExampleText(
-    modifier: Modifier = Modifier,
     word: String,
     example: String,
+    modifier: Modifier = Modifier,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(

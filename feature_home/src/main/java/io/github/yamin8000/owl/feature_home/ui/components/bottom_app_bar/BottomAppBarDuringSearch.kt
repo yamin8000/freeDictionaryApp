@@ -37,14 +37,16 @@ import io.github.yamin8000.owl.strings.R
 @Composable
 private fun Preview() {
     PreviewTheme {
-        BottomAppBarDuringSearch {}
+        BottomAppBarDuringSearch(
+            onCancel = {}
+        )
     }
 }
 
 @Composable
 internal fun BottomAppBarDuringSearch(
-    modifier: Modifier = Modifier,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     BottomAppBar(
         modifier = modifier,

@@ -53,19 +53,18 @@ private fun Preview() {
 
 @Composable
 internal fun TtsLanguageSetting(
-    modifier: Modifier = Modifier,
     currentTtsTag: String,
     languages: List<Locale>,
-    onTtsTagChange: (String) -> Unit
+    onTtsTagChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     SettingsItemCard(
         modifier = modifier,
         title = stringResource(R.string.tts_language),
         content = {
             var isDialogShown by remember { mutableStateOf(false) }
-            val showDialog = remember { { isDialogShown = true } }
             SettingsItem(
-                onClick = showDialog,
+                onClick = { isDialogShown = true },
                 content = {
                     Icon(
                         imageVector = Icons.TwoTone.Language,

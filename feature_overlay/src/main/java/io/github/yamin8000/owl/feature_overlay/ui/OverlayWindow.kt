@@ -46,10 +46,10 @@ import io.github.yamin8000.owl.feature_overlay.ui.components.SearchList
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverlayScreen(
-    modifier: Modifier = Modifier,
-    vm: OverlayWindowViewModel = hiltViewModel(),
     onDismissRequest: () -> Unit,
-    navigateToApp: (String) -> Unit
+    navigateToApp: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    vm: OverlayWindowViewModel = hiltViewModel()
 ) {
     val state = vm.state.collectAsStateWithLifecycle().value
 

@@ -75,11 +75,11 @@ import io.github.yamin8000.owl.strings.R
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CopyAbleRippleText(
-    modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
-    content: @Composable (() -> Unit)? = null,
-    onDoubleClick: ((String) -> Unit)? = null
+    modifier: Modifier = Modifier,
+    onDoubleClick: ((String) -> Unit)? = null,
+    content: @Composable (() -> Unit)? = null
 ) {
     val textCopied = stringResource(R.string.text_copied)
     val context = LocalContext.current
@@ -174,13 +174,13 @@ fun CopyAbleRippleText(
 
 @Composable
 fun CopyAbleRippleTextWithIcon(
-    modifier: Modifier = Modifier,
-    title: String? = null,
     text: String,
     imageVector: ImageVector,
     onClick: () -> Unit,
-    content: @Composable (() -> Unit)? = null,
-    onDoubleClick: ((String) -> Unit)? = null
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    onDoubleClick: ((String) -> Unit)? = null,
+    content: @Composable (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier,
@@ -226,13 +226,13 @@ fun CopyAbleRippleTextWithIcon(
 
 @Composable
 fun SpeakableRippleTextWithIcon(
-    modifier: Modifier = Modifier,
     text: String,
-    ttsText: String = text,
     imageVector: ImageVector,
+    modifier: Modifier = Modifier,
+    ttsText: String = text,
     title: String? = null,
-    content: @Composable (() -> Unit)? = null,
-    onDoubleClick: ((String) -> Unit)? = null
+    onDoubleClick: ((String) -> Unit)? = null,
+    content: @Composable (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val increaseVolumeText = context.getString(R.string.increase_volume_notice)

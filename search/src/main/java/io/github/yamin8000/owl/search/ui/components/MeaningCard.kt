@@ -43,9 +43,9 @@ private fun Preview() {
 
 @Composable
 fun MeaningCard(
-    modifier: Modifier = Modifier,
     word: String,
     meaning: Meaning,
+    modifier: Modifier = Modifier,
     onWordChipClick: ((String) -> Unit)? = null
 ) {
     OutlinedCard(

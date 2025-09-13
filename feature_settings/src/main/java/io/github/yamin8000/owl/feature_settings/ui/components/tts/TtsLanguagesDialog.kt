@@ -51,11 +51,11 @@ private fun Preview() {
 
 @Composable
 internal fun TtsLanguagesDialog(
-    modifier: Modifier = Modifier,
     currentTtsTag: String,
     languages: List<Locale>,
     onLanguageSelect: (String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     AlertDialog(
         modifier = modifier,

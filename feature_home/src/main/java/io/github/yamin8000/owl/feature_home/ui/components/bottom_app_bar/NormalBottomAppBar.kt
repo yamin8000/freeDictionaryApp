@@ -60,10 +60,10 @@ private fun Preview() {
 
 @Composable
 internal fun NormalBottomAppBar(
-    modifier: Modifier = Modifier,
-    onSearch: () -> Unit,
+    searchTerm: String,
     onSearchTermChange: (String) -> Unit,
-    searchTerm: String
+    onSearch: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     BottomAppBar(
         modifier = modifier,
@@ -88,12 +88,11 @@ internal fun NormalBottomAppBar(
                     )
                 },
                 leadingIcon = {
-                    val onClearClick = remember { { onSearchTermChange("") } }
                     ClickableIcon(
                         enabled = searchTerm.isNotBlank(),
                         imageVector = Icons.TwoTone.Clear,
                         contentDescription = stringResource(R.string.clear),
-                        onClick = onClearClick
+                        onClick = { onSearchTermChange("") }
                     )
                 },
                 trailingIcon = {

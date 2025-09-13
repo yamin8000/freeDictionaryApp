@@ -31,8 +31,8 @@ import io.github.yamin8000.owl.strings.R
 
 @Composable
 internal fun WordTypeText(
-    modifier: Modifier = Modifier,
     type: String,
+    modifier: Modifier = Modifier,
     onDoubleClick: ((String) -> Unit)? = null
 ) {
     SpeakableRippleTextWithIcon(

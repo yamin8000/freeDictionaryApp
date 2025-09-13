@@ -52,13 +52,13 @@ private fun Preview() {
 
 @Composable
 internal fun MainBottomBar(
-    modifier: Modifier = Modifier,
     searchTerm: String,
-    suggestionsChips: @Composable ColumnScope.() -> Unit,
     isSearching: Boolean,
     onSearchTermChange: (String) -> Unit,
     onSearch: () -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier,
+    suggestionsChips: @Composable ColumnScope.() -> Unit
 ) {
     Column(
         modifier = modifier,

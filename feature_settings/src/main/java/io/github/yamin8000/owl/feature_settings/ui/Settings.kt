@@ -43,6 +43,7 @@ import io.github.yamin8000.owl.feature_settings.ui.components.theme.ThemeSetting
 import io.github.yamin8000.owl.feature_settings.ui.components.tts.TtsLanguageSetting
 import io.github.yamin8000.owl.strings.R
 import java.util.Locale
+import kotlin.random.Random
 
 @PreviewScreenSizes
 @MyPreview
@@ -50,11 +51,11 @@ import java.util.Locale
 private fun Preview() {
     PreviewTheme {
         SettingsContent(
-            isVibrating = false,
+            isVibrating = Random.nextBoolean(),
             onVibrationChange = {},
-            isStartingBlank = false,
+            isStartingBlank = Random.nextBoolean(),
             onStartingBlankChange = {},
-            theme = ThemeType.System,
+            theme = ThemeType.entries().random(),
             onUpdateTheme = {},
             ttsLang = "en-us",
             onTtsLangChange = {},
@@ -92,7 +93,6 @@ fun SettingsScreen(
 
 @Composable
 internal fun SettingsContent(
-    modifier: Modifier = Modifier,
     isVibrating: Boolean,
     onVibrationChange: (Boolean) -> Unit,
     isStartingBlank: Boolean,
@@ -103,7 +103,8 @@ internal fun SettingsContent(
     onTtsLangChange: (String) -> Unit,
     englishLanguages: List<Locale>,
     onThemeChanged: (ThemeType) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     ScaffoldWithTitle(
         modifier = modifier,

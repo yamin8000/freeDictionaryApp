@@ -54,8 +54,8 @@ private fun Preview() {
 
 @Composable
 internal fun SettingsItem(
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }

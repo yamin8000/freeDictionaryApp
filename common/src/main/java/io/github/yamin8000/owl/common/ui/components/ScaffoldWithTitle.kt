@@ -49,9 +49,9 @@ import io.github.yamin8000.owl.strings.R
 @Composable
 fun ScaffoldWithTitle(
     title: String,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     snackbarHost: @Composable () -> Unit = {},
-    onBackClick: () -> Unit,
     content: @Composable BoxScope.() -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()

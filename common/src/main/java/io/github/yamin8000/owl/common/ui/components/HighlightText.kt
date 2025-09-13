@@ -45,9 +45,9 @@ private fun Preview() {
 
 @Composable
 fun HighlightText(
-    modifier: Modifier = Modifier,
     fullText: String,
     highlightedText: String,
+    modifier: Modifier = Modifier,
     highlightedTextStyle: SpanStyle = SpanStyle(
         fontWeight = FontWeight.ExtraBold,
         textDecoration = TextDecoration.Underline

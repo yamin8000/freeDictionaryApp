@@ -47,10 +47,10 @@ private fun Preview() {
 
 @Composable
 internal fun TtsLanguageItem(
-    modifier: Modifier = Modifier,
     localeTag: String,
     isSelected: Boolean,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     OutlinedCard(
         modifier = modifier.fillMaxWidth(),

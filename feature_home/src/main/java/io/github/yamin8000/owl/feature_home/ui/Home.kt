@@ -66,12 +66,12 @@ import io.github.yamin8000.owl.strings.R
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
-    vm: HomeViewModel = hiltViewModel(),
     onNavigateToAbout: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToFavourites: () -> Unit,
     onNavigateToHistory: () -> Unit,
+    modifier: Modifier = Modifier,
+    vm: HomeViewModel = hiltViewModel()
 ) {
     val state = vm.state.collectAsStateWithLifecycle().value
 

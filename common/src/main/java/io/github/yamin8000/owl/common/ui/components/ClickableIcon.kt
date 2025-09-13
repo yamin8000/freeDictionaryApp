@@ -31,11 +31,11 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 
 @Composable
 fun ClickableIcon(
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
     imageVector: ImageVector,
     contentDescription: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     val haptic = LocalHapticFeedback.current
     IconButton(

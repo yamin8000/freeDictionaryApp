@@ -53,10 +53,10 @@ private fun Preview() {
 
 @Composable
 internal fun SwitchWithText(
-    modifier: Modifier = Modifier,
     caption: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val hapticFeedback = LocalHapticFeedback.current
     val onClick = remember(checked, onCheckedChange) {

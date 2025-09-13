@@ -22,6 +22,7 @@
 package io.github.yamin8000.karlancer.feature_history.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,13 +31,15 @@ import io.github.yamin8000.owl.strings.R
 
 @Composable
 fun HistoryScreen(
-    vm: HistoryViewModel = hiltViewModel(),
     onHistoryItemClick: (String) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    vm: HistoryViewModel = hiltViewModel(),
 ) {
     val state = vm.state.collectAsStateWithLifecycle().value
 
     CrudContent(
+        modifier = modifier,
         title = stringResource(R.string.search_history),
         items = state.history,
         onBackClick = onBackClick,

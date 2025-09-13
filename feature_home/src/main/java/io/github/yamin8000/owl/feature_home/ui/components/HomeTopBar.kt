@@ -42,12 +42,12 @@ import io.github.yamin8000.owl.strings.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainTopBar(
-    modifier: Modifier = Modifier,
     onNavigateToAbout: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToFavourites: () -> Unit,
     onNavigateToHistory: () -> Unit,
-    onRandomClick: () -> Unit
+    onRandomClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier,

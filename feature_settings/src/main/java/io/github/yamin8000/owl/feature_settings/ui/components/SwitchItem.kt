@@ -50,11 +50,11 @@ private fun Preview() {
 
 @Composable
 internal fun SwitchItem(
-    modifier: Modifier = Modifier,
     imageVector: ImageVector,
     caption: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,

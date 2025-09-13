@@ -66,9 +66,9 @@ private fun Preview() {
 
 @Composable
 fun WordCard(
-    modifier: Modifier = Modifier,
     word: String,
     pronunciation: String?,
+    modifier: Modifier = Modifier,
     onAddToFavourite: (() -> Unit)? = null,
     onShareWord: (() -> Unit)? = null
 ) {

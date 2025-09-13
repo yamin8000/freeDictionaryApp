@@ -29,8 +29,8 @@ import io.github.yamin8000.owl.common.ui.components.SpeakableRippleTextWithIcon
 
 @Composable
 internal fun WordText(
-    modifier: Modifier = Modifier,
-    word: String
+    word: String,
+    modifier: Modifier = Modifier
 ) {
     SpeakableRippleTextWithIcon(
         modifier = modifier,

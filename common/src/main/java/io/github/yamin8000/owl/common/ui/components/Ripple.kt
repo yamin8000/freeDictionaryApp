@@ -34,10 +34,10 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Ripple(
-    modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit,
     onClick: () -> Unit,
-    onLongClick: () -> Unit = {}
+    modifier: Modifier = Modifier,
+    onLongClick: () -> Unit = {},
+    content: @Composable BoxScope.() -> Unit
 ) {
     Box(
         content = content,

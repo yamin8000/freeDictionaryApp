@@ -26,10 +26,10 @@ import androidx.compose.ui.Modifier
 
 @Composable
 internal fun CrudItem(
-    modifier: Modifier = Modifier,
     item: String,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     RemovableCard(
         modifier = modifier,

@@ -34,9 +34,9 @@ import io.github.yamin8000.owl.strings.R
 
 @Composable
 internal fun ButtonsRow(
-    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    navigateToApp: () -> Unit
+    navigateToApp: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,

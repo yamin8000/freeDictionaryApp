@@ -55,10 +55,10 @@ private fun Preview() {
 
 @Composable
 internal fun DeleteMenu(
-    modifier: Modifier = Modifier,
     expanded: Boolean,
     onDismiss: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val delete = stringResource(R.string.delete)
     DropdownMenu(

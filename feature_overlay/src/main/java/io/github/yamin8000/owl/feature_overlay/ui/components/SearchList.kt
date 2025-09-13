@@ -37,13 +37,14 @@ import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
+import kotlin.random.Random
 
 @MyPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
         SearchList(
-            isSearching = true,
+            isSearching = Random.nextBoolean(),
             word = LoremIpsum(1).values.first(),
             phonetic = LoremIpsum(1).values.first(),
             meanings = emptyList()
@@ -53,11 +54,11 @@ private fun Preview() {
 
 @Composable
 internal fun SearchList(
-    modifier: Modifier = Modifier,
     isSearching: Boolean,
     word: String,
     phonetic: String,
-    meanings: List<Meaning>
+    meanings: List<Meaning>,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier.padding(Sizes.Large),
@@ -77,12 +78,16 @@ internal fun SearchList(
                     pronunciation = phonetic
                 )
             }
-            items(meanings) { meaning ->
-                MeaningCard(
-                    word = word,
-                    meaning = meaning
-                )
-            }
+            items(
+                items = meanings,
+                key = { "meaning-${it.id}" },
+                itemContent = { meaning ->
+                    MeaningCard(
+                        word = word,
+                        meaning = meaning
+                    )
+                }
+            )
         }
     )
 }

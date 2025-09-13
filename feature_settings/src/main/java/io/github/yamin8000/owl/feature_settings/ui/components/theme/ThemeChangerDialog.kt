@@ -53,7 +53,7 @@ import io.github.yamin8000.owl.strings.R
 private fun Preview() {
     PreviewTheme {
         ThemeChangerDialog(
-            currentTheme = ThemeType.System,
+            currentTheme = ThemeType.entries().random(),
             onCurrentThemeChange = {},
             onDismiss = {}
         )
@@ -62,10 +62,10 @@ private fun Preview() {
 
 @Composable
 internal fun ThemeChangerDialog(
-    modifier: Modifier = Modifier,
     currentTheme: ThemeType,
     onCurrentThemeChange: (ThemeType) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val themes = remember { ThemeType.entries() }
     AlertDialog(

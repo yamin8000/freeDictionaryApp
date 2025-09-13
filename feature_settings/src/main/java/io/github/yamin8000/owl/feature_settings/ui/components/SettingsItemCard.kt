@@ -56,8 +56,8 @@ private fun Preview() {
 
 @Composable
 internal fun SettingsItemCard(
-    modifier: Modifier = Modifier,
     title: String,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(

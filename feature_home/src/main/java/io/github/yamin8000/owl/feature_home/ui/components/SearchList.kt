@@ -66,14 +66,14 @@ private fun Preview() {
 
 @Composable
 internal fun SearchList(
-    modifier: Modifier = Modifier,
     isOnline: Boolean,
     word: String,
     phonetic: String,
     onAddToFavourite: () -> Unit,
     onShareWord: () -> Unit,
     onWordChipClick: (String) -> Unit,
-    meanings: List<Meaning>
+    meanings: List<Meaning>,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     LazyColumn(
