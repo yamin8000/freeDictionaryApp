@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         applicationId = appId
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 46
         versionName = "1.7.3"
