@@ -64,7 +64,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.TRANSLATE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.DEFINE" />
@@ -72,9 +71,7 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
 
-            <intent-filter
-                android:autoVerify="true"
-                tools:targetApi="23">
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
