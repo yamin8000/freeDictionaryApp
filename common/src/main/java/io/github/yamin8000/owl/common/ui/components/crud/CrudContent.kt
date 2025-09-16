@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 import io.github.yamin8000.owl.common.ui.theme.Sizes
+import java.util.UUID
 
 @Composable
 fun <T> CrudContent(
@@ -71,7 +72,7 @@ fun <T> CrudContent(
                         items(
                             span = { StaggeredGridItemSpan.SingleLane },
                             count = items.size,
-                            key = { index -> items[index].hashCode() },
+                            key = { UUID.randomUUID() },
                             itemContent = { index ->
                                 val item by remember(items, index) {
                                     mutableStateOf(items[index])

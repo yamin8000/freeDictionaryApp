@@ -23,7 +23,6 @@ package io.github.yamin8000.owl.feature_overlay.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.LinearProgressIndicator
@@ -37,6 +36,7 @@ import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
+import java.util.UUID
 import kotlin.random.Random
 
 @MyPreview
@@ -47,7 +47,7 @@ private fun Preview() {
             isSearching = Random.nextBoolean(),
             word = LoremIpsum(1).values.first(),
             phonetic = LoremIpsum(1).values.first(),
-            meanings = emptyList()
+            meanings = Meaning.mockList()
         )
     }
 }
@@ -61,7 +61,7 @@ internal fun SearchList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.padding(Sizes.Large),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
         content = {
@@ -71,23 +71,24 @@ internal fun SearchList(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-            }
-            item {
-                WordCard(
-                    word = word,
-                    pronunciation = phonetic
-                )
-            }
-            items(
-                items = meanings,
-                key = { "meaning-${it.id}" },
-                itemContent = { meaning ->
-                    MeaningCard(
+            } else {
+                item {
+                    WordCard(
                         word = word,
-                        meaning = meaning
+                        pronunciation = phonetic
                     )
                 }
-            )
+                items(
+                    items = meanings,
+                    key = { item -> "meaning-${item.id ?: UUID.randomUUID()}" },
+                    itemContent = { meaning ->
+                        MeaningCard(
+                            word = word,
+                            meaning = meaning
+                        )
+                    }
+                )
+            }
         }
     )
 }

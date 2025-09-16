@@ -30,7 +30,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -46,7 +46,9 @@ import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
+import java.util.UUID
 import kotlin.random.Random
+import kotlin.uuid.Uuid
 
 @MyPreview
 @Composable
@@ -110,10 +112,10 @@ internal fun SearchList(
                 }
             }
 
-            itemsIndexed(
+            items(
                 items = meanings,
-                key = { index, item -> item.id ?: index },
-                itemContent = { _, meaning ->
+                key = { item -> "meaning-${item.id ?: UUID.randomUUID()}" },
+                itemContent = { meaning ->
                     MeaningCard(
                         modifier = Modifier.animateItem(),
                         word = word,

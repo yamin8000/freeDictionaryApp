@@ -33,7 +33,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,8 +58,12 @@ fun OverlayScreen(
     val isPortrait = remember(configuration) {
         configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     }
-    val screenHeight = remember(configuration) {
-        configuration.screenHeightDp.dp
+    val localWindow = LocalWindowInfo.current
+    val density = LocalDensity.current
+    val screenHeight = remember(localWindow) {
+        with(density) {
+            localWindow.containerSize.height.toDp()
+        }
     }
     val buttonsOffset = Sizes.xxLarge
     val windowHeight = remember(isPortrait, screenHeight) {
@@ -83,6 +88,7 @@ fun OverlayScreen(
                         border = defaultGradientBorder(),
                         content = {
                             SearchList(
+                                modifier = Modifier.padding(Sizes.Large),
                                 isSearching = state.isSearching,
                                 word = state.word,
                                 phonetic = state.phonetic,
