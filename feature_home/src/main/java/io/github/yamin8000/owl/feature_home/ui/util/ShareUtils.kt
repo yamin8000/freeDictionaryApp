@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.feature_home.ui.util
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.strings.R
 
@@ -38,7 +39,10 @@ object ShareUtils {
             putExtra(Intent.EXTRA_TEXT, text)
             type = "text/plain"
         }
-        val shareIntent = Intent.createChooser(sendIntent, null)
+        val shareIntent = Intent.createChooser(
+            sendIntent,
+            "${context.getString(R.string.app_name)}, ${entry.word}"
+        )
         context.startActivity(shareIntent)
     }
 
@@ -46,24 +50,25 @@ object ShareUtils {
         context: Context,
         entry: Entry
     ) = buildString {
-        append("Word: ")
-        append(entry.word)
+        appendLine("Word: ${entry.word}")
         appendLine()
         append("Pronunciation(IPA): ")
-        append(entry.phonetics.firstOrNull { it.text != null }?.text ?: "-")
-        appendLine()
+        appendLine(entry.phonetics.firstOrNull { it.text != null }?.text ?: "-")
         appendLine()
         entry.meanings.forEachIndexed { index, (partOfSpeech, definitions, _, _) ->
             appendLine("${index + 1})")
             appendLine("Type: $partOfSpeech")
             definitions.take(5).forEach { (definition, example, synonyms, antonyms) ->
                 appendLine("Definition: $definition")
-                if (example != null)
+                if (example != null) {
                     appendLine("Example: $example")
-                if (synonyms.isNotEmpty())
+                }
+                if (synonyms.isNotEmpty()) {
                     appendLine("Synonyms: ${synonyms.take(5).joinToString()}")
-                if (antonyms.isNotEmpty())
+                }
+                if (antonyms.isNotEmpty()) {
                     appendLine("Antonyms: ${antonyms.take(5).joinToString()}")
+                }
                 appendLine()
             }
             appendLine()

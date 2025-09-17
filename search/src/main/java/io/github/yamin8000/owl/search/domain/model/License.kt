@@ -1,16 +1,16 @@
 /*
- *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     License.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     License.kt Last modified at 2024/8/18
- *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     freeDictionaryApp/freeDictionaryApp.search.main
+ *     License.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
+ *     License.kt Last modified at 2025/9/17
+ *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
- *     freeDictionaryApp/freeDictionaryApp.feature_home.main is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     freeDictionaryApp/freeDictionaryApp.feature_home.main is distributed in the hope that it will be useful,
+ *     freeDictionaryApp/freeDictionaryApp.search.main is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
@@ -21,9 +21,6 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
 data class License(
     val name: String,
     val url: String

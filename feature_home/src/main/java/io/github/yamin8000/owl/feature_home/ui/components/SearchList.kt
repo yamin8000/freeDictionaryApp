@@ -48,7 +48,6 @@ import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
 import java.util.UUID
 import kotlin.random.Random
-import kotlin.uuid.Uuid
 
 @MyPreview
 @Composable
@@ -84,22 +83,25 @@ internal fun SearchList(
         verticalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.CenterVertically),
         contentPadding = PaddingValues(Sizes.Medium),
         content = {
-            item(key = isOnline) {
-                AnimatedVisibility(
-                    visible = !isOnline,
-                    enter = slideInVertically() + fadeIn(),
-                    exit = slideOutVertically() + fadeOut(),
-                    content = {
-                        val internetError =
-                            remember { context.getString(R.string.general_net_error) }
-                        AppText(
-                            modifier = Modifier.padding(Sizes.Medium),
-                            color = MaterialTheme.colorScheme.error,
-                            text = internetError
-                        )
-                    }
-                )
-            }
+            item(
+                key = isOnline,
+                content = {
+                    AnimatedVisibility(
+                        visible = !isOnline,
+                        enter = slideInVertically() + fadeIn(),
+                        exit = slideOutVertically() + fadeOut(),
+                        content = {
+                            val internetError =
+                                remember { context.getString(R.string.general_net_error) }
+                            AppText(
+                                modifier = Modifier.padding(Sizes.Medium),
+                                color = MaterialTheme.colorScheme.error,
+                                text = internetError
+                            )
+                        }
+                    )
+                }
+            )
 
             if (word.isNotBlank()) {
                 item(key = word + phonetic) {

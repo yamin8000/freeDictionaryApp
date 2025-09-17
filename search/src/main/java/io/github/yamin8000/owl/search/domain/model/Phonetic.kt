@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     Phonetic.kt Copyrighted by Yamin Siahmargooei at 2024/9/5
- *     Phonetic.kt Last modified at 2024/8/30
+ *     Phonetic.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
+ *     Phonetic.kt Last modified at 2025/9/17
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -21,9 +21,6 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
 data class Phonetic(
     val text: String? = null,
     val audio: String? = null,

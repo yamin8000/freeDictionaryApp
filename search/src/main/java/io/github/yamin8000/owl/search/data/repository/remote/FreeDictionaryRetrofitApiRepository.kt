@@ -30,6 +30,6 @@ class FreeDictionaryRetrofitApiRepository @Inject constructor(
     private val api: FreeDictionaryAPI
 ) : FreeDictionaryApiRepository {
     override suspend fun searchWord(word: String): List<Entry> {
-        return api.search(word)
+        return api.search(word).map { it.domain() }
     }
 }

@@ -34,10 +34,10 @@ import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseC
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
-import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
 import io.github.yamin8000.owl.feature_home.ui.util.HomeSnackbarType
+import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
 import io.github.yamin8000.owl.search.domain.usecase.WordCacheUseCases
 import kotlinx.coroutines.CoroutineExceptionHandler
