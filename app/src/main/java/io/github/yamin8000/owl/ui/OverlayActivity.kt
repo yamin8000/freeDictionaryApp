@@ -25,7 +25,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import io.github.yamin8000.owl.feature_overlay.di.OverlayViewModelFactory
 import io.github.yamin8000.owl.feature_overlay.ui.OverlayScreen
 import io.github.yamin8000.owl.feature_overlay.ui.OverlayWindowViewModel

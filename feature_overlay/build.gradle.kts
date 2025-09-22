@@ -25,7 +25,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
-    alias(libs.plugins.jetbrains.compose.plugin)
+    alias(libs.plugins.jetbrains.kotlin.compose.plugin)
     alias(libs.plugins.hilt)
 }
 
@@ -58,5 +58,5 @@ dependencies {
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.lifecycle.compose)
 }
