@@ -50,6 +50,11 @@ android {
     }
 }
 
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    metricsDestination = layout.buildDirectory.dir("compose_compiler")
+}
+
 dependencies {
     api(project(":strings"))
     api(project(":datastore"))

@@ -28,20 +28,3 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.hilt) apply false
 }
-
-subprojects {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        compilerOptions.freeCompilerArgs.addAll(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" +
-                    layout.buildDirectory + "/compose_metrics",
-        )
-    }
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        compilerOptions.freeCompilerArgs.addAll(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                    layout.buildDirectory + "/compose_metrics",
-        )
-    }
-}
