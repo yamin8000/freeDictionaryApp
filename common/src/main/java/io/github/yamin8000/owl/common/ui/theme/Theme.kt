@@ -131,11 +131,11 @@ fun PreviewTheme(
                     .background(Color.Red)
             )
             AppTheme(
-                isDarkTheme,
-                isOledTheme,
-                true,
-                isDynamicColor,
-                content
+                isDarkTheme = isDarkTheme,
+                isOledTheme = isOledTheme,
+                isPreviewing = true,
+                isDynamicColor = isDynamicColor,
+                content = content
             )
         }
     )
