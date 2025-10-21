@@ -51,6 +51,15 @@ android {
         base.archivesName = "$applicationId-v$versionCode-n$versionName"
     }
 
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            isUniversalApk = false
+        }
+    }
+
     buildTypes {
         release {
             proguardFiles(
@@ -59,11 +68,18 @@ android {
             )
             isMinifyEnabled = true
             isShrinkResources = true
+            @Suppress("UnstableApiUsage")
+            vcsInfo.include = false
         }
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
         }
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
     compileOptions {
@@ -86,6 +102,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/en/*"
+            excludes += "/*.yml"
         }
     }
 }

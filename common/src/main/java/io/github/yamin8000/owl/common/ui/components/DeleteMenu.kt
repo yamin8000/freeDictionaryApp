@@ -33,28 +33,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
+import net.datafaker.Faker
 
 @MyPreview
 @Composable
 private fun Preview() {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(Sizes.xxLarge),
-        content = {
-            DeleteMenu(
-                expanded = true,
-                onDelete = {},
-                onDismiss = {}
-            )
-        }
-    )
+    PreviewTheme {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(Sizes.xxLarge),
+            content = {
+                DeleteMenu(
+                    item = Faker().word().noun(),
+                    expanded = true,
+                    onDelete = {},
+                    onDismiss = {}
+                )
+            }
+        )
+    }
 }
 
 @Composable
 internal fun DeleteMenu(
+    item: String,
     expanded: Boolean,
     onDismiss: () -> Unit,
     onDelete: () -> Unit,
@@ -66,6 +72,10 @@ internal fun DeleteMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
         content = {
+            DropdownMenuItem(
+                onClick = {},
+                text = { AppText(item) },
+            )
             DropdownMenuItem(
                 onClick = onDelete,
                 text = { AppText(delete) },

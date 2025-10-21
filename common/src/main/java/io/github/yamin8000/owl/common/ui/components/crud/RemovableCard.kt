@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import io.github.yamin8000.owl.common.ui.components.DeleteMenu
 import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
@@ -60,15 +61,19 @@ fun RemovableCard(
                 content = {
                     Text(
                         text = item,
+                        maxLines = 1,
                         textAlign = TextAlign.Center,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
-                            .padding(Sizes.Medium)
+                            .padding(vertical = Sizes.Medium)
+                            .padding(horizontal = Sizes.Small)
                             .fillMaxWidth()
                     )
                 }
             )
             val haptic = LocalHapticFeedback.current
             DeleteMenu(
+                item = item,
                 expanded = isMenuExpanded,
                 onDismiss = { isMenuExpanded = false },
                 onDelete = {
