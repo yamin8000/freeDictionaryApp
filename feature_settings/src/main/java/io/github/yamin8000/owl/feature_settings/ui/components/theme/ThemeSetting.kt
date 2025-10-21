@@ -22,6 +22,9 @@
 package io.github.yamin8000.owl.feature_settings.ui.components.theme
 
 import android.os.Build
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material3.Icon
@@ -30,12 +33,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItem
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItemCard
@@ -75,12 +80,25 @@ internal fun ThemeSetting(
             SettingsItem(
                 onClick = { isShowingDialog = true },
                 content = {
-                    val context = LocalContext.current
-                    Icon(
-                        imageVector = Icons.TwoTone.DisplaySettings,
-                        contentDescription = stringResource(R.string.theme)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(
+                            Sizes.Small,
+                            Alignment.Start
+                        ),
+                        content = {
+                            val context = LocalContext.current
+                            Icon(
+                                imageVector = Icons.TwoTone.DisplaySettings,
+                                contentDescription = stringResource(R.string.theme),
+                            )
+                            AppText(
+                                text = theme.toStringResource(context),
+                                maxLines = 2
+                            )
+                        }
                     )
-                    AppText(text = theme.toStringResource(context))
                 }
             )
             if (theme == ThemeType.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

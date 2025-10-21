@@ -80,5 +80,5 @@ dependencies {
     implementation(libs.hilt.lifecycle.compose)
     //lottie
     implementation(libs.lottie.compose)
-    implementation(libs.datafaker)
+    api(libs.datafaker)
 }

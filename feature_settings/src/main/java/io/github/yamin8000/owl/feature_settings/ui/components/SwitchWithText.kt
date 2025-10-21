@@ -44,7 +44,7 @@ import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 private fun Preview() {
     PreviewTheme {
         SwitchWithText(
-            caption = "some setting",
+            caption = "some settingssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
             checked = true,
             onCheckedChange = {}
         )
@@ -59,16 +59,17 @@ internal fun SwitchWithText(
     modifier: Modifier = Modifier
 ) {
     val hapticFeedback = LocalHapticFeedback.current
-    val onClick = remember(checked, onCheckedChange) {
-        {
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-            onCheckedChange(!checked)
-        }
+    val feedbackType = remember(checked) {
+        if (checked) HapticFeedbackType.ToggleOff
+        else HapticFeedbackType.ToggleOn
     }
     Box(
         modifier = modifier.clickable(
             role = Role.Switch,
-            onClick = onClick
+            onClick = {
+                hapticFeedback.performHapticFeedback(feedbackType)
+                onCheckedChange(!checked)
+            }
         ),
         content = {
             Row(
@@ -78,12 +79,19 @@ internal fun SwitchWithText(
                 content = {
                     AppText(
                         text = caption,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(5f)
                     )
-                    Switch(
-                        checked = checked,
-                        onCheckedChange = null
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        content = {
+                            Switch(
+                                checked = checked,
+                                onCheckedChange = null,
+                                modifier = Modifier.align(Alignment.CenterEnd)
+                            )
+                        }
                     )
                 }
             )

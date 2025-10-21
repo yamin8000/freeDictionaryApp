@@ -30,11 +30,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
@@ -46,7 +46,7 @@ import java.util.Locale
 import kotlin.random.Random
 
 @PreviewScreenSizes
-@MyPreview
+@PreviewFontScale
 @Composable
 private fun Preview() {
     PreviewTheme {

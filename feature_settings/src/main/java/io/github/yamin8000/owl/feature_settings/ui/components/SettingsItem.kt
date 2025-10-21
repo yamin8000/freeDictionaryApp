@@ -73,14 +73,23 @@ internal fun SettingsItem(
                 content = {
                     Row(
                         //Extra padding for increasing touch area
-                        modifier = Modifier.padding(vertical = Sizes.Medium),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = Sizes.Medium)
+                            .weight(5f),
                         horizontalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.Start),
                         verticalAlignment = Alignment.CenterVertically,
                         content = content
                     )
-                    Icon(
-                        imageVector = Icons.TwoTone.ArrowDropDownCircle,
-                        contentDescription = null
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        content = {
+                            Icon(
+                                imageVector = Icons.TwoTone.ArrowDropDownCircle,
+                                contentDescription = null,
+                                modifier = Modifier.align(Alignment.CenterEnd)
+                            )
+                        }
                     )
                 }
             )
