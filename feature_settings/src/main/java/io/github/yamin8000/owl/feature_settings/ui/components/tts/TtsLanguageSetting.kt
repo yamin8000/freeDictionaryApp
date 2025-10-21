@@ -81,7 +81,7 @@ internal fun TtsLanguageSetting(
                         content = {
                             Icon(
                                 imageVector = Icons.TwoTone.Language,
-                                contentDescription = stringResource(R.string.tts_language)
+                                contentDescription = null
                             )
                             AppText(
                                 text = Locale.forLanguageTag(currentTtsTag).displayName,

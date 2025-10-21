@@ -51,7 +51,8 @@ private fun Preview() {
                     item = Faker().word().noun(),
                     expanded = true,
                     onDelete = {},
-                    onDismiss = {}
+                    onDismiss = {},
+                    onWordClick = {}
                 )
             }
         )
@@ -62,6 +63,7 @@ private fun Preview() {
 internal fun DeleteMenu(
     item: String,
     expanded: Boolean,
+    onWordClick: () -> Unit,
     onDismiss: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
@@ -73,12 +75,12 @@ internal fun DeleteMenu(
         onDismissRequest = onDismiss,
         content = {
             DropdownMenuItem(
-                onClick = {},
+                onClick = onWordClick,
                 text = { AppText(item) },
             )
             DropdownMenuItem(
                 onClick = onDelete,
-                text = { AppText(delete) },
+                text = { AppText(text = delete) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.TwoTone.Delete,

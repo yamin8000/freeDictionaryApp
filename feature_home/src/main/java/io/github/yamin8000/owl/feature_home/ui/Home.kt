@@ -21,7 +21,6 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
-import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,15 +48,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import io.github.yamin8000.owl.common.ui.components.EmptyList
-import io.github.yamin8000.owl.common.ui.components.LockScreenOrientation
-import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.components.AppText
+import io.github.yamin8000.owl.common.ui.components.EmptyList
+import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.common.util.LocalTTS
-import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
 import io.github.yamin8000.owl.feature_home.ui.components.SearchList
+import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.SuggestionsChips
 import io.github.yamin8000.owl.feature_home.ui.util.ShareUtils.handleShareIntent
 import io.github.yamin8000.owl.feature_home.ui.util.Utils.ObserverEvent
@@ -75,7 +73,6 @@ fun HomeScreen(
 ) {
     val state = vm.state.collectAsStateWithLifecycle().value
 
-    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val keyboardManager = LocalSoftwareKeyboardController.current

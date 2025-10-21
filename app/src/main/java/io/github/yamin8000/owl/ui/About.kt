@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,25 +33,29 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
 import io.github.yamin8000.owl.R as RApp
 
-@MyPreview
+@PreviewFontScale
+@PreviewScreenSizes
 @Composable
 private fun Preview() {
     PreviewTheme {
@@ -72,6 +77,7 @@ internal fun AboutContent(
         content = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
                     Sizes.Medium,
                     Alignment.CenterVertically
@@ -85,12 +91,17 @@ internal fun AboutContent(
                     Ripple(
                         onClick = { uriHandler.openUri(licenseUri) },
                         content = {
+                            val config = LocalConfiguration.current
+                            val fill = remember(config) {
+                                if (config.orientation == Configuration.ORIENTATION_PORTRAIT) 1f
+                                else .5f
+                            }
                             Image(
                                 painter = painterResource(id = RApp.drawable.ic_gplv3),
                                 contentDescription = stringResource(id = R.string.gplv3_image_description),
-                                modifier = Modifier.fillMaxWidth(),
                                 contentScale = ContentScale.FillWidth,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant),
+                                modifier = Modifier.fillMaxWidth(fill)
                             )
                         }
                     )

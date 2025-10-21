@@ -91,7 +91,7 @@ internal fun ThemeSetting(
                             val context = LocalContext.current
                             Icon(
                                 imageVector = Icons.TwoTone.DisplaySettings,
-                                contentDescription = stringResource(R.string.theme),
+                                contentDescription = null,
                             )
                             AppText(
                                 text = theme.toStringResource(context),

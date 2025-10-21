@@ -35,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import io.github.yamin8000.owl.common.ui.components.ClickableIcon
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
@@ -44,18 +43,20 @@ import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.ui.components.texts.PronunciationText
 import io.github.yamin8000.owl.search.ui.components.texts.WordText
 import io.github.yamin8000.owl.strings.R
+import net.datafaker.Faker
 
 @MyPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
+        val faker = Faker()
         Column(
             modifier = Modifier.padding(Sizes.Large),
             verticalArrangement = Arrangement.spacedBy(Sizes.Large),
             content = {
                 WordCard(
-                    word = LoremIpsum(1).values.first(),
-                    pronunciation = LoremIpsum(1).values.first(),
+                    word = faker.word().noun(),
+                    pronunciation = faker.word().noun(),
                     onShareWord = {},
                     onAddToFavourite = {}
                 )
@@ -86,7 +87,7 @@ fun WordCard(
                 ),
                 content = {
                     Column(
-                        modifier = Modifier.weight(2f),
+                        modifier = Modifier.weight(3f),
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.spacedBy(
                             Sizes.Medium,

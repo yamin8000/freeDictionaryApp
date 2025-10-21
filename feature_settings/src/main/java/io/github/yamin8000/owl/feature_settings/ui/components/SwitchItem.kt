@@ -63,7 +63,7 @@ internal fun SwitchItem(
         content = {
             Icon(
                 imageVector = imageVector,
-                contentDescription = caption,
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.secondary
             )
             SwitchWithText(

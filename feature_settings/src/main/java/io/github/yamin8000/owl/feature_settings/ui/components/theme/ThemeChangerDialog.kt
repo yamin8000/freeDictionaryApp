@@ -26,13 +26,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.DisplaySettings
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import io.github.yamin8000.owl.common.ui.components.AppText
+import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
@@ -60,6 +65,7 @@ private fun Preview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ThemeChangerDialog(
     currentTheme: ThemeType,
@@ -68,55 +74,73 @@ internal fun ThemeChangerDialog(
     modifier: Modifier = Modifier
 ) {
     val themes = remember { ThemeType.entries() }
-    AlertDialog(
+    BasicAlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
-        confirmButton = {},
-        title = { AppText(stringResource(R.string.theme)) },
-        icon = { Icon(imageVector = Icons.TwoTone.DisplaySettings, contentDescription = null) },
-        text = {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(
-                    Sizes.Medium,
-                    Alignment.CenterVertically
-                ),
-                modifier = Modifier
-                    .padding(Sizes.Large)
-                    .selectableGroup()
-                    .fillMaxWidth(),
+        content = {
+            Surface(
+                shape = DefaultCutShape,
                 content = {
-                    themes.forEach { theme ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(
-                                Sizes.xSmall,
-                                Alignment.Start
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .selectable(
-                                    selected = theme == currentTheme,
-                                    role = Role.RadioButton,
-                                    onClick = {
-                                        onCurrentThemeChange(theme)
-                                        onDismiss()
-                                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(
+                            Sizes.Small,
+                            Alignment.CenterVertically
+                        ),
+                        modifier = Modifier
+                            .padding(Sizes.Large)
+                            .selectableGroup()
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState()),
+                        content = {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    Sizes.Small,
+                                    Alignment.CenterHorizontally
                                 ),
-                            content = {
-                                val context = LocalContext.current
-                                RadioButton(
-                                    modifier = Modifier.padding(start = Sizes.Medium),
-                                    selected = theme == currentTheme,
-                                    onClick = null
-                                )
-                                AppText(
-                                    modifier = Modifier.padding(vertical = Sizes.Large),
-                                    text = theme.toStringResource(context)
+                                verticalAlignment = Alignment.CenterVertically,
+                                content = {
+                                    Icon(
+                                        imageVector = Icons.TwoTone.DisplaySettings,
+                                        contentDescription = null
+                                    )
+                                    AppText(text = stringResource(R.string.theme))
+                                }
+                            )
+                            themes.forEach { theme ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(
+                                        Sizes.xSmall,
+                                        Alignment.Start
+                                    ),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .selectable(
+                                            selected = theme == currentTheme,
+                                            role = Role.RadioButton,
+                                            onClick = {
+                                                onCurrentThemeChange(theme)
+                                                onDismiss()
+                                            }
+                                        ),
+                                    content = {
+                                        val context = LocalContext.current
+                                        RadioButton(
+                                            modifier = Modifier.padding(start = Sizes.Medium),
+                                            selected = theme == currentTheme,
+                                            onClick = null
+                                        )
+                                        AppText(
+                                            modifier = Modifier.padding(vertical = Sizes.Large),
+                                            text = theme.toStringResource(context)
+                                        )
+                                    }
                                 )
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             )
         }

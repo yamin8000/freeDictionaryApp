@@ -29,24 +29,26 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
+import net.datafaker.Faker
 import java.util.UUID
-import kotlin.random.Random
 
-@MyPreview
+@PreviewScreenSizes
+@PreviewFontScale
 @Composable
 private fun Preview() {
     PreviewTheme {
+        val faker = Faker()
         SearchList(
-            isSearching = Random.nextBoolean(),
-            word = LoremIpsum(1).values.first(),
-            phonetic = LoremIpsum(1).values.first(),
+            isSearching = false,
+            word = faker.word().noun(),
+            phonetic = faker.word().noun(),
             meanings = Meaning.mockList()
         )
     }

@@ -21,7 +21,7 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
+import net.datafaker.Faker
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -34,22 +34,24 @@ data class Definition(
     val id: Long? = null
 ) {
     companion object {
+        private val faker = Faker()
+
         fun mock() = Definition(
-            definition = LoremIpsum(Random.nextInt(1..3)).values.joinToString(" "),
-            example = LoremIpsum(Random.nextInt(0..3)).values.joinToString(" "),
+            definition = faker.text().text(),
+            example = faker.text().text(),
             synonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
-                    add(LoremIpsum(Random.nextInt(0..3)).values.joinToString(" "))
+                    add(faker.word().noun())
                 }
             },
             antonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
-                    add(LoremIpsum(Random.nextInt(0..3)).values.joinToString(" "))
+                    add(faker.word().noun())
                 }
             }
         )
 
-        fun mockList(n: Int = Random.nextInt(0..3)) = buildList {
+        fun mockList(n: Int = Random.nextInt(1..5)) = buildList {
             repeat(n) {
                 add(mock())
             }

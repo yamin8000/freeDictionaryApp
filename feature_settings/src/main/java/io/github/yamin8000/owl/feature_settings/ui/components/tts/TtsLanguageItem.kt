@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
@@ -60,7 +61,9 @@ internal fun TtsLanguageItem(
         content = {
             AppText(
                 modifier = Modifier.padding(Sizes.Large),
-                text = Locale.forLanguageTag(localeTag).displayName
+                text = Locale.forLanguageTag(localeTag).displayName,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
         }
     )

@@ -42,7 +42,12 @@ internal fun WordDefinitionText(
         text = definition,
         imageVector = Icons.AutoMirrored.TwoTone.ShortText,
         title = stringResource(R.string.definition),
-        content = { HighlightText(fullText = definition, highlightedText = word) },
         onDoubleClick = onDoubleClick,
+        content = {
+            HighlightText(
+                fullText = definition,
+                highlightedText = word
+            )
+        }
     )
 }

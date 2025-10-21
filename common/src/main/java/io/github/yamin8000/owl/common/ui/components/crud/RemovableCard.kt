@@ -76,6 +76,7 @@ fun RemovableCard(
                 item = item,
                 expanded = isMenuExpanded,
                 onDismiss = { isMenuExpanded = false },
+                onWordClick = onClick,
                 onDelete = {
                     isMenuExpanded = false
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)

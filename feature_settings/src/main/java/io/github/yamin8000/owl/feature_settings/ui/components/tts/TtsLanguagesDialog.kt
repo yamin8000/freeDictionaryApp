@@ -22,33 +22,50 @@
 package io.github.yamin8000.owl.feature_settings.ui.components.tts
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Language
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import io.github.yamin8000.owl.common.ui.components.AppText
+import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
+import io.github.yamin8000.owl.strings.R
+import net.datafaker.Faker
 import java.util.Locale
 
 @MyPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
+        val faker = Faker()
+        val languages = buildList {
+            repeat(5) {
+                add(Locale.Builder().setLanguage(faker.languageCode().iso639()).build())
+            }
+        }
         TtsLanguagesDialog(
-            currentTtsTag = "en-us",
-            languages = listOf(),
+            currentTtsTag = languages.random().toLanguageTag(),
+            languages = languages,
             onDismiss = {},
             onLanguageSelect = {}
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TtsLanguagesDialog(
     currentTtsTag: String,
@@ -57,26 +74,51 @@ internal fun TtsLanguagesDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AlertDialog(
+    BasicAlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
-        icon = { Icon(imageVector = Icons.TwoTone.Language, contentDescription = null) },
-        confirmButton = {/*ignored*/ },
-        text = {
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(
-                    Sizes.Medium,
-                    Alignment.CenterVertically
-                ),
+        content = {
+            Surface(
+                shape = DefaultCutShape,
                 content = {
-                    items(languages) {
-                        TtsLanguageItem(
-                            localeTag = it.toLanguageTag(),
-                            isSelected = it.toLanguageTag() == currentTtsTag,
-                            onClick = onLanguageSelect
-                        )
-                    }
+                    LazyColumn(
+                        modifier = Modifier.padding(Sizes.Large),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(
+                            Sizes.Medium,
+                            Alignment.CenterVertically
+                        ),
+                        content = {
+                            item {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(
+                                        Sizes.Small,
+                                        Alignment.CenterHorizontally
+                                    ),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    content = {
+                                        Icon(
+                                            imageVector = Icons.TwoTone.Language,
+                                            contentDescription = null
+                                        )
+                                        AppText(text = stringResource(R.string.tts_language))
+                                    }
+                                )
+
+                            }
+                            item {
+
+                            }
+                            items(items = languages) {
+                                TtsLanguageItem(
+                                    localeTag = it.toLanguageTag(),
+                                    isSelected = it.toLanguageTag() == currentTtsTag,
+                                    onClick = onLanguageSelect
+                                )
+                            }
+                        }
+                    )
                 }
             )
         }

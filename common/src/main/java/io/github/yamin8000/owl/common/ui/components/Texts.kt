@@ -23,7 +23,9 @@ package io.github.yamin8000.owl.common.ui.components
 
 import android.content.ClipData
 import android.content.Context
+import android.content.res.Configuration
 import android.media.AudioManager
+import android.util.Config
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -50,6 +52,7 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,7 +62,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -187,34 +192,68 @@ fun CopyAbleRippleTextWithIcon(
         horizontalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
         content = {
+            val iconContent = remember(imageVector, text) {
+                movableContentOf {
+                    Icon(
+                        imageVector = imageVector,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+            }
             if (title != null) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(
-                        Sizes.Medium,
-                        Alignment.CenterVertically
-                    ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth(0.25f),
+                val config = LocalConfiguration.current
+                val orientation = remember(config) { config.orientation }
+                val density = LocalDensity.current
+                val titleFraction = remember(density) {
+                    if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                        .25f * (density.fontScale + 1) / 2
+                    } else {
+                        .15f * (density.fontScale + 1) / 2
+                    }
+                }
+                Box(
+                    modifier = Modifier.fillMaxWidth(titleFraction),
                     content = {
-                        Icon(
-                            imageVector = imageVector,
-                            contentDescription = text,
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                        AppText(
-                            text = title,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
+                        val titleContent = remember {
+                            movableContentOf {
+                                iconContent()
+                                AppText(
+                                    text = title,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(
+                                    Sizes.Medium,
+                                    Alignment.CenterVertically
+                                ),
+                                content = { titleContent() }
+                            )
+                        } else {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    Sizes.Medium,
+                                    Alignment.Start
+                                ),
+                                content = { titleContent() }
+                            )
+                        }
                     }
                 )
             } else {
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = text,
-                    tint = MaterialTheme.colorScheme.secondary
-                )
+                iconContent()
             }
             CopyAbleRippleText(
+                modifier = Modifier.fillMaxWidth(),
                 text = text,
                 content = content,
                 onClick = onClick,

@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
@@ -70,12 +71,14 @@ fun HighlightText(
 
         Text(
             modifier = modifier,
-            text = text
+            text = text,
+            textAlign = TextAlign.Justify
         )
     } else {
         Text(
             modifier = modifier,
-            text = fullText
+            text = fullText,
+            textAlign = TextAlign.Justify
         )
     }
 }
