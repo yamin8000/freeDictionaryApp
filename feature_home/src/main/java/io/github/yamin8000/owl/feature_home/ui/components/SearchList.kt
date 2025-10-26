@@ -104,14 +104,17 @@ internal fun SearchList(
             )
 
             if (word.isNotBlank()) {
-                item(key = word + phonetic) {
-                    WordCard(
-                        word = word,
-                        pronunciation = phonetic,
-                        onShareWord = onShareWord,
-                        onAddToFavourite = onAddToFavourite
-                    )
-                }
+                item(
+                    key = word + phonetic,
+                    content = {
+                        WordCard(
+                            word = word,
+                            pronunciation = phonetic,
+                            onShareWord = onShareWord,
+                            onAddToFavourite = onAddToFavourite
+                        )
+                    }
+                )
             }
 
             items(

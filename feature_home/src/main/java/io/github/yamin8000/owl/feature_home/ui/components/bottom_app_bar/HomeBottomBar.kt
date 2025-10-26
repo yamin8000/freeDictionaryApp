@@ -65,7 +65,7 @@ internal fun MainBottomBar(
         content = {
             suggestionsChips()
             if (isSearching) {
-                RainbowLinearProgress()
+                RainbowWavyLinearProgress()
             }
             AnimatedContent(
                 targetState = isSearching,

@@ -74,9 +74,9 @@ fun WordCard(
     onShareWord: (() -> Unit)? = null
 ) {
     OutlinedCard(
+        modifier = modifier,
         shape = DefaultCutShape,
         border = BorderStroke(Sizes.xxSmall, MaterialTheme.colorScheme.tertiary),
-        modifier = modifier,
         content = {
             Row(
                 modifier = Modifier.padding(Sizes.Large),

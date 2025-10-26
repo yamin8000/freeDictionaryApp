@@ -21,8 +21,11 @@
 
 package io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,35 +36,52 @@ import androidx.compose.ui.Modifier
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import kotlinx.coroutines.delay
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 @MyPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
-        RainbowLinearProgress()
+        RainbowWavyLinearProgress()
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun RainbowLinearProgress(
+internal fun RainbowWavyLinearProgress(
     modifier: Modifier = Modifier,
-    colorChangeDuration: Long = 250
+    animationDuration: Duration = 500.milliseconds
 ) {
-    fun randomBeam(): Int = (16..255).random()
     val colors = buildList {
-        repeat((5..20).random()) {
-            add(androidx.compose.ui.graphics.Color(randomBeam(), randomBeam(), randomBeam()))
+        repeat((50..100).random()) {
+            add(
+                androidx.compose.ui.graphics.Color(
+                    red = randomBeam(),
+                    green = randomBeam(),
+                    blue = randomBeam()
+                )
+            )
         }
     }
-    var color by remember { mutableStateOf(colors.first()) }
+    var color by remember { mutableStateOf(colors.random()) }
     LaunchedEffect(Unit) {
         while (true) {
             color = colors.random()
-            delay(colorChangeDuration)
+            delay(animationDuration)
         }
     }
-    LinearProgressIndicator(
+
+    val animatedColor by animateColorAsState(
+        targetValue = color,
+        animationSpec = MaterialTheme.motionScheme.fastEffectsSpec()
+    )
+
+    LinearWavyProgressIndicator(
         modifier = modifier.fillMaxWidth(),
-        color = color
+        color = animatedColor,
+        trackColor = animatedColor
     )
 }
+
+private fun randomBeam(): Int = (64..256).random()
