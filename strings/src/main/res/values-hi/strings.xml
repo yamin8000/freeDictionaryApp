@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~     freeDictionaryApp/freeDictionaryApp.strings.main
+  ~     strings.xml Copyrighted by Yamin Siahmargooei at 2025/10/27
+  ~     strings.xml Last modified at 2025/10/27
+  ~     This file is part of freeDictionaryApp/freeDictionaryApp.strings.main.
+  ~     Copyright (C) 2025  Yamin Siahmargooei
+  ~
+  ~     freeDictionaryApp/freeDictionaryApp.strings.main is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     freeDictionaryApp/freeDictionaryApp.strings.main is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="search">खोज</string>
+    <string name="search_hint">खोजने के लिए कोई शब्द दर्ज करें</string>
+    <string name="favourites">पसंदीदा शब्द</string>
+    <string name="search_history">खोज इतिहास</string>
+    <string name="random_word">यादृच्छिक शब्द</string>
+    <string name="general_net_error">सर्वर से कोई कनेक्शन नहीं है। डेटा कैश से लोड किया जा सकता है।</string>
+    <string name="api_throttled">सर्वर व्यस्त है, कृपया पुनः प्रयास करें!</string>
+    <string name="definition_not_found">इस शब्द की कोई परिभाषा नहीं मिली।</string>
+    <string name="api_authorization_error">प्रमाणीकरण त्रुटि</string>
+    <string name="text_copied">पाठ कॉपी किया गया।</string>
+    <string name="license_header">यह GNU लाइसेंस के अंतर्गत एक निःशुल्क एप्लिकेशन है, अधिक जानें:</string>
+    <string name="gplv3_image_description">GPLv3 लाइसेंस लोगो</string>
+    <string name="about_app">अंग्रेज़ी-अंग्रेज़ी शब्दकोश पर आधारित:</string>
+    <string name="added_to_favourites">पसंदीदा में जोड़ा गया</string>
+    <string name="clear">साफ़ करें</string>
+    <string name="untracked_error">अनपेक्षित त्रुटि!</string>
+    <string name="no_search_term_entered">कोई शब्द दर्ज नहीं किया गया।</string>
+    <string name="share">साझा करें</string>
+    <string name="this_text_generated_using_owl">यह पाठ Owl ऐप का उपयोग करके बनाया गया है</string>
+    <string name="clear_all">सभी साफ़ करें</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="theme">थीम</string>
+    <string name="dynamic_theme_notice">Android 12 और उससे ऊपर पर, ऐप की थीम आपके वॉलपेपर के रंगों पर आधारित होती है</string>
+    <string name="theme_system">सिस्टम</string>
+    <string name="theme_light">हल्का</string>
+    <string name="theme_dark">गहरा</string>
+    <string name="tts_language">पाठ-से-भाषण की भाषा</string>
+    <string name="about">एप्लिकेशन के बारे में</string>
+    <string name="version_name">संस्करण %s</string>
+    <string name="example">उदाहरण</string>
+    <string name="definition">परिभाषा</string>
+    <string name="type">प्रकार</string>
+    <string name="general">सामान्य</string>
+    <string name="vibrate_on_scroll">स्क्रॉल करते समय कंपन</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="delete">हटाएं</string>
+    <string name="increase_volume_notice">अपनी वॉल्यूम बढ़ाएं</string>
+    <string name="antonym">विलोम</string>
+    <string name="synonym">पर्यायवाची</string>
+    <string name="start_blank_search">रिक्त प्रारंभिक खोज</string>
+    <string name="theme_oled">OLED/गहरा</string>
+    <string name="yes">हाँ</string>
+    <string name="no">नहीं</string>
+    <string name="back">वापस</string>
+    <string name="remove_all_prompt">क्या आप सब हटाना चाहते हैं?</string>
+    <string name="cancelled">रद्द किया गया</string>
+    <string name="close">बंद करें</string>
+    <string name="more_in_app">ऐप में और देखें…</string>
+</resources>
