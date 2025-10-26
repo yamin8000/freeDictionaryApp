@@ -25,7 +25,6 @@ import android.content.ClipData
 import android.content.Context
 import android.content.res.Configuration
 import android.media.AudioManager
-import android.util.Config
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable

@@ -19,6 +19,8 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 package io.github.yamin8000.owl.common.ui.theme
 
 import android.app.Activity
@@ -29,7 +31,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -191,7 +195,8 @@ fun AppTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        content = content
+        content = content,
+        motionScheme = MotionScheme.expressive()
     )
 }
 
