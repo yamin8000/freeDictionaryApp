@@ -36,7 +36,6 @@ import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
-import net.datafaker.Faker
 
 @MyPreview
 @Composable
@@ -48,7 +47,7 @@ private fun Preview() {
                 .padding(Sizes.xxLarge),
             content = {
                 DeleteMenu(
-                    item = Faker().word().noun(),
+                    item = "Item",
                     expanded = true,
                     onDelete = {},
                     onDismiss = {},

@@ -21,7 +21,6 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
-import net.datafaker.Faker
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -34,19 +33,17 @@ data class Meaning(
     val id: Long? = null
 ) {
     companion object {
-        private val faker = Faker()
-
         fun mock() = Meaning(
-            partOfSpeech = faker.word().noun(),
+            partOfSpeech = "partOfSpeech",
             definitions = Definition.mockList(),
             synonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
-                    add(faker.word().noun())
+                    add("Synonym")
                 }
             },
             antonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
-                    add(faker.word().noun())
+                    add("Antonym")
                 }
             }
         )

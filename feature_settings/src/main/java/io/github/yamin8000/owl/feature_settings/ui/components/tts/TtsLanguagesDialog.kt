@@ -43,22 +43,15 @@ import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
-import net.datafaker.Faker
 import java.util.Locale
 
 @MyPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
-        val faker = Faker()
-        val languages = buildList {
-            repeat(5) {
-                add(Locale.Builder().setLanguage(faker.languageCode().iso639()).build())
-            }
-        }
         TtsLanguagesDialog(
-            currentTtsTag = languages.random().toLanguageTag(),
-            languages = languages,
+            currentTtsTag = "",
+            languages = emptyList(),
             onDismiss = {},
             onLanguageSelect = {}
         )

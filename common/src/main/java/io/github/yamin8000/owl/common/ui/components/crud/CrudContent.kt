@@ -22,8 +22,8 @@
 package io.github.yamin8000.owl.common.ui.components.crud
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
@@ -36,32 +36,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.tooling.preview.PreviewFontScale
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.util.fastRoundToInt
 import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
-import net.datafaker.Faker
 import java.util.UUID
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-@PreviewScreenSizes
-@PreviewFontScale
+@Preview(showBackground = true)
 @Composable
 private fun Preview() {
     PreviewTheme {
-        val faker = Faker()
         CrudContent(
-            title = faker.word().noun(),
+            title = "Title",
             onBackClick = {},
             onRemoveAll = {},
             onRemoveSingle = { _ -> },
             onItemClick = {},
             items = buildList {
-                repeat(Random.nextInt(0..20)) {
-                    add(faker.word().noun())
+                repeat(Random.nextInt(0..100)) {
+                    add("Item")
                 }
             }
         )
@@ -93,17 +91,31 @@ fun <T> CrudContent(
             if (isNotEmpty) {
                 val window = LocalWindowInfo.current
                 val density = LocalDensity.current
-                val width = remember(window, density) {
-                    with(density) { window.containerSize.width.toDp() }
+                val windowWidth = remember(window, density) {
+                    window.containerSize.width
                 }
+
+                val textMeasurer = rememberTextMeasurer()
+                val columns = remember(items, window, density) {
+                    when (items.size) {
+                        0, 1 -> 1
+                        else -> {
+                            val maxItem = items.map(itemDisplayProvider).maxBy { it.length }
+                            val maxItemWidth =
+                                textMeasurer.measure(maxItem).size.width * 2 * density.fontScale
+                            (windowWidth / maxItemWidth).fastRoundToInt()
+                        }
+                    }
+                }
+
                 LazyVerticalStaggeredGrid(
-                    modifier = Modifier.padding(bottom = Sizes.Large),
+                    contentPadding = PaddingValues(bottom = Sizes.Medium),
                     verticalItemSpacing = Sizes.Medium,
                     horizontalArrangement = Arrangement.spacedBy(
                         Sizes.Medium,
                         Alignment.CenterHorizontally
                     ),
-                    columns = StaggeredGridCells.Adaptive(((width / 3) - (Sizes.Large * 2)) * density.fontScale),
+                    columns = StaggeredGridCells.Fixed(columns),
                     content = {
                         item(
                             span = StaggeredGridItemSpan.FullLine,

@@ -43,20 +43,18 @@ import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.ui.components.texts.PronunciationText
 import io.github.yamin8000.owl.search.ui.components.texts.WordText
 import io.github.yamin8000.owl.strings.R
-import net.datafaker.Faker
 
 @MyPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
-        val faker = Faker()
         Column(
             modifier = Modifier.padding(Sizes.Large),
             verticalArrangement = Arrangement.spacedBy(Sizes.Large),
             content = {
                 WordCard(
-                    word = faker.word().noun(),
-                    pronunciation = faker.word().noun(),
+                    word = "Word",
+                    pronunciation = "Pronunciation",
                     onShareWord = {},
                     onAddToFavourite = {}
                 )
