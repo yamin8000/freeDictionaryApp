@@ -45,19 +45,10 @@ android {
         applicationId = appId
         minSdk = 23
         targetSdk = 36
-        versionCode = 49
-        versionName = "1.7.6"
+        versionCode = 50
+        versionName = "1.7.7"
         vectorDrawables.useSupportLibrary = true
         base.archivesName = "$applicationId-v$versionCode-n$versionName"
-    }
-
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = false
-        }
     }
 
     buildTypes {
@@ -68,8 +59,6 @@ android {
             )
             isMinifyEnabled = true
             isShrinkResources = true
-            @Suppress("UnstableApiUsage")
-            vcsInfo.include = false
         }
         debug {
             isMinifyEnabled = false
