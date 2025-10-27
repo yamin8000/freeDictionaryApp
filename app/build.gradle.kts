@@ -36,11 +36,6 @@ android {
     namespace = appId
     compileSdk = 36
 
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
-
     defaultConfig {
         applicationId = appId
         minSdk = 23
