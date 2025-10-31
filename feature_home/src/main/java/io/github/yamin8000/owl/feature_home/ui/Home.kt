@@ -23,13 +23,11 @@ package io.github.yamin8000.owl.feature_home.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -85,105 +83,101 @@ fun HomeScreen(
     }
 
     CompositionLocalProvider(LocalTTS provides vm.tts) {
-        Surface(
-            modifier = modifier.fillMaxSize(),
-            content = {
-                val listState = rememberScrollState()
-                if (listState.isScrollInProgress && state.isVibrating) {
-                    LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                }
+        val listState = rememberScrollState()
+        if (listState.isScrollInProgress && state.isVibrating) {
+            LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        }
 
-                ObserverEvent(vm.shareChannelFlow) { data ->
-                    if (data != null) {
-                        handleShareIntent(context, data)
+        ObserverEvent(vm.shareChannelFlow) { data ->
+            if (data != null) {
+                handleShareIntent(context, data)
+            }
+        }
+
+        ObserverEvent(vm.errorChannelFlow) { event ->
+            state.snackbarHostState.showSnackbar(
+                getErrorText(context = context, error = event)
+            )
+        }
+
+        Scaffold(
+            modifier = modifier,
+            snackbarHost = {
+                SnackbarHost(state.snackbarHostState) { data ->
+                    MySnackbar {
+                        AppText(
+                            text = data.visuals.message,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
-
-                ObserverEvent(vm.errorChannelFlow) { event ->
-                    state.snackbarHostState.showSnackbar(
-                        getErrorText(context = context, error = event)
-                    )
-                }
-
-                Scaffold(
-                    snackbarHost = {
-                        SnackbarHost(state.snackbarHostState) { data ->
-                            MySnackbar {
-                                AppText(
-                                    text = data.visuals.message,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
-                    },
-                    topBar = {
-                        MainTopBar(
-                            onNavigateToAbout = onNavigateToAbout,
-                            onNavigateToSettings = onNavigateToSettings,
-                            onNavigateToFavourites = onNavigateToFavourites,
-                            onNavigateToHistory = onNavigateToHistory,
-                            onRandomClick = { vm.onEvent(HomeEvent.RandomWord) }
-                        )
-                    },
-                    bottomBar = {
-                        val term = vm.searchTerm.collectAsState().value
-                        MainBottomBar(
+            },
+            topBar = {
+                MainTopBar(
+                    onNavigateToAbout = onNavigateToAbout,
+                    onNavigateToSettings = onNavigateToSettings,
+                    onNavigateToFavourites = onNavigateToFavourites,
+                    onNavigateToHistory = onNavigateToHistory,
+                    onRandomClick = { vm.onEvent(HomeEvent.RandomWord) }
+                )
+            },
+            bottomBar = {
+                val term = vm.searchTerm.collectAsState().value
+                MainBottomBar(
+                    searchTerm = term,
+                    suggestionsChips = {
+                        SuggestionsChips(
                             searchTerm = term,
-                            suggestionsChips = {
-                                SuggestionsChips(
-                                    searchTerm = term,
-                                    suggestions = state.searchSuggestions,
-                                    onSuggestionClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
-                                )
-                            },
-                            isSearching = state.isSearching,
-                            onSearch = {
-                                vm.onEvent(HomeEvent.NewSearch())
-                                keyboardManager?.hide()
-                                focusManager.clearFocus()
-                            },
-                            onCancel = {
-                                vm.onEvent(HomeEvent.CancelSearch)
-                                keyboardManager?.hide()
-                                focusManager.clearFocus()
-                            },
-                            onSearchTermChange = {
-                                vm.onEvent(HomeEvent.OnTermChanged(it))
-                                if (vm.isWordSelectedFromKeyboardSuggestions.value) {
-                                    vm.onEvent(HomeEvent.NewSearch(it))
-                                }
-                            }
+                            suggestions = state.searchSuggestions,
+                            onSuggestionClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
                         )
                     },
-                    content = { contentPadding ->
-                        if (state.searchResult != null) {
-                            SearchList(
-                                modifier = Modifier.padding(contentPadding),
-                                meanings = state.searchResult.meanings,
-                                onAddToFavourite = { vm.onEvent(HomeEvent.OnAddToFavourite(state.word)) },
-                                onWordChipClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
-                                onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
-                                isOnline = state.isOnline,
-                                word = state.word,
-                                phonetic = state.phonetic
-                            )
-                        } else {
-                            Column(
-                                modifier = modifier.padding(Sizes.Large),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(
-                                    Sizes.Large,
-                                    Alignment.CenterVertically
-                                ),
-                                content = {
-                                    AppText(stringResource(R.string.search_hint))
-                                    EmptyList()
-                                }
-                            )
+                    isSearching = state.isSearching,
+                    onSearch = {
+                        vm.onEvent(HomeEvent.NewSearch())
+                        keyboardManager?.hide()
+                        focusManager.clearFocus()
+                    },
+                    onCancel = {
+                        vm.onEvent(HomeEvent.CancelSearch)
+                        keyboardManager?.hide()
+                        focusManager.clearFocus()
+                    },
+                    onSearchTermChange = {
+                        vm.onEvent(HomeEvent.OnTermChanged(it))
+                        if (vm.isWordSelectedFromKeyboardSuggestions.value) {
+                            vm.onEvent(HomeEvent.NewSearch(it))
                         }
                     }
                 )
+            },
+            content = { contentPadding ->
+                if (state.searchResult != null) {
+                    SearchList(
+                        modifier = Modifier.padding(contentPadding),
+                        meanings = state.searchResult.meanings,
+                        onAddToFavourite = { vm.onEvent(HomeEvent.OnAddToFavourite(state.word)) },
+                        onWordChipClick = { vm.onEvent(HomeEvent.NewSearch(it)) },
+                        onShareWord = { vm.onEvent(HomeEvent.OnShareData) },
+                        isOnline = state.isOnline,
+                        word = state.word,
+                        phonetic = state.phonetic
+                    )
+                } else {
+                    Column(
+                        modifier = modifier.padding(Sizes.Large),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(
+                            Sizes.Large,
+                            Alignment.CenterVertically
+                        ),
+                        content = {
+                            AppText(stringResource(R.string.search_hint))
+                            EmptyList()
+                        }
+                    )
+                }
             }
         )
     }

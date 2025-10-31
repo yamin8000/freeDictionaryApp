@@ -36,28 +36,14 @@ android {
     namespace = appId
     compileSdk = 36
 
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
-
     defaultConfig {
         applicationId = appId
         minSdk = 23
         targetSdk = 36
-        versionCode = 48
-        versionName = "1.7.5"
+        versionCode = 51
+        versionName = "1.7.8"
         vectorDrawables.useSupportLibrary = true
         base.archivesName = "$applicationId-v$versionCode-n$versionName"
-    }
-
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = false
-        }
     }
 
     buildTypes {
@@ -68,8 +54,6 @@ android {
             )
             isMinifyEnabled = true
             isShrinkResources = true
-            @Suppress("UnstableApiUsage")
-            vcsInfo.include = false
         }
         debug {
             isMinifyEnabled = false
