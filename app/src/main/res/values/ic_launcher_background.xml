@@ -19,6 +19,4 @@
   ~     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <color name="ic_launcher_background">#BB0055</color>
-</resources>
+<resources></resources>
