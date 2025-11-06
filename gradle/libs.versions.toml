@@ -1,6 +1,6 @@
 [versions]
 activity-compose = "1.11.0"
-compose-bom = "2025.10.01"
+compose-bom = "2025.11.00"
 core-ktx = "1.17.0"
 core-splash = "1.0.1"
 datafaker = "2.5.3"
