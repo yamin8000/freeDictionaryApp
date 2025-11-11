@@ -23,9 +23,9 @@ package io.github.yamin8000.owl.feature_settings.ui
 
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 
-sealed interface SettingsEvent {
-    data class UpdateVibrationState(val value: Boolean) : SettingsEvent
-    data class UpdateStartingBlankState(val value: Boolean) : SettingsEvent
-    data class UpdateTtsLangState(val value: String) : SettingsEvent
-    data class UpdateTheme(val newTheme: ThemeType) : SettingsEvent
+sealed interface SettingsAction {
+    data class OnVibrationChange(val value: Boolean) : SettingsAction
+    data class OnStartingBlankChange(val value: Boolean) : SettingsAction
+    data class OnTtsLangChange(val value: String) : SettingsAction
+    data class OnThemeChange(val newTheme: ThemeType) : SettingsAction
 }

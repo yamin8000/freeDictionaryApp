@@ -24,6 +24,7 @@ package io.github.yamin8000.owl.common.ui.components
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextLayoutResult
@@ -59,7 +60,9 @@ fun AppText(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current
 ) {
-    val hasAnyRtlCharacter = text.any { LocaleUtils.isRtlChar(it) }
+    val hasAnyRtlCharacter = remember(text) {
+        text.any { LocaleUtils.isRtlChar(it) }
+    }
 
     Text(
         text = text,
@@ -78,6 +81,6 @@ fun AppText(
         maxLines = maxLines,
         minLines = minLines,
         onTextLayout = onTextLayout,
-        style = style.copy(textDirection = if (hasAnyRtlCharacter) TextDirection.Rtl else TextDirection.Companion.Ltr)
+        style = style.copy(textDirection = if (hasAnyRtlCharacter) TextDirection.Rtl else TextDirection.Ltr)
     )
 }

@@ -18,6 +18,7 @@ ksp = "2.3.0"
 retrofit = "3.0.0"
 room = "2.8.3"
 desugar-jdk-libs = "2.1.5"
+kotlinx-collections-immutable = "0.4.0"
 
 [libraries]
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -48,7 +49,8 @@ moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", ver
 retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 retrofit-type-keeper = { module = "com.squareup.retrofit2:response-type-keeper", version.ref = "retrofit" }
 retrofit-main = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
+desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-application" }

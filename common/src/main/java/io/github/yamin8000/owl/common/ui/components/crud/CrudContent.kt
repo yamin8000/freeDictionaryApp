@@ -43,6 +43,8 @@ import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import java.util.UUID
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -61,7 +63,7 @@ private fun Preview() {
                 repeat(Random.nextInt(0..100)) {
                     add("Item")
                 }
-            }
+            }.toImmutableList()
         )
     }
 }
@@ -69,7 +71,7 @@ private fun Preview() {
 @Composable
 fun <T> CrudContent(
     title: String,
-    items: List<T>,
+    items: ImmutableList<T>,
     onBackClick: () -> Unit,
     onRemoveAll: () -> Unit,
     onRemoveSingle: (T) -> Unit,

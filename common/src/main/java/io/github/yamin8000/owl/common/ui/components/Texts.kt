@@ -134,7 +134,7 @@ fun CopyAbleRippleText(
                 Surface(
                     shape = DefaultCutShape,
                     content = {
-                        val words = remember {
+                        val words = remember(text) {
                             sanitizeWords(text.split(Regex("\\s+")).toSet()).toList()
                         }
                         LazyVerticalGrid(

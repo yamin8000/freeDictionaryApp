@@ -42,6 +42,8 @@ import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItem
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItemCard
 import io.github.yamin8000.owl.strings.R
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
 
 @MyPreview
@@ -50,7 +52,7 @@ private fun Preview() {
     PreviewTheme {
         TtsLanguageSetting(
             currentTtsTag = "en-us",
-            languages = listOf(),
+            languages = persistentListOf(),
             onTtsTagChange = {}
         )
     }
@@ -59,7 +61,7 @@ private fun Preview() {
 @Composable
 internal fun TtsLanguageSetting(
     currentTtsTag: String,
-    languages: List<Locale>,
+    languages: ImmutableList<Locale>,
     onTtsTagChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {

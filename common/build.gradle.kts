@@ -62,6 +62,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     api(libs.androidx.core.ktx)
     api(libs.androidx.lifecycle.viewmodel.compose)
+    api(libs.kotlinx.collections.immutable)
     //compose
     api(libs.androidx.compose.ui)
     api(libs.androidx.compose.material)

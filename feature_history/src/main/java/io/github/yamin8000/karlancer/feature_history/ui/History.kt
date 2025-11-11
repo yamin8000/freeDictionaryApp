@@ -28,6 +28,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.components.crud.CrudContent
 import io.github.yamin8000.owl.strings.R
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun HistoryScreen(
@@ -41,7 +42,7 @@ fun HistoryScreen(
     CrudContent(
         modifier = modifier,
         title = stringResource(R.string.search_history),
-        items = state.history,
+        items = state.history.toImmutableList(),
         onBackClick = onBackClick,
         onRemoveAll = { vm.onEvent(HistoryEvent.RemoveAll) },
         onRemoveSingle = { vm.onEvent(HistoryEvent.RemoveHistory(it)) },

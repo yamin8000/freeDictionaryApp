@@ -26,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -56,31 +57,31 @@ class SettingsViewModel @Inject constructor(
         }
         scope.launch {
             _state.update { settingsState ->
-                settingsState.copy(englishLanguages = tts.englishLanguages())
+                settingsState.copy(englishLanguages = tts.englishLanguages().toImmutableList())
             }
         }
     }
 
-    fun onEvent(event: SettingsEvent) {
-        when (event) {
-            is SettingsEvent.UpdateStartingBlankState -> {
-                _state.update { it.copy(isStartingBlank = event.value) }
-                scope.launch { useCases.setStartingBlank(event.value) }
+    fun onAction(action: SettingsAction) {
+        when (action) {
+            is SettingsAction.OnStartingBlankChange -> {
+                _state.update { it.copy(isStartingBlank = action.value) }
+                scope.launch { useCases.setStartingBlank(action.value) }
             }
 
-            is SettingsEvent.UpdateTtsLangState -> {
-                _state.update { it.copy(ttsLang = event.value) }
-                scope.launch { useCases.setTTS(event.value) }
+            is SettingsAction.OnTtsLangChange -> {
+                _state.update { it.copy(ttsLang = action.value) }
+                scope.launch { useCases.setTTS(action.value) }
             }
 
-            is SettingsEvent.UpdateVibrationState -> {
-                _state.update { it.copy(isVibrating = event.value) }
-                scope.launch { useCases.setVibration(event.value) }
+            is SettingsAction.OnVibrationChange -> {
+                _state.update { it.copy(isVibrating = action.value) }
+                scope.launch { useCases.setVibration(action.value) }
             }
 
-            is SettingsEvent.UpdateTheme -> {
-                _state.update { it.copy(theme = event.newTheme) }
-                scope.launch { useCases.setTheme(event.newTheme) }
+            is SettingsAction.OnThemeChange -> {
+                _state.update { it.copy(theme = action.newTheme) }
+                scope.launch { useCases.setTheme(action.newTheme) }
             }
         }
     }

@@ -21,6 +21,9 @@
 
 package io.github.yamin8000.owl.datastore.domain.model
 
+import androidx.compose.runtime.Stable
+
+@Stable
 sealed interface ThemeType {
     data object Dark : ThemeType
     data object Light : ThemeType

@@ -28,6 +28,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.components.crud.CrudContent
 import io.github.yamin8000.owl.strings.R
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun FavouritesScreen(
@@ -40,7 +41,7 @@ fun FavouritesScreen(
     CrudContent(
         modifier = modifier,
         title = stringResource(R.string.favourites),
-        items = state.favourites,
+        items = state.favourites.toImmutableList(),
         onBackClick = onBackClick,
         onRemoveAll = { vm.onEvent(FavouriteEvent.RemoveAll) },
         onRemoveSingle = { vm.onEvent(FavouriteEvent.Remove(it)) },

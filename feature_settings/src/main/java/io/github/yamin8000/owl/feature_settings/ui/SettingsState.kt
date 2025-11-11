@@ -22,6 +22,8 @@
 package io.github.yamin8000.owl.feature_settings.ui
 
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
 
 data class SettingsState(
@@ -29,5 +31,5 @@ data class SettingsState(
     val ttsLang: String = "en-US",
     val isVibrating: Boolean = true,
     val isStartingBlank: Boolean = true,
-    val englishLanguages: List<Locale> = emptyList()
+    val englishLanguages: ImmutableList<Locale> = persistentListOf()
 )

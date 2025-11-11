@@ -42,8 +42,6 @@ import io.github.yamin8000.owl.feature_settings.ui.components.GeneralSettings
 import io.github.yamin8000.owl.feature_settings.ui.components.theme.ThemeSetting
 import io.github.yamin8000.owl.feature_settings.ui.components.tts.TtsLanguageSetting
 import io.github.yamin8000.owl.strings.R
-import java.util.Locale
-import kotlin.random.Random
 
 @PreviewScreenSizes
 @PreviewFontScale
@@ -51,15 +49,8 @@ import kotlin.random.Random
 private fun Preview() {
     PreviewTheme {
         SettingsContent(
-            isVibrating = Random.nextBoolean(),
-            onVibrationChange = {},
-            isStartingBlank = Random.nextBoolean(),
-            onStartingBlankChange = {},
-            theme = ThemeType.entries().random(),
-            onUpdateTheme = {},
-            ttsLang = "en-us",
-            onTtsLangChange = {},
-            englishLanguages = listOf(),
+            state = SettingsState(),
+            onAction = {},
             onThemeChanged = {},
             onBackClick = {}
         )
@@ -77,15 +68,8 @@ fun SettingsScreen(
 
     SettingsContent(
         modifier = modifier,
-        isVibrating = state.isVibrating,
-        onVibrationChange = { vm.onEvent(SettingsEvent.UpdateVibrationState(it)) },
-        isStartingBlank = state.isStartingBlank,
-        onStartingBlankChange = { vm.onEvent(SettingsEvent.UpdateStartingBlankState(it)) },
-        theme = state.theme,
-        onUpdateTheme = { vm.onEvent(SettingsEvent.UpdateTheme(it)) },
-        ttsLang = state.ttsLang,
-        onTtsLangChange = { vm.onEvent(SettingsEvent.UpdateTtsLangState(it)) },
-        englishLanguages = state.englishLanguages,
+        state = state,
+        onAction = { vm.onAction(it) },
         onThemeChanged = onThemeChanged,
         onBackClick = onBackClick
     )
@@ -93,15 +77,8 @@ fun SettingsScreen(
 
 @Composable
 internal fun SettingsContent(
-    isVibrating: Boolean,
-    onVibrationChange: (Boolean) -> Unit,
-    isStartingBlank: Boolean,
-    onStartingBlankChange: (Boolean) -> Unit,
-    theme: ThemeType,
-    onUpdateTheme: (ThemeType) -> Unit,
-    ttsLang: String,
-    onTtsLangChange: (String) -> Unit,
-    englishLanguages: List<Locale>,
+    state: SettingsState,
+    onAction: (SettingsAction) -> Unit,
     onThemeChanged: (ThemeType) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -122,22 +99,22 @@ internal fun SettingsContent(
                     .padding(bottom = Sizes.Large),
                 content = {
                     GeneralSettings(
-                        isVibrating = isVibrating,
-                        onVibratingChange = onVibrationChange,
-                        isStartingBlank = isStartingBlank,
-                        onStartingBlankChange = onStartingBlankChange
+                        isVibrating = state.isVibrating,
+                        onVibratingChange = { onAction(SettingsAction.OnVibrationChange(it)) },
+                        isStartingBlank = state.isStartingBlank,
+                        onStartingBlankChange = { onAction(SettingsAction.OnStartingBlankChange(it)) }
                     )
                     ThemeSetting(
-                        theme = theme,
+                        theme = state.theme,
                         onThemeChanged = { newTheme ->
-                            onUpdateTheme(newTheme)
+                            onAction(SettingsAction.OnThemeChange(newTheme))
                             onThemeChanged(newTheme)
                         }
                     )
                     TtsLanguageSetting(
-                        currentTtsTag = ttsLang,
-                        languages = englishLanguages,
-                        onTtsTagChange = onTtsLangChange
+                        currentTtsTag = state.ttsLang,
+                        languages = state.englishLanguages,
+                        onTtsTagChange = { onAction(SettingsAction.OnTtsLangChange(it)) }
                     )
                 }
             )

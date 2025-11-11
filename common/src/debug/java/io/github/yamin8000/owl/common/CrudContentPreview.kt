@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import io.github.yamin8000.owl.common.ui.components.crud.CrudContent
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
+import kotlinx.collections.immutable.toImmutableList
 import net.datafaker.Faker
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -55,7 +56,7 @@ private fun CrudContentPreview() {
 
         CrudContent(
             title = faker.lorem().word(),
-            items = items,
+            items = items.toImmutableList(),
             onBackClick = {},
             onRemoveAll = {},
             onRemoveSingle = {},
