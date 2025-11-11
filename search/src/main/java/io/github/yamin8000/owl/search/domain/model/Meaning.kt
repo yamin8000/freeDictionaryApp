@@ -21,31 +21,33 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlin.random.Random
 import kotlin.random.nextInt
 
 data class Meaning(
     val partOfSpeech: String,
-    val definitions: List<Definition>,
-    val synonyms: List<String>,
-    val antonyms: List<String>,
+    val definitions: ImmutableList<Definition>,
+    val synonyms: ImmutableList<String>,
+    val antonyms: ImmutableList<String>,
     val entryId: Long? = null,
     val id: Long? = null
 ) {
     companion object {
         fun mock() = Meaning(
             partOfSpeech = "partOfSpeech",
-            definitions = Definition.mockList(),
+            definitions = Definition.mockList().toImmutableList(),
             synonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
                     add("Synonym")
                 }
-            },
+            }.toImmutableList(),
             antonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
                     add("Antonym")
                 }
-            }
+            }.toImmutableList()
         )
 
         fun mockList(n: Int = Random.nextInt(1..5)) = buildList {

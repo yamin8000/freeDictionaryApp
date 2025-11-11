@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.search.data.datasource.remote.dto
 
 import com.squareup.moshi.JsonClass
 import io.github.yamin8000.owl.search.domain.model.Meaning
+import kotlinx.collections.immutable.toImmutableList
 
 @JsonClass(generateAdapter = true)
 data class MeaningDto(
@@ -37,8 +38,8 @@ data class MeaningDto(
         id = id,
         entryId = entryId,
         partOfSpeech = partOfSpeech,
-        definitions = definitions.map { it.domain() },
-        synonyms = synonyms,
-        antonyms = antonyms
+        definitions = definitions.map { it.domain() }.toImmutableList(),
+        synonyms = synonyms.toImmutableList(),
+        antonyms = antonyms.toImmutableList()
     )
 }

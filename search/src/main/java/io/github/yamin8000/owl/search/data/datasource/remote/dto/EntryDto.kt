@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.search.data.datasource.remote.dto
 
 import com.squareup.moshi.JsonClass
 import io.github.yamin8000.owl.search.domain.model.Entry
+import kotlinx.collections.immutable.toImmutableList
 
 @JsonClass(generateAdapter = true)
 data class EntryDto(
@@ -35,10 +36,10 @@ data class EntryDto(
 ) {
     fun domain() = Entry(
         word = word,
-        phonetics = phonetics.map { it.domain() },
-        meanings = meanings.map { it.domain() },
+        phonetics = phonetics.map { it.domain() }.toImmutableList(),
+        meanings = meanings.map { it.domain() }.toImmutableList(),
         license = license?.domain(),
-        sourceUrls = sourceUrls,
+        sourceUrls = sourceUrls?.toImmutableList(),
         id = id
     )
 }

@@ -29,14 +29,18 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import java.util.UUID
 import kotlin.random.Random
 
+@Preview
 @Composable
 private fun Preview() {
     PreviewTheme {
@@ -44,7 +48,7 @@ private fun Preview() {
             isSearching = Random.nextBoolean(),
             word = "Word",
             phonetic = "Phonetic",
-            meanings = Meaning.mockList()
+            meanings = Meaning.mockList().toImmutableList()
         )
     }
 }
@@ -54,7 +58,7 @@ internal fun SearchList(
     isSearching: Boolean,
     word: String,
     phonetic: String,
-    meanings: List<Meaning>,
+    meanings: ImmutableList<Meaning>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(

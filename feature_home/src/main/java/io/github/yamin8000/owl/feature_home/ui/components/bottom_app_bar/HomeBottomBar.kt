@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
+import kotlinx.collections.immutable.persistentListOf
 
 @MyPreview
 @Composable
@@ -38,7 +39,7 @@ private fun Preview() {
             suggestionsChips = {
                 SuggestionsChips(
                     searchTerm = "test",
-                    suggestions = emptyList(),
+                    suggestions = persistentListOf(),
                     onSuggestionClick = {},
                 )
             },

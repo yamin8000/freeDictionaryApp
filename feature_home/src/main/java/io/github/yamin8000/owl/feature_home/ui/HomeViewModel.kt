@@ -40,6 +40,8 @@ import io.github.yamin8000.owl.feature_home.ui.util.HomeSnackbarType
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
 import io.github.yamin8000.owl.search.domain.usecase.WordCacheUseCases
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -155,7 +157,10 @@ class HomeViewModel @AssistedInject constructor(
                 savedState["Search"] = event.term
                 scope.launch {
                     _state.update {
-                        it.copy(searchSuggestions = termSuggesterRepository.suggestTerms(event.term))
+                        it.copy(
+                            searchSuggestions = termSuggesterRepository.suggestTerms(event.term)
+                                .toImmutableList()
+                        )
                     }
                 }
             }
@@ -216,7 +221,7 @@ class HomeViewModel @AssistedInject constructor(
                 searchResult = cachedWord,
                 word = cachedWord.word,
                 phonetic = phonetic,
-                searchSuggestions = emptyList()
+                searchSuggestions = persistentListOf()
             )
         }
     }
@@ -231,7 +236,7 @@ class HomeViewModel @AssistedInject constructor(
                 searchResult = entry,
                 word = entry?.word ?: "",
                 phonetic = phonetic,
-                searchSuggestions = emptyList()
+                searchSuggestions = persistentListOf()
             )
         }
         return entry

@@ -24,11 +24,13 @@ package io.github.yamin8000.owl.feature_home.ui
 import androidx.compose.material3.SnackbarHostState
 import io.github.yamin8000.owl.feature_home.ui.util.HomeSnackbarType
 import io.github.yamin8000.owl.search.domain.model.Entry
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 data class HomeState(
     val isOnline: Boolean = false,
     val isSearching: Boolean = false,
-    val searchSuggestions: List<String> = emptyList(),
+    val searchSuggestions: ImmutableList<String> = persistentListOf(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     val error: HomeSnackbarType? = null,
     val searchResult: Entry? = null,

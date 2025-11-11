@@ -35,6 +35,8 @@ import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @MyPreview
 @Composable
@@ -42,7 +44,7 @@ private fun Preview() {
     PreviewTheme {
         SuggestionsChips(
             searchTerm = "ing",
-            suggestions = listOf("eating", "drinking", "drink"),
+            suggestions = persistentListOf("eating", "drinking", "drink"),
             onSuggestionClick = {}
         )
     }
@@ -51,7 +53,7 @@ private fun Preview() {
 @Composable
 internal fun SuggestionsChips(
     searchTerm: String,
-    suggestions: List<String>,
+    suggestions: ImmutableList<String>,
     onSuggestionClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {

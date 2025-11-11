@@ -29,6 +29,7 @@ import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.search.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.search.domain.repository.local.PhoneticRepository
+import kotlinx.collections.immutable.toImmutableList
 
 class EntryRoomRepository(
     private val dao: DAOs.EntryDao,
@@ -54,8 +55,8 @@ class EntryRoomRepository(
             Entry(
                 id = item.id,
                 word = item.word,
-                phonetics = phoneticRepository.findAllByEntryId(item.id),
-                meanings = meaningRepository.findAllByEntryId(item.id)
+                phonetics = phoneticRepository.findAllByEntryId(item.id).toImmutableList(),
+                meanings = meaningRepository.findAllByEntryId(item.id).toImmutableList()
             )
         } else null
     }

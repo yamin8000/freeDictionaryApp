@@ -46,6 +46,8 @@ import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import java.util.UUID
 import kotlin.random.Random
 
@@ -60,7 +62,7 @@ private fun Preview() {
             onAddToFavourite = {},
             onShareWord = {},
             onWordChipClick = {},
-            meanings = Meaning.mockList(),
+            meanings = Meaning.mockList().toImmutableList(),
         )
     }
 }
@@ -73,10 +75,10 @@ internal fun SearchList(
     onAddToFavourite: () -> Unit,
     onShareWord: () -> Unit,
     onWordChipClick: (String) -> Unit,
-    meanings: List<Meaning>,
+    meanings: ImmutableList<Meaning>,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
+
     LazyColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -91,8 +93,10 @@ internal fun SearchList(
                         enter = slideInVertically() + fadeIn(),
                         exit = slideOutVertically() + fadeOut(),
                         content = {
-                            val internetError =
-                                remember { context.getString(R.string.general_net_error) }
+                            val context = LocalContext.current
+                            val internetError = remember {
+                                context.getString(R.string.general_net_error)
+                            }
                             AppText(
                                 modifier = Modifier.padding(Sizes.Medium),
                                 color = MaterialTheme.colorScheme.error,

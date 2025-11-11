@@ -60,7 +60,7 @@ fun OverlayScreen(
     }
     val localWindow = LocalWindowInfo.current
     val density = LocalDensity.current
-    val screenHeight = remember(localWindow) {
+    val screenHeight = remember(localWindow, density) {
         with(density) {
             localWindow.containerSize.height.toDp()
         }

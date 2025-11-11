@@ -21,11 +21,13 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
+import kotlinx.collections.immutable.ImmutableList
+
 data class Entry(
     val word: String,
-    val phonetics: List<Phonetic>,
-    val meanings: List<Meaning>,
+    val phonetics: ImmutableList<Phonetic>,
+    val meanings: ImmutableList<Meaning>,
     val license: License? = null,
-    val sourceUrls: List<String>? = null,
+    val sourceUrls: ImmutableList<String>? = null,
     val id: Long? = null
 )

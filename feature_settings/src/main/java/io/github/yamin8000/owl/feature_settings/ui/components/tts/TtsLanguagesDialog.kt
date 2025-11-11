@@ -43,6 +43,8 @@ import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
 
 @MyPreview
@@ -51,7 +53,7 @@ private fun Preview() {
     PreviewTheme {
         TtsLanguagesDialog(
             currentTtsTag = "",
-            languages = emptyList(),
+            languages = persistentListOf(),
             onDismiss = {},
             onLanguageSelect = {}
         )
@@ -62,7 +64,7 @@ private fun Preview() {
 @Composable
 internal fun TtsLanguagesDialog(
     currentTtsTag: String,
-    languages: List<Locale>,
+    languages: ImmutableList<Locale>,
     onLanguageSelect: (String) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier

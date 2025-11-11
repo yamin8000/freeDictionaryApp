@@ -28,6 +28,8 @@ import io.github.yamin8000.owl.search.domain.model.Meaning
 import io.github.yamin8000.owl.search.domain.repository.local.DefinitionRepository
 import io.github.yamin8000.owl.search.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.search.domain.repository.local.util.HasEntry
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 class MeaningRoomRepository(
     private val meaningDao: DAOs.MeaningDao,
@@ -44,9 +46,9 @@ class MeaningRoomRepository(
                 id = item.id,
                 entryId = item.entryId,
                 partOfSpeech = item.partOfSpeech,
-                definitions = definitionRepository.findAllByMeaningId(item.id),
-                synonyms = listOf(),
-                antonyms = listOf()
+                definitions = definitionRepository.findAllByMeaningId(item.id).toImmutableList(),
+                synonyms = persistentListOf(),
+                antonyms = persistentListOf()
             )
         } else null
     }
