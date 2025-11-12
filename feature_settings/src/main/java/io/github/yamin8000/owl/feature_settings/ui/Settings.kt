@@ -42,6 +42,8 @@ import io.github.yamin8000.owl.feature_settings.ui.components.GeneralSettings
 import io.github.yamin8000.owl.feature_settings.ui.components.theme.ThemeSetting
 import io.github.yamin8000.owl.feature_settings.ui.components.tts.TtsLanguageSetting
 import io.github.yamin8000.owl.strings.R
+import kotlinx.collections.immutable.persistentListOf
+import kotlin.random.Random
 
 @PreviewScreenSizes
 @PreviewFontScale
@@ -49,10 +51,16 @@ import io.github.yamin8000.owl.strings.R
 private fun Preview() {
     PreviewTheme {
         SettingsContent(
-            state = SettingsState(),
             onAction = {},
             onThemeChanged = {},
-            onBackClick = {}
+            onBackClick = {},
+            state = SettingsState(
+                theme = ThemeType.entries().random(),
+                ttsLang = "en-US",
+                isVibrating = Random.nextBoolean(),
+                isStartingBlank = Random.nextBoolean(),
+                englishLanguages = persistentListOf()
+            )
         )
     }
 }
