@@ -1,3 +1,5 @@
+import com.android.build.api.variant.impl.DeferredActionManager
+
 /*
  *     freeDictionaryApp/freeDictionaryApp
  *     build.gradle.kts Copyrighted by Yamin Siahmargooei at 2024/5/9
@@ -27,4 +29,67 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.hilt) apply false
+}
+
+tasks.register("sortLibs") {
+    doFirst {
+        val tomlFile = File("$projectDir${File.separator}gradle${File.separator}libs.versions.toml")
+        val lines = tomlFile.readLines()
+        var versions = mutableListOf<String>()
+        var libraries = mutableListOf<String>()
+        var plugins = mutableListOf<String>()
+
+        var isVersion = false
+        var isLibrary = false
+        var isPlugin = false
+        for (line in lines) {
+            if (line.isNotBlank()) {
+                if (line == "[versions]") {
+                    isVersion = true
+                    isLibrary = false
+                    isPlugin = false
+                    continue
+                }
+                if (line == "[libraries]") {
+                    isVersion = false
+                    isLibrary = true
+                    isPlugin = false
+                    continue
+                }
+                if (line == "[plugins]") {
+                    isVersion = false
+                    isLibrary = false
+                    isPlugin = true
+                    continue
+                }
+
+                if (isVersion) {
+                    versions.add(line)
+                }
+                if (isLibrary) {
+                    libraries.add(line)
+                }
+                if (isPlugin) {
+                    plugins.add(line)
+                }
+            }
+        }
+
+        versions = versions.sorted().toMutableList()
+        libraries = libraries.sorted().toMutableList()
+        plugins = plugins.sorted().toMutableList()
+
+        tomlFile.writeText(
+            buildString {
+                appendLine("[versions]")
+                versions.forEach { appendLine(it) }
+                appendLine()
+                appendLine("[libraries]")
+                libraries.forEach { appendLine(it) }
+                appendLine()
+                appendLine("[plugins]")
+                plugins.forEach { appendLine(it) }
+            }.trim()
+        )
+    }
 }
