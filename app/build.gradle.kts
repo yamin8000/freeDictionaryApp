@@ -102,6 +102,7 @@ dependencies {
     implementation(project(":feature_history"))
     implementation(project(":feature_favourites"))
     implementation(project(":feature_overlay"))
+    implementation(project(":feature_about"))
     //core android/kotlin
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)

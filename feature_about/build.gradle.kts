@@ -30,7 +30,7 @@ plugins {
 }
 
 android {
-    namespace = "io.github.yamin8000.owl.feature_favourites"
+    namespace = "io.github.yamin8000.owl.feature_about"
     compileSdk = 36
 
     defaultConfig {

@@ -38,7 +38,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.github.yamin8000.karlancer.feature_history.ui.HistoryScreen
+import io.github.yamin8000.owl.BuildConfig
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
+import io.github.yamin8000.owl.feature_about.ui.AboutScreen
 import io.github.yamin8000.owl.feature_favourites.FavouritesScreen
 import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.ui.HomeScreen
@@ -107,7 +109,8 @@ internal class MainActivity : BaseActivity() {
                 }
 
                 composable(Nav.Route.About.toString()) {
-                    AboutContent(
+                    AboutScreen(
+                        versionName = BuildConfig.VERSION_NAME,
                         onBackClick = onBackClick
                     )
                 }

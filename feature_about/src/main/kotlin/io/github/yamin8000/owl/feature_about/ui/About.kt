@@ -1,16 +1,16 @@
 /*
- *     freeDictionaryApp/freeDictionaryApp.app.main
- *     About.kt Copyrighted by Yamin Siahmargooei at 2024/5/9
- *     About.kt Last modified at 2024/5/6
- *     This file is part of freeDictionaryApp/freeDictionaryApp.app.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     freeDictionaryApp/freeDictionaryApp.feature_about.main
+ *     About.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
+ *     About.kt Last modified at 2025/11/16
+ *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_about.main.
+ *     Copyright (C) 2025  Yamin Siahmargooei
  *
- *     freeDictionaryApp/freeDictionaryApp.app.main is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp/freeDictionaryApp.feature_about.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     freeDictionaryApp/freeDictionaryApp.app.main is distributed in the hope that it will be useful,
+ *     freeDictionaryApp/freeDictionaryApp.feature_about.main is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.ui
+package io.github.yamin8000.owl.feature_about.ui
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
@@ -45,31 +45,37 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import io.github.yamin8000.owl.BuildConfig
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
-import io.github.yamin8000.owl.R as RApp
+import io.github.yamin8000.owl.feature_about.R.drawable as R_drawable
 
 @PreviewFontScale
 @PreviewScreenSizes
 @Composable
 private fun Preview() {
     PreviewTheme {
-        AboutContent(
+        AboutScreen(
+            versionName = "1.0.0",
             onBackClick = {}
         )
     }
 }
 
 @Composable
-internal fun AboutContent(
+fun AboutScreen(
+    onBackClick: () -> Unit,
+    versionName: String,
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit
+    vm: AboutViewModel = hiltViewModel()
 ) {
+    val state = vm.state.collectAsStateWithLifecycle()
+
     ScaffoldWithTitle(
         modifier = modifier,
         title = stringResource(R.string.about),
@@ -97,7 +103,7 @@ internal fun AboutContent(
                                 else .5f
                             }
                             Image(
-                                painter = painterResource(id = RApp.drawable.ic_gplv3),
+                                painter = painterResource(id = R_drawable.ic_gplv3),
                                 contentDescription = stringResource(id = R.string.gplv3_image_description),
                                 contentScale = ContentScale.FillWidth,
                                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant),
@@ -107,7 +113,7 @@ internal fun AboutContent(
                     )
                     AppText(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(R.string.version_name, BuildConfig.VERSION_NAME)
+                        text = stringResource(R.string.version_name, versionName)
                     )
                     Spacer(modifier = Modifier.padding(bottom = Sizes.Large))
                     AppText(

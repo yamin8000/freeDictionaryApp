@@ -48,6 +48,10 @@ android {
             jvmTarget = JvmTarget.JVM_17
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 composeCompiler {
