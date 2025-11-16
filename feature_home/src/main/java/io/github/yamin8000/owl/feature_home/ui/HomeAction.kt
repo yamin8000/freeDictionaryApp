@@ -21,13 +21,13 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
-sealed interface HomeEvent {
-    data object RandomWord : HomeEvent
-    data class NewSearch(val searchTerm: String? = null) : HomeEvent
-    data class OnTermChanged(val term: String) : HomeEvent
-    data object OnShareData : HomeEvent
-    data object CancelSearch : HomeEvent
-    data object OnCheckInternet : HomeEvent
-    data class OnAddToFavourite(val word: String) : HomeEvent
-    data object UpdateTTS : HomeEvent
+sealed interface HomeAction {
+    data object RandomWord : HomeAction
+    data class NewSearch(val searchTerm: String? = null) : HomeAction
+    data class OnTermChanged(val term: String) : HomeAction
+    data object OnShareData : HomeAction
+    data object CancelSearch : HomeAction
+    data object OnCheckInternet : HomeAction
+    data class OnAddToFavourite(val word: String) : HomeAction
+    data object UpdateTTS : HomeAction
 }

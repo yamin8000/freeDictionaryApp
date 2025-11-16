@@ -132,40 +132,38 @@ class HomeViewModel @AssistedInject constructor(
                 searchForDefinition(searchTerm.value)
             }
             while (true) {
-                onEvent(HomeEvent.OnCheckInternet)
+                onAction(HomeAction.OnCheckInternet)
                 delay(internetCheckDelay)
             }
         }
     }
 
-    fun onEvent(
-        event: HomeEvent
-    ) {
-        when (event) {
-            HomeEvent.RandomWord -> searchForRandomWord()
-            HomeEvent.OnShareData -> scope.launch { shareChannel.send(state.value.searchResult) }
-            HomeEvent.CancelSearch -> cancel()
-            HomeEvent.UpdateTTS -> scope.launch { tts.createEngine(settingsUseCases.getTTS()) }
+    fun onAction(action: HomeAction) {
+        when (action) {
+            HomeAction.RandomWord -> searchForRandomWord()
+            HomeAction.OnShareData -> scope.launch { shareChannel.send(state.value.searchResult) }
+            HomeAction.CancelSearch -> cancel()
+            HomeAction.UpdateTTS -> scope.launch { tts.createEngine(settingsUseCases.getTTS()) }
 
-            is HomeEvent.NewSearch -> {
-                val term = event.searchTerm ?: searchTerm.value
+            is HomeAction.NewSearch -> {
+                val term = action.searchTerm ?: searchTerm.value
                 savedState["Search"] = term
                 searchJob = searchForDefinition(term)
             }
 
-            is HomeEvent.OnTermChanged -> {
-                savedState["Search"] = event.term
+            is HomeAction.OnTermChanged -> {
+                savedState["Search"] = action.term
                 scope.launch {
                     _state.update {
                         it.copy(
-                            searchSuggestions = termSuggesterRepository.suggestTerms(event.term)
+                            searchSuggestions = termSuggesterRepository.suggestTerms(action.term)
                                 .toImmutableList()
                         )
                     }
                 }
             }
 
-            HomeEvent.OnCheckInternet -> {
+            HomeAction.OnCheckInternet -> {
                 scope.launch {
                     _state.update { stateUpdate ->
                         stateUpdate.copy(isOnline = dnsServers.any { dnsAccessible(it) })
@@ -173,9 +171,9 @@ class HomeViewModel @AssistedInject constructor(
                 }
             }
 
-            is HomeEvent.OnAddToFavourite -> {
+            is HomeAction.OnAddToFavourite -> {
                 scope.launch {
-                    favouriteUseCases.addFavourite(event.word)
+                    favouriteUseCases.addFavourite(action.word)
                     errorChannel.send(HomeSnackbarType.AddedToFavourite)
                 }
             }

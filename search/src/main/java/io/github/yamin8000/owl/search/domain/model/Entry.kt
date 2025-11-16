@@ -22,6 +22,8 @@
 package io.github.yamin8000.owl.search.domain.model
 
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 data class Entry(
     val word: String,
@@ -30,4 +32,14 @@ data class Entry(
     val license: License? = null,
     val sourceUrls: ImmutableList<String>? = null,
     val id: Long? = null
-)
+) {
+    companion object {
+        fun mock() = Entry(
+            word = "word",
+            phonetics = persistentListOf(),
+            meanings = Meaning.mockList().toImmutableList(),
+            license = null,
+            sourceUrls = persistentListOf()
+        )
+    }
+}
