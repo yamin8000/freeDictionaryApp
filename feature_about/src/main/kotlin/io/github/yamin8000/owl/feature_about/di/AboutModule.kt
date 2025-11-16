@@ -25,21 +25,63 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.yamin8000.owl.feature_about.data.datasource.remote.GithubAPIs
+import io.github.yamin8000.owl.feature_about.data.repository.GithubWebRepoRepository
+import io.github.yamin8000.owl.feature_about.domain.repository.GithubRepoRepository
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.create
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AboutModule {
 
+    @Qualifier
+    annotation class AboutModule
+
     @Provides
     @Singleton
-    fun providesRetrofit(): Retrofit {
+    fun providesOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val newRequest = chain.request()
+                newRequest.newBuilder()
+                    .addHeader("Accept", "application/vnd.github+json")
+                    .addHeader("X-GitHub-Api-Version", "2022-11-28")
+                    .build()
+                return@addInterceptor chain.proceed(newRequest)
+            }.build()
+    }
+
+    @AboutModule
+    @Provides
+    @Singleton
+    fun providesRetrofit(
+        client: OkHttpClient
+    ): Retrofit {
         val baseUrl = "https://api.github.com"
         return Retrofit.Builder()
             .baseUrl(baseUrl)
+            .client(client)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providesGithubAPIs(
+        @AboutModule
+        retrofit: Retrofit
+    ): GithubAPIs {
+        return retrofit.create<GithubAPIs>()
+    }
+
+    @Provides
+    @Singleton
+    fun providesGithubRepoRepository(api: GithubAPIs): GithubRepoRepository {
+        return GithubWebRepoRepository(api)
     }
 }

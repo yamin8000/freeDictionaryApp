@@ -110,7 +110,7 @@ internal class MainActivity : BaseActivity() {
 
                 composable(Nav.Route.About.toString()) {
                     AboutScreen(
-                        versionName = BuildConfig.VERSION_NAME,
+                        installedVersionName = BuildConfig.VERSION_NAME,
                         onBackClick = onBackClick
                     )
                 }

@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_about.main
- *     AboutState.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
- *     AboutState.kt Last modified at 2025/11/16
+ *     ContributorType.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
+ *     ContributorType.kt Last modified at 2025/11/16
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_about.main.
  *     Copyright (C) 2025  Yamin Siahmargooei
  *
@@ -19,16 +19,8 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_about.ui
+package io.github.yamin8000.owl.feature_about.domain
 
-import io.github.yamin8000.owl.feature_about.domain.Repository
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-
-data class AboutState(
-    val tab: AboutTab = AboutTab.Info,
-    val isLoading: Boolean = false,
-    val repository: Repository? = null,
-    val contributors: ImmutableList<UiContributor> = persistentListOf(),
-    val latestVersionName: String = "-"
-)
+enum class ContributorType {
+    User, Bot
+}

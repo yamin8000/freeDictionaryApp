@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_about.main
- *     GithubAPIs.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
- *     GithubAPIs.kt Last modified at 2025/11/16
+ *     GithubRepoRepository.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
+ *     GithubRepoRepository.kt Last modified at 2025/11/16
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_about.main.
  *     Copyright (C) 2025  Yamin Siahmargooei
  *
@@ -19,31 +19,26 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_about.data.datasource.remote
+package io.github.yamin8000.owl.feature_about.domain.repository
 
-import io.github.yamin8000.owl.feature_about.data.datasource.remote.dto.ContributorDto
-import io.github.yamin8000.owl.feature_about.data.datasource.remote.dto.ReleaseDto
-import io.github.yamin8000.owl.feature_about.data.datasource.remote.dto.RepositoryDto
-import retrofit2.http.GET
-import retrofit2.http.Path
+import io.github.yamin8000.owl.feature_about.domain.Contributor
+import io.github.yamin8000.owl.feature_about.domain.Release
+import io.github.yamin8000.owl.feature_about.domain.Repository
 
-interface GithubAPIs {
+interface GithubRepoRepository {
 
-    @GET("/repos/{owner}/{repo}")
     suspend fun getRepository(
-        @Path("owner") owner: String,
-        @Path("repo") repo: String
-    ): RepositoryDto
+        owner: String,
+        repo: String
+    ): Repository
 
-    @GET("/repos/{owner}/{repo}/contributors")
-    suspend fun repositoryContributors(
-        @Path("owner") owner: String,
-        @Path("repo") repo: String
-    ): List<ContributorDto>
+    suspend fun getRepositoryContributors(
+        owner: String,
+        repo: String
+    ): List<Contributor>
 
-    @GET("/repos/{owner}/{repo}/releases")
-    suspend fun releases(
-        @Path("owner") owner: String,
-        @Path("repo") repo: String
-    ): List<ReleaseDto>
+    suspend fun getReleases(
+        owner: String,
+        repo: String
+    ): List<Release>
 }

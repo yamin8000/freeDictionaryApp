@@ -22,4 +22,6 @@
 package io.github.yamin8000.owl.feature_about.ui
 
 sealed interface AboutAction {
+    data object OnRefresh : AboutAction
+    data class OnTabChanged(val tab: AboutTab) : AboutAction
 }

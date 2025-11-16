@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_about.main
- *     AboutState.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
- *     AboutState.kt Last modified at 2025/11/16
+ *     AboutTab.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
+ *     AboutTab.kt Last modified at 2025/11/16
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_about.main.
  *     Copyright (C) 2025  Yamin Siahmargooei
  *
@@ -21,14 +21,8 @@
 
 package io.github.yamin8000.owl.feature_about.ui
 
-import io.github.yamin8000.owl.feature_about.domain.Repository
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-
-data class AboutState(
-    val tab: AboutTab = AboutTab.Info,
-    val isLoading: Boolean = false,
-    val repository: Repository? = null,
-    val contributors: ImmutableList<UiContributor> = persistentListOf(),
-    val latestVersionName: String = "-"
-)
+enum class AboutTab(
+    val index: Int
+) {
+    Info(0), License(1), Contributors(2)
+}

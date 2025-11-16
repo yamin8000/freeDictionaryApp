@@ -29,7 +29,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import io.github.yamin8000.owl.core.R
+import io.github.yamin8000.owl.common.R
 
 @Composable
 fun EmptyList(

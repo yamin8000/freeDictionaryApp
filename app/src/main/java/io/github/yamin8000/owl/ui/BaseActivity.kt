@@ -33,7 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.yamin8000.owl.common.ui.theme.AppTheme
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
-import io.github.yamin8000.owl.util.log
+import io.github.yamin8000.owl.common.util.log
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 

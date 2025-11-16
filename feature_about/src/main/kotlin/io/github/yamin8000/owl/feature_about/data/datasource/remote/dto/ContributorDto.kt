@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_about.main
- *     AboutState.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
- *     AboutState.kt Last modified at 2025/11/16
+ *     ContributorDto.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
+ *     ContributorDto.kt Last modified at 2025/11/16
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_about.main.
  *     Copyright (C) 2025  Yamin Siahmargooei
  *
@@ -19,16 +19,30 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_about.ui
+package io.github.yamin8000.owl.feature_about.data.datasource.remote.dto
 
-import io.github.yamin8000.owl.feature_about.domain.Repository
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import io.github.yamin8000.owl.feature_about.domain.Contributor
+import io.github.yamin8000.owl.feature_about.domain.ContributorType
 
-data class AboutState(
-    val tab: AboutTab = AboutTab.Info,
-    val isLoading: Boolean = false,
-    val repository: Repository? = null,
-    val contributors: ImmutableList<UiContributor> = persistentListOf(),
-    val latestVersionName: String = "-"
-)
+@JsonClass(generateAdapter = true)
+data class ContributorDto(
+    val id: Long,
+    val login: String,
+    val type: String,
+    @param:Json(name = "avatar_url")
+    val avatarUrl: String,
+    @param:Json(name = "html_url")
+    val profileUrl: String,
+    val contributions: Long
+) {
+    fun domain() = Contributor(
+        id = id,
+        username = login,
+        type = ContributorType.valueOf(type),
+        avatarUrl = avatarUrl,
+        profileUrl = profileUrl,
+        contributions = contributions,
+    )
+}

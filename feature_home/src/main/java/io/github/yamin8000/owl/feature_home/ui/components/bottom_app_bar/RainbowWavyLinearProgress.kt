@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
+import io.github.yamin8000.owl.common.util.randomColor
 import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -55,13 +56,7 @@ internal fun RainbowWavyLinearProgress(
 ) {
     val colors = buildList {
         repeat((50..100).random()) {
-            add(
-                androidx.compose.ui.graphics.Color(
-                    red = randomBeam(),
-                    green = randomBeam(),
-                    blue = randomBeam()
-                )
-            )
+            add(randomColor())
         }
     }
     var color by remember { mutableStateOf(colors.random()) }
@@ -83,5 +78,3 @@ internal fun RainbowWavyLinearProgress(
         trackColor = animatedColor
     )
 }
-
-private fun randomBeam(): Int = (64..256).random()

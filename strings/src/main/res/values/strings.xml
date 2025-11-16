@@ -33,7 +33,7 @@
     <string name="text_copied">Text copied.</string>
     <string name="license_header">This is a free application under GNU license, see more:</string>
     <string name="gplv3_image_description">GPLv3 License Logo</string>
-    <string name="about_app">English to English Dictionary, based on:</string>
+    <string name="about_app">freeDictionaryApp, An English to English Dictionary, based on:</string>
     <string name="github_source" translatable="false">https://github.com/yamin8000/freeDictionaryApp</string>
     <string name="license_link" translatable="false">https://raw.githubusercontent.com/yamin8000/freeDictionaryApp/master/LICENSE</string>
     <string name="free_dictionary_link" translatable="false">https://dictionaryapi.dev/</string>
@@ -52,7 +52,7 @@
     <string name="theme_dark">Dark</string>
     <string name="tts_language">Text-to-Speech Language</string>
     <string name="about">About</string>
-    <string name="version_name">Version %s</string>
+    <string name="version_name">Installed Version %s</string>
     <string name="example">Example</string>
     <string name="definition">Definition</string>
     <string name="type">Type</string>
@@ -73,4 +73,6 @@
     <string name="cancelled">Cancelled</string>
     <string name="close">Close</string>
     <string name="more_in_app">More in app…</string>
+    <string name="latest_version">Latest version: %1$s</string>
+    <string name="contributions_graph">Contributions Graph</string>
 </resources>

@@ -30,7 +30,7 @@ plugins {
 }
 
 android {
-    namespace = "io.github.yamin8000.owl.core"
+    namespace = "io.github.yamin8000.owl.common"
     compileSdk = 36
 
     defaultConfig {
@@ -51,6 +51,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

@@ -48,7 +48,7 @@
     <string name="theme_dark">تاریک</string>
     <string name="tts_language">زبان متن به گفتار</string>
     <string name="about">درباره</string>
-    <string name="version_name">نگارش %s</string>
+    <string name="version_name">نگارش نصب شده %s</string>
     <string name="example">نمونه</string>
     <string name="definition">معنی</string>
     <string name="type">نوع</string>
@@ -68,4 +68,6 @@
     <string name="cancelled">لغو شد.</string>
     <string name="close">بستن</string>
     <string name="more_in_app">بیشتر در برنامه…</string>
+    <string name="latest_version">جدیدترین نسخه: %1$s</string>
+    <string name="contributions_graph">نمودار مشارکت‌کنندگان</string>
 </resources>

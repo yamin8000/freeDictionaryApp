@@ -24,19 +24,29 @@ package io.github.yamin8000.owl.feature_about.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.common.util.randomColor
+import io.github.yamin8000.owl.feature_about.domain.repository.GithubRepoRepository
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class AboutViewModel @Inject constructor() : ViewModel() {
+class AboutViewModel @Inject constructor(
+    private val repository: GithubRepoRepository
+) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-
+        _state.update { it.copy(isLoading = false) }
+        log(throwable.stackTraceToString())
     }
 
     private val scope = CoroutineScope(
@@ -48,13 +58,41 @@ class AboutViewModel @Inject constructor() : ViewModel() {
     val state = _state.asStateFlow()
 
     init {
+        load()
+    }
 
+    private fun load() {
+        scope.launch {
+            _state.update { it.copy(isLoading = true) }
+            val repo = withContext(ioScope.coroutineContext) {
+                repository.getRepository("yamin8000", "freeDictionaryApp")
+            }
+            val releases = withContext(ioScope.coroutineContext) {
+                repository.getReleases("yamin8000", "freeDictionaryApp")
+            }
+            val contributors = withContext(ioScope.coroutineContext) {
+                repository.getRepositoryContributors("yamin8000", "freeDictionaryApp")
+            }
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    repository = repo,
+                    latestVersionName = releases.firstOrNull()?.name ?: "-",
+                    contributors = contributors.toImmutableList().map { contributor ->
+                        UiContributor(
+                            contributor = contributor,
+                            borderColor = randomColor()
+                        )
+                    }.toImmutableList()
+                )
+            }
+        }
     }
 
     fun onAction(action: AboutAction) {
         when (action) {
-
-            else -> {}
+            AboutAction.OnRefresh -> load()
+            is AboutAction.OnTabChanged -> _state.update { it.copy(tab = action.tab) }
         }
     }
 }

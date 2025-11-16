@@ -23,6 +23,6 @@ package io.github.yamin8000.owl.common.ui.theme
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import io.github.yamin8000.owl.core.R
+import io.github.yamin8000.owl.common.R
 
 val Samim = FontFamily(Font(R.font.samimbold))

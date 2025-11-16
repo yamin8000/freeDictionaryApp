@@ -32,12 +32,17 @@ import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object SearchWeb {
 
+    @Qualifier
+    annotation class SearchModule
+
+    @SearchModule
     @Provides
     @Singleton
     fun providesRetrofit(): Retrofit {
@@ -50,7 +55,10 @@ object SearchWeb {
 
     @Provides
     @Singleton
-    fun providesFreeDictionaryApi(retrofit: Retrofit): FreeDictionaryAPI {
+    fun providesFreeDictionaryApi(
+        @SearchModule
+        retrofit: Retrofit
+    ): FreeDictionaryAPI {
         return retrofit.create<FreeDictionaryAPI>()
     }
 

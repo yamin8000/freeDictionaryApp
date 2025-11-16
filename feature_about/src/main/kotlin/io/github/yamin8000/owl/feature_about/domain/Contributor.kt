@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_about.main
- *     AboutState.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
- *     AboutState.kt Last modified at 2025/11/16
+ *     Contributor.kt Copyrighted by Yamin Siahmargooei at 2025/11/16
+ *     Contributor.kt Last modified at 2025/11/16
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_about.main.
  *     Copyright (C) 2025  Yamin Siahmargooei
  *
@@ -19,16 +19,26 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_about.ui
+package io.github.yamin8000.owl.feature_about.domain
 
-import io.github.yamin8000.owl.feature_about.domain.Repository
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlin.random.Random
 
-data class AboutState(
-    val tab: AboutTab = AboutTab.Info,
-    val isLoading: Boolean = false,
-    val repository: Repository? = null,
-    val contributors: ImmutableList<UiContributor> = persistentListOf(),
-    val latestVersionName: String = "-"
-)
+data class Contributor(
+    val id: Long,
+    val username: String,
+    val type: ContributorType,
+    val avatarUrl: String,
+    val profileUrl: String,
+    val contributions: Long,
+) {
+    companion object {
+        fun mock() = Contributor(
+            id = Random.nextLong(),
+            username = "username",
+            type = ContributorType.entries.toTypedArray().random(),
+            avatarUrl = "https://example.com/avatar.png",
+            profileUrl = "https://example.com/profile",
+            contributions = Random.nextLong(1, 1000)
+        )
+    }
+}

@@ -31,7 +31,6 @@
     <string name="api_authorization_error">認証エラー</string>
     <string name="text_copied">テキストをコピーしました。</string>
     <string name="license_header">これはGNUライセンスに基づいた無料のアプリケーションです。詳細については次を参照してください：</string>
-    <string name="gplv3_image_description">GPLv3 License Logo</string>
     <string name="about_app">英語から英語への辞書、以下をベースにしています。</string>
     <string name="added_to_favourites">お気に入りに追加されました</string>
     <string name="clear">消去</string>
@@ -66,6 +65,4 @@
     <string name="back">戻る</string>
     <string name="remove_all_prompt">本当に全て削除しますか？</string>
     <string name="cancelled">キャンセル</string>
-    <string name="close">Close</string>
-    <string name="more_in_app">More in app…</string>
 </resources>

@@ -19,15 +19,28 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.util
+package io.github.yamin8000.owl.common.util
 
 import android.util.Log
-import io.github.yamin8000.owl.BuildConfig
+import androidx.compose.ui.graphics.Color
+import io.github.yamin8000.owl.common.BuildConfig
+import kotlin.random.Random
 
 /** Prints [message] to logcat if app is in debug build */
 fun log(
     message: String
 ) {
-    if (BuildConfig.DEBUG)
+    if (BuildConfig.DEBUG) {
         Log.d(Constants.LOG_TAG, message)
+    }
+}
+
+private const val GOLDEN_RATIO = 0.618033988749895
+
+fun randomColor(): Color {
+    val hue = Random.nextDouble(0.0, 360.0)
+    val saturation = Random.nextDouble(50.0, 100.0) / 100f
+    val value = Random.nextDouble(75.0, 100.0) / 100f
+    val hsv = floatArrayOf(hue.toFloat(), saturation.toFloat(), value.toFloat())
+    return Color(android.graphics.Color.HSVToColor(255, hsv))
 }

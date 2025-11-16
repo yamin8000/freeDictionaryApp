@@ -21,47 +21,60 @@
 
 package io.github.yamin8000.owl.feature_about.ui
 
-import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.yamin8000.owl.common.ui.components.AppText
-import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
+import io.github.yamin8000.owl.feature_about.ui.tabs.AboutContributors
+import io.github.yamin8000.owl.feature_about.ui.tabs.AboutInfo
+import io.github.yamin8000.owl.feature_about.ui.tabs.AboutLicense
 import io.github.yamin8000.owl.strings.R
-import io.github.yamin8000.owl.feature_about.R.drawable as R_drawable
+import kotlinx.collections.immutable.toImmutableList
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @PreviewFontScale
 @PreviewScreenSizes
 @Composable
 private fun Preview() {
     PreviewTheme {
-        AboutScreen(
-            versionName = "1.0.0",
+        var tab by remember { mutableStateOf(AboutTab.entries.random()) }
+        AboutContent(
+            installedVersionName = "1.0.0",
+            state = AboutState(
+                tab = tab,
+                contributors = buildList {
+                    repeat(Random.nextInt(2..5)) {
+                        add(UiContributor.mock())
+                    }
+                }.toImmutableList()
+            ),
+            onAction = {
+                when (it) {
+                    AboutAction.OnRefresh -> {}
+                    is AboutAction.OnTabChanged -> tab = it.tab
+                }
+            },
             onBackClick = {}
         )
     }
@@ -70,78 +83,78 @@ private fun Preview() {
 @Composable
 fun AboutScreen(
     onBackClick: () -> Unit,
-    versionName: String,
+    installedVersionName: String,
     modifier: Modifier = Modifier,
     vm: AboutViewModel = hiltViewModel()
 ) {
-    val state = vm.state.collectAsStateWithLifecycle()
+    val state = vm.state.collectAsStateWithLifecycle().value
 
+    PullToRefreshBox(
+        isRefreshing = state.isLoading,
+        onRefresh = { vm.onAction(AboutAction.OnRefresh) },
+        content = {
+            AboutContent(
+                onBackClick = onBackClick,
+                modifier = modifier,
+                installedVersionName = installedVersionName,
+                state = state,
+                onAction = { action -> vm.onAction(action) },
+            )
+        }
+    )
+}
+
+@Composable
+internal fun AboutContent(
+    onBackClick: () -> Unit,
+    installedVersionName: String,
+    state: AboutState,
+    onAction: (AboutAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     ScaffoldWithTitle(
         modifier = modifier,
         title = stringResource(R.string.about),
         onBackClick = onBackClick,
         content = {
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(Sizes.Small, Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(
-                    Sizes.Medium,
-                    Alignment.CenterVertically
-                ),
                 content = {
-                    val uriHandler = LocalUriHandler.current
-                    val sourceUri = stringResource(R.string.github_source)
-                    val freeDictionaryUri = stringResource(R.string.free_dictionary_link)
-                    val licenseUri = stringResource(R.string.license_link)
-
-                    Ripple(
-                        onClick = { uriHandler.openUri(licenseUri) },
-                        content = {
-                            val config = LocalConfiguration.current
-                            val fill = remember(config) {
-                                if (config.orientation == Configuration.ORIENTATION_PORTRAIT) 1f
-                                else .5f
+                    PrimaryTabRow(
+                        selectedTabIndex = state.tab.index,
+                        divider = {},
+                        tabs = {
+                            AboutTab.entries.forEach { tab ->
+                                Tab(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    selected = tab == state.tab,
+                                    onClick = { onAction(AboutAction.OnTabChanged(tab)) },
+                                    text = {
+                                        AppText(
+                                            text = tab.name,
+                                            modifier = Modifier.fillMaxWidth(),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                )
                             }
-                            Image(
-                                painter = painterResource(id = R_drawable.ic_gplv3),
-                                contentDescription = stringResource(id = R.string.gplv3_image_description),
-                                contentScale = ContentScale.FillWidth,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant),
-                                modifier = Modifier.fillMaxWidth(fill)
-                            )
                         }
                     )
-                    AppText(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(R.string.version_name, versionName)
-                    )
-                    Spacer(modifier = Modifier.padding(bottom = Sizes.Large))
-                    AppText(
-                        text = stringResource(id = R.string.license_header),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Ripple(
-                        onClick = { uriHandler.openUri(sourceUri) },
-                        content = {
-                            Text(
-                                text = sourceUri,
-                                textDecoration = TextDecoration.Underline
+                    when (state.tab) {
+                        AboutTab.Info -> {
+                            AboutInfo(
+                                installedVersionName = installedVersionName,
+                                latestVersionName = state.latestVersionName,
+                                description = state.repository?.description ?: ""
                             )
                         }
-                    )
-                    AppText(
-                        text = stringResource(id = R.string.about_app),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Ripple(
-                        onClick = { uriHandler.openUri(freeDictionaryUri) },
-                        content = {
-                            Text(
-                                text = freeDictionaryUri,
-                                textDecoration = TextDecoration.Underline
-                            )
-                        }
-                    )
+
+                        AboutTab.License -> AboutLicense()
+                        AboutTab.Contributors -> AboutContributors(contributors = state.contributors)
+                    }
                 }
             )
         }

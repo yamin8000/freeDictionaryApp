@@ -9,6 +9,7 @@ androidx-lifecycle-compose = "2.9.4"
 androidx-material3 = "1.5.0-alpha08"
 androidx-navigation-compose = "2.9.6"
 androidx-room = "2.8.3"
+coil-compose = "2.7.0"
 datafaker = "2.5.3"
 desugar-jdk-libs = "2.1.5"
 hilt = "2.57.2"
@@ -39,6 +40,7 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
 datafaker = { module = "net.datafaker:datafaker", version.ref = "datafaker" }
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
