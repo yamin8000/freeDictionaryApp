@@ -26,6 +26,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.kotlin.compose.plugin)
+    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.hilt)
 }
 
@@ -64,4 +65,11 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.lifecycle.compose)
+    //retrofit
+    api(libs.retrofit.main)
+    implementation(libs.retrofit.converter.moshi)
+    kapt(libs.retrofit.type.keeper)
+    //moshi
+    implementation(libs.moshi.kotlin)
+    ksp(libs.moshi.kotlin.codegen)
 }
