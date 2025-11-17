@@ -67,4 +67,7 @@
     <string name="remove_all_prompt">Do you want to remove all?</string>
     <string name="cancelled">Cancelled</string>
     <string name="close">Close</string>
+    <string name="more_in_app">More in app…</string>
+    <string name="latest_version">Latest version: %1$s</string>
+    <string name="contributions_graph">Contributions Graph</string>
 </resources>
