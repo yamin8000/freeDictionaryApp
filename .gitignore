@@ -37,3 +37,4 @@ local.properties
 /.idea/copilot.data.migration.ask.xml
 /.idea/copilot.data.migration.ask2agent.xml
 /.idea/betterCommentsSettings.xml
+/.idea/runConfigurations/app.xml
