@@ -272,8 +272,8 @@ fun SpeakableRippleTextWithIcon(
     onDoubleClick: ((String) -> Unit)? = null,
     content: @Composable (() -> Unit)? = null
 ) {
+    val increaseVolumeText = stringResource(R.string.increase_volume_notice)
     val context = LocalContext.current
-    val increaseVolumeText = context.getString(R.string.increase_volume_notice)
     val audio = remember {
         context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
     }
