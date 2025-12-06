@@ -33,10 +33,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
@@ -93,14 +92,10 @@ internal fun SearchList(
                         enter = slideInVertically() + fadeIn(),
                         exit = slideOutVertically() + fadeOut(),
                         content = {
-                            val context = LocalContext.current
-                            val internetError = remember {
-                                context.getString(R.string.general_net_error)
-                            }
                             AppText(
                                 modifier = Modifier.padding(Sizes.Medium),
                                 color = MaterialTheme.colorScheme.error,
-                                text = internetError
+                                text = stringResource(R.string.general_net_error)
                             )
                         }
                     )
