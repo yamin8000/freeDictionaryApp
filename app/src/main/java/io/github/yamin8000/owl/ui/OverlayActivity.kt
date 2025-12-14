@@ -58,19 +58,12 @@ internal class OverlayActivity : BaseActivity() {
     private fun handleOutsideInputIntent(): String? {
         return if (intent.type == "text/plain") {
             when (intent.action) {
-                Intent.ACTION_TRANSLATE, Intent.ACTION_DEFINE, Intent.ACTION_SEND -> {
-                    intent.getStringExtra(Intent.EXTRA_TEXT)
-                }
+                Intent.ACTION_TRANSLATE, Intent.ACTION_DEFINE, Intent.ACTION_SEND -> intent.getStringExtra(
+                    Intent.EXTRA_TEXT
+                )
 
-                Intent.ACTION_PROCESS_TEXT -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
-                    else null
-                }
-
-                else -> {
-                    null
-                }
+                Intent.ACTION_PROCESS_TEXT -> intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
+                else -> null
             }
         } else {
             null

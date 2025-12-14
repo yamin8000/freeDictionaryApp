@@ -21,7 +21,6 @@
 
 package io.github.yamin8000.owl.feature_overlay.ui
 
-import androidx.compose.runtime.Immutable
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

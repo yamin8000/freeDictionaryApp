@@ -1,5 +1,3 @@
-import com.android.build.api.variant.impl.DeferredActionManager
-
 /*
  *     freeDictionaryApp/freeDictionaryApp
  *     build.gradle.kts Copyrighted by Yamin Siahmargooei at 2024/5/9

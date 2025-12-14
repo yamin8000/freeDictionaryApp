@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.common.ui.theme
 
 import androidx.compose.ui.unit.dp
 
+@Suppress("unused")
 object Sizes {
 
     /** 1.dp */

@@ -35,8 +35,6 @@ fun log(
     }
 }
 
-private const val GOLDEN_RATIO = 0.618033988749895
-
 fun randomColor(): Color {
     val hue = Random.nextDouble(0.0, 360.0)
     val saturation = Random.nextDouble(50.0, 100.0) / 100f
