@@ -58,40 +58,34 @@ class AboutViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-        load()
+        scope.launch { load() }
     }
 
-    private fun load() {
-        scope.launch {
-            _state.update { it.copy(isLoading = true) }
-            val repo = withContext(ioScope.coroutineContext) {
-                repository.getRepository("yamin8000", "freeDictionaryApp")
-            }
-            val releases = withContext(ioScope.coroutineContext) {
-                repository.getReleases("yamin8000", "freeDictionaryApp")
-            }
-            val contributors = withContext(ioScope.coroutineContext) {
-                repository.getRepositoryContributors("yamin8000", "freeDictionaryApp")
-            }
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    repository = repo,
-                    latestVersionName = releases.firstOrNull()?.name ?: "-",
-                    contributors = contributors.toImmutableList().map { contributor ->
-                        UiContributor(
-                            contributor = contributor,
-                            borderColor = randomColor()
-                        )
-                    }.toImmutableList()
-                )
-            }
+    private suspend fun load() {
+        _state.update { it.copy(isLoading = true) }
+
+        val repo = repository.getRepository("yamin8000", "freeDictionaryApp")
+        val releases = repository.getReleases("yamin8000", "freeDictionaryApp")
+        val contributors = repository.getRepositoryContributors("yamin8000", "freeDictionaryApp")
+
+        _state.update {
+            it.copy(
+                isLoading = false,
+                repository = repo,
+                latestVersionName = releases.firstOrNull()?.name ?: "-",
+                contributors = contributors.toImmutableList().map { contributor ->
+                    UiContributor(
+                        contributor = contributor,
+                        borderColor = randomColor()
+                    )
+                }.toImmutableList()
+            )
         }
     }
 
     fun onAction(action: AboutAction) {
         when (action) {
-            AboutAction.OnRefresh -> load()
+            AboutAction.OnRefresh -> scope.launch { load() }
             is AboutAction.OnTabChanged -> _state.update { it.copy(tab = action.tab) }
         }
     }

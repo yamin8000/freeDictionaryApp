@@ -22,7 +22,6 @@
 package io.github.yamin8000.owl.ui
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel

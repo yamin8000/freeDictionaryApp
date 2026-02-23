@@ -52,7 +52,7 @@ class DefinitionRoomRepository(
 
     override suspend fun findEntity(item: Definition): DefinitionEntity? {
         return if (item.id != null) definitionDao.find(item.id)
-        else return null
+        else null
     }
 
     override suspend fun add(item: Definition): Long {

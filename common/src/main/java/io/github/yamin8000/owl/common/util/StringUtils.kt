@@ -24,7 +24,7 @@ package io.github.yamin8000.owl.common.util
 object StringUtils {
     /**
      * This method sanitize words from the given [data] set by removing
-     * unnecessary characters like white spaces and numbers and etc
+     * unnecessary characters like white spaces and numbers, etc.
      * and making them lowercase and filtering out blank entries
      */
     fun sanitizeWords(

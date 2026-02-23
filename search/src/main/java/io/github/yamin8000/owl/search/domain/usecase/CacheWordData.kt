@@ -56,8 +56,7 @@ class CacheWordData(
                 .plus(definitions.flatMap { it.synonyms })
                 .plus(definitions.flatMap { it.antonyms })
         }.filterNotNull()
-        .map { it.split(Regex("\\s+")) }
-        .flatten()
+        .flatMap { it.split(Regex("\\s+")) }
         .map { it.trim() }
         .toMutableSet()
 }
