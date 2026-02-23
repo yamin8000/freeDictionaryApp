@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
@@ -35,7 +36,8 @@ import io.github.yamin8000.owl.strings.R
 
 @Composable
 internal fun RemoveAllContent(
-    onRemoveAllClick: () -> Unit
+    onRemoveAllClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
 
@@ -59,6 +61,7 @@ internal fun RemoveAllContent(
         )
     }
     Button(
+        modifier = modifier,
         onClick = { isShowingDialog = true },
         shape = DefaultCutShape,
         content = { AppText(text = stringResource(R.string.clear_all)) }
