@@ -36,7 +36,9 @@
             android:name="io.github.yamin8000.owl.ui.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|locale|screenLayout|screenSize"
             android:exported="true"
-            android:theme="@style/Theme.Owl.Splash">
+            android:theme="@style/Theme.Owl.Splash"
+            android:windowSoftInputMode="adjustNothing"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

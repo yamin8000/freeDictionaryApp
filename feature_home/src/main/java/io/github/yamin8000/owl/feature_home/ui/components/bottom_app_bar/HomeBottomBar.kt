@@ -24,6 +24,7 @@ package io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
@@ -62,7 +63,7 @@ internal fun MainBottomBar(
     suggestionsChips: @Composable ColumnScope.() -> Unit
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.imePadding(),
         content = {
             suggestionsChips()
             if (isSearching) {
