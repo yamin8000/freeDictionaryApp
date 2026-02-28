@@ -57,9 +57,6 @@ android {
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
-            defaultConfig {
-                base.archivesName = "app"
-            }
         }
     }
 
