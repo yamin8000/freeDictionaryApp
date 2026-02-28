@@ -39,8 +39,8 @@ android {
         applicationId = appId
         minSdk = 23
         targetSdk = 36
-        versionCode = 52
-        versionName = "1.7.9"
+        versionCode = 53
+        versionName = "1.7.10"
         vectorDrawables.useSupportLibrary = true
         base.archivesName = "$applicationId-v$versionCode-n$versionName"
     }
