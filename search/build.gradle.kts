@@ -23,11 +23,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.kotlin.compose.plugin)
-    id("org.jetbrains.kotlin.kapt")
     alias(libs.plugins.hilt)
+    alias(libs.plugins.androix.room)
 }
 
 android {
@@ -36,7 +35,10 @@ android {
 
     defaultConfig {
         minSdk = 23
-        ksp.arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 
     compileOptions {
@@ -77,7 +79,6 @@ dependencies {
     //retrofit
     api(libs.retrofit.main)
     implementation(libs.retrofit.converter.moshi)
-    kapt(libs.retrofit.type.keeper)
     //moshi
     implementation(libs.moshi.kotlin)
     ksp(libs.moshi.kotlin.codegen)

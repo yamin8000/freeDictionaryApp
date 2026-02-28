@@ -57,9 +57,10 @@ retrofit-type-keeper = { module = "com.squareup.retrofit2:response-type-keeper",
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-application" }
 android-library = { id = "com.android.library", version.ref = "android-application" }
+androix-room = { id = "androidx.room", version.ref = "androidx-room" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-compose-plugin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
+legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "android-application" }

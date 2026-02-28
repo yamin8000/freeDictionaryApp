@@ -20,7 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class io.github.yamin8000.owl.datastore.model.** { <fields>; }
+-keep class io.github.yamin8000.owl.datastore.domain.model.** { <fields>; }
+-keep class io.github.yamin8000.owl.search.domain.model.** { <fields>; }
+-keep class io.github.yamin8000.owl.search.data.datasource.remote.dto.** { <fields>; }
 
 # This is generated automatically by the Android Gradle plugin.
 -dontwarn org.bouncycastle.jsse.BCSSLParameters

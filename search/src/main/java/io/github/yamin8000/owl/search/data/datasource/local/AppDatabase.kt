@@ -42,6 +42,7 @@ import io.github.yamin8000.owl.search.data.datasource.local.entity.TermEntity
         MeaningEntity::class, PhoneticEntity::class, SynonymEntity::class,
         TermEntity::class
     ],
+    exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 6, to = 7)
     ]

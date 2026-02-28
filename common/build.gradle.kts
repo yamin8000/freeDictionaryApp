@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.kotlin.compose.plugin)
     alias(libs.plugins.hilt)
@@ -79,7 +78,7 @@ dependencies {
     api(libs.androidx.compose.material3.window.size)
     api(libs.androidx.lifecycle.runtime.compose)
     api(platform(libs.androidx.compose.bom))
-    androidTestApi(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

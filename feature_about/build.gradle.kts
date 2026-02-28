@@ -23,10 +23,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.kotlin.compose.plugin)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.legacy.kapt)
     alias(libs.plugins.hilt)
 }
 
