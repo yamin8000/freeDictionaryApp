@@ -2,7 +2,7 @@
 android-application = "9.0.1"
 androidx-activity-compose = "1.12.4"
 androidx-compose-bom = "2026.02.01"
-androidx-core-ktx = "1.17.0"
+androidx-core-ktx = "1.18.0"
 androidx-core-splash = "1.2.0"
 androidx-datastore = "1.2.0"
 androidx-lifecycle-compose = "2.10.0"
