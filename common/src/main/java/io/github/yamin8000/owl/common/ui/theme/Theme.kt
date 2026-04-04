@@ -163,6 +163,7 @@ fun AppTheme(
     var colors = when {
         isDynamicColorReadyDevice && isDarkTheme -> dynamicDarkColorScheme(LocalContext.current)
         isDynamicColorReadyDevice && !isDarkTheme -> dynamicLightColorScheme(LocalContext.current)
+        isDynamicColorReadyDevice && isOledTheme -> dynamicDarkColorScheme(LocalContext.current)
         isDarkTheme -> darkColors
         else -> lightColors
     }

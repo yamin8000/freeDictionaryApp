@@ -29,6 +29,7 @@ sealed interface ThemeType {
     data object Light : ThemeType
     data object System : ThemeType
     data object Darker : ThemeType
+    data object SystemDarker: ThemeType
 
     companion object {
         fun toType(value: String?): ThemeType {
@@ -37,10 +38,11 @@ sealed interface ThemeType {
                 "Light" -> Light
                 "System" -> System
                 "Darker" -> Darker
+                "SystemDarker" -> SystemDarker
                 else -> System
             }
         }
 
-        fun entries() = listOf(Dark, Light, System, Darker)
+        fun entries() = listOf(Dark, Light, System, Darker, SystemDarker)
     }
 }

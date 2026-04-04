@@ -59,8 +59,8 @@ internal open class BaseActivity : ComponentActivity() {
                 .and(Configuration.UI_MODE_NIGHT_MASK)) == Configuration.UI_MODE_NIGHT_YES
             AppTheme(
                 isDarkTheme = isDarkTheme(appTheme, isSystemInDarkTheme),
-                isOledTheme = appTheme == ThemeType.Darker,
-                isDynamicColor = appTheme == ThemeType.System,
+                isOledTheme = appTheme == ThemeType.Darker || appTheme == ThemeType.SystemDarker,
+                isDynamicColor = appTheme == ThemeType.System || appTheme == ThemeType.SystemDarker,
                 content = content
             )
         }
@@ -83,6 +83,6 @@ internal open class BaseActivity : ComponentActivity() {
     ) = when (theme) {
         ThemeType.Light -> false
         ThemeType.System -> isSystemInDarkTheme
-        ThemeType.Dark, ThemeType.Darker -> true
+        ThemeType.Dark, ThemeType.Darker, ThemeType.SystemDarker -> true
     }
 }
