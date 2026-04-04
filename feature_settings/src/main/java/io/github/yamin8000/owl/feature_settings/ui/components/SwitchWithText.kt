@@ -119,7 +119,7 @@ internal fun SwitchWithText(
                                             contentDescription = null,
                                             modifier = Modifier.size(SwitchDefaults.IconSize),
                                         )
-                                }
+                                    }
                                 }
                             )
                         }
