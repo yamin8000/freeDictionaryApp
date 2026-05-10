@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -33,15 +34,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.size
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
@@ -54,10 +52,11 @@ import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 @Composable
 private fun Preview() {
     PreviewTheme {
+        var checked by remember { mutableStateOf(true) }
         SwitchWithText(
             caption = "some settingssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
-            checked = true,
-            onCheckedChange = {}
+            checked = checked,
+            onCheckedChange = { checked = it }
         )
     }
 }
@@ -69,7 +68,6 @@ internal fun SwitchWithText(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var checked by remember { mutableStateOf(true) }
     val hapticFeedback = LocalHapticFeedback.current
     val feedbackType = remember(checked) {
         if (checked) HapticFeedbackType.ToggleOff
@@ -98,28 +96,19 @@ internal fun SwitchWithText(
                     Box(
                         modifier = Modifier.weight(1f),
                         content = {
+                            val icon = remember(checked) {
+                                if (checked) Icons.Filled.Check else Icons.Filled.Close
+                            }
                             Switch(
                                 checked = checked,
-                                onCheckedChange = {
-                                    checked = it
-                                },
+                                onCheckedChange = onCheckedChange,
                                 modifier = Modifier.align(Alignment.CenterEnd),
-                                thumbContent = if (checked) {
-                                    {
-                                        Icon(
-                                            imageVector = Icons.Filled.Check,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(SwitchDefaults.IconSize),
-                                        )
-                                    }
-                                } else {
-                                    {
-                                        Icon(
-                                            imageVector = Icons.Filled.Close,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(SwitchDefaults.IconSize),
-                                        )
-                                    }
+                                thumbContent = {
+                                    Icon(
+                                        imageVector = icon,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                                    )
                                 }
                             )
                         }

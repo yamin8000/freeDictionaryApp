@@ -29,7 +29,7 @@ sealed interface ThemeType {
     data object Light : ThemeType
     data object System : ThemeType
     data object Darker : ThemeType
-    data object SystemDarker: ThemeType
+    data object SystemDarker : ThemeType
 
     companion object {
         fun toType(value: String?): ThemeType {
