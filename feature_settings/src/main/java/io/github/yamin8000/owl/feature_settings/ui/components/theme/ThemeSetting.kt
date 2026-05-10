@@ -101,7 +101,7 @@ internal fun ThemeSetting(
                     )
                 }
             )
-            if (theme == ThemeType.System && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if ((theme == ThemeType.System || theme == ThemeType.SystemDarker) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 DynamicThemeNotice()
             }
         }

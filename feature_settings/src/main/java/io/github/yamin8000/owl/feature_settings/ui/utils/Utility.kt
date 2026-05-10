@@ -34,5 +34,6 @@ object Utility {
         ThemeType.Darker -> context.getString(R.string.theme_oled)
         ThemeType.Light -> context.getString(R.string.theme_light)
         ThemeType.System -> context.getString(R.string.theme_system)
+        ThemeType.SystemDarker -> context.getString(R.string.theme_system_darker)
     }
 }
