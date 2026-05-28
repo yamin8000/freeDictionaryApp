@@ -54,6 +54,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,6 +66,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.toClipEntry
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
@@ -75,6 +77,7 @@ import io.github.yamin8000.owl.common.util.ContextUtils.findActivity
 import io.github.yamin8000.owl.common.util.LocalTTS
 import io.github.yamin8000.owl.common.util.StringUtils.sanitizeWords
 import io.github.yamin8000.owl.strings.R
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -91,6 +94,8 @@ fun CopyAbleRippleText(
     val haptic = LocalHapticFeedback.current
 
     var isDialogShown by remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
 
     Box(
         content = {
@@ -118,12 +123,12 @@ fun CopyAbleRippleText(
                 onClick = onClick,
                 onDoubleClick = { isDialogShown = true },
                 onLongClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    clipboardManager.nativeClipboard.setPrimaryClip(
-                        ClipData.newPlainText(text, text)
-                    )
-                    Toast.makeText(context, textCopied, Toast.LENGTH_SHORT)
-                        .show()
+                    scope.launch {
+                        clipboardManager.setClipEntry(ClipData.newPlainText(text, text).toClipEntry())
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        Toast.makeText(context, textCopied, Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             )
     )
