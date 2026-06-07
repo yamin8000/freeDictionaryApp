@@ -26,7 +26,7 @@ plugins {
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.kotlin.compose.plugin)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.androix.room)
+    alias(libs.plugins.androidx.room)
 }
 
 android {

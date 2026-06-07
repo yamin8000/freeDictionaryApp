@@ -26,7 +26,7 @@ plugins {
     alias(libs.plugins.google.ksp) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.hilt) apply false
-    alias(libs.plugins.androix.room) apply false
+    alias(libs.plugins.androidx.room) apply false
 }
 
 tasks.register("sortLibs") {
