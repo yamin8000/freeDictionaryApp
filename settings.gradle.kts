@@ -21,8 +21,12 @@
 
 pluginManagement {
     repositories {
-        if (uri("https://maven.myket.ir/").toURL().readText().isNotBlank()) {
-            maven { url = uri("https://maven.myket.ir/") }
+        try {
+            if (uri("https://maven.myket.ir/").toURL().readText().isNotBlank()) {
+                maven { url = uri("https://maven.myket.ir/") }
+            }
+        } catch (_: Exception) {
+            //ignored
         }
         gradlePluginPortal()
         google()
@@ -32,8 +36,12 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        if (uri("https://maven.myket.ir/").toURL().readText().isNotBlank()) {
-            maven { url = uri("https://maven.myket.ir/") }
+        try {
+            if (uri("https://maven.myket.ir/").toURL().readText().isNotBlank()) {
+                maven { url = uri("https://maven.myket.ir/") }
+            }
+        } catch (_: Exception) {
+            //ignored
         }
         google()
         mavenCentral()
