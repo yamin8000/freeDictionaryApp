@@ -41,7 +41,7 @@ internal class OverlayActivity : BaseActivity() {
                 onDismissRequest = { finish() },
                 navigateToApp = {
                     val intent = Intent(this, MainActivity::class.java)
-                    intent.putExtras(bundleOf("Search" to it))
+                    intent.putExtras(Bundle().apply { putString("Search", it) })
                     startActivity(intent)
                     finish()
                 },

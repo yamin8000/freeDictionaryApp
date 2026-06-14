@@ -30,6 +30,7 @@ plugins {
 }
 
 tasks.register("sortLibs") {
+    description = "Sort libraries names and versions in libs.version.toml file"
     doFirst {
         val tomlFile = File("$projectDir${File.separator}gradle${File.separator}libs.versions.toml")
         val lines = tomlFile.readLines()

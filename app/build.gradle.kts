@@ -29,6 +29,12 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
+    }
+}
+
 private val appId = "io.github.yamin8000.owl"
 
 android {
@@ -56,7 +62,6 @@ android {
         }
         debug {
             isMinifyEnabled = false
-            isShrinkResources = false
         }
     }
 
@@ -67,14 +72,8 @@ android {
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-        }
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
