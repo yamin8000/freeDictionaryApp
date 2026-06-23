@@ -30,6 +30,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.util.TTS
+import io.github.yamin8000.owl.common.util.log
 import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
@@ -57,6 +58,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.net.UnknownHostException
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel(assistedFactory = HomeViewModelFactory::class)
 class HomeViewModel @AssistedInject constructor(
@@ -75,7 +77,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         _state.update { it.copy(isSearching = false) }
-        println(throwable.stackTraceToString())
+        log(throwable.stackTraceToString())
         viewModelScope.launch {
             when (throwable) {
                 is HttpException -> when (throwable.code()) {
@@ -110,7 +112,7 @@ class HomeViewModel @AssistedInject constructor(
     val isWordSelectedFromKeyboardSuggestions: State<Boolean>
         get() = derivedStateOf { searchTerm.value.length > 1 && searchTerm.value.last() == ' ' && !searchTerm.value.all { it == ' ' } }
 
-    private val internetCheckDelay = 5000L
+    private val internetCheckDelay = 5
     private val dnsServers = listOf(
         "8.8.8.8",
         "8.8.4.4",
@@ -133,7 +135,7 @@ class HomeViewModel @AssistedInject constructor(
             }
             while (true) {
                 onAction(HomeAction.OnCheckInternet)
-                delay(internetCheckDelay)
+                delay(internetCheckDelay.seconds)
             }
         }
     }
