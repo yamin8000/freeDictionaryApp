@@ -29,14 +29,14 @@ import io.github.yamin8000.owl.search.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.search.domain.repository.local.PhoneticRepository
 import kotlinx.collections.immutable.persistentListOf
 
-class CacheWord(
+class CacheEntry(
     private val entryRepository: EntryRepository,
     private val meaningRepository: MeaningRepository,
     private val definitionRepository: DefinitionRepository,
     private val phoneticRepository: PhoneticRepository
 ) {
     suspend operator fun invoke(wordEntry: Entry) {
-        val isNotCached = entryRepository.findByTerm(wordEntry.word.lowercase().trim()) == null
+        val isNotCached = entryRepository.findByTerm(wordEntry.word.lowercase().trim()).isEmpty()
         if (isNotCached) {
             addWordEntryToDatabase(wordEntry)
         }

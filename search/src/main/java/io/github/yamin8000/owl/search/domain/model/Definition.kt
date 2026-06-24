@@ -26,16 +26,16 @@ import kotlin.random.nextInt
 
 data class Definition(
     val definition: String,
-    val example: String?,
-    val synonyms: List<String>,
-    val antonyms: List<String>,
+    val examples: List<String> = emptyList(),
+    val synonyms: List<String> = emptyList(),
+    val antonyms: List<String> = emptyList(),
     val meaningId: Long? = null,
     val id: Long? = null
 ) {
     companion object {
         fun mock() = Definition(
             definition = "Definition",
-            example = "Example",
+            examples = listOf(),
             synonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
                     add("Synonym")

@@ -52,11 +52,10 @@ class CacheWordData(
         .flatMap { (partOfSpeech, definitions, _, _) ->
             listOf(partOfSpeech)
                 .plus(definitions.map { it.definition })
-                .plus(definitions.map { it.example })
+                .plus(definitions.flatMap { it.examples })
                 .plus(definitions.flatMap { it.synonyms })
                 .plus(definitions.flatMap { it.antonyms })
-        }.filterNotNull()
-        .flatMap { it.split(Regex("\\s+")) }
+        }.flatMap { it.split(Regex("\\s+")) }
         .map { it.trim() }
         .toMutableSet()
 }

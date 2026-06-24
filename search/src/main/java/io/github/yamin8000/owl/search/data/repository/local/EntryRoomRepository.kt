@@ -46,8 +46,8 @@ class EntryRoomRepository(
         )
     }
 
-    override suspend fun findByTerm(term: String): Entry? {
-        return mapToDomain(dao.where("word", sanitizeWord(term)).firstOrNull())
+    override suspend fun findByTerm(term: String): List<Entry> {
+        return dao.where("word", sanitizeWord(term)).mapNotNull { mapToDomain(it) }
     }
 
     override suspend fun mapToDomain(item: EntryEntity?): Entry? {

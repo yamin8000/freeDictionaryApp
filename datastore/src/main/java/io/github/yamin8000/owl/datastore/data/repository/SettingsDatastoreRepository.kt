@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.datastore.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.datastore.domain.model.SettingsKeys
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.datastore.domain.repository.BaseDatastoreRepository
@@ -62,5 +63,14 @@ class SettingsDatastoreRepository(
 
     override suspend fun setIsStartingBlank(value: Boolean) {
         setBool(SettingsKeys.IS_STARTING_BLANK, value)
+    }
+
+    override suspend fun getDictionarySource(): DictionarySource {
+        val source = getString(SettingsKeys.DictionarySource.toString())
+        return DictionarySource.valueOf(source ?: DictionarySource.Wiktionary.name)
+    }
+
+    override suspend fun setDictionarySource(source: DictionarySource) {
+        setString(SettingsKeys.DictionarySource.toString(), source.name)
     }
 }

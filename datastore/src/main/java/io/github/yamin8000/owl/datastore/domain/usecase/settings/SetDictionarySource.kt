@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.datastore.main
- *     SettingsKeys.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
- *     SettingsKeys.kt Last modified at 2024/8/19
+ *     SetDictionarySource.kt Copyrighted by Yamin Siahmargooei at 2026/6/24
+ *     SetDictionarySource.kt Last modified at 2026/6/24
  *     This file is part of freeDictionaryApp/freeDictionaryApp.datastore.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.datastore.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,13 +19,15 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.datastore.domain.model
+package io.github.yamin8000.owl.datastore.domain.usecase.settings
 
-object SettingsKeys {
-    const val THEME = "theme"
-    const val TTS_LANG = "tts_lang"
-    const val IS_VIBRATING = "is_vibrating"
-    const val IS_STARTING_BLANK = "is_starting_blank"
+import io.github.yamin8000.owl.common.domain.model.DictionarySource
+import io.github.yamin8000.owl.datastore.domain.repository.SettingsRepository
 
-    data object DictionarySource
+class SetDictionarySource(
+    private val repository: SettingsRepository
+) {
+    suspend operator fun invoke(source: DictionarySource) {
+        repository.setDictionarySource(source)
+    }
 }

@@ -39,6 +39,7 @@ data class MeaningEntity(
     @ColumnInfo(index = true)
     val entryId: Long,
     val partOfSpeech: String,
+    val language: String,
     val createdAt: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0

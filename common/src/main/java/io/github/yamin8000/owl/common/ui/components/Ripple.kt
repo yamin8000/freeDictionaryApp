@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -43,7 +42,7 @@ fun Ripple(
         content = content,
         modifier = modifier
             .combinedClickable(
-                interactionSource = remember { MutableInteractionSource() },
+                interactionSource = null,
                 indication = ripple(),
                 onClick = onClick,
                 onLongClick = onLongClick

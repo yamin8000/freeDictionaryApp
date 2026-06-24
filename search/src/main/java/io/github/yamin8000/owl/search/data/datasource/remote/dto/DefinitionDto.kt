@@ -37,7 +37,7 @@ data class DefinitionDto(
         id = id,
         meaningId = meaningId,
         definition = definition,
-        example = example,
+        examples = if (example != null) listOf(example) else listOf(),
         synonyms = synonyms,
         antonyms = antonyms
     )

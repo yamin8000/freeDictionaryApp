@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     WordCacheUseCases.kt Copyrighted by Yamin Siahmargooei at 2024/9/5
- *     WordCacheUseCases.kt Last modified at 2024/8/30
+ *     WiktionaryAPI.kt Copyrighted by Yamin Siahmargooei at 2026/6/24
+ *     WiktionaryAPI.kt Last modified at 2026/6/24
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,10 +19,13 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.domain.usecase
+package io.github.yamin8000.owl.search.data.datasource.remote
 
-data class WordCacheUseCases(
-    val getCachedEntries: GetCachedEntries,
-    val cacheEntry: CacheEntry,
-    val cacheWordData: CacheWordData
-)
+import retrofit2.http.GET
+import retrofit2.http.Path
+
+interface WiktionaryAPI {
+
+    @GET("page/definition/{term}")
+    suspend fun search(@Path("term") term: String): List<Any>
+}

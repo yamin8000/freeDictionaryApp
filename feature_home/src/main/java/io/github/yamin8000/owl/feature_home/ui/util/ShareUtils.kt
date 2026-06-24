@@ -29,9 +29,9 @@ import io.github.yamin8000.owl.strings.R
 object ShareUtils {
     internal fun handleShareIntent(
         context: Context,
-        entry: Entry
+        entries: List<Entry>
     ) {
-        val text = createShareText(context, entry)
+        val text = createShareText(context, entries)
 
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -40,37 +40,39 @@ object ShareUtils {
         }
         val shareIntent = Intent.createChooser(
             sendIntent,
-            "${context.getString(R.string.app_name)}, ${entry.word}"
+            "${context.getString(R.string.app_name)}, ${entries.firstOrNull()?.word}"
         )
         context.startActivity(shareIntent)
     }
 
     private fun createShareText(
         context: Context,
-        entry: Entry
+        entries: List<Entry>
     ) = buildString {
-        appendLine("Word: ${entry.word}")
-        appendLine()
-        append("Pronunciation(IPA): ")
-        appendLine(entry.phonetics.firstOrNull { it.text != null }?.text ?: "-")
-        appendLine()
-        entry.meanings.forEachIndexed { index, (partOfSpeech, definitions, _, _) ->
-            appendLine("${index + 1})")
-            appendLine("Type: $partOfSpeech")
-            definitions.take(5).forEach { (definition, example, synonyms, antonyms) ->
-                appendLine("Definition: $definition")
-                if (example != null) {
-                    appendLine("Example: $example")
-                }
-                if (synonyms.isNotEmpty()) {
-                    appendLine("Synonyms: ${synonyms.take(5).joinToString()}")
-                }
-                if (antonyms.isNotEmpty()) {
-                    appendLine("Antonyms: ${antonyms.take(5).joinToString()}")
+        entries.forEach { entry ->
+            appendLine("Word: ${entry.word}")
+            appendLine()
+            append("Pronunciation(IPA): ")
+            appendLine(entry.phonetics.firstOrNull { it.text != null }?.text ?: "-")
+            appendLine()
+            entry.meanings.forEachIndexed { index, (partOfSpeech, definitions, _, _) ->
+                appendLine("${index + 1})")
+                appendLine("Type: $partOfSpeech")
+                definitions.take(5).forEach { (definition, examples, synonyms, antonyms) ->
+                    appendLine("Definition: $definition")
+                    if (examples.isNotEmpty()) {
+                        appendLine("Examples: ${examples.take(5).joinToString()}")
+                    }
+                    if (synonyms.isNotEmpty()) {
+                        appendLine("Synonyms: ${synonyms.take(5).joinToString()}")
+                    }
+                    if (antonyms.isNotEmpty()) {
+                        appendLine("Antonyms: ${antonyms.take(5).joinToString()}")
+                    }
+                    appendLine()
                 }
                 appendLine()
             }
-            appendLine()
         }
         trim()
         appendLine(context.getString(R.string.this_text_generated_using_owl))

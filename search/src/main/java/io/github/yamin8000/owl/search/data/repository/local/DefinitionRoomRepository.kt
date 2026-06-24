@@ -41,7 +41,7 @@ class DefinitionRoomRepository(
         return if (item != null) {
             Definition(
                 definition = item.definition,
-                example = item.example,
+                examples = if (item.example != null) listOf(item.example) else listOf(),
                 antonyms = antonymDao.where("definitionId", item.id).map { it.value },
                 synonyms = synonymDao.where("definitionId", item.id).map { it.value },
                 meaningId = item.meaningId,
@@ -60,7 +60,7 @@ class DefinitionRoomRepository(
             definitionDao.insert(
                 DefinitionEntity(
                     definition = item.definition,
-                    example = item.example,
+                    example = item.examples.firstOrNull(),
                     createdAt = epoch(),
                     meaningId = item.meaningId
                 )

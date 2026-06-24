@@ -62,13 +62,13 @@ fun MeaningCard(
                         type = meaning.partOfSpeech,
                         onDoubleClick = onWordChipClick
                     )
-                    meaning.definitions.forEach { (definition, example, synonyms, antonyms) ->
+                    meaning.definitions.forEach { (definition, examples, synonyms, antonyms) ->
                         WordDefinitionText(
                             word = word,
                             definition = definition,
                             onDoubleClick = onWordChipClick
                         )
-                        if (example != null) {
+                        examples.forEach { example ->
                             WordExampleText(
                                 word = word,
                                 example = example,

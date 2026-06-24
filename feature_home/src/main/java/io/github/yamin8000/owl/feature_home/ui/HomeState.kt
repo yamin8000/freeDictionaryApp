@@ -33,7 +33,7 @@ data class HomeState(
     val searchSuggestions: ImmutableList<String> = persistentListOf(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     val error: HomeSnackbarType? = null,
-    val searchResult: Entry? = null,
+    val searchResult: List<Entry> = emptyList(),
     val phonetic: String = "",
     val word: String = "",
     val isVibrating: Boolean = false

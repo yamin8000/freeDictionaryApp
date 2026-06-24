@@ -26,6 +26,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.yamin8000.owl.search.data.datasource.remote.FreeDictionaryAPI
+import io.github.yamin8000.owl.search.data.datasource.remote.WiktionaryAPI
 import io.github.yamin8000.owl.search.data.repository.remote.FreeDictionaryRetrofitApiRepository
 import io.github.yamin8000.owl.search.domain.repository.remote.FreeDictionaryApiRepository
 import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
@@ -40,12 +41,15 @@ import javax.inject.Singleton
 object SearchWeb {
 
     @Qualifier
-    annotation class SearchModule
+    annotation class FreeDictionary
 
-    @SearchModule
+    @Qualifier
+    annotation class Wiktionary
+
+    @FreeDictionary
     @Provides
     @Singleton
-    fun providesRetrofit(): Retrofit {
+    fun providesFreeDictionaryRetrofit(): Retrofit {
         val baseUrl = "https://api.dictionaryapi.dev/api/v2/"
         return Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -56,8 +60,7 @@ object SearchWeb {
     @Provides
     @Singleton
     fun providesFreeDictionaryApi(
-        @SearchModule
-        retrofit: Retrofit
+        @FreeDictionary retrofit: Retrofit
     ): FreeDictionaryAPI {
         return retrofit.create<FreeDictionaryAPI>()
     }
@@ -72,5 +75,24 @@ object SearchWeb {
     @Singleton
     fun providesFreeDictionaryApiUseCase(repository: FreeDictionaryApiRepository): SearchFreeDictionary {
         return SearchFreeDictionary(repository)
+    }
+
+    @Wiktionary
+    @Provides
+    @Singleton
+    fun providesWiktionaryRetrofit(): Retrofit {
+        val baseUrl = "https://en.wiktionary.org/api/rest_v1/"
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providesWiktionaryApi(
+        @Wiktionary retrofit: Retrofit
+    ): WiktionaryAPI {
+        return retrofit.create<WiktionaryAPI>()
     }
 }

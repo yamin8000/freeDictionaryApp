@@ -30,9 +30,9 @@ import io.github.yamin8000.owl.search.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.search.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.search.domain.repository.local.PhoneticRepository
 import io.github.yamin8000.owl.search.domain.repository.local.TermRepository
-import io.github.yamin8000.owl.search.domain.usecase.CacheWord
+import io.github.yamin8000.owl.search.domain.usecase.CacheEntry
 import io.github.yamin8000.owl.search.domain.usecase.CacheWordData
-import io.github.yamin8000.owl.search.domain.usecase.GetCachedWord
+import io.github.yamin8000.owl.search.domain.usecase.GetCachedEntries
 import io.github.yamin8000.owl.search.domain.usecase.WordCacheUseCases
 import javax.inject.Singleton
 
@@ -49,8 +49,8 @@ object SearchUseCases {
         definitionRepository: DefinitionRepository,
         termRepository: TermRepository
     ) = WordCacheUseCases(
-        getCachedWord = GetCachedWord(entryRepository),
-        cacheWord = CacheWord(
+        getCachedEntries = GetCachedEntries(entryRepository),
+        cacheEntry = CacheEntry(
             entryRepository = entryRepository,
             meaningRepository = meaningRepository,
             definitionRepository = definitionRepository,

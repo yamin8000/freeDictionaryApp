@@ -28,7 +28,6 @@ import android.media.AudioManager
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -118,7 +117,7 @@ fun CopyAbleRippleText(
         modifier = modifier
             .clip(DefaultCutShape)
             .combinedClickable(
-                interactionSource = remember { MutableInteractionSource() },
+                interactionSource = null,
                 indication = ripple(),
                 onClick = onClick,
                 onDoubleClick = { isDialogShown = true },

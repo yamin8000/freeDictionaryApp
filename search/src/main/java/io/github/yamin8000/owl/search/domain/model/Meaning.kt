@@ -31,6 +31,7 @@ data class Meaning(
     val definitions: ImmutableList<Definition>,
     val synonyms: ImmutableList<String>,
     val antonyms: ImmutableList<String>,
+    val language: String? = null,
     val entryId: Long? = null,
     val id: Long? = null
 ) {

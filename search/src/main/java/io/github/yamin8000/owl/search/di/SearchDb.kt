@@ -29,6 +29,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.yamin8000.owl.search.data.datasource.local.AppDatabase
 import io.github.yamin8000.owl.search.data.datasource.local.MIGRATION_7_8
+import io.github.yamin8000.owl.search.data.datasource.local.MIGRATION_8_9
 import io.github.yamin8000.owl.search.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.search.data.repository.local.DefinitionRoomRepository
 import io.github.yamin8000.owl.search.data.repository.local.EntryRoomRepository
@@ -51,6 +52,7 @@ object SearchDb {
     fun providesDb(app: Application): AppDatabase {
         return Room.databaseBuilder(app, AppDatabase::class.java, "db")
             .addMigrations(MIGRATION_7_8)
+            .addMigrations(MIGRATION_8_9)
             .build()
     }
 

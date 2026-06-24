@@ -36,7 +36,7 @@ import io.github.yamin8000.owl.search.data.datasource.local.entity.SynonymEntity
 import io.github.yamin8000.owl.search.data.datasource.local.entity.TermEntity
 
 @Database(
-    version = 8,
+    version = 9,
     entities = [
         AntonymEntity::class, DefinitionEntity::class, EntryEntity::class,
         MeaningEntity::class, PhoneticEntity::class, SynonymEntity::class,
@@ -66,6 +66,12 @@ val MIGRATION_7_8 = object : Migration(7, 8) {
         db.execSQL(addDateColumn("PhoneticEntity"))
         db.execSQL(addDateColumn("SynonymEntity"))
         db.execSQL(addDateColumn("TermEntity"))
+    }
+}
+
+val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `MeaningEntity` ADD COLUMN language TEXT NOT NULL DEFAULT 'English'")
     }
 }
 

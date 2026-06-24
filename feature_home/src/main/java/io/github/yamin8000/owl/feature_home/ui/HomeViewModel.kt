@@ -101,7 +101,7 @@ class HomeViewModel @AssistedInject constructor(
     private var errorChannel = Channel<HomeSnackbarType>()
     val errorChannelFlow = errorChannel.receiveAsFlow()
 
-    private var shareChannel = Channel<Entry?>()
+    private var shareChannel = Channel<List<Entry>>()
     val shareChannelFlow = shareChannel.receiveAsFlow()
 
     private var _state = MutableStateFlow(HomeState())
@@ -201,45 +201,42 @@ class HomeViewModel @AssistedInject constructor(
 
             _state.update { it.copy(isSearching = true) }
 
-            val cachedWord = cacheUseCases.getCachedWord(searchTerm)
-            if (cachedWord == null) {
-                val newWord = searchForDefinitionUsingApi(searchTerm)
-                if (newWord != null) {
-                    cacheUseCases.cacheWord(newWord)
-                    cacheUseCases.cacheWordData(newWord)
+            val cachedEntry = cacheUseCases.getCachedEntries(searchTerm)
+            if (cachedEntry.isEmpty()) {
+                val entries = searchFreeDictionaryUseCase(searchTerm)
+                val firstEntry = entries.firstOrNull()
+                val phonetic = firstEntry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
+
+                _state.update {
+                    it.copy(
+                        searchResult = entries,
+                        word = firstEntry?.word ?: "",
+                        phonetic = phonetic,
+                        searchSuggestions = persistentListOf()
+                    )
                 }
-            } else loadCachedWord(cachedWord)
+
+                cachedEntry.forEach { entry ->
+                    cacheUseCases.cacheEntry(entry)
+                    cacheUseCases.cacheWordData(entry)
+                }
+            } else loadCachedWord(cachedEntry)
 
             _state.update { it.copy(isSearching = false) }
         } else errorChannel.send(HomeSnackbarType.TermIsEmpty)
     }
 
-    private fun loadCachedWord(cachedWord: Entry) {
-        val phonetic = cachedWord.phonetics.firstOrNull { it.text != null }?.text ?: ""
+    private fun loadCachedWord(cachedEntries: List<Entry>) {
+        val firstEntry = cachedEntries.firstOrNull()
+        val phonetic = firstEntry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
         _state.update {
             it.copy(
-                searchResult = cachedWord,
-                word = cachedWord.word,
+                searchResult = cachedEntries,
+                word = firstEntry?.word ?: "",
                 phonetic = phonetic,
                 searchSuggestions = persistentListOf()
             )
         }
-    }
-
-    private suspend fun searchForDefinitionUsingApi(
-        searchTerm: String
-    ): Entry? {
-        val entry = searchFreeDictionaryUseCase(searchTerm).firstOrNull()
-        val phonetic = entry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
-        _state.update {
-            it.copy(
-                searchResult = entry,
-                word = entry?.word ?: "",
-                phonetic = phonetic,
-                searchSuggestions = persistentListOf()
-            )
-        }
-        return entry
     }
 
     private fun cancel() {

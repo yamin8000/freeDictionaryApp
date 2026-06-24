@@ -26,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.util.log
 import io.github.yamin8000.owl.feature_overlay.di.OverlayViewModelFactory
 import io.github.yamin8000.owl.search.domain.model.Phonetic
 import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 
 @HiltViewModel(assistedFactory = OverlayViewModelFactory::class)
 class OverlayWindowViewModel @AssistedInject constructor(
@@ -45,7 +47,16 @@ class OverlayWindowViewModel @AssistedInject constructor(
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        println(throwable.stackTraceToString())
+        log(throwable.stackTraceToString())
+        when (throwable) {
+            is SocketTimeoutException -> {
+                _state.update { it.copy(isSearching = false) }
+            }
+
+            else -> {
+
+            }
+        }
     }
 
     private val scope = CoroutineScope(viewModelScope.coroutineContext + exceptionHandler)
@@ -58,23 +69,23 @@ class OverlayWindowViewModel @AssistedInject constructor(
         if (term.isNotBlank()) {
             scope.launch {
                 _state.update { it.copy(isSearching = true) }
-                val cached = cacheUseCases.getCachedWord(term)
-                if (cached != null) {
+                val randomCached = cacheUseCases.getCachedEntries(term).randomOrNull()
+                if (randomCached != null) {
                     _state.update {
                         it.copy(
-                            meanings = cached.meanings,
-                            word = cached.word,
-                            phonetic = getFirstPhonetic(cached.phonetics)
+                            meanings = randomCached.meanings,
+                            word = randomCached.word,
+                            phonetic = getFirstPhonetic(randomCached.phonetics)
                         )
                     }
                 } else {
-                    val result = searchFreeDictionaryUseCase(term).firstOrNull()
-                    if (result != null) {
+                    val random = searchFreeDictionaryUseCase(term).randomOrNull()
+                    if (random != null) {
                         _state.update {
                             it.copy(
-                                meanings = result.meanings,
-                                word = result.word,
-                                phonetic = getFirstPhonetic(result.phonetics)
+                                meanings = random.meanings,
+                                word = random.word,
+                                phonetic = getFirstPhonetic(random.phonetics)
                             )
                         }
                     }

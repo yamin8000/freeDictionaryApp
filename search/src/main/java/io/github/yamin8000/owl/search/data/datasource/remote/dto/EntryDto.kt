@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.search.data.datasource.remote.dto
 
 import com.squareup.moshi.JsonClass
 import io.github.yamin8000.owl.search.domain.model.Entry
+import io.github.yamin8000.owl.search.domain.model.Phonetic
 import kotlinx.collections.immutable.toImmutableList
 
 @JsonClass(generateAdapter = true)

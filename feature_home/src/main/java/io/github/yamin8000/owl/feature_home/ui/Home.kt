@@ -63,6 +63,7 @@ import io.github.yamin8000.owl.feature_home.ui.util.Utils.getErrorText
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlin.random.Random
 
 @Preview(showBackground = true)
@@ -71,7 +72,7 @@ private fun Preview() {
     PreviewTheme {
         HomeContent(
             state = HomeState(
-                searchResult = Entry.mock(),
+                searchResult = emptyList(),
                 isOnline = Random.nextBoolean(),
                 isSearching = Random.nextBoolean(),
                 searchSuggestions = persistentListOf("apple", "banana", "orange"),
@@ -109,7 +110,7 @@ fun HomeScreen(
 
     val context = LocalContext.current
     ObserverEvent(vm.shareChannelFlow) { data ->
-        if (data != null) {
+        if (data.isNotEmpty()) {
             handleShareIntent(context, data)
         }
     }
@@ -204,10 +205,10 @@ internal fun HomeContent(
             )
         },
         content = { contentPadding ->
-            if (state.searchResult != null) {
+            if (state.searchResult.isNotEmpty()) {
                 SearchList(
                     modifier = Modifier.padding(contentPadding),
-                    meanings = state.searchResult.meanings,
+                    meanings = state.searchResult.flatMap { it.meanings }.toImmutableList(),
                     onAddToFavourite = { onAction(HomeAction.OnAddToFavourite(state.word)) },
                     onWordChipClick = { onAction(HomeAction.NewSearch(it)) },
                     onShareWord = { onAction(HomeAction.OnShareData) },
