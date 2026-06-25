@@ -38,6 +38,7 @@ data class Meaning(
     companion object {
         fun mock() = Meaning(
             partOfSpeech = "partOfSpeech",
+            language = "English",
             definitions = Definition.mockList().toImmutableList(),
             synonyms = buildList {
                 repeat(Random.nextInt(0..3)) {

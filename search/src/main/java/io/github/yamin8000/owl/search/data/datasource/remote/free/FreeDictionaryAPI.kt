@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     WiktionaryAPI.kt Copyrighted by Yamin Siahmargooei at 2026/6/24
- *     WiktionaryAPI.kt Last modified at 2026/6/24
+ *     FreeDictionaryAPI.kt Copyrighted by Yamin Siahmargooei at 2026/6/25
+ *     FreeDictionaryAPI.kt Last modified at 2025/9/17
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
  *     Copyright (C) 2026  Yamin Siahmargooei
  *
@@ -19,13 +19,16 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote
+package io.github.yamin8000.owl.search.data.datasource.remote.free
 
+import io.github.yamin8000.owl.search.data.datasource.remote.free.dto.EntryDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface WiktionaryAPI {
+/** [Free Dictionary API](https://dictionaryapi.dev) */
+interface FreeDictionaryAPI {
 
-    @GET("page/definition/{term}")
-    suspend fun search(@Path("term") term: String): List<Any>
+    /** Search for [word] definitions */
+    @GET("entries/en/{word}")
+    suspend fun search(@Path("word") word: String): List<EntryDto>
 }

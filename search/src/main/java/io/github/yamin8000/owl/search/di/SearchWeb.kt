@@ -25,8 +25,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.github.yamin8000.owl.search.data.datasource.remote.FreeDictionaryAPI
-import io.github.yamin8000.owl.search.data.datasource.remote.WiktionaryAPI
+import io.github.yamin8000.owl.search.data.datasource.remote.free.FreeDictionaryAPI
+import io.github.yamin8000.owl.search.data.datasource.remote.wiktionary.WiktionaryAPI
 import io.github.yamin8000.owl.search.data.repository.remote.FreeDictionaryRetrofitApiRepository
 import io.github.yamin8000.owl.search.domain.repository.remote.FreeDictionaryApiRepository
 import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary

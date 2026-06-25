@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     DefinitionDto.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
- *     DefinitionDto.kt Last modified at 2025/9/8
+ *     EntryDto.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
+ *     EntryDto.kt Last modified at 2025/9/8
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
  *     Copyright (C) 2025  Yamin Siahmargooei
  *
@@ -19,26 +19,27 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote.dto
+package io.github.yamin8000.owl.search.data.datasource.remote.free.dto
 
 import com.squareup.moshi.JsonClass
-import io.github.yamin8000.owl.search.domain.model.Definition
+import io.github.yamin8000.owl.search.domain.model.Entry
+import kotlinx.collections.immutable.toImmutableList
 
 @JsonClass(generateAdapter = true)
-data class DefinitionDto(
-    val definition: String,
-    val example: String?,
-    val synonyms: List<String>,
-    val antonyms: List<String>,
-    val id: Long? = null,
-    val meaningId: Long? = null
+data class EntryDto(
+    val word: String,
+    val phonetics: List<PhoneticDto>,
+    val meanings: List<MeaningDto>,
+    val license: LicenseDto? = null,
+    val sourceUrls: List<String>? = null,
+    val id: Long? = null
 ) {
-    fun domain() = Definition(
-        id = id,
-        meaningId = meaningId,
-        definition = definition,
-        examples = if (example != null) listOf(example) else listOf(),
-        synonyms = synonyms,
-        antonyms = antonyms
+    fun domain() = Entry(
+        word = word,
+        phonetics = phonetics.map { it.domain() }.toImmutableList(),
+        meanings = meanings.map { it.domain() }.toImmutableList(),
+        license = license?.domain(),
+        sourceUrls = sourceUrls?.toImmutableList(),
+        id = id
     )
 }

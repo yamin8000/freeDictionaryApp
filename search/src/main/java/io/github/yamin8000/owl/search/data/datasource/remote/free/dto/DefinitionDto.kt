@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     PronunciationText.kt Copyrighted by Yamin Siahmargooei at 2025/9/8
- *     PronunciationText.kt Last modified at 2025/8/31
+ *     DefinitionDto.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
+ *     DefinitionDto.kt Last modified at 2025/9/8
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
  *     Copyright (C) 2025  Yamin Siahmargooei
  *
@@ -19,24 +19,28 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.ui.components.texts
+package io.github.yamin8000.owl.search.data.datasource.remote.free.dto
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.RecordVoiceOver
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import io.github.yamin8000.owl.common.ui.components.SpeakableRippleTextWithIcon
+import com.squareup.moshi.JsonClass
+import io.github.yamin8000.owl.search.domain.model.Definition
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
-@Composable
-internal fun PronunciationText(
-    pronunciation: String,
-    word: String,
-    modifier: Modifier = Modifier,
+@JsonClass(generateAdapter = true)
+data class DefinitionDto(
+    val definition: String,
+    val example: String?,
+    val synonyms: List<String>,
+    val antonyms: List<String>,
+    val id: Long? = null,
+    val meaningId: Long? = null
 ) {
-    SpeakableRippleTextWithIcon(
-        modifier = modifier,
-        text = pronunciation,
-        ttsText = word,
-        imageVector = Icons.TwoTone.RecordVoiceOver,
+    fun domain() = Definition(
+        id = id,
+        meaningId = meaningId,
+        definition = definition,
+        examples = if (example != null) persistentListOf(example) else persistentListOf(),
+        synonyms = synonyms.toPersistentList(),
+        antonyms = antonyms.toPersistentList()
     )
 }

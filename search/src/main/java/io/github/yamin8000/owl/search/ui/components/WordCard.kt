@@ -25,9 +25,11 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material.icons.twotone.RecordVoiceOver
 import androidx.compose.material.icons.twotone.Share
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -35,13 +37,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.components.ClickableIcon
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
-import io.github.yamin8000.owl.search.ui.components.texts.PronunciationText
-import io.github.yamin8000.owl.search.ui.components.texts.WordText
 import io.github.yamin8000.owl.strings.R
 
 @MyPreview
@@ -54,7 +55,7 @@ private fun Preview() {
             content = {
                 WordCard(
                     word = "Word",
-                    pronunciation = "Pronunciation",
+                    onPlayPhonetic = {},
                     onShareWord = {},
                     onAddToFavourite = {}
                 )
@@ -66,8 +67,8 @@ private fun Preview() {
 @Composable
 fun WordCard(
     word: String,
-    pronunciation: String?,
     modifier: Modifier = Modifier,
+    onPlayPhonetic: ((String) -> Unit)? = null,
     onAddToFavourite: (() -> Unit)? = null,
     onShareWord: (() -> Unit)? = null
 ) {
@@ -76,40 +77,19 @@ fun WordCard(
         shape = DefaultCutShape,
         border = BorderStroke(Sizes.xxSmall, MaterialTheme.colorScheme.tertiary),
         content = {
-            Row(
-                modifier = Modifier.padding(Sizes.Large),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(
-                    Sizes.Large,
-                    Alignment.CenterHorizontally
+            Column(
+                modifier = Modifier.padding(Sizes.Medium),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(
+                    Sizes.Small,
+                    Alignment.CenterVertically
                 ),
                 content = {
-                    Column(
-                        modifier = Modifier.weight(3f),
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.spacedBy(
-                            Sizes.Medium,
-                            Alignment.CenterVertically
-                        ),
-                        content = {
-                            WordText(
-                                word = word
-                            )
-                            if (!pronunciation.isNullOrBlank()) {
-                                PronunciationText(
-                                    word = word,
-                                    pronunciation = pronunciation,
-                                )
-                            }
-                        }
-                    )
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.spacedBy(
-                            Sizes.Medium,
-                            Alignment.CenterVertically
-                        ),
+                    AppText(text = word)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         content = {
                             if (onAddToFavourite != null) {
                                 ClickableIcon(
@@ -123,6 +103,13 @@ fun WordCard(
                                     imageVector = Icons.TwoTone.Share,
                                     contentDescription = stringResource(R.string.share),
                                     onClick = onShareWord
+                                )
+                            }
+                            if (onPlayPhonetic != null) {
+                                ClickableIcon(
+                                    imageVector = Icons.TwoTone.RecordVoiceOver,
+                                    contentDescription = "",
+                                    onClick = { onPlayPhonetic(word) }
                                 )
                             }
                         }

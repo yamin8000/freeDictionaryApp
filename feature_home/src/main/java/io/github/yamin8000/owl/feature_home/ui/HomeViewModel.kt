@@ -21,8 +21,10 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
+import android.text.TextUtils
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.core.text.TextUtilsCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -56,6 +58,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.seconds
@@ -87,8 +90,11 @@ class HomeViewModel @AssistedInject constructor(
                     else -> errorChannel.send(HomeSnackbarType.Unknown)
                 }
 
+                is SocketTimeoutException, is UnknownHostException -> errorChannel.send(
+                    HomeSnackbarType.NoInternet
+                )
+
                 is CancellationException -> errorChannel.send(HomeSnackbarType.Cancelled)
-                is UnknownHostException -> errorChannel.send(HomeSnackbarType.NoInternet)
                 else -> errorChannel.send(HomeSnackbarType.Unknown)
             }
         }
@@ -180,6 +186,9 @@ class HomeViewModel @AssistedInject constructor(
                 }
             }
 
+            is HomeAction.OnPlayPhonetic -> {
+                tts.speak(action.phonetic)
+            }
         }
     }
 
@@ -205,13 +214,11 @@ class HomeViewModel @AssistedInject constructor(
             if (cachedEntry.isEmpty()) {
                 val entries = searchFreeDictionaryUseCase(searchTerm)
                 val firstEntry = entries.firstOrNull()
-                val phonetic = firstEntry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
 
                 _state.update {
                     it.copy(
                         searchResult = entries,
                         word = firstEntry?.word ?: "",
-                        phonetic = phonetic,
                         searchSuggestions = persistentListOf()
                     )
                 }
@@ -228,12 +235,10 @@ class HomeViewModel @AssistedInject constructor(
 
     private fun loadCachedWord(cachedEntries: List<Entry>) {
         val firstEntry = cachedEntries.firstOrNull()
-        val phonetic = firstEntry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
         _state.update {
             it.copy(
                 searchResult = cachedEntries,
                 word = firstEntry?.word ?: "",
-                phonetic = phonetic,
                 searchSuggestions = persistentListOf()
             )
         }

@@ -34,7 +34,6 @@ data class HomeState(
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     val error: HomeSnackbarType? = null,
     val searchResult: List<Entry> = emptyList(),
-    val phonetic: String = "",
     val word: String = "",
     val isVibrating: Boolean = false
 )

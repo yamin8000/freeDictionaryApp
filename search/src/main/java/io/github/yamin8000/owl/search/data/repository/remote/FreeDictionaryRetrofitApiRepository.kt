@@ -21,7 +21,7 @@
 
 package io.github.yamin8000.owl.search.data.repository.remote
 
-import io.github.yamin8000.owl.search.data.datasource.remote.FreeDictionaryAPI
+import io.github.yamin8000.owl.search.data.datasource.remote.free.FreeDictionaryAPI
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.repository.remote.FreeDictionaryApiRepository
 import javax.inject.Inject

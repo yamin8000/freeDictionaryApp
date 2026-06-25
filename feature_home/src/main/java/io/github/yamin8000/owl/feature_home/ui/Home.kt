@@ -60,7 +60,6 @@ import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.Suggest
 import io.github.yamin8000.owl.feature_home.ui.util.ShareUtils.handleShareIntent
 import io.github.yamin8000.owl.feature_home.ui.util.Utils.ObserverEvent
 import io.github.yamin8000.owl.feature_home.ui.util.Utils.getErrorText
-import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -76,8 +75,7 @@ private fun Preview() {
                 isOnline = Random.nextBoolean(),
                 isSearching = Random.nextBoolean(),
                 searchSuggestions = persistentListOf("apple", "banana", "orange"),
-                word = "example",
-                phonetic = "/ɪɡˈzæmpəl/"
+                word = "example"
             ),
             term = "example",
             isWordSelectedFromKeyboardSuggestions = Random.nextBoolean(),
@@ -214,7 +212,7 @@ internal fun HomeContent(
                     onShareWord = { onAction(HomeAction.OnShareData) },
                     isOnline = state.isOnline,
                     word = state.word,
-                    phonetic = state.phonetic
+                    onPlayPhonetic = { onAction(HomeAction.OnPlayPhonetic(it)) }
                 )
             } else {
                 Column(
@@ -225,7 +223,7 @@ internal fun HomeContent(
                         Alignment.CenterVertically
                     ),
                     content = {
-                        AppText(stringResource(R.string.search_hint))
+                        AppText(text = stringResource(R.string.search_hint))
                         EmptyList()
                     }
                 )

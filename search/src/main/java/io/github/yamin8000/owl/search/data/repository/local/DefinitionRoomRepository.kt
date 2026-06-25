@@ -26,6 +26,8 @@ import io.github.yamin8000.owl.search.data.datasource.local.dao.DAOs
 import io.github.yamin8000.owl.search.data.datasource.local.entity.DefinitionEntity
 import io.github.yamin8000.owl.search.domain.model.Definition
 import io.github.yamin8000.owl.search.domain.repository.local.DefinitionRepository
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 class DefinitionRoomRepository(
     private val definitionDao: DAOs.DefinitionDao,
@@ -41,9 +43,9 @@ class DefinitionRoomRepository(
         return if (item != null) {
             Definition(
                 definition = item.definition,
-                examples = if (item.example != null) listOf(item.example) else listOf(),
-                antonyms = antonymDao.where("definitionId", item.id).map { it.value },
-                synonyms = synonymDao.where("definitionId", item.id).map { it.value },
+                examples = if (item.example != null) persistentListOf(item.example) else persistentListOf(),
+                antonyms = antonymDao.where("definitionId", item.id).map { it.value }.toPersistentList(),
+                synonyms = synonymDao.where("definitionId", item.id).map { it.value }.toPersistentList(),
                 meaningId = item.meaningId,
                 id = item.id
             )
