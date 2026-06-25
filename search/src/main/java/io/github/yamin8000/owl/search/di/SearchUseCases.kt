@@ -30,10 +30,10 @@ import io.github.yamin8000.owl.search.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.search.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.search.domain.repository.local.PhoneticRepository
 import io.github.yamin8000.owl.search.domain.repository.local.TermRepository
-import io.github.yamin8000.owl.search.domain.usecase.CacheEntry
-import io.github.yamin8000.owl.search.domain.usecase.CacheWordData
-import io.github.yamin8000.owl.search.domain.usecase.GetCachedEntries
-import io.github.yamin8000.owl.search.domain.usecase.WordCacheUseCases
+import io.github.yamin8000.owl.search.domain.usecase.cache.CacheEntry
+import io.github.yamin8000.owl.search.domain.usecase.cache.CacheWordData
+import io.github.yamin8000.owl.search.domain.usecase.cache.GetCachedEntries
+import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
 import javax.inject.Singleton
 
 @Module

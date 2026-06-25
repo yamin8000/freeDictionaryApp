@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     WiktionaryAPI.kt Copyrighted by Yamin Siahmargooei at 2026/6/25
- *     WiktionaryAPI.kt Last modified at 2026/6/25
+ *     WikiDefinitionDto.kt Copyrighted by Yamin Siahmargooei at 2026/6/25
+ *     WikiDefinitionDto.kt Last modified at 2026/6/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
  *     Copyright (C) 2026  Yamin Siahmargooei
  *
@@ -19,18 +19,24 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote.wiktionary
+package io.github.yamin8000.owl.search.data.datasource.remote.wiktionary.dto
 
-import io.github.yamin8000.owl.search.data.datasource.remote.wiktionary.dto.WikiMeaningDto
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
+import com.squareup.moshi.JsonClass
+import io.github.yamin8000.owl.search.domain.model.Definition
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
-interface WiktionaryAPI {
-
-    @Headers("Accept-Encoding: gzip")
-    @GET("page/definition/{term}")
-    suspend fun search(
-        @Path("term") term: String
-    ): Map<String, List<WikiMeaningDto>>
+@JsonClass(generateAdapter = true)
+data class WikiDefinitionDto(
+    val definition: String,
+    val examples: List<String>? = null,
+    val id: Long? = null,
+    val meaningId: Long? = null
+) {
+    fun domain() = Definition(
+        id = id,
+        meaningId =  meaningId,
+        definition = definition,
+        examples = examples?.toPersistentList() ?: persistentListOf()
+    )
 }

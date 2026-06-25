@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.domain.usecase
+package io.github.yamin8000.owl.search.domain.usecase.cache
 
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.model.Meaning

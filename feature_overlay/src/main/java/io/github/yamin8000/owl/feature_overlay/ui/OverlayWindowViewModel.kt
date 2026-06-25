@@ -29,8 +29,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.util.log
 import io.github.yamin8000.owl.feature_overlay.di.OverlayViewModelFactory
 import io.github.yamin8000.owl.search.domain.model.Phonetic
-import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
-import io.github.yamin8000.owl.search.domain.usecase.WordCacheUseCases
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
+import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow

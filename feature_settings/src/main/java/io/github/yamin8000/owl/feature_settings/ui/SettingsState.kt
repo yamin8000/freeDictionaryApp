@@ -33,5 +33,5 @@ data class SettingsState(
     val isVibrating: Boolean = true,
     val isStartingBlank: Boolean = true,
     val englishLanguages: ImmutableList<Locale> = persistentListOf(),
-    val source: DictionarySource = DictionarySource.Wiktionary
+    val source: DictionarySource = DictionarySource.FreeDictionary
 )

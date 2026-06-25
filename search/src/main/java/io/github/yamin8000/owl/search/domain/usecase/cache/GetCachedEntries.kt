@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     SearchWordUseCase.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
- *     SearchWordUseCase.kt Last modified at 2024/8/18
+ *     GetCachedWord.kt Copyrighted by Yamin Siahmargooei at 2024/8/25
+ *     GetCachedWord.kt Last modified at 2024/8/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
  *     Copyright (C) 2024  Yamin Siahmargooei
  *
@@ -19,15 +19,15 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.domain.usecase
+package io.github.yamin8000.owl.search.domain.usecase.cache
 
 import io.github.yamin8000.owl.search.domain.model.Entry
-import io.github.yamin8000.owl.search.domain.repository.remote.FreeDictionaryApiRepository
+import io.github.yamin8000.owl.search.domain.repository.local.EntryRepository
 
-class SearchFreeDictionary(
-    private val repository: FreeDictionaryApiRepository
+class GetCachedEntries(
+    private val entryRepository: EntryRepository
 ) {
-    suspend operator fun invoke(word: String): List<Entry> {
-        return repository.searchWord(word)
+    suspend operator fun invoke(term: String): List<Entry> {
+        return entryRepository.findByTerm(term)
     }
 }

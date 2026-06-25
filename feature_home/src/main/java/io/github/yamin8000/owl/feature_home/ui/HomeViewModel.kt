@@ -21,18 +21,18 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
-import android.text.TextUtils
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
-import androidx.core.text.TextUtilsCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.datastore.domain.model.SettingsKeys
 import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
@@ -41,8 +41,9 @@ import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepos
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
 import io.github.yamin8000.owl.feature_home.ui.util.HomeSnackbarType
 import io.github.yamin8000.owl.search.domain.model.Entry
-import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
-import io.github.yamin8000.owl.search.domain.usecase.WordCacheUseCases
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
+import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchWiktionary
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -67,6 +68,7 @@ import kotlin.time.Duration.Companion.seconds
 class HomeViewModel @AssistedInject constructor(
     private val savedState: SavedStateHandle,
     private val searchFreeDictionaryUseCase: SearchFreeDictionary,
+    private val searchWiktionaryUseCase: SearchWiktionary,
     private val termSuggesterRepository: TermSuggesterRepository,
     private val settingsUseCases: SettingUseCases,
     private val historyUseCases: HistoryUseCases,
@@ -132,7 +134,12 @@ class HomeViewModel @AssistedInject constructor(
 
     init {
         scope.launch {
-            _state.update { it.copy(isVibrating = settingsUseCases.getVibration()) }
+            _state.update {
+                it.copy(
+                    isVibrating = settingsUseCases.getVibration(),
+                    dictionarySource = settingsUseCases.getSource()
+                )
+            }
             if (!settingsUseCases.getStartingBlank() && searchTerm.value.isBlank()) {
                 savedState["Search"] = "free"
             }
@@ -212,7 +219,9 @@ class HomeViewModel @AssistedInject constructor(
 
             val cachedEntry = cacheUseCases.getCachedEntries(searchTerm)
             if (cachedEntry.isEmpty()) {
-                val entries = searchFreeDictionaryUseCase(searchTerm)
+                val entries = if (state.value.dictionarySource == DictionarySource.FreeDictionary) {
+                    searchFreeDictionaryUseCase(searchTerm)
+                } else searchWiktionaryUseCase(searchTerm)
                 val firstEntry = entries.firstOrNull()
 
                 _state.update {
