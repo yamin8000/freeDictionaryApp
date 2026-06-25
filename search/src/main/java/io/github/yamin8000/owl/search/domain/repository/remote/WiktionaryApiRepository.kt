@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     WordCacheUseCases.kt Copyrighted by Yamin Siahmargooei at 2024/9/5
- *     WordCacheUseCases.kt Last modified at 2024/8/30
+ *     WiktionaryApiRepository.kt Copyrighted by Yamin Siahmargooei at 2026/6/25
+ *     WiktionaryApiRepository.kt Last modified at 2026/6/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.domain.usecase
+package io.github.yamin8000.owl.search.domain.repository.remote
 
-data class WordCacheUseCases(
-    val getCachedWord: GetCachedWord,
-    val cacheWord: CacheWord,
-    val cacheWordData: CacheWordData
-)
+import io.github.yamin8000.owl.search.domain.model.Entry
+
+interface WiktionaryApiRepository {
+    suspend fun searchWord(word: String): List<Entry>
+}

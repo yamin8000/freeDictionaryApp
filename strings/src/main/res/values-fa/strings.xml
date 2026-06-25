@@ -32,7 +32,7 @@
     <string name="text_copied">متن کپی شد</string>
     <string name="license_header">این یک برنامه آزاد طبق پروانه گنو است که توضیحات بیشتر آن در ادامه آورده شده است</string>
     <string name="gplv3_image_description">لوگو پروانه برنامه GPLv3</string>
-    <string name="about_app">فرهنگ واژگان انگلیسی به انگلیسی جغد، برگرفته از فرهنگ واژگان</string>
+    <string name="about_app">فرهنگ واژگان انگلیسی به انگلیسی رایگان، برگرفته از فرهنگ واژگان</string>
     <string name="added_to_favourites">به برگزیده‌ها اضافه شد</string>
     <string name="clear">پاک کردن</string>
     <string name="untracked_error">خطای پیش بینی نشده</string>
@@ -59,8 +59,9 @@
     <string name="increase_volume_notice">صدای بلندگو را زیاد کنید.</string>
     <string name="antonym">متضاد</string>
     <string name="synonym">مترادف</string>
-    <string name="start_blank_search">Blank startup search</string>
-    <string name="theme_oled">تاریک تر</string>
+    <string name="start_blank_search">جستجوی آغازین خالی</string>
+    <string name="theme_oled">تاریک تر/OLED</string>
+    <string name="theme_system_darker">تاریک تر/OLED هماهنگ سیستمی</string>
     <string name="yes">بله</string>
     <string name="no">نه</string>
     <string name="back">بازگشت</string>
@@ -70,4 +71,6 @@
     <string name="more_in_app">بیشتر در برنامه…</string>
     <string name="latest_version">جدیدترین نسخه: %1$s</string>
     <string name="contributions_graph">نمودار مشارکت‌کنندگان</string>
+    <string name="dictionary_source">منبع فرهنگ واژگان</string>
+    <string name="dictionary_source_note">FreeDictionary فقط برای انگلیسی مناسب است اما Wiktionary از چندین زبان پشتیبانی میکند.</string>
 </resources>

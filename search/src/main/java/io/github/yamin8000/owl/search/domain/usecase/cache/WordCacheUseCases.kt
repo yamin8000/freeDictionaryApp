@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     PhoneticDto.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
- *     PhoneticDto.kt Last modified at 2025/9/8
+ *     WordCacheUseCases.kt Copyrighted by Yamin Siahmargooei at 2024/9/5
+ *     WordCacheUseCases.kt Last modified at 2024/8/30
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
- *     Copyright (C) 2025  Yamin Siahmargooei
+ *     Copyright (C) 2024  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,26 +19,10 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote.dto
+package io.github.yamin8000.owl.search.domain.usecase.cache
 
-import com.squareup.moshi.JsonClass
-import io.github.yamin8000.owl.search.domain.model.Phonetic
-
-@JsonClass(generateAdapter = true)
-data class PhoneticDto(
-    val id: Long? = null,
-    val entryId: Long? = null,
-    val text: String? = null,
-    val audio: String? = null,
-    val sourceUrl: String? = null,
-    val license: LicenseDto? = null
-) {
-    fun domain() = Phonetic(
-        id = id,
-        entryId = entryId,
-        text = text,
-        audio = audio,
-        sourceUrl = sourceUrl,
-        license = license?.domain()
-    )
-}
+data class WordCacheUseCases(
+    val getCachedEntries: GetCachedEntries,
+    val cacheEntry: CacheEntry,
+    val cacheWordData: CacheWordData
+)

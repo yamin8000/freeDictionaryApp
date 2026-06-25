@@ -38,6 +38,7 @@ import kotlin.random.nextInt
 private fun HomeLoadSuccess() {
     val faker = Faker()
     val word = faker.backToTheFuture().character()
+/*
     PreviewTheme {
         HomeContent(
             state = HomeState(
@@ -54,7 +55,11 @@ private fun HomeLoadSuccess() {
                                             add(
                                                 Definition(
                                                     definition = faker.backToTheFuture().quote(),
-                                                    example = faker.backToTheFuture().quote(),
+                                                    examples = buildList {
+                                                        repeat(Random.nextInt(0..3)) {
+                                                            add(faker.backToTheFuture().quote())
+                                                        }
+                                                    },
                                                     synonyms = buildList {
                                                         repeat(Random.nextInt(0..3)) {
                                                             add(faker.backToTheFuture().character())
@@ -92,4 +97,5 @@ private fun HomeLoadSuccess() {
             onNavigateToHistory = {}
         )
     }
+*/
 }

@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.domain.usecase
+package io.github.yamin8000.owl.search.domain.usecase.cache
 
 import io.github.yamin8000.owl.common.util.StringUtils.sanitizeWords
 import io.github.yamin8000.owl.search.domain.model.Entry
@@ -52,11 +52,10 @@ class CacheWordData(
         .flatMap { (partOfSpeech, definitions, _, _) ->
             listOf(partOfSpeech)
                 .plus(definitions.map { it.definition })
-                .plus(definitions.map { it.example })
+                .plus(definitions.flatMap { it.examples })
                 .plus(definitions.flatMap { it.synonyms })
                 .plus(definitions.flatMap { it.antonyms })
-        }.filterNotNull()
-        .flatMap { it.split(Regex("\\s+")) }
+        }.flatMap { it.split(Regex("\\s+")) }
         .map { it.trim() }
         .toMutableSet()
 }

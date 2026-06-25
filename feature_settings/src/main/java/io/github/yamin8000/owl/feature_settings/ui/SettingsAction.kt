@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_settings.ui
 
+import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 
 sealed interface SettingsAction {
@@ -28,4 +29,5 @@ sealed interface SettingsAction {
     data class OnStartingBlankChange(val value: Boolean) : SettingsAction
     data class OnTtsLangChange(val value: String) : SettingsAction
     data class OnThemeChange(val newTheme: ThemeType) : SettingsAction
+    data class OnDictionarySourceChanged(val source: DictionarySource) : SettingsAction
 }

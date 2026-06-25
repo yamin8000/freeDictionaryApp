@@ -1,7 +1,7 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     PronunciationText.kt Copyrighted by Yamin Siahmargooei at 2025/9/8
- *     PronunciationText.kt Last modified at 2025/8/31
+ *     PhoneticDto.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
+ *     PhoneticDto.kt Last modified at 2025/9/8
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
  *     Copyright (C) 2025  Yamin Siahmargooei
  *
@@ -19,24 +19,26 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.ui.components.texts
+package io.github.yamin8000.owl.search.data.datasource.remote.free.dto
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.RecordVoiceOver
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import io.github.yamin8000.owl.common.ui.components.SpeakableRippleTextWithIcon
+import com.squareup.moshi.JsonClass
+import io.github.yamin8000.owl.search.domain.model.Phonetic
 
-@Composable
-internal fun PronunciationText(
-    pronunciation: String,
-    word: String,
-    modifier: Modifier = Modifier,
+@JsonClass(generateAdapter = true)
+data class PhoneticDto(
+    val id: Long? = null,
+    val entryId: Long? = null,
+    val text: String? = null,
+    val audio: String? = null,
+    val sourceUrl: String? = null,
+    val license: LicenseDto? = null
 ) {
-    SpeakableRippleTextWithIcon(
-        modifier = modifier,
-        text = pronunciation,
-        ttsText = word,
-        imageVector = Icons.TwoTone.RecordVoiceOver,
+    fun domain() = Phonetic(
+        id = id,
+        entryId = entryId,
+        text = text,
+        audio = audio,
+        sourceUrl = sourceUrl,
+        license = license?.domain()
     )
 }

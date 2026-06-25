@@ -29,7 +29,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.common.util.TTS
+import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.datastore.domain.model.SettingsKeys
 import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
@@ -38,8 +41,9 @@ import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepos
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
 import io.github.yamin8000.owl.feature_home.ui.util.HomeSnackbarType
 import io.github.yamin8000.owl.search.domain.model.Entry
-import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
-import io.github.yamin8000.owl.search.domain.usecase.WordCacheUseCases
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
+import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchWiktionary
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -55,13 +59,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel(assistedFactory = HomeViewModelFactory::class)
 class HomeViewModel @AssistedInject constructor(
     private val savedState: SavedStateHandle,
     private val searchFreeDictionaryUseCase: SearchFreeDictionary,
+    private val searchWiktionaryUseCase: SearchWiktionary,
     private val termSuggesterRepository: TermSuggesterRepository,
     private val settingsUseCases: SettingUseCases,
     private val historyUseCases: HistoryUseCases,
@@ -75,7 +82,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         _state.update { it.copy(isSearching = false) }
-        println(throwable.stackTraceToString())
+        log(throwable.stackTraceToString())
         viewModelScope.launch {
             when (throwable) {
                 is HttpException -> when (throwable.code()) {
@@ -85,8 +92,11 @@ class HomeViewModel @AssistedInject constructor(
                     else -> errorChannel.send(HomeSnackbarType.Unknown)
                 }
 
+                is SocketTimeoutException, is UnknownHostException -> errorChannel.send(
+                    HomeSnackbarType.NoInternet
+                )
+
                 is CancellationException -> errorChannel.send(HomeSnackbarType.Cancelled)
-                is UnknownHostException -> errorChannel.send(HomeSnackbarType.NoInternet)
                 else -> errorChannel.send(HomeSnackbarType.Unknown)
             }
         }
@@ -99,7 +109,7 @@ class HomeViewModel @AssistedInject constructor(
     private var errorChannel = Channel<HomeSnackbarType>()
     val errorChannelFlow = errorChannel.receiveAsFlow()
 
-    private var shareChannel = Channel<Entry?>()
+    private var shareChannel = Channel<List<Entry>>()
     val shareChannelFlow = shareChannel.receiveAsFlow()
 
     private var _state = MutableStateFlow(HomeState())
@@ -110,7 +120,7 @@ class HomeViewModel @AssistedInject constructor(
     val isWordSelectedFromKeyboardSuggestions: State<Boolean>
         get() = derivedStateOf { searchTerm.value.length > 1 && searchTerm.value.last() == ' ' && !searchTerm.value.all { it == ' ' } }
 
-    private val internetCheckDelay = 5000L
+    private val internetCheckDelay = 5
     private val dnsServers = listOf(
         "8.8.8.8",
         "8.8.4.4",
@@ -124,7 +134,12 @@ class HomeViewModel @AssistedInject constructor(
 
     init {
         scope.launch {
-            _state.update { it.copy(isVibrating = settingsUseCases.getVibration()) }
+            _state.update {
+                it.copy(
+                    isVibrating = settingsUseCases.getVibration(),
+                    dictionarySource = settingsUseCases.getSource()
+                )
+            }
             if (!settingsUseCases.getStartingBlank() && searchTerm.value.isBlank()) {
                 savedState["Search"] = "free"
             }
@@ -133,7 +148,7 @@ class HomeViewModel @AssistedInject constructor(
             }
             while (true) {
                 onAction(HomeAction.OnCheckInternet)
-                delay(internetCheckDelay)
+                delay(internetCheckDelay.seconds)
             }
         }
     }
@@ -178,6 +193,9 @@ class HomeViewModel @AssistedInject constructor(
                 }
             }
 
+            is HomeAction.OnPlayPhonetic -> {
+                tts.speak(action.phonetic)
+            }
         }
     }
 
@@ -199,45 +217,40 @@ class HomeViewModel @AssistedInject constructor(
 
             _state.update { it.copy(isSearching = true) }
 
-            val cachedWord = cacheUseCases.getCachedWord(searchTerm)
-            if (cachedWord == null) {
-                val newWord = searchForDefinitionUsingApi(searchTerm)
-                if (newWord != null) {
-                    cacheUseCases.cacheWord(newWord)
-                    cacheUseCases.cacheWordData(newWord)
+            val cachedEntry = cacheUseCases.getCachedEntries(searchTerm)
+            if (cachedEntry.isEmpty()) {
+                val entries = if (state.value.dictionarySource == DictionarySource.FreeDictionary) {
+                    searchFreeDictionaryUseCase(searchTerm)
+                } else searchWiktionaryUseCase(searchTerm)
+                val firstEntry = entries.firstOrNull()
+
+                _state.update {
+                    it.copy(
+                        searchResult = entries,
+                        word = firstEntry?.word ?: "",
+                        searchSuggestions = persistentListOf()
+                    )
                 }
-            } else loadCachedWord(cachedWord)
+
+                cachedEntry.forEach { entry ->
+                    cacheUseCases.cacheEntry(entry)
+                    cacheUseCases.cacheWordData(entry)
+                }
+            } else loadCachedWord(cachedEntry)
 
             _state.update { it.copy(isSearching = false) }
         } else errorChannel.send(HomeSnackbarType.TermIsEmpty)
     }
 
-    private fun loadCachedWord(cachedWord: Entry) {
-        val phonetic = cachedWord.phonetics.firstOrNull { it.text != null }?.text ?: ""
+    private fun loadCachedWord(cachedEntries: List<Entry>) {
+        val firstEntry = cachedEntries.firstOrNull()
         _state.update {
             it.copy(
-                searchResult = cachedWord,
-                word = cachedWord.word,
-                phonetic = phonetic,
+                searchResult = cachedEntries,
+                word = firstEntry?.word ?: "",
                 searchSuggestions = persistentListOf()
             )
         }
-    }
-
-    private suspend fun searchForDefinitionUsingApi(
-        searchTerm: String
-    ): Entry? {
-        val entry = searchFreeDictionaryUseCase(searchTerm).firstOrNull()
-        val phonetic = entry?.phonetics?.firstOrNull { it.text != null }?.text ?: ""
-        _state.update {
-            it.copy(
-                searchResult = entry,
-                word = entry?.word ?: "",
-                phonetic = phonetic,
-                searchSuggestions = persistentListOf()
-            )
-        }
-        return entry
     }
 
     private fun cancel() {

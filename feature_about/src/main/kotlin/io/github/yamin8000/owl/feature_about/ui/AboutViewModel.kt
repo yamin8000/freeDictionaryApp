@@ -30,13 +30,11 @@ import io.github.yamin8000.owl.feature_about.domain.repository.GithubRepoReposit
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +50,6 @@ class AboutViewModel @Inject constructor(
     private val scope = CoroutineScope(
         SupervisorJob() + viewModelScope.coroutineContext + exceptionHandler
     )
-    private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO + exceptionHandler)
 
     private var _state = MutableStateFlow(AboutState())
     val state = _state.asStateFlow()

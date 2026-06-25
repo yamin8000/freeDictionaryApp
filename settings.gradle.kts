@@ -21,6 +21,13 @@
 
 pluginManagement {
     repositories {
+        try {
+            if (uri("https://maven.myket.ir/").toURL().readText().isNotBlank()) {
+                maven { url = uri("https://maven.myket.ir/") }
+            }
+        } catch (_: Exception) {
+            //ignored
+        }
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -29,10 +36,18 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        try {
+            if (uri("https://maven.myket.ir/").toURL().readText().isNotBlank()) {
+                maven { url = uri("https://maven.myket.ir/") }
+            }
+        } catch (_: Exception) {
+            //ignored
+        }
         google()
         mavenCentral()
     }
 }
+
 rootProject.name = "freeDictionaryApp"
 include(":app")
 include(":strings")

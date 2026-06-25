@@ -46,6 +46,7 @@ class MeaningRoomRepository(
                 id = item.id,
                 entryId = item.entryId,
                 partOfSpeech = item.partOfSpeech,
+                language = item.language,
                 definitions = definitionRepository.findAllByMeaningId(item.id).toImmutableList(),
                 synonyms = persistentListOf(),
                 antonyms = persistentListOf()
@@ -65,6 +66,7 @@ class MeaningRoomRepository(
                     entryId = item.entryId,
                     partOfSpeech = item.partOfSpeech,
                     createdAt = epoch(),
+                    language = item.language ?: "English"
                 )
             )
         } else -1

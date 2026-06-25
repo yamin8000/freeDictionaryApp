@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote.dto
+package io.github.yamin8000.owl.search.data.datasource.remote.free.dto
 
 import com.squareup.moshi.JsonClass
 import io.github.yamin8000.owl.search.domain.model.Entry

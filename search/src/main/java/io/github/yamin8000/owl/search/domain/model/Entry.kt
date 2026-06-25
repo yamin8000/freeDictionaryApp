@@ -27,8 +27,8 @@ import kotlinx.collections.immutable.toImmutableList
 
 data class Entry(
     val word: String,
-    val phonetics: ImmutableList<Phonetic>,
     val meanings: ImmutableList<Meaning>,
+    val phonetics: ImmutableList<Phonetic> = persistentListOf(),
     val license: License? = null,
     val sourceUrls: ImmutableList<String>? = null,
     val id: Long? = null

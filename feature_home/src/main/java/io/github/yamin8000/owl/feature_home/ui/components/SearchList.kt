@@ -57,10 +57,10 @@ private fun Preview() {
         SearchList(
             isOnline = Random.nextBoolean(),
             word = LoremIpsum(1).values.first(),
-            phonetic = LoremIpsum(1).values.first(),
             onAddToFavourite = {},
             onShareWord = {},
             onWordChipClick = {},
+            onPlayPhonetic = {},
             meanings = Meaning.mockList().toImmutableList(),
         )
     }
@@ -70,10 +70,10 @@ private fun Preview() {
 internal fun SearchList(
     isOnline: Boolean,
     word: String,
-    phonetic: String,
     onAddToFavourite: () -> Unit,
     onShareWord: () -> Unit,
     onWordChipClick: (String) -> Unit,
+    onPlayPhonetic: (String) -> Unit,
     meanings: ImmutableList<Meaning>,
     modifier: Modifier = Modifier
 ) {
@@ -104,13 +104,13 @@ internal fun SearchList(
 
             if (word.isNotBlank()) {
                 item(
-                    key = word + phonetic,
+                    key = word,
                     content = {
                         WordCard(
                             word = word,
-                            pronunciation = phonetic,
                             onShareWord = onShareWord,
-                            onAddToFavourite = onAddToFavourite
+                            onAddToFavourite = onAddToFavourite,
+                            onPlayPhonetic = onPlayPhonetic
                         )
                     }
                 )

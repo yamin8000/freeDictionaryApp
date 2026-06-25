@@ -19,15 +19,15 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.domain.usecase
+package io.github.yamin8000.owl.search.domain.usecase.cache
 
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.repository.local.EntryRepository
 
-class GetCachedWord(
+class GetCachedEntries(
     private val entryRepository: EntryRepository
 ) {
-    suspend operator fun invoke(term: String): Entry? {
+    suspend operator fun invoke(term: String): List<Entry> {
         return entryRepository.findByTerm(term)
     }
 }

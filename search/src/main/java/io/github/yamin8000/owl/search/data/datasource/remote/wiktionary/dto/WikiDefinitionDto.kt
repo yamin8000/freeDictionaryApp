@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     MeaningDto.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
- *     MeaningDto.kt Last modified at 2025/9/8
+ *     WikiDefinitionDto.kt Copyrighted by Yamin Siahmargooei at 2026/6/25
+ *     WikiDefinitionDto.kt Last modified at 2026/6/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
- *     Copyright (C) 2025  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,27 +19,24 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote.dto
+package io.github.yamin8000.owl.search.data.datasource.remote.wiktionary.dto
 
 import com.squareup.moshi.JsonClass
-import io.github.yamin8000.owl.search.domain.model.Meaning
-import kotlinx.collections.immutable.toImmutableList
+import io.github.yamin8000.owl.search.domain.model.Definition
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @JsonClass(generateAdapter = true)
-data class MeaningDto(
-    val partOfSpeech: String,
-    val definitions: List<DefinitionDto>,
-    val synonyms: List<String>,
-    val antonyms: List<String>,
+data class WikiDefinitionDto(
+    val definition: String,
+    val examples: List<String>? = null,
     val id: Long? = null,
-    val entryId: Long? = null
+    val meaningId: Long? = null
 ) {
-    fun domain() = Meaning(
+    fun domain() = Definition(
         id = id,
-        entryId = entryId,
-        partOfSpeech = partOfSpeech,
-        definitions = definitions.map { it.domain() }.toImmutableList(),
-        synonyms = synonyms.toImmutableList(),
-        antonyms = antonyms.toImmutableList()
+        meaningId =  meaningId,
+        definition = definition,
+        examples = examples?.toPersistentList() ?: persistentListOf()
     )
 }

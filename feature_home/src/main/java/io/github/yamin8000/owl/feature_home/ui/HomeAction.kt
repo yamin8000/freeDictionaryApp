@@ -30,4 +30,5 @@ sealed interface HomeAction {
     data object OnCheckInternet : HomeAction
     data class OnAddToFavourite(val word: String) : HomeAction
     data object UpdateTTS : HomeAction
+    data class OnPlayPhonetic(val phonetic: String) : HomeAction
 }
