@@ -23,10 +23,12 @@ package io.github.yamin8000.owl.feature_home.ui.components
 
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Attribution
 import androidx.compose.material3.Icon
@@ -67,7 +69,8 @@ internal fun LicenseCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Sizes.Medium),
+                    .padding(Sizes.Medium)
+                    .horizontalScroll(rememberScrollState()),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(
                     Sizes.Medium,
@@ -82,7 +85,6 @@ internal fun LicenseCard(
                         AppText(
                             text = name,
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.basicMarquee()
                         )
                     }
                     if (url != null) {
@@ -91,9 +93,7 @@ internal fun LicenseCard(
                             text = url,
                             style = MaterialTheme.typography.bodySmall,
                             textDecoration = TextDecoration.Underline,
-                            modifier = Modifier
-                                .clickable(onClick = { uriHandler.openUri(url) })
-                                .basicMarquee()
+                            modifier = Modifier.clickable(onClick = { uriHandler.openUri(url) })
                         )
                     }
                 }

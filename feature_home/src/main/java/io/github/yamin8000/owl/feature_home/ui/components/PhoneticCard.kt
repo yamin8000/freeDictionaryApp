@@ -23,10 +23,12 @@ package io.github.yamin8000.owl.feature_home.ui.components
 
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -102,6 +104,7 @@ internal fun PhoneticCard(
                     )
 
                     Row(
+                        modifier = Modifier.horizontalScroll(rememberScrollState()),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(
                             Sizes.Medium,
@@ -112,7 +115,7 @@ internal fun PhoneticCard(
                                 AppText(
                                     text = license.name,
                                     style = MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier.basicMarquee()
+                                    maxLines = 1,
                                 )
                             }
 
@@ -122,9 +125,10 @@ internal fun PhoneticCard(
                                     text = sourceUrl,
                                     textDecoration = TextDecoration.Underline,
                                     style = MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier
-                                        .clickable(onClick = { uriHandler.openUri(sourceUrl) })
-                                        .basicMarquee()
+                                    maxLines = 1,
+                                    modifier = Modifier.clickable(
+                                        onClick = { uriHandler.openUri(sourceUrl) }
+                                    )
                                 )
                             }
                         }
