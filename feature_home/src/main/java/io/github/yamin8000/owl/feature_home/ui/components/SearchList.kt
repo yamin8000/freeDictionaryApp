@@ -38,10 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import io.github.yamin8000.owl.common.ui.components.AppText
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
-import io.github.yamin8000.owl.search.domain.model.Meaning
+import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
@@ -50,18 +50,19 @@ import kotlinx.collections.immutable.toImmutableList
 import java.util.UUID
 import kotlin.random.Random
 
-@MyPreview
+@AppPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
         SearchList(
             isOnline = Random.nextBoolean(),
             word = LoremIpsum(1).values.first(),
-            phonetic = LoremIpsum(1).values.first(),
             onAddToFavourite = {},
             onShareWord = {},
             onWordChipClick = {},
-            meanings = Meaning.mockList().toImmutableList(),
+            onTextToSpeech = {},
+            onPlayAudio = {},
+            entries = Entry.mockList().toImmutableList(),
         )
     }
 }
@@ -70,18 +71,18 @@ private fun Preview() {
 internal fun SearchList(
     isOnline: Boolean,
     word: String,
-    phonetic: String,
     onAddToFavourite: () -> Unit,
     onShareWord: () -> Unit,
     onWordChipClick: (String) -> Unit,
-    meanings: ImmutableList<Meaning>,
+    onTextToSpeech: (String) -> Unit,
+    onPlayAudio: (String) -> Unit,
+    entries: ImmutableList<Entry>,
     modifier: Modifier = Modifier
 ) {
-
     LazyColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(Sizes.Medium, Alignment.CenterVertically),
+        verticalArrangement = Arrangement.spacedBy(Sizes.Small, Alignment.CenterVertically),
         contentPadding = PaddingValues(Sizes.Medium),
         content = {
             item(
@@ -93,7 +94,7 @@ internal fun SearchList(
                         exit = slideOutVertically() + fadeOut(),
                         content = {
                             AppText(
-                                modifier = Modifier.padding(Sizes.Medium),
+                                modifier = Modifier.padding(Sizes.Small),
                                 color = MaterialTheme.colorScheme.error,
                                 text = stringResource(R.string.general_net_error)
                             )
@@ -104,30 +105,56 @@ internal fun SearchList(
 
             if (word.isNotBlank()) {
                 item(
-                    key = word + phonetic,
+                    key = word,
                     content = {
                         WordCard(
                             word = word,
-                            pronunciation = phonetic,
                             onShareWord = onShareWord,
-                            onAddToFavourite = onAddToFavourite
+                            onAddToFavourite = onAddToFavourite,
+                            onWordTextToSpeech = onTextToSpeech
                         )
                     }
                 )
             }
 
-            items(
-                items = meanings,
-                key = { item -> "meaning-${item.id ?: UUID.randomUUID()}" },
-                itemContent = { meaning ->
-                    MeaningCard(
-                        modifier = Modifier.animateItem(),
-                        word = word,
-                        meaning = meaning,
-                        onWordChipClick = onWordChipClick
+            entries.forEachIndexed { index, entry ->
+                if (entry.license != null) {
+                    item(
+                        key = "${entry.id ?: UUID.randomUUID()}-license",
+                        content = {
+                            LicenseCard(
+                                name = entry.license?.name,
+                                url = entry.license?.url
+                            )
+                        }
                     )
                 }
-            )
+                if (entry.phonetics.isNotEmpty()) {
+                    item(
+                        key = "${entry.id ?: UUID.randomUUID()}-phonetic",
+                        content = {
+                            PhoneticList(
+                                phonetics = entry.phonetics,
+                                onPlayAudio = onPlayAudio
+                            )
+                        }
+                    )
+                }
+                items(
+                    items = entry.meanings,
+                    key = { item -> "meaning-${item.id ?: UUID.randomUUID()}" },
+                    itemContent = { meaning ->
+                        MeaningCard(
+                            word = word,
+                            meaning = meaning,
+                            onWordChipClick = onWordChipClick
+                        )
+                    }
+                )
+                if (index < entries.size - 1) {
+                    //item { HorizontalDivider() }
+                }
+            }
         }
     )
 }

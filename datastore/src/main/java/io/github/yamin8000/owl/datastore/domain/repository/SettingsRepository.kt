@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.datastore.domain.repository
 
+import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 
 interface SettingsRepository : BaseDatastoreRepository {
@@ -32,4 +33,6 @@ interface SettingsRepository : BaseDatastoreRepository {
     suspend fun setIsVibrating(value: Boolean)
     suspend fun getIsStartingBlank(): Boolean
     suspend fun setIsStartingBlank(value: Boolean)
+    suspend fun getDictionarySource(): DictionarySource
+    suspend fun setDictionarySource(source: DictionarySource)
 }

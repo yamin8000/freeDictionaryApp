@@ -110,7 +110,11 @@ internal fun SettingsContent(
                         isVibrating = state.isVibrating,
                         onVibratingChange = { onAction(SettingsAction.OnVibrationChange(it)) },
                         isStartingBlank = state.isStartingBlank,
-                        onStartingBlankChange = { onAction(SettingsAction.OnStartingBlankChange(it)) }
+                        onStartingBlankChange = { onAction(SettingsAction.OnStartingBlankChange(it)) },
+                        dictionarySource = state.source,
+                        onDictionarySourceChanged = {
+                            onAction(SettingsAction.OnDictionarySourceChanged(it))
+                        }
                     )
                     ThemeSetting(
                         theme = state.theme,

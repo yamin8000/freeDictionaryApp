@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_home.ui.components
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Casino
 import androidx.compose.material.icons.twotone.Favorite
@@ -60,7 +61,7 @@ internal fun MainTopBar(
                         text = stringResource(R.string.app_name),
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        modifier = Modifier.basicMarquee()
                     )
                 },
                 actions = {

@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  IS_CI: ${{ vars.IS_CI }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,5 +35,5 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build with Gradle CI=${{ vars.IS_CI }}
+        run: ./gradlew build -PIS_CI=${{ vars.IS_CI }}

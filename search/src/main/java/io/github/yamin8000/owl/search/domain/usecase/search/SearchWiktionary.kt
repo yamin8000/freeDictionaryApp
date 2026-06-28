@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     FreeDictionaryAPI.kt Copyrighted by Yamin Siahmargooei at 2024/9/5
- *     FreeDictionaryAPI.kt Last modified at 2024/9/5
+ *     SearchWiktionary.kt Copyrighted by Yamin Siahmargooei at 2026/6/25
+ *     SearchWiktionary.kt Last modified at 2026/6/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,16 +19,15 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote
+package io.github.yamin8000.owl.search.domain.usecase.search
 
-import io.github.yamin8000.owl.search.data.datasource.remote.dto.EntryDto
-import retrofit2.http.GET
-import retrofit2.http.Path
+import io.github.yamin8000.owl.search.domain.model.Entry
+import io.github.yamin8000.owl.search.domain.repository.remote.WiktionaryApiRepository
 
-/** [Free Dictionary API](https://dictionaryapi.dev) */
-interface FreeDictionaryAPI {
-
-    /** Search for [word] definitions */
-    @GET("entries/en/{word}")
-    suspend fun search(@Path("word") word: String): List<EntryDto>
+class SearchWiktionary(
+    private val repository: WiktionaryApiRepository
+) {
+    suspend operator fun invoke(word: String): List<Entry> {
+        return repository.searchWord(word)
+    }
 }

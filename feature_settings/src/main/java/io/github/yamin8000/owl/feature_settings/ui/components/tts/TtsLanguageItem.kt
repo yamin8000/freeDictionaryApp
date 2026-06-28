@@ -21,20 +21,20 @@
 
 package io.github.yamin8000.owl.feature_settings.ui.components.tts
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import io.github.yamin8000.owl.common.ui.components.AppText
+import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import java.util.Locale
 
-@MyPreview
+@AppPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
@@ -60,10 +60,11 @@ internal fun TtsLanguageItem(
         enabled = !isSelected,
         content = {
             AppText(
-                modifier = Modifier.padding(Sizes.Large),
                 text = Locale.forLanguageTag(localeTag).displayName,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                modifier = Modifier
+                    .padding(Sizes.Large)
+                    .basicMarquee(),
             )
         }
     )

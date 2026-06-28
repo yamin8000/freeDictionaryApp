@@ -40,12 +40,12 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import io.github.yamin8000.owl.common.ui.components.ClickableIcon
 import io.github.yamin8000.owl.common.ui.components.AppText
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
 
-@MyPreview
+@AppPreview
 @Composable
 private fun Preview() {
     PreviewTheme {

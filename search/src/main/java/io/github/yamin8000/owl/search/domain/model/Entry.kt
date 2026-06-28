@@ -21,14 +21,18 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
+import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlin.random.Random
+import kotlin.random.nextInt
 
+@Stable
 data class Entry(
     val word: String,
-    val phonetics: ImmutableList<Phonetic>,
     val meanings: ImmutableList<Meaning>,
+    val phonetics: ImmutableList<Phonetic> = persistentListOf(),
     val license: License? = null,
     val sourceUrls: ImmutableList<String>? = null,
     val id: Long? = null
@@ -36,10 +40,14 @@ data class Entry(
     companion object {
         fun mock() = Entry(
             word = "word",
-            phonetics = persistentListOf(),
+            phonetics = Phonetic.mockList().toImmutableList(),
             meanings = Meaning.mockList().toImmutableList(),
-            license = null,
+            license = License.mock(),
             sourceUrls = persistentListOf()
         )
+
+        fun mockList(n: Int = Random.nextInt(1..5)) = buildList {
+            repeat(n) { add(mock()) }
+        }
     }
 }

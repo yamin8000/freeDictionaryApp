@@ -26,9 +26,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.yamin8000.owl.common.util.TTS
+import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.data.repository.TermSuggesterRepositoryImpl
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
+import io.github.yamin8000.owl.feature_home.utils.MediaPlayerHelper
 import io.github.yamin8000.owl.search.data.datasource.local.AppDatabase
+import kotlinx.coroutines.runBlocking
 import javax.inject.Singleton
 
 @Module
@@ -41,4 +45,23 @@ object HomeModule {
         db: AppDatabase,
         app: Application
     ): TermSuggesterRepository = TermSuggesterRepositoryImpl(db.termDao(), app)
+
+    @Provides
+    @Singleton
+    internal fun providesTts(
+        app: Application,
+        settingUseCases: SettingUseCases
+    ): TTS = runBlocking {
+        TTS(
+            app,
+            settingUseCases.getTTS()
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesMediaPlayerHelper(
+    ): MediaPlayerHelper {
+        return MediaPlayerHelper()
+    }
 }

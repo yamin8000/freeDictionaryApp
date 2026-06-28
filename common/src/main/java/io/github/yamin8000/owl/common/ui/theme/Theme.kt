@@ -148,7 +148,7 @@ fun PreviewTheme(
 @Preview(
     showBackground = true,
 )
-annotation class MyPreview
+annotation class AppPreview
 
 @Composable
 fun AppTheme(

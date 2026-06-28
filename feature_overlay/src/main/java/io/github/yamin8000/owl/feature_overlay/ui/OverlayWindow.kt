@@ -91,7 +91,6 @@ fun OverlayScreen(
                                 modifier = Modifier.padding(Sizes.Large),
                                 isSearching = state.isSearching,
                                 word = state.word,
-                                phonetic = state.phonetic,
                                 meanings = state.meanings
                             )
                         }

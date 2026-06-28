@@ -19,7 +19,7 @@
   ~     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name" translatable="false">freeDictionary</string>
     <string name="search">Search</string>
     <string name="search_hint">Enter a word to search</string>
@@ -46,10 +46,12 @@
     <string name="clear_all">Clear All</string>
     <string name="settings">Settings</string>
     <string name="theme">Theme</string>
-    <string name="dynamic_theme_notice">On Android 12+ your app theme colors are based on your home screen background</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
+    <string name="theme_oled">OLED/Darker</string>
+    <string name="theme_system_darker">System OLED/Darker</string>
+    <string name="dynamic_theme_notice">On Android 12+ your app theme colors are based on your home screen background</string>
     <string name="tts_language">Text-to-Speech Language</string>
     <string name="about">About</string>
     <string name="version_name">Installed Version %s</string>
@@ -65,8 +67,6 @@
     <string name="antonym">Antonym</string>
     <string name="synonym">Synonym</string>
     <string name="start_blank_search">Blank startup search</string>
-    <string name="theme_oled" tools:ignore="MissingTranslation">OLED/Darker</string>
-    <string name="theme_system_darker" tools:ignore="MissingTranslation">System OLED/Darker</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="back">Back</string>
@@ -76,4 +76,7 @@
     <string name="more_in_app">More in app…</string>
     <string name="latest_version">Latest version: %1$s</string>
     <string name="contributions_graph">Contributions Graph</string>
+    <string name="dictionary_source">Dictionary Source</string>
+    <string name="dictionary_source_note">FreeDictionary is only useful for English but Wiktionary provides data for multiple languages.</string>
+    <string name="license">License</string>
 </resources>

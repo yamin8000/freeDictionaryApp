@@ -1,19 +1,20 @@
 [versions]
 android-application = "9.2.1"
 androidx-activity-compose = "1.13.0"
-androidx-compose-bom = "2026.05.01"
+androidx-compose-bom = "2026.06.00"
 androidx-core-ktx = "1.19.0"
 androidx-core-splash = "1.2.0"
 androidx-datastore = "1.2.1"
-androidx-lifecycle-compose = "2.10.0"
-androidx-material3 = "1.5.0-alpha21"
+androidx-lifecycle-compose = "2.11.0"
+androidx-material3 = "1.5.0-alpha22"
 androidx-navigation-compose = "2.9.8"
 androidx-room = "2.8.4"
 coil-compose = "2.7.0"
-datafaker = "2.5.4"
+datafaker = "2.6.0"
 desugar-jdk-libs = "2.1.5"
 hilt = "2.59.2"
 hilt-compose = "1.3.0"
+jsoup = "1.22.2"
 kotlin = "2.3.21"
 kotlinx-collections-immutable = "0.5.0"
 ksp = "2.3.9"
@@ -46,6 +47,7 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-lifecycle-compose = { module = "androidx.hilt:hilt-lifecycle-viewmodel-compose", version.ref = "hilt-compose" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie-compose" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }

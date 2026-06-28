@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     DefinitionDto.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
- *     DefinitionDto.kt Last modified at 2025/9/8
+ *     WiktionaryApiRepository.kt Copyrighted by Yamin Siahmargooei at 2026/6/25
+ *     WiktionaryApiRepository.kt Last modified at 2026/6/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
- *     Copyright (C) 2025  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,26 +19,10 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote.dto
+package io.github.yamin8000.owl.search.domain.repository.remote
 
-import com.squareup.moshi.JsonClass
-import io.github.yamin8000.owl.search.domain.model.Definition
+import io.github.yamin8000.owl.search.domain.model.Entry
 
-@JsonClass(generateAdapter = true)
-data class DefinitionDto(
-    val definition: String,
-    val example: String?,
-    val synonyms: List<String>,
-    val antonyms: List<String>,
-    val id: Long? = null,
-    val meaningId: Long? = null
-) {
-    fun domain() = Definition(
-        id = id,
-        meaningId = meaningId,
-        definition = definition,
-        example = example,
-        synonyms = synonyms,
-        antonyms = antonyms
-    )
+interface WiktionaryApiRepository {
+    suspend fun searchWord(word: String): List<Entry>
 }

@@ -61,6 +61,7 @@
     <string name="synonym">Synonym</string>
     <string name="start_blank_search">Blank startup search</string>
     <string name="theme_oled">OLED/Darker</string>
+    <string name="theme_system_darker">System OLED/Darker</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
     <string name="back">Back</string>
@@ -70,4 +71,7 @@
     <string name="more_in_app">More in app…</string>
     <string name="latest_version">Latest version: %1$s</string>
     <string name="contributions_graph">Contributions Graph</string>
+    <string name="dictionary_source">Dictionary Source</string>
+    <string name="dictionary_source_note">FreeDictionary is only useful for English but Wiktionary provides data for multiple languages.</string>
+    <string name="license">License</string>
 </resources>

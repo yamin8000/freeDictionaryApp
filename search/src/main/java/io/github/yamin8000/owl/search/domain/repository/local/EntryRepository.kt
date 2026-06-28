@@ -25,5 +25,5 @@ import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.repository.local.util.BaseRepository
 
 interface EntryRepository : BaseRepository<Entry> {
-    suspend fun findByTerm(term: String): Entry?
+    suspend fun findByTerm(term: String): List<Entry>
 }

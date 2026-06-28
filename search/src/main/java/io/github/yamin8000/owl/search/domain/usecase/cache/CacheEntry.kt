@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.domain.usecase
+package io.github.yamin8000.owl.search.domain.usecase.cache
 
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.model.Meaning
@@ -29,14 +29,14 @@ import io.github.yamin8000.owl.search.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.search.domain.repository.local.PhoneticRepository
 import kotlinx.collections.immutable.persistentListOf
 
-class CacheWord(
+class CacheEntry(
     private val entryRepository: EntryRepository,
     private val meaningRepository: MeaningRepository,
     private val definitionRepository: DefinitionRepository,
     private val phoneticRepository: PhoneticRepository
 ) {
     suspend operator fun invoke(wordEntry: Entry) {
-        val isNotCached = entryRepository.findByTerm(wordEntry.word.lowercase().trim()) == null
+        val isNotCached = entryRepository.findByTerm(wordEntry.word.lowercase().trim()).isEmpty()
         if (isNotCached) {
             addWordEntryToDatabase(wordEntry)
         }

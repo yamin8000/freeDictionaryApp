@@ -21,6 +21,14 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
+import androidx.compose.runtime.Stable
+import kotlin.random.Random
+import kotlin.random.nextInt
+
+/**
+ * @param audio url to phonetic audio
+ */
+@Stable
 data class Phonetic(
     val text: String? = null,
     val audio: String? = null,
@@ -28,4 +36,19 @@ data class Phonetic(
     val license: License? = null,
     val entryId: Long? = null,
     val id: Long? = null
-)
+) {
+    companion object {
+        fun mock() = Phonetic(
+            text = listOf("/ˈskɛ.dʒu.əl/", "/ʃɛ.djuːl/").random(),
+            audio = "https://api.dictionaryapi.dev/media/pronunciations/en/schedule-au.mp3",
+            sourceUrl = "https://creativecommons.org/licenses/by-sa/4.0",
+            license = License.mock(),
+        )
+
+        fun mockList() = buildList {
+            repeat(Random.nextInt(2..4)) {
+                add(mock())
+            }
+        }
+    }
+}

@@ -38,13 +38,13 @@ android {
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     kotlin {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
+            jvmTarget = JvmTarget.JVM_21
         }
     }
 
@@ -61,7 +61,6 @@ composeCompiler {
 
 dependencies {
     api(project(":strings"))
-    api(project(":datastore"))
     //core android/kotlin
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     api(libs.androidx.core.ktx)
@@ -69,7 +68,6 @@ dependencies {
     api(libs.kotlinx.collections.immutable)
     //compose
     api(libs.androidx.compose.ui)
-    api(libs.androidx.compose.material)
     api(libs.androidx.compose.ui.tooling.preview)
     debugApi(libs.androidx.compose.ui.tooling)
     api(libs.androidx.activity.compose)

@@ -21,14 +21,22 @@
 
 package io.github.yamin8000.owl.search.di
 
+import android.os.Build
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.github.yamin8000.owl.search.data.datasource.remote.FreeDictionaryAPI
+import io.github.yamin8000.owl.common.BuildConfig
+import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.search.data.datasource.remote.free.FreeDictionaryAPI
+import io.github.yamin8000.owl.search.data.datasource.remote.wiktionary.WiktionaryAPI
 import io.github.yamin8000.owl.search.data.repository.remote.FreeDictionaryRetrofitApiRepository
+import io.github.yamin8000.owl.search.data.repository.remote.WiktionaryApiRetrofitRepository
 import io.github.yamin8000.owl.search.domain.repository.remote.FreeDictionaryApiRepository
-import io.github.yamin8000.owl.search.domain.usecase.SearchFreeDictionary
+import io.github.yamin8000.owl.search.domain.repository.remote.WiktionaryApiRepository
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchWiktionary
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
@@ -40,15 +48,33 @@ import javax.inject.Singleton
 object SearchWeb {
 
     @Qualifier
-    annotation class SearchModule
+    annotation class FreeDictionary
 
-    @SearchModule
+    @Qualifier
+    annotation class Wiktionary
+
+    @FreeDictionary
     @Provides
     @Singleton
-    fun providesRetrofit(): Retrofit {
-        val baseUrl = "https://api.dictionaryapi.dev/api/v2/"
+    fun providesFreeDictionaryRetrofit(): Retrofit {
+        val clientBuilder = OkHttpClient.Builder()
+
+        if (BuildConfig.DEBUG) {
+            clientBuilder.addInterceptor { chain ->
+                val request = chain.request()
+                log("Retrofit/OkHttp request: ${request.method}:${request.url}")
+                log("Request body: ${request.body}")
+
+                val response = chain.proceed(request)
+                log("Response code for: ${request.method}:${request.url} is ${response.code}")
+
+                return@addInterceptor response
+            }
+        }
+
         return Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl("https://api.dictionaryapi.dev/api/v2/")
+            .client(clientBuilder.build())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }
@@ -56,8 +82,7 @@ object SearchWeb {
     @Provides
     @Singleton
     fun providesFreeDictionaryApi(
-        @SearchModule
-        retrofit: Retrofit
+        @FreeDictionary retrofit: Retrofit
     ): FreeDictionaryAPI {
         return retrofit.create<FreeDictionaryAPI>()
     }
@@ -72,5 +97,64 @@ object SearchWeb {
     @Singleton
     fun providesFreeDictionaryApiUseCase(repository: FreeDictionaryApiRepository): SearchFreeDictionary {
         return SearchFreeDictionary(repository)
+    }
+
+    @Wiktionary
+    @Provides
+    @Singleton
+    fun providesWiktionaryRetrofit(): Retrofit {
+        val clientBuilder = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val requestBuilder = chain.request()
+                    .newBuilder()
+                    .addHeader("User-Agent", createUserAgent())
+
+                val request = requestBuilder.build()
+                if (BuildConfig.DEBUG) {
+                    log("Retrofit/OkHttp request: ${request.method}:${request.url}")
+                    log("Request body: ${request.body}")
+                }
+
+                val response = chain.proceed(request)
+                if (BuildConfig.DEBUG) {
+                    log("Response code for: ${request.method}:${request.url} is ${response.code}")
+                }
+
+                return@addInterceptor response
+            }
+
+
+
+        return Retrofit.Builder()
+            .baseUrl("https://en.wiktionary.org/api/rest_v1/")
+            .addConverterFactory(MoshiConverterFactory.create())
+            .client(clientBuilder.build())
+            .build()
+    }
+
+    private fun createUserAgent() = buildString {
+        append("FreeDictionaryApp ")
+        append("${Build.BRAND} ${Build.MODEL} ${Build.DEVICE} ${Build.PRODUCT} ")
+        append("Android: ${Build.VERSION.BASE_OS}, ${Build.VERSION.RELEASE}")
+    }.trim()
+
+    @Provides
+    @Singleton
+    fun providesWiktionaryApi(
+        @Wiktionary retrofit: Retrofit
+    ): WiktionaryAPI {
+        return retrofit.create<WiktionaryAPI>()
+    }
+
+    @Provides
+    @Singleton
+    fun providesWiktionaryApiRepository(api: WiktionaryAPI): WiktionaryApiRepository {
+        return WiktionaryApiRetrofitRepository(api)
+    }
+
+    @Provides
+    @Singleton
+    fun providesWiktionaryApiUseCase(repository: WiktionaryApiRepository): SearchWiktionary {
+        return SearchWiktionary(repository)
     }
 }

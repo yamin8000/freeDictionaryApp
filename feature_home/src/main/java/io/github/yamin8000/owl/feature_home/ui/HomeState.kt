@@ -22,6 +22,7 @@
 package io.github.yamin8000.owl.feature_home.ui
 
 import androidx.compose.material3.SnackbarHostState
+import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.feature_home.ui.util.HomeSnackbarType
 import io.github.yamin8000.owl.search.domain.model.Entry
 import kotlinx.collections.immutable.ImmutableList
@@ -33,8 +34,8 @@ data class HomeState(
     val searchSuggestions: ImmutableList<String> = persistentListOf(),
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     val error: HomeSnackbarType? = null,
-    val searchResult: Entry? = null,
-    val phonetic: String = "",
+    val searchResult: List<Entry> = emptyList(),
     val word: String = "",
-    val isVibrating: Boolean = false
+    val isVibrating: Boolean = false,
+    val dictionarySource: DictionarySource = DictionarySource.FreeDictionary
 )

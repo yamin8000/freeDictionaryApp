@@ -56,8 +56,6 @@ class TTS(
      * some predefined parameters
      */
     fun speak(text: String) {
-        val current = this.languageTag
-        println(current)
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 

@@ -61,6 +61,7 @@
     <string name="synonym">同義語</string>
     <string name="start_blank_search">起動時に空白で検索</string>
     <string name="theme_oled" tools:ignore="MissingTranslation">OLED/Darker</string>
+    <string name="theme_system_darker">System OLED/Darker</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
     <string name="back">戻る</string>
@@ -70,4 +71,7 @@
     <string name="more_in_app">More in app…</string>
     <string name="latest_version">Latest version: %1$s</string>
     <string name="contributions_graph">Contributions Graph</string>
+    <string name="dictionary_source">Dictionary Source</string>
+    <string name="dictionary_source_note">FreeDictionary is only useful for English but Wiktionary provides data for multiple languages.</string>
+    <string name="license">License</string>
 </resources>

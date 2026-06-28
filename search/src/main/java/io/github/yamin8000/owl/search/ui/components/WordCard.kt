@@ -25,26 +25,26 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material.icons.twotone.RecordVoiceOver
 import androidx.compose.material.icons.twotone.Share
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import io.github.yamin8000.owl.common.ui.components.AppOutlinedCard
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.components.ClickableIcon
-import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
-import io.github.yamin8000.owl.common.ui.theme.MyPreview
+import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
-import io.github.yamin8000.owl.search.ui.components.texts.PronunciationText
-import io.github.yamin8000.owl.search.ui.components.texts.WordText
 import io.github.yamin8000.owl.strings.R
 
-@MyPreview
+@AppPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
@@ -53,8 +53,8 @@ private fun Preview() {
             verticalArrangement = Arrangement.spacedBy(Sizes.Large),
             content = {
                 WordCard(
-                    word = "Word",
-                    pronunciation = "Pronunciation",
+                    word = listOf("Word", "a-moderately-long-word").random(),
+                    onWordTextToSpeech = {},
                     onShareWord = {},
                     onAddToFavourite = {}
                 )
@@ -66,67 +66,45 @@ private fun Preview() {
 @Composable
 fun WordCard(
     word: String,
-    pronunciation: String?,
     modifier: Modifier = Modifier,
+    onWordTextToSpeech: ((String) -> Unit)? = null,
     onAddToFavourite: (() -> Unit)? = null,
     onShareWord: (() -> Unit)? = null
 ) {
-    OutlinedCard(
+    AppOutlinedCard(
         modifier = modifier,
-        shape = DefaultCutShape,
         border = BorderStroke(Sizes.xxSmall, MaterialTheme.colorScheme.tertiary),
         content = {
             Row(
-                modifier = Modifier.padding(Sizes.Large),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = Sizes.Small)
+                    .padding(horizontal = Sizes.Large),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(
-                    Sizes.Large,
-                    Alignment.CenterHorizontally
-                ),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 content = {
-                    Column(
-                        modifier = Modifier.weight(3f),
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.spacedBy(
-                            Sizes.Medium,
-                            Alignment.CenterVertically
-                        ),
-                        content = {
-                            WordText(
-                                word = word
-                            )
-                            if (!pronunciation.isNullOrBlank()) {
-                                PronunciationText(
-                                    word = word,
-                                    pronunciation = pronunciation,
-                                )
-                            }
-                        }
-                    )
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.spacedBy(
-                            Sizes.Medium,
-                            Alignment.CenterVertically
-                        ),
-                        content = {
-                            if (onAddToFavourite != null) {
-                                ClickableIcon(
-                                    imageVector = Icons.TwoTone.Favorite,
-                                    contentDescription = stringResource(R.string.favourites),
-                                    onClick = onAddToFavourite
-                                )
-                            }
-                            if (onShareWord != null) {
-                                ClickableIcon(
-                                    imageVector = Icons.TwoTone.Share,
-                                    contentDescription = stringResource(R.string.share),
-                                    onClick = onShareWord
-                                )
-                            }
-                        }
-                    )
+                    AppText(text = word)
+                    if (onAddToFavourite != null) {
+                        ClickableIcon(
+                            imageVector = Icons.TwoTone.Favorite,
+                            contentDescription = stringResource(R.string.favourites),
+                            onClick = onAddToFavourite
+                        )
+                    }
+                    if (onShareWord != null) {
+                        ClickableIcon(
+                            imageVector = Icons.TwoTone.Share,
+                            contentDescription = stringResource(R.string.share),
+                            onClick = onShareWord
+                        )
+                    }
+                    if (onWordTextToSpeech != null) {
+                        ClickableIcon(
+                            imageVector = Icons.TwoTone.RecordVoiceOver,
+                            contentDescription = "",
+                            onClick = { onWordTextToSpeech(word) }
+                        )
+                    }
                 }
             )
         }

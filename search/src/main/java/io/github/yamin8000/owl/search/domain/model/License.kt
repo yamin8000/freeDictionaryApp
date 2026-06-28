@@ -21,7 +21,17 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
+import androidx.compose.runtime.Stable
+
+@Stable
 data class License(
     val name: String,
     val url: String
-)
+) {
+    companion object {
+        fun mock() = License(
+            name = "Licence",
+            url = "https://source.com"
+        )
+    }
+}

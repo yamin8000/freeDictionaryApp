@@ -21,31 +21,34 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlin.random.Random
 import kotlin.random.nextInt
 
 data class Definition(
     val definition: String,
-    val example: String?,
-    val synonyms: List<String>,
-    val antonyms: List<String>,
+    val examples: ImmutableList<String> = persistentListOf(),
+    val synonyms: ImmutableList<String> = persistentListOf(),
+    val antonyms: ImmutableList<String> = persistentListOf(),
     val meaningId: Long? = null,
     val id: Long? = null
 ) {
     companion object {
         fun mock() = Definition(
             definition = "Definition",
-            example = "Example",
+            examples = persistentListOf(),
             synonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
                     add("Synonym")
                 }
-            },
+            }.toPersistentList(),
             antonyms = buildList {
                 repeat(Random.nextInt(0..3)) {
                     add("Antonym")
                 }
-            }
+            }.toPersistentList()
         )
 
         fun mockList(n: Int = Random.nextInt(1..5)) = buildList {

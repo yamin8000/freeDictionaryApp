@@ -19,10 +19,10 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.domain.usecase
+package io.github.yamin8000.owl.search.domain.usecase.cache
 
 data class WordCacheUseCases(
-    val getCachedWord: GetCachedWord,
-    val cacheWord: CacheWord,
+    val getCachedEntries: GetCachedEntries,
+    val cacheEntry: CacheEntry,
     val cacheWordData: CacheWordData
 )

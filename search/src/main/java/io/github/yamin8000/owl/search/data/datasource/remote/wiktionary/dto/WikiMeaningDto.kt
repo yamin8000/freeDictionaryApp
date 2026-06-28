@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.search.main
- *     PhoneticDto.kt Copyrighted by Yamin Siahmargooei at 2025/9/17
- *     PhoneticDto.kt Last modified at 2025/9/8
+ *     WikiMeaningDto.kt Copyrighted by Yamin Siahmargooei at 2026/6/25
+ *     WikiMeaningDto.kt Last modified at 2026/6/25
  *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
- *     Copyright (C) 2025  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,26 +19,25 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.search.data.datasource.remote.dto
+package io.github.yamin8000.owl.search.data.datasource.remote.wiktionary.dto
 
 import com.squareup.moshi.JsonClass
-import io.github.yamin8000.owl.search.domain.model.Phonetic
+import io.github.yamin8000.owl.search.domain.model.Meaning
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @JsonClass(generateAdapter = true)
-data class PhoneticDto(
-    val id: Long? = null,
-    val entryId: Long? = null,
-    val text: String? = null,
-    val audio: String? = null,
-    val sourceUrl: String? = null,
-    val license: LicenseDto? = null
+data class WikiMeaningDto(
+    val partOfSpeech: String,
+    val language: String,
+    val definitions: List<WikiDefinitionDto>
 ) {
-    fun domain() = Phonetic(
-        id = id,
-        entryId = entryId,
-        text = text,
-        audio = audio,
-        sourceUrl = sourceUrl,
-        license = license?.domain()
+    fun domain() = Meaning(
+        partOfSpeech = partOfSpeech.trim(),
+        synonyms = persistentListOf(),
+        antonyms = persistentListOf(),
+        definitions = definitions.map { it.domain() }
+            .filter { it.definition.isNotEmpty() }
+            .toPersistentList()
     )
 }

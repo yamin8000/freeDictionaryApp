@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.common.ui.components
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -74,7 +75,7 @@ fun ScaffoldWithTitle(
                                 fontSize = 20.sp,
                                 textAlign = TextAlign.Center,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                modifier = Modifier.basicMarquee()
                             )
                         },
                         actions = {

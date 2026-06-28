@@ -29,5 +29,7 @@ data class SettingUseCases(
     val getVibration: GetVibration,
     val setVibration: SetVibration,
     val getStartingBlank: GetStartingBlank,
-    val setStartingBlank: SetStartingBlank
+    val setStartingBlank: SetStartingBlank,
+    val getSource: GetDictionarySource,
+    val setSource: SetDictionarySource
 )

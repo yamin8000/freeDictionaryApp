@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_about.ui
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -134,9 +134,10 @@ internal fun AboutContent(
                                     text = {
                                         AppText(
                                             text = tab.name,
-                                            modifier = Modifier.fillMaxWidth(),
                                             maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .basicMarquee(),
                                         )
                                     }
                                 )

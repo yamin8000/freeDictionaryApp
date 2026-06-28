@@ -45,10 +45,12 @@ import io.github.yamin8000.owl.datastore.domain.usecase.history.GetAllHistory
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.history.RemoveAllHistory
 import io.github.yamin8000.owl.datastore.domain.usecase.history.RemoveHistory
+import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetDictionarySource
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetStartingBlank
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetTTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetTheme
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.GetVibration
+import io.github.yamin8000.owl.datastore.domain.usecase.settings.SetDictionarySource
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SetStartingBlank
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SetTTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SetTheme
@@ -77,7 +79,9 @@ object DatastoreModule {
             getVibration = GetVibration(repository),
             setVibration = SetVibration(repository),
             getStartingBlank = GetStartingBlank(repository),
-            setStartingBlank = SetStartingBlank(repository)
+            setStartingBlank = SetStartingBlank(repository),
+            getSource = GetDictionarySource(repository),
+            setSource = SetDictionarySource(repository)
         )
     }
 

@@ -22,6 +22,7 @@
 package io.github.yamin8000.owl.common.ui.components.crud
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import io.github.yamin8000.owl.common.ui.components.DeleteMenu
 import io.github.yamin8000.owl.common.ui.components.Ripple
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
@@ -63,11 +63,11 @@ fun RemovableCard(
                         text = item,
                         maxLines = 1,
                         textAlign = TextAlign.Center,
-                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .padding(vertical = Sizes.Medium)
                             .padding(horizontal = Sizes.Small)
                             .fillMaxWidth()
+                            .basicMarquee()
                     )
                 }
             )
