@@ -21,7 +21,7 @@
 
 pluginManagement {
     repositories {
-        if(settings.extra["usingMyket"].toString().toBoolean()) {
+        if(settings.extra.has("usingMyket") && settings.extra.get("usingMyket").toString().toBoolean()) {
             maven { url = uri("https://maven.myket.ir/") }
         }
         gradlePluginPortal()
@@ -32,7 +32,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        if(settings.extra["usingMyket"].toString().toBoolean()) {
+        if(settings.extra.has("usingMyket") && settings.extra.get("usingMyket").toString().toBoolean()) {
             maven { url = uri("https://maven.myket.ir/") }
         }
         google()
