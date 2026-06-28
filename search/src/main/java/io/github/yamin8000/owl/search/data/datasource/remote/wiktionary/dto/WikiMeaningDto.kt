@@ -34,6 +34,7 @@ data class WikiMeaningDto(
 ) {
     fun domain() = Meaning(
         partOfSpeech = partOfSpeech.trim(),
+        language = language,
         synonyms = persistentListOf(),
         antonyms = persistentListOf(),
         definitions = definitions.map { it.domain() }

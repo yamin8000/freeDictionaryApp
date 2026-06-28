@@ -25,13 +25,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -63,6 +64,7 @@ import io.github.yamin8000.owl.feature_home.ui.util.Utils.getErrorText
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Preview(showBackground = true)
@@ -144,7 +146,7 @@ internal fun HomeContent(
     onNavigateToHistory: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val listState = rememberScrollState()
+    val listState = rememberLazyListState()
     if (listState.isScrollInProgress && state.isVibrating) {
         LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.TextHandleMove)
     }
@@ -174,6 +176,7 @@ internal fun HomeContent(
         bottomBar = {
             val focusManager = LocalFocusManager.current
             val keyboardManager = LocalSoftwareKeyboardController.current
+            val scope = rememberCoroutineScope()
             MainBottomBar(
                 searchTerm = term,
                 suggestionsChips = {
@@ -188,6 +191,7 @@ internal fun HomeContent(
                     onAction(HomeAction.NewSearch())
                     keyboardManager?.hide()
                     focusManager.clearFocus()
+                    scope.launch { listState.animateScrollToItem(0) }
                 },
                 onCancel = {
                     onAction(HomeAction.CancelSearch)
@@ -206,6 +210,7 @@ internal fun HomeContent(
             if (state.searchResult.isNotEmpty()) {
                 SearchList(
                     modifier = Modifier.padding(contentPadding),
+                    listState = listState,
                     entries = state.searchResult.toImmutableList(),
                     onAddToFavourite = { onAction(HomeAction.OnAddToFavourite(state.word)) },
                     onWordChipClick = { onAction(HomeAction.NewSearch(it)) },

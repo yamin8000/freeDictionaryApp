@@ -53,8 +53,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -114,7 +118,16 @@ class HomeViewModel @AssistedInject constructor(
     val shareChannelFlow = shareChannel.receiveAsFlow()
 
     private var _state = MutableStateFlow(HomeState())
-    val state = _state.asStateFlow()
+    val state: StateFlow<HomeState> = _state.onStart {
+        loadSettings()
+        if (searchTerm.value.isNotBlank()) {
+            searchForDefinition(searchTerm.value)
+        }
+    }.stateIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(5.seconds),
+        initialValue = HomeState()
+    )
 
     private var searchJob: Job? = null
 
@@ -137,10 +150,6 @@ class HomeViewModel @AssistedInject constructor(
 
     init {
         scope.launch {
-            loadSettings()
-            if (searchTerm.value.isNotBlank()) {
-                searchForDefinition(searchTerm.value)
-            }
             while (true) {
                 onAction(HomeAction.OnCheckInternet)
                 delay(internetCheckDelay.seconds)
@@ -150,10 +159,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private suspend fun loadSettings() {
         _state.update {
-            it.copy(
-                isVibrating = settingsUseCases.getVibration(),
-                dictionarySource = settingsUseCases.getSource()
-            )
+            it.copy(isVibrating = settingsUseCases.getVibration())
         }
         if (!settingsUseCases.getStartingBlank() && searchTerm.value.isBlank()) {
             savedState["Search"] = "free"
@@ -236,7 +242,7 @@ class HomeViewModel @AssistedInject constructor(
 
             val cachedEntry = cacheUseCases.getCachedEntries(searchTerm)
             if (cachedEntry.isEmpty()) {
-                val entries = if (state.value.dictionarySource == DictionarySource.FreeDictionary) {
+                val entries = if (settingsUseCases.getSource() == DictionarySource.FreeDictionary) {
                     searchFreeDictionaryUseCase(searchTerm)
                 } else searchWiktionaryUseCase(searchTerm)
                 val firstEntry = entries.firstOrNull()

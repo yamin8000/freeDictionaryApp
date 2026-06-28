@@ -46,7 +46,7 @@ data class Phonetic(
         )
 
         fun mockList() = buildList {
-            repeat(Random.nextInt(2..4)) {
+            repeat(Random.nextInt(1..4)) {
                 add(mock())
             }
         }

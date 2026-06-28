@@ -295,7 +295,6 @@ fun SpeakableRippleTextWithIcon(
                 Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
             }
             tts?.speak(ttsText)
-            Unit
         }
     )
 }

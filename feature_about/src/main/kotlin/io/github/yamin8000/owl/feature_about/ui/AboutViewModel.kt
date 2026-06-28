@@ -32,10 +32,14 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class AboutViewModel @Inject constructor(
@@ -52,11 +56,12 @@ class AboutViewModel @Inject constructor(
     )
 
     private var _state = MutableStateFlow(AboutState())
-    val state = _state.asStateFlow()
-
-    init {
-        scope.launch { load() }
-    }
+    val state = _state.onStart { load() }
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(5.seconds),
+            initialValue = AboutState()
+        )
 
     private suspend fun load() {
         _state.update { it.copy(isLoading = true) }

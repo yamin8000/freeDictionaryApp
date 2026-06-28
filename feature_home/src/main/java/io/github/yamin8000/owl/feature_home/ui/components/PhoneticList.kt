@@ -55,10 +55,11 @@ internal fun PhoneticList(
 ) {
     BoxWithConstraints(
         content = {
+            val horizontalSpacing = Sizes.Small
             LazyRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(
-                    Sizes.Small,
+                    horizontalSpacing,
                     Alignment.CenterHorizontally
                 ),
                 content = {
@@ -67,7 +68,10 @@ internal fun PhoneticList(
                         key = { phonetic -> phonetic.id ?: UUID.randomUUID() },
                         itemContent = { phonetic ->
                             PhoneticCard(
-                                modifier = Modifier.width(maxWidth.div(2f) - Sizes.Small),
+                                modifier = Modifier.then(
+                                    if (phonetics.size > 1) Modifier.width(maxWidth.div(2f) - horizontalSpacing)
+                                    else Modifier
+                                ),
                                 text = phonetic.text,
                                 audio = phonetic.audio,
                                 sourceUrl = phonetic.sourceUrl,

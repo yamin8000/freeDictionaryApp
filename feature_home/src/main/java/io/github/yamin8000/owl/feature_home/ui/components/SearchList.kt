@@ -30,7 +30,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -63,6 +65,7 @@ private fun Preview() {
             onTextToSpeech = {},
             onPlayAudio = {},
             entries = Entry.mockList().toImmutableList(),
+            listState = rememberLazyListState()
         )
     }
 }
@@ -77,10 +80,12 @@ internal fun SearchList(
     onTextToSpeech: (String) -> Unit,
     onPlayAudio: (String) -> Unit,
     entries: ImmutableList<Entry>,
+    listState: LazyListState,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier,
+        state = listState,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Sizes.Small, Alignment.CenterVertically),
         contentPadding = PaddingValues(Sizes.Medium),
@@ -117,7 +122,7 @@ internal fun SearchList(
                 )
             }
 
-            entries.forEachIndexed { index, entry ->
+            entries.forEach { entry ->
                 if (entry.license != null) {
                     item(
                         key = "${entry.id ?: UUID.randomUUID()}-license",
@@ -151,9 +156,6 @@ internal fun SearchList(
                         )
                     }
                 )
-                if (index < entries.size - 1) {
-                    //item { HorizontalDivider() }
-                }
             }
         }
     )
