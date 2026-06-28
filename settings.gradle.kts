@@ -21,8 +21,7 @@
 
 pluginManagement {
     repositories {
-        val isCi = providers.gradleProperty("IS_CI").orNull.toBoolean()
-        if (!isCi) {
+        if(settings.extra["usingMyket"].toString().toBoolean()) {
             maven { url = uri("https://maven.myket.ir/") }
         }
         gradlePluginPortal()
@@ -33,8 +32,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        val isCi = providers.gradleProperty("IS_CI").orNull.toBoolean()
-        if (!isCi) {
+        if(settings.extra["usingMyket"].toString().toBoolean()) {
             maven { url = uri("https://maven.myket.ir/") }
         }
         google()
