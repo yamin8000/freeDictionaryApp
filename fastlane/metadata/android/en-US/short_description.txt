@@ -1,1 +1,1 @@
-a simple app for Free Dictionary API
+a dictionary app for Free Dictionary API and Wiktionary API

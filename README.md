@@ -8,9 +8,8 @@
 [![Android CI](https://github.com/yamin8000/freeDictionaryApp/actions/workflows/android.yml/badge.svg)](https://github.com/yamin8000/freeDictionaryApp/actions/workflows/android.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/yamin8000/freedictionaryapp/badge)](https://www.codefactor.io/repository/github/yamin8000/freedictionaryapp)
 
-**freeDictionary** is a simple Android application
-for [freeDictionaryAPI](https://dictionaryapi.dev/) a reincarnation
-of https://github.com/yamin8000/Owl2
+**freeDictionary** is am android dictionary
+for [freeDictionaryAPI](https://dictionaryapi.dev/) and [Wiktionary](https://wiktionary.org)
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
 alt="Get it on F-Droid"
@@ -22,9 +21,9 @@ height="80">](https://f-droid.org/packages/io.github.yamin8000.owl)
 
 <table>
 <tr>
-<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="preview" width="200"/></td>
-<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" alt="preview" width="200"/></td>
-<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" alt="preview" width="200"/></td>
+<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" alt="preview" width="200"/></td>
+<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" alt="preview" width="200"/></td>
+<td><img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" alt="preview" width="200"/></td>
 </tr>
 <tr>
 <td align="center">Dark</td>
@@ -54,6 +53,7 @@ Just use the search input to search the word.
 ## Features
 
 - English to English dictionary
+- Supports multiple languages to English using Wiktionary API (case-sensitive)
 - Definition of the word
 - Example of the word usage if available
 - Synonyms/Antonyms of the work if available
@@ -71,6 +71,9 @@ Just use the search input to search the word.
 - MVI / MVVM
 - Retrofit, Moshi with KSP, Coil
 - Datastore, Room with KSP
+- Kotlinx Immutables
+- Lottie/Coil
+- Jsoup
 
 ## License
 
