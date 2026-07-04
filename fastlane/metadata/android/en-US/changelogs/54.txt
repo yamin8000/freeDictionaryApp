@@ -1,0 +1,1 @@
+- Added Wiktionary API as an alternative source
