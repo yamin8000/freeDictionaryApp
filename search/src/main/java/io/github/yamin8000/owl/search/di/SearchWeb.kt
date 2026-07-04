@@ -103,27 +103,25 @@ object SearchWeb {
     @Provides
     @Singleton
     fun providesWiktionaryRetrofit(): Retrofit {
-        val clientBuilder = OkHttpClient.Builder()
-            .addInterceptor { chain ->
-                val requestBuilder = chain.request()
-                    .newBuilder()
-                    .addHeader("User-Agent", createUserAgent())
+        val clientBuilder = OkHttpClient.Builder().addInterceptor { chain ->
+            val requestBuilder = chain.request()
+                .newBuilder()
+                .addHeader("User-Agent", createUserAgent())
+            return@addInterceptor chain.proceed(requestBuilder.build())
+        }
 
-                val request = requestBuilder.build()
-                if (BuildConfig.DEBUG) {
-                    log("Retrofit/OkHttp request: ${request.method}:${request.url}")
-                    log("Request body: ${request.body}")
-                }
+        if (BuildConfig.DEBUG) {
+            clientBuilder.addInterceptor { chain ->
+                val request = chain.request()
+                log("Retrofit/OkHttp request: ${request.method}:${request.url}")
+                log("Request body: ${request.body}")
 
                 val response = chain.proceed(request)
-                if (BuildConfig.DEBUG) {
-                    log("Response code for: ${request.method}:${request.url} is ${response.code}")
-                }
+                log("Response code for: ${request.method}:${request.url} is ${response.code}")
 
                 return@addInterceptor response
             }
-
-
+        }
 
         return Retrofit.Builder()
             .baseUrl("https://en.wiktionary.org/api/rest_v1/")

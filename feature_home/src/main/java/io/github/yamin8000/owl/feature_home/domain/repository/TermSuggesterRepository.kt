@@ -22,5 +22,5 @@
 package io.github.yamin8000.owl.feature_home.domain.repository
 
 interface TermSuggesterRepository {
-    suspend fun suggestTerms(searchTerm: String): List<String>
+    suspend fun suggest(searchTerm: String): List<String>
 }

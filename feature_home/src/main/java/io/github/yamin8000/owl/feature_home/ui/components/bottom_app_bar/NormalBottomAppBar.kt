@@ -108,7 +108,7 @@ internal fun NormalBottomAppBar(
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search,
                     keyboardType = KeyboardType.Text,
-                    capitalization = KeyboardCapitalization.Words
+                    capitalization = KeyboardCapitalization.None
                 )
             )
         }

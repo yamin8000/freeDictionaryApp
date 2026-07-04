@@ -181,7 +181,7 @@ class HomeViewModel @AssistedInject constructor(
             }
 
             is HomeAction.NewSearch -> {
-                val term = action.searchTerm ?: searchTerm.value
+                val term = (action.searchTerm ?: searchTerm.value).trim()
                 savedState["Search"] = term
                 searchJob = searchForDefinition(term)
             }
@@ -189,12 +189,9 @@ class HomeViewModel @AssistedInject constructor(
             is HomeAction.OnTermChanged -> {
                 savedState["Search"] = action.term
                 scope.launch {
-                    _state.update {
-                        it.copy(
-                            searchSuggestions = termSuggesterRepository.suggestTerms(action.term)
-                                .toImmutableList()
-                        )
-                    }
+                    val suggestions = termSuggesterRepository.suggest(action.term.trim())
+                        .toImmutableList()
+                    _state.update { it.copy(searchSuggestions = suggestions) }
                 }
             }
 

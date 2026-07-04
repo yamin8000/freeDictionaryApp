@@ -40,7 +40,7 @@ class TermSuggesterRepositoryImpl(
     private val defaultNGramSize = 3
     private val notWordsRegex = Regex("\\W+")
 
-    override suspend fun suggestTerms(searchTerm: String): List<String> {
+    override suspend fun suggest(searchTerm: String): List<String> {
         items = items.plus(getOldSearchData())
 
         val term = searchTerm.lowercase().replace(notWordsRegex, "")
