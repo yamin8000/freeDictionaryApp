@@ -8,7 +8,7 @@
 [![Android CI](https://github.com/yamin8000/freeDictionaryApp/actions/workflows/android.yml/badge.svg)](https://github.com/yamin8000/freeDictionaryApp/actions/workflows/android.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/yamin8000/freedictionaryapp/badge)](https://www.codefactor.io/repository/github/yamin8000/freedictionaryapp)
 
-**freeDictionary** is am android dictionary
+**freeDictionary** is an android dictionary
 for [freeDictionaryAPI](https://dictionaryapi.dev/) and [Wiktionary](https://wiktionary.org)
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
