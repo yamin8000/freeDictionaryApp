@@ -24,6 +24,7 @@ package io.github.yamin8000.owl.feature_home.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
@@ -61,6 +62,7 @@ import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.Suggest
 import io.github.yamin8000.owl.feature_home.ui.util.ShareUtils.handleShareIntent
 import io.github.yamin8000.owl.feature_home.ui.util.Utils.ObserverEvent
 import io.github.yamin8000.owl.feature_home.ui.util.Utils.getErrorText
+import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -73,7 +75,7 @@ private fun Preview() {
     PreviewTheme {
         HomeContent(
             state = HomeState(
-                searchResult = emptyList(),
+                searchResult = Entry.mockList().toImmutableList(),
                 isOnline = Random.nextBoolean(),
                 isSearching = Random.nextBoolean(),
                 searchSuggestions = persistentListOf("apple", "banana", "orange"),
@@ -152,7 +154,7 @@ internal fun HomeContent(
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.imePadding(),
         snackbarHost = {
             SnackbarHost(state.snackbarHostState) { data ->
                 MySnackbar {
@@ -211,7 +213,7 @@ internal fun HomeContent(
                 SearchList(
                     modifier = Modifier.padding(contentPadding),
                     listState = listState,
-                    entries = state.searchResult.toImmutableList(),
+                    entries = state.searchResult,
                     onAddToFavourite = { onAction(HomeAction.OnAddToFavourite(state.word)) },
                     onWordChipClick = { onAction(HomeAction.NewSearch(it)) },
                     onShareWord = { onAction(HomeAction.OnShareData) },

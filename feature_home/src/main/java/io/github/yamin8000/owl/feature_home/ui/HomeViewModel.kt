@@ -46,6 +46,7 @@ import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
 import io.github.yamin8000.owl.search.domain.usecase.search.SearchWiktionary
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -246,7 +247,7 @@ class HomeViewModel @AssistedInject constructor(
 
                 _state.update {
                     it.copy(
-                        searchResult = entries,
+                        searchResult = entries.toPersistentList(),
                         word = firstEntry?.word ?: "",
                         searchSuggestions = persistentListOf()
                     )
@@ -266,7 +267,7 @@ class HomeViewModel @AssistedInject constructor(
         val firstEntry = cachedEntries.firstOrNull()
         _state.update {
             it.copy(
-                searchResult = cachedEntries,
+                searchResult = cachedEntries.toPersistentList(),
                 word = firstEntry?.word ?: "",
                 searchSuggestions = persistentListOf()
             )
