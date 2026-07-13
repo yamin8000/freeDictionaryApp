@@ -21,11 +21,13 @@
 
 package io.github.yamin8000.owl.search.domain.model
 
+import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+@Stable
 data class Meaning(
     val partOfSpeech: String,
     val definitions: ImmutableList<Definition>,

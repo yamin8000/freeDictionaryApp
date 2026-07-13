@@ -44,12 +44,10 @@ import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Entry
-import io.github.yamin8000.owl.search.ui.components.MeaningCard
 import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import java.util.UUID
 import kotlin.random.Random
 
 @AppPreview
@@ -122,41 +120,19 @@ internal fun SearchList(
                 )
             }
 
-            entries.forEach { entry ->
-                if (entry.license != null) {
-                    item(
-                        key = "${entry.id ?: UUID.randomUUID()}-license",
-                        content = {
-                            LicenseCard(
-                                name = entry.license?.name,
-                                url = entry.license?.url
-                            )
-                        }
+            items(
+                items = entries,
+                itemContent = { entry ->
+                    EntryItem(
+                        word = word,
+                        license = entry.license,
+                        phonetics = entry.phonetics,
+                        meanings = entry.meanings,
+                        onWordChipClick = onWordChipClick,
+                        onPlayAudio = onPlayAudio,
                     )
                 }
-                if (entry.phonetics.isNotEmpty()) {
-                    item(
-                        key = "${entry.id ?: UUID.randomUUID()}-phonetic",
-                        content = {
-                            PhoneticList(
-                                phonetics = entry.phonetics,
-                                onPlayAudio = onPlayAudio
-                            )
-                        }
-                    )
-                }
-                items(
-                    items = entry.meanings,
-                    key = { item -> "meaning-${item.id ?: UUID.randomUUID()}" },
-                    itemContent = { meaning ->
-                        MeaningCard(
-                            word = word,
-                            meaning = meaning,
-                            onWordChipClick = onWordChipClick
-                        )
-                    }
-                )
-            }
+            )
         }
     )
 }

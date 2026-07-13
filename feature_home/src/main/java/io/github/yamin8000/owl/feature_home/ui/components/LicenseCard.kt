@@ -21,7 +21,6 @@
 
 package io.github.yamin8000.owl.feature_home.ui.components
 
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
