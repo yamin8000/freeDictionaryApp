@@ -212,7 +212,7 @@ fun CopyAbleRippleTextWithIcon(
                     if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                         .25f * (density.fontScale + 1) / 2
                     } else {
-                        .15f * (density.fontScale + 1) / 2
+                        .1f * (density.fontScale + 1) / 2
                     }
                 }
                 Box(

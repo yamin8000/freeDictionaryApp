@@ -74,4 +74,5 @@
     <string name="dictionary_source">منبع فرهنگ واژگان</string>
     <string name="dictionary_source_note">FreeDictionary فقط برای انگلیسی مناسب است اما Wiktionary از چندین زبان پشتیبانی میکند.</string>
     <string name="license">پروانه</string>
+    <string name="see_source">دیدن منبع</string>
 </resources>

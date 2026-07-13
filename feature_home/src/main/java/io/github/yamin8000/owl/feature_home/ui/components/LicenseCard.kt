@@ -73,7 +73,7 @@ internal fun LicenseCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(
                     Sizes.Medium,
-                    Alignment.Start
+                    Alignment.CenterHorizontally
                 ),
                 content = {
                     Icon(
@@ -89,7 +89,7 @@ internal fun LicenseCard(
                     if (url != null) {
                         val uriHandler = LocalUriHandler.current
                         AppText(
-                            text = url,
+                            text = stringResource(R.string.see_source),
                             style = MaterialTheme.typography.bodySmall,
                             textDecoration = TextDecoration.Underline,
                             modifier = Modifier.clickable(onClick = { uriHandler.openUri(url) })

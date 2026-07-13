@@ -39,10 +39,13 @@ data class Phonetic(
 ) {
     companion object {
         fun mock() = Phonetic(
-            text = listOf("/ˈskɛ.dʒu.əl/", "/ʃɛ.djuːl/").random(),
-            audio = "https://api.dictionaryapi.dev/media/pronunciations/en/schedule-au.mp3",
-            sourceUrl = "https://creativecommons.org/licenses/by-sa/4.0",
-            license = License.mock(),
+            text = listOf("/ˈskɛ.dʒu.əl/", "/ʃɛ.djuːl/", null).random(),
+            audio = listOf(
+                "https://api.dictionaryapi.dev/media/pronunciations/en/schedule-au.mp3",
+                null
+            ).random(),
+            sourceUrl = listOf("https://creativecommons.org/licenses/by-sa/4.0", null).random(),
+            license = listOf(License.mock(), null).random(),
         )
 
         fun mockList() = buildList {

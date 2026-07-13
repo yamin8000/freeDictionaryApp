@@ -30,7 +30,7 @@ data class License(
 ) {
     companion object {
         fun mock() = License(
-            name = "Licence",
+            name = listOf("CC", "BY", "Public Domain").random(),
             url = "https://source.com"
         )
     }

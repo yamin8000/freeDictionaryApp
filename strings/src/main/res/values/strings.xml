@@ -79,4 +79,5 @@
     <string name="dictionary_source">Dictionary Source</string>
     <string name="dictionary_source_note">FreeDictionary is only useful for English but Wiktionary provides data for multiple languages.</string>
     <string name="license">License</string>
+    <string name="see_source">See source</string>
 </resources>
