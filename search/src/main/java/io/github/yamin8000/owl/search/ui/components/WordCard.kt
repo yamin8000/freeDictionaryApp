@@ -67,9 +67,9 @@ private fun Preview() {
 fun WordCard(
     word: String,
     modifier: Modifier = Modifier,
-    onWordTextToSpeech: ((String) -> Unit)? = null,
-    onAddToFavourite: (() -> Unit)? = null,
-    onShareWord: (() -> Unit)? = null
+    onWordTextToSpeech: ((String) -> Unit)?,
+    onAddToFavourite: (() -> Unit)?,
+    onShareWord: (() -> Unit)?
 ) {
     AppOutlinedCard(
         modifier = modifier,

@@ -71,14 +71,14 @@ private fun Preview() {
 fun SearchList(
     isOnline: Boolean,
     word: String,
-    onAddToFavourite: () -> Unit,
-    onShareWord: () -> Unit,
+    onAddToFavourite: (() -> Unit)?,
+    onShareWord: (() -> Unit)?,
     onWordChipClick: (String) -> Unit,
     onTextToSpeech: (String) -> Unit,
     onPlayAudio: (String) -> Unit,
     entries: ImmutableList<Entry>,
-    listState: LazyListState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
         modifier = modifier,

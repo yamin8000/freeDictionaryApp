@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -71,6 +70,7 @@ fun OverlayScreen(
     val windowHeight = remember(isPortrait, screenHeight) {
         if (isPortrait) screenHeight / 2 else screenHeight - buttonsOffset
     }
+
     BasicAlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
@@ -94,16 +94,16 @@ fun OverlayScreen(
                                 modifier = Modifier.padding(Sizes.Large),
                                 word = state.word,
                                 isOnline = true,
-                                onAddToFavourite = {},
-                                onShareWord = {},
+                                onAddToFavourite = null,
+                                onShareWord = null,
                                 onWordChipClick = {},
-                                onTextToSpeech = {},
-                                onPlayAudio = {},
-                                entries = state.entries,
-                                listState = rememberLazyListState(),
+                                onTextToSpeech = { vm.onAction(OverlayWindowAction.OnTextToSpeech(it)) },
+                                onPlayAudio = { vm.onAction(OverlayWindowAction.OnPlayAudio(it)) },
+                                entries = state.entries
                             )
                         }
                     )
+
                     ButtonsRow(
                         modifier = Modifier
                             .padding(top = buttonsOffset)

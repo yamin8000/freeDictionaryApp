@@ -215,7 +215,6 @@ class HomeViewModel @AssistedInject constructor(
                 tts.speak(action.phonetic)
             }
 
-            HomeAction.ReloadSettings -> scope.launch { loadSettings() }
             is HomeAction.OnPlayAudio -> mediaPlayerHelper.playFromUrl(action.audioUrl)
         }
     }

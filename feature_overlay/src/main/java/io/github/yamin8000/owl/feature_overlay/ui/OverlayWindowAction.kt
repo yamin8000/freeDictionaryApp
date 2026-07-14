@@ -22,4 +22,6 @@
 package io.github.yamin8000.owl.feature_overlay.ui
 
 sealed interface OverlayWindowAction {
+    data class OnTextToSpeech(val phonetic: String) : OverlayWindowAction
+    data class OnPlayAudio(val audioUrl: String) : OverlayWindowAction
 }

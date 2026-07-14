@@ -31,6 +31,5 @@ sealed interface HomeAction {
     data class OnAddToFavourite(val word: String) : HomeAction
     data object UpdateTTS : HomeAction
     data class OnTextToSpeech(val phonetic: String) : HomeAction
-    data object ReloadSettings : HomeAction
     data class OnPlayAudio(val audioUrl: String) : HomeAction
 }
