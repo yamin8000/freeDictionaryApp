@@ -1,16 +1,16 @@
 /*
- *     freeDictionaryApp/freeDictionaryApp.feature_home.main
- *     SearchList.kt Copyrighted by Yamin Siahmargooei at 2025/1/16
- *     SearchList.kt Last modified at 2025/1/16
- *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_home.main.
- *     Copyright (C) 2025  Yamin Siahmargooei
+ *     freeDictionaryApp/freeDictionaryApp.search.main
+ *     SearchList.kt Copyrighted by Yamin Siahmargooei at 2026/7/14
+ *     SearchList.kt Last modified at 2026/7/13
+ *     This file is part of freeDictionaryApp/freeDictionaryApp.search.main.
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
- *     freeDictionaryApp/freeDictionaryApp.feature_home.main is free software: you can redistribute it and/or modify
+ *     freeDictionaryApp/freeDictionaryApp.search.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
  *
- *     freeDictionaryApp/freeDictionaryApp.feature_home.main is distributed in the hope that it will be useful,
+ *     freeDictionaryApp/freeDictionaryApp.search.main is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
@@ -19,7 +19,7 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_home.ui.components
+package io.github.yamin8000.owl.search.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -44,7 +44,6 @@ import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.search.domain.model.Entry
-import io.github.yamin8000.owl.search.ui.components.WordCard
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -69,7 +68,7 @@ private fun Preview() {
 }
 
 @Composable
-internal fun SearchList(
+fun SearchList(
     isOnline: Boolean,
     word: String,
     onAddToFavourite: () -> Unit,

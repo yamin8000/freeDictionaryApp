@@ -27,6 +27,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.yamin8000.owl.common.util.TTS
+import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.search.data.datasource.local.AppDatabase
 import io.github.yamin8000.owl.search.data.datasource.local.MIGRATION_7_8
 import io.github.yamin8000.owl.search.data.datasource.local.MIGRATION_8_9
@@ -41,11 +43,13 @@ import io.github.yamin8000.owl.search.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.search.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.search.domain.repository.local.PhoneticRepository
 import io.github.yamin8000.owl.search.domain.repository.local.TermRepository
+import io.github.yamin8000.owl.search.utils.MediaPlayerHelper
+import kotlinx.coroutines.runBlocking
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SearchDb {
+object SearchModule {
 
     @Provides
     @Singleton
@@ -142,5 +146,25 @@ object SearchDb {
     @Singleton
     fun providesPhoneticRepository(dao: DAOs.PhoneticDao): PhoneticRepository {
         return PhoneticRoomRepository(dao)
+    }
+
+
+    @Provides
+    @Singleton
+    fun providesMediaPlayerHelper(
+    ): MediaPlayerHelper {
+        return MediaPlayerHelper()
+    }
+
+    @Provides
+    @Singleton
+    internal fun providesTts(
+        app: Application,
+        settingUseCases: SettingUseCases
+    ): TTS = runBlocking {
+        TTS(
+            app,
+            settingUseCases.getTTS()
+        )
     }
 }

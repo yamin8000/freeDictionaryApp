@@ -67,6 +67,7 @@ dependencies {
     //core
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":common"))
+    implementation(project(":datastore"))
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

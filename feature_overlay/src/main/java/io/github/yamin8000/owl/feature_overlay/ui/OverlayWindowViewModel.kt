@@ -26,37 +26,32 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.common.util.log
 import io.github.yamin8000.owl.feature_overlay.di.OverlayViewModelFactory
-import io.github.yamin8000.owl.search.domain.model.Phonetic
-import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
 import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
+import io.github.yamin8000.owl.search.utils.MediaPlayerHelper
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.net.SocketTimeoutException
 
 @HiltViewModel(assistedFactory = OverlayViewModelFactory::class)
 class OverlayWindowViewModel @AssistedInject constructor(
     @Assisted("intent") private val intentSearch: String?,
     private val searchFreeDictionaryUseCase: SearchFreeDictionary,
     private val cacheUseCases: WordCacheUseCases,
+    private val mediaPlayerHelper: MediaPlayerHelper,
+    private val tts: TTS,
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         log(throwable.stackTraceToString())
-        when (throwable) {
-            is SocketTimeoutException -> {
-                _state.update { it.copy(isSearching = false) }
-            }
-
-            else -> {
-
-            }
-        }
+        _state.update { it.copy(isSearching = false) }
     }
 
     private val scope = CoroutineScope(viewModelScope.coroutineContext + exceptionHandler)
@@ -69,23 +64,21 @@ class OverlayWindowViewModel @AssistedInject constructor(
         if (term.isNotBlank()) {
             scope.launch {
                 _state.update { it.copy(isSearching = true) }
-                val randomCached = cacheUseCases.getCachedEntries(term).randomOrNull()
-                if (randomCached != null) {
+                val cachedEntries = cacheUseCases.getCachedEntries(term)
+                if (cachedEntries.isNotEmpty()) {
                     _state.update {
                         it.copy(
-                            meanings = randomCached.meanings,
-                            word = randomCached.word,
-                            phonetic = getFirstPhonetic(randomCached.phonetics)
+                            entries = cachedEntries.toImmutableList(),
+                            word = cachedEntries.firstOrNull()?.word ?: "",
                         )
                     }
                 } else {
-                    val random = searchFreeDictionaryUseCase(term).randomOrNull()
-                    if (random != null) {
+                    val entries = searchFreeDictionaryUseCase(term)
+                    if (entries.isNotEmpty()) {
                         _state.update {
                             it.copy(
-                                meanings = random.meanings,
-                                word = random.word,
-                                phonetic = getFirstPhonetic(random.phonetics)
+                                entries = entries.toImmutableList(),
+                                word = entries.firstOrNull()?.word ?: "",
                             )
                         }
                     }
@@ -93,9 +86,5 @@ class OverlayWindowViewModel @AssistedInject constructor(
                 _state.update { it.copy(isSearching = false) }
             }
         }
-    }
-
-    private fun getFirstPhonetic(phonetics: List<Phonetic>): String {
-        return phonetics.firstOrNull { it.text != null }?.text ?: ""
     }
 }

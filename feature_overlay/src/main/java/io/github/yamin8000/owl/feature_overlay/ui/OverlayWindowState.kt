@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_overlay.ui
 
+import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.model.Meaning
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -28,7 +29,6 @@ import kotlinx.collections.immutable.persistentListOf
 data class OverlayWindowState(
     val isSearching: Boolean = false,
     val searchTerm: String = "",
-    val meanings: ImmutableList<Meaning> = persistentListOf(),
-    val word: String = "",
-    val phonetic: String = ""
+    val entries: ImmutableList<Entry> = persistentListOf(),
+    val word: String = ""
 )

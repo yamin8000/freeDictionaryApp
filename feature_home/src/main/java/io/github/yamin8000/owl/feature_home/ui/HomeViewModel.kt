@@ -39,7 +39,7 @@ import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
 import io.github.yamin8000.owl.feature_home.ui.util.HomeSnackbarType
-import io.github.yamin8000.owl.feature_home.utils.MediaPlayerHelper
+import io.github.yamin8000.owl.search.utils.MediaPlayerHelper
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
 import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary

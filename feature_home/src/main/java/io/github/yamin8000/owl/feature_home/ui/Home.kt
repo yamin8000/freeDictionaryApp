@@ -56,13 +56,13 @@ import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.common.util.LocalTTS
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
-import io.github.yamin8000.owl.feature_home.ui.components.SearchList
 import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.SuggestionsChips
 import io.github.yamin8000.owl.feature_home.ui.util.ShareUtils.handleShareIntent
 import io.github.yamin8000.owl.feature_home.ui.util.Utils.ObserverEvent
 import io.github.yamin8000.owl.feature_home.ui.util.Utils.getErrorText
 import io.github.yamin8000.owl.search.domain.model.Entry
+import io.github.yamin8000.owl.search.ui.components.SearchList
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
