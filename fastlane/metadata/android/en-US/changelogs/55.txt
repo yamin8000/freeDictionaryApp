@@ -1,0 +1,2 @@
+- Fixed a bug where screen flickered during typing
+- Fixed a bug where pronunciations where missing on Pop-up window
