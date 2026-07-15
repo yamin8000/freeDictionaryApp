@@ -33,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -44,6 +45,7 @@ import io.github.yamin8000.owl.strings.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainTopBar(
+    scrollBehavior: TopAppBarScrollBehavior,
     onNavigateToAbout: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToFavourites: () -> Unit,
@@ -56,6 +58,7 @@ internal fun MainTopBar(
         shadowElevation = Sizes.Medium,
         content = {
             TopAppBar(
+                scrollBehavior = scrollBehavior,
                 title = {
                     Text(
                         text = stringResource(R.string.app_name),
