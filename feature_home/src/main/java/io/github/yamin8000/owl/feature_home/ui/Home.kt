@@ -21,6 +21,9 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
+import android.content.Context
+import android.media.AudioManager
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,9 +34,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,7 +59,8 @@ import io.github.yamin8000.owl.common.ui.components.EmptyList
 import io.github.yamin8000.owl.common.ui.components.MySnackbar
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
-import io.github.yamin8000.owl.common.util.LocalTTS
+import io.github.yamin8000.owl.common.util.ContextUtils.findActivity
+import io.github.yamin8000.owl.feature_home.ui.components.ExpandedTextDialog
 import io.github.yamin8000.owl.feature_home.ui.components.MainTopBar
 import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.MainBottomBar
 import io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar.SuggestionsChips
@@ -123,19 +127,17 @@ fun HomeScreen(
         state.snackbarHostState.showSnackbar(getErrorText(context, error))
     }
 
-    CompositionLocalProvider(LocalTTS provides vm.tts) {
-        HomeContent(
-            state = state,
-            term = vm.searchTerm.collectAsState().value,
-            isWordSelectedFromKeyboardSuggestions = vm.isWordSelectedFromKeyboardSuggestions.value,
-            onAction = { action -> vm.onAction(action) },
-            onNavigateToAbout = onNavigateToAbout,
-            onNavigateToSettings = onNavigateToSettings,
-            onNavigateToFavourites = onNavigateToFavourites,
-            onNavigateToHistory = onNavigateToHistory,
-            modifier = modifier
-        )
-    }
+    HomeContent(
+        state = state,
+        term = vm.searchTerm.collectAsState().value,
+        isWordSelectedFromKeyboardSuggestions = vm.isWordSelectedFromKeyboardSuggestions.value,
+        onAction = { action -> vm.onAction(action) },
+        onNavigateToAbout = onNavigateToAbout,
+        onNavigateToSettings = onNavigateToSettings,
+        onNavigateToFavourites = onNavigateToFavourites,
+        onNavigateToHistory = onNavigateToHistory,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -216,18 +218,40 @@ internal fun HomeContent(
         },
         content = { contentPadding ->
             if (state.searchResult.isNotEmpty()) {
+                val increaseVolumeText = stringResource(R.string.increase_volume_notice)
+                val context = LocalContext.current
+                val audio = remember {
+                    context.findActivity()?.getSystemService(Context.AUDIO_SERVICE) as AudioManager?
+                }
                 SearchList(
                     modifier = Modifier.padding(contentPadding),
                     listState = listState,
                     entries = state.searchResult,
                     onAddToFavourite = { onAction(HomeAction.OnAddToFavourite(state.word)) },
-                    onWordChipClick = { onAction(HomeAction.NewSearch(it)) },
+                    onExpandText = {
+                        onAction(HomeAction.OnExpandText(it))
+                    },
                     onShareWord = { onAction(HomeAction.OnShareData) },
                     isOnline = state.isOnline,
                     word = state.word,
-                    onTextToSpeech = { onAction(HomeAction.OnTextToSpeech(it)) },
+                    onTextToSpeech = {
+                        if (audio?.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
+                            Toast.makeText(context, increaseVolumeText, Toast.LENGTH_SHORT).show()
+                        } else {
+                            onAction(HomeAction.OnTextToSpeech(it))
+                        }
+                    },
                     onPlayAudio = { onAction(HomeAction.OnPlayAudio(it)) }
                 )
+
+                if (state.isShowingExpandedTextDialog) {
+                    ExpandedTextDialog(
+                        onWordClicked = { onAction(HomeAction.NewSearch(it)) },
+                        words = state.expandedTextWords,
+                        text = state.expandedText,
+                        onDismissRequest = { onAction(HomeAction.OnDismissExpandedTextDialog) }
+                    )
+                }
             } else {
                 Column(
                     modifier = modifier.padding(Sizes.Large),

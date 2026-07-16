@@ -30,6 +30,8 @@ sealed interface HomeAction {
     data object OnCheckInternet : HomeAction
     data class OnAddToFavourite(val word: String) : HomeAction
     data object UpdateTTS : HomeAction
-    data class OnTextToSpeech(val phonetic: String) : HomeAction
+    data class OnTextToSpeech(val text: String) : HomeAction
     data class OnPlayAudio(val audioUrl: String) : HomeAction
+    data class OnExpandText(val text: String) : HomeAction
+    data object OnDismissExpandedTextDialog : HomeAction
 }

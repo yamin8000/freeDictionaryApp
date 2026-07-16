@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.feature_overlay.ui
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,9 +40,9 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.yamin8000.owl.common.ui.components.BoxWithMovingGradientBorder
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.Sizes
-import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
 import io.github.yamin8000.owl.feature_overlay.ui.components.ButtonsRow
 import io.github.yamin8000.owl.search.ui.components.SearchList
 
@@ -82,24 +83,41 @@ fun OverlayScreen(
             Box(
                 modifier = Modifier.height(windowHeight + buttonsOffset),
                 content = {
-                    Surface(
+                    BoxWithMovingGradientBorder(
+                        shape = DefaultCutShape,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(windowHeight)
                             .padding(horizontal = Sizes.Large),
-                        shape = DefaultCutShape,
-                        border = defaultGradientBorder(),
                         content = {
-                            SearchList(
-                                modifier = Modifier.padding(Sizes.Large),
-                                word = state.word,
-                                isOnline = true,
-                                onAddToFavourite = null,
-                                onShareWord = null,
-                                onWordChipClick = {},
-                                onTextToSpeech = { vm.onAction(OverlayWindowAction.OnTextToSpeech(it)) },
-                                onPlayAudio = { vm.onAction(OverlayWindowAction.OnPlayAudio(it)) },
-                                entries = state.entries
+                            Surface(
+                                modifier = Modifier.fillMaxSize(),
+                                shape = DefaultCutShape,
+                                content = {
+                                    SearchList(
+                                        modifier = Modifier.padding(Sizes.Large),
+                                        word = state.word,
+                                        isOnline = true,
+                                        onAddToFavourite = null,
+                                        onShareWord = null,
+                                        onExpandText = {},
+                                        onTextToSpeech = {
+                                            vm.onAction(
+                                                OverlayWindowAction.OnTextToSpeech(
+                                                    it
+                                                )
+                                            )
+                                        },
+                                        onPlayAudio = {
+                                            vm.onAction(
+                                                OverlayWindowAction.OnPlayAudio(
+                                                    it
+                                                )
+                                            )
+                                        },
+                                        entries = state.entries
+                                    )
+                                }
                             )
                         }
                     )

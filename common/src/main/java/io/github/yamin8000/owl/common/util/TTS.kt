@@ -23,10 +23,9 @@ package io.github.yamin8000.owl.common.util
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Locale
+import kotlin.coroutines.resume
 
 /** A helper/wrapper for [TextToSpeech] */
 class TTS(
@@ -35,18 +34,17 @@ class TTS(
 ) {
     private var tts: TextToSpeech? = null
 
-    private val scope = CoroutineScope(Dispatchers.Main)
-
-    init {
-        scope.launch {
-            createEngine()
-        }
-    }
-
-    fun createEngine(tag: String = languageTag) {
+    suspend fun createEngine(
+        tag: String = languageTag
+    ): TextToSpeech? = suspendCancellableCoroutine { continuation ->
         tts = TextToSpeech(context) {
             if (it == TextToSpeech.SUCCESS) {
                 tts?.language = Locale.forLanguageTag(tag)
+                log("TTS init success!")
+                continuation.resume(tts)
+            } else {
+                log("TTS init failed!")
+                continuation.resume(null)
             }
         }
     }
@@ -55,11 +53,19 @@ class TTS(
      * Extension method for [TextToSpeech] that calls [TextToSpeech.speak] with
      * some predefined parameters
      */
-    fun speak(text: String) {
+    suspend fun speak(text: String) {
+        if (tts == null) {
+            tts = createEngine()
+        }
+
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
-    fun englishLanguages() = tts?.availableLanguages
-        ?.filter { it.language == Locale.ENGLISH.language }
-        ?: listOf()
+    suspend fun languages(): List<Locale> {
+        if (tts == null) {
+            tts = createEngine()
+        }
+
+        return tts?.availableLanguages?.filterNotNull()?.sortedBy { it.displayName } ?: listOf()
+    }
 }

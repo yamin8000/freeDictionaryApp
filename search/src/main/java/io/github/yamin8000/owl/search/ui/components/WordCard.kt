@@ -21,7 +21,6 @@
 
 package io.github.yamin8000.owl.search.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,12 +30,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material.icons.twotone.RecordVoiceOver
 import androidx.compose.material.icons.twotone.Share
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import io.github.yamin8000.owl.common.ui.components.AppOutlinedCard
+import io.github.yamin8000.owl.common.ui.components.AppCard
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.components.ClickableIcon
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
@@ -71,9 +69,8 @@ fun WordCard(
     onAddToFavourite: (() -> Unit)?,
     onShareWord: (() -> Unit)?
 ) {
-    AppOutlinedCard(
+    AppCard(
         modifier = modifier,
-        border = BorderStroke(Sizes.xxSmall, MaterialTheme.colorScheme.tertiary),
         content = {
             Row(
                 modifier = Modifier

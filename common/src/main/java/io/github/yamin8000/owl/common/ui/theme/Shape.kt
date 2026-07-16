@@ -21,47 +21,6 @@
 
 package io.github.yamin8000.owl.common.ui.theme
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Brush
 
 val DefaultCutShape = CutCornerShape(Sizes.Medium)
-
-@Composable
-fun defaultGradientBorder(
-    duration: Int = 5000
-): BorderStroke {
-    val animation = rememberInfiniteTransition(label = "")
-    val start by animation.animateColor(
-        initialValue = MaterialTheme.colorScheme.primary,
-        targetValue = MaterialTheme.colorScheme.tertiary,
-        label = "",
-        animationSpec = infiniteRepeatable(
-            tween(duration),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    val end by animation.animateColor(
-        initialValue = MaterialTheme.colorScheme.tertiary,
-        targetValue = MaterialTheme.colorScheme.primary,
-        label = "",
-        animationSpec = infiniteRepeatable(
-            tween(duration),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-
-    return BorderStroke(
-        width = Sizes.xxSmall,
-        brush = Brush.verticalGradient(listOf(start, end))
-    )
-}

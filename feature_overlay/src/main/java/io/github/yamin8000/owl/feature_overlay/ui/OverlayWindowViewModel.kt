@@ -91,7 +91,7 @@ class OverlayWindowViewModel @AssistedInject constructor(
     fun onAction(action: OverlayWindowAction) {
         when (action) {
             is OverlayWindowAction.OnPlayAudio -> mediaPlayerHelper.playFromUrl(action.audioUrl)
-            is OverlayWindowAction.OnTextToSpeech -> tts.speak(action.phonetic)
+            is OverlayWindowAction.OnTextToSpeech -> scope.launch { tts.speak(action.phonetic) }
         }
     }
 }

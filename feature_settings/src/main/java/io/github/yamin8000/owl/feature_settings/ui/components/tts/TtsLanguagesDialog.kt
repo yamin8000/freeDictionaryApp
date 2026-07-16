@@ -32,29 +32,33 @@ import androidx.compose.material.icons.twotone.Language
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.common.ui.components.AppText
-import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
+import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import java.util.Locale
 
 @AppPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
-        TtsLanguagesDialog(
+        TtsLanguagesDialogContent(
             currentTtsTag = "",
-            languages = persistentListOf(),
-            onDismiss = {},
+            languages = Locale.getAvailableLocales().toList().toImmutableList(),
             onLanguageSelect = {}
         )
     }
@@ -66,52 +70,87 @@ internal fun TtsLanguagesDialog(
     currentTtsTag: String,
     languages: ImmutableList<Locale>,
     onLanguageSelect: (String) -> Unit,
-    onDismiss: () -> Unit,
+    onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     BasicAlertDialog(
         modifier = modifier,
-        onDismissRequest = onDismiss,
+        onDismissRequest = onDismissRequest,
         content = {
-            Surface(
-                shape = DefaultCutShape,
+            TtsLanguagesDialogContent(
+                currentTtsTag = currentTtsTag,
+                languages = languages,
+                onLanguageSelect = onLanguageSelect
+            )
+        }
+    )
+}
+
+@Composable
+private fun TtsLanguagesDialogContent(
+    currentTtsTag: String,
+    languages: ImmutableList<Locale>,
+    onLanguageSelect: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = DefaultCutShape,
+        content = {
+            var filterValue by remember { mutableStateOf("") }
+            var filtered by remember { mutableStateOf(languages) }
+
+            LazyColumn(
+                modifier = Modifier.padding(Sizes.Large),
+                verticalArrangement = Arrangement.spacedBy(Sizes.Small, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
-                    LazyColumn(
-                        modifier = Modifier.padding(Sizes.Large),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(
-                            Sizes.Medium,
-                            Alignment.CenterVertically
-                        ),
+                    item(
                         content = {
-                            item {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(
-                                        Sizes.Small,
-                                        Alignment.CenterHorizontally
-                                    ),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    content = {
-                                        Icon(
-                                            imageVector = Icons.TwoTone.Language,
-                                            contentDescription = null
-                                        )
-                                        AppText(text = stringResource(R.string.tts_language))
-                                    }
-                                )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(
+                                    Sizes.Small,
+                                    Alignment.CenterHorizontally
+                                ),
+                                verticalAlignment = Alignment.CenterVertically,
+                                content = {
+                                    Icon(
+                                        imageVector = Icons.TwoTone.Language,
+                                        contentDescription = null
+                                    )
+                                    AppText(text = stringResource(R.string.tts_language))
+                                }
+                            )
 
-                            }
-                            item {
-
-                            }
-                            items(items = languages) {
-                                TtsLanguageItem(
-                                    localeTag = it.toLanguageTag(),
-                                    isSelected = it.toLanguageTag() == currentTtsTag,
-                                    onClick = onLanguageSelect
-                                )
-                            }
+                        }
+                    )
+                    item(
+                        content = {
+                            OutlinedTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                value = filterValue,
+                                label = { AppText(text = "Filter") },
+                                onValueChange = {
+                                    filterValue = it
+                                    filtered = languages.filter { locale ->
+                                        locale.displayName.contains(other = it, ignoreCase = true)
+                                    }.toImmutableList()
+                                },
+                            )
+                        }
+                    )
+                    items(
+                        items = filtered,
+                        key = { it.toLanguageTag() },
+                        itemContent = {
+                            TtsLanguageItem(
+                                localeTag = it.toLanguageTag(),
+                                displayName = it.displayName,
+                                isSelected = it.toLanguageTag() == currentTtsTag,
+                                onClick = onLanguageSelect
+                            )
                         }
                     )
                 }

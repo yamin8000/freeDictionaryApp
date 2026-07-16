@@ -59,7 +59,7 @@ private fun Preview() {
                 ttsLang = "en-US",
                 isVibrating = Random.nextBoolean(),
                 isStartingBlank = Random.nextBoolean(),
-                englishLanguages = persistentListOf()
+                languages = persistentListOf()
             )
         )
     }
@@ -125,7 +125,7 @@ internal fun SettingsContent(
                     )
                     TtsLanguageSetting(
                         currentTtsTag = state.ttsLang,
-                        languages = state.englishLanguages,
+                        languages = state.languages,
                         onTtsTagChange = { onAction(SettingsAction.OnTtsLangChange(it)) }
                     )
                 }

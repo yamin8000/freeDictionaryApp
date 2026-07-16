@@ -32,6 +32,6 @@ data class SettingsState(
     val ttsLang: String = "en-US",
     val isVibrating: Boolean = true,
     val isStartingBlank: Boolean = true,
-    val englishLanguages: ImmutableList<Locale> = persistentListOf(),
+    val languages: ImmutableList<Locale> = persistentListOf(),
     val source: DictionarySource = DictionarySource.FreeDictionary
 )

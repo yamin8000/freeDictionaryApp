@@ -30,6 +30,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.domain.model.DictionarySource
+import io.github.yamin8000.owl.common.util.StringUtils.sanitizeWord
 import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.common.util.log
 import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseCases
@@ -211,11 +212,24 @@ class HomeViewModel @AssistedInject constructor(
                 }
             }
 
-            is HomeAction.OnTextToSpeech -> {
-                tts.speak(action.phonetic)
+            is HomeAction.OnTextToSpeech -> scope.launch { tts.speak(action.text) }
+            is HomeAction.OnPlayAudio -> mediaPlayerHelper.playFromUrl(action.audioUrl)
+            is HomeAction.OnExpandText -> {
+                _state.update {
+                    it.copy(
+                        expandedText = action.text,
+                        isShowingExpandedTextDialog = true,
+                        expandedTextWords = action.text.split(Regex("\\s+"))
+                            .toSet()
+                            .map { word -> sanitizeWord(word) }
+                            .toImmutableList()
+                    )
+                }
             }
 
-            is HomeAction.OnPlayAudio -> mediaPlayerHelper.playFromUrl(action.audioUrl)
+            is HomeAction.OnDismissExpandedTextDialog -> {
+                _state.update { it.copy(isShowingExpandedTextDialog = false) }
+            }
         }
     }
 

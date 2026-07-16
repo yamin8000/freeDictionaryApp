@@ -35,5 +35,8 @@ data class HomeState(
     val error: HomeSnackbarType? = null,
     val searchResult: ImmutableList<Entry> = persistentListOf(),
     val word: String = "",
-    val isVibrating: Boolean = false
+    val isVibrating: Boolean = false,
+    val expandedText: String = "",
+    val isShowingExpandedTextDialog: Boolean = false,
+    val expandedTextWords: ImmutableList<String> = persistentListOf()
 )

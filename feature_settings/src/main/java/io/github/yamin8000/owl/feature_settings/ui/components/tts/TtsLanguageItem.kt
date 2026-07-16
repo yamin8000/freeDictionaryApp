@@ -24,23 +24,28 @@ package io.github.yamin8000.owl.feature_settings.ui.components.tts
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import java.util.Locale
+import kotlin.random.Random
 
 @AppPreview
 @Composable
 private fun Preview() {
     PreviewTheme {
+        val locale = Locale.getAvailableLocales().random()
         TtsLanguageItem(
-            localeTag = "en-us",
-            isSelected = false,
+            localeTag = locale.toLanguageTag(),
+            displayName = locale.displayName,
+            isSelected = Random.nextBoolean(),
             onClick = {}
         )
     }
@@ -49,6 +54,7 @@ private fun Preview() {
 @Composable
 internal fun TtsLanguageItem(
     localeTag: String,
+    displayName: String,
     isSelected: Boolean,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -60,11 +66,11 @@ internal fun TtsLanguageItem(
         enabled = !isSelected,
         content = {
             AppText(
-                text = Locale.forLanguageTag(localeTag).displayName,
-                maxLines = 2,
+                text = displayName,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(Sizes.Large)
-                    .basicMarquee(),
+                    .padding(Sizes.Medium)
+                    .fillMaxWidth()
             )
         }
     )

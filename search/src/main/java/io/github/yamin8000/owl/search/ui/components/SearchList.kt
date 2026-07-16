@@ -58,7 +58,7 @@ private fun Preview() {
             word = LoremIpsum(1).values.first(),
             onAddToFavourite = {},
             onShareWord = {},
-            onWordChipClick = {},
+            onExpandText = {},
             onTextToSpeech = {},
             onPlayAudio = {},
             entries = Entry.mockList().toImmutableList(),
@@ -73,7 +73,7 @@ fun SearchList(
     word: String,
     onAddToFavourite: (() -> Unit)?,
     onShareWord: (() -> Unit)?,
-    onWordChipClick: (String) -> Unit,
+    onExpandText: (String) -> Unit,
     onTextToSpeech: (String) -> Unit,
     onPlayAudio: (String) -> Unit,
     entries: ImmutableList<Entry>,
@@ -127,8 +127,9 @@ fun SearchList(
                         license = entry.license,
                         phonetics = entry.phonetics,
                         meanings = entry.meanings,
-                        onWordChipClick = onWordChipClick,
+                        onExpandText = onExpandText,
                         onPlayAudio = onPlayAudio,
+                        onTextToSpeech = onTextToSpeech
                     )
                 }
             )

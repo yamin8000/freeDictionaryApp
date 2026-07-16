@@ -24,6 +24,7 @@ package io.github.yamin8000.owl.feature_settings.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,13 +32,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val useCases: SettingUseCases,
-    private val ttsLanguages: List<Locale>,
+    private val tts: TTS,
 ) : ViewModel() {
     private val scope = viewModelScope
 
@@ -58,7 +58,7 @@ class SettingsViewModel @Inject constructor(
         }
         scope.launch {
             _state.update { settingsState ->
-                settingsState.copy(englishLanguages = ttsLanguages.toImmutableList())
+                settingsState.copy(languages = tts.languages().toImmutableList())
             }
         }
     }

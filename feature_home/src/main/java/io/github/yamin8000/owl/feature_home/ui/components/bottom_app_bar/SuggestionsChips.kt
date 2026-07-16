@@ -21,20 +21,21 @@
 
 package io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ElevatedSuggestionChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import io.github.yamin8000.owl.common.ui.components.HighlightText
-import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
+import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
-import io.github.yamin8000.owl.common.ui.theme.defaultGradientBorder
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -71,7 +72,10 @@ internal fun SuggestionsChips(
                     itemContent = {
                         ElevatedSuggestionChip(
                             shape = DefaultCutShape,
-                            border = defaultGradientBorder(1000),
+                            border = BorderStroke(
+                                Sizes.xxSmall,
+                                MaterialTheme.colorScheme.tertiary
+                            ),
                             onClick = { onSuggestionClick(it) },
                             label = {
                                 HighlightText(

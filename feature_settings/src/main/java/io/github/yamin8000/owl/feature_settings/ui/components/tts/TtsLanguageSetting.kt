@@ -96,7 +96,7 @@ internal fun TtsLanguageSetting(
                         TtsLanguagesDialog(
                             currentTtsTag = currentTtsTag,
                             languages = languages,
-                            onDismiss = { isDialogShown = false },
+                            onDismissRequest = { isDialogShown = false },
                             onLanguageSelect = {
                                 onTtsTagChange(it)
                                 isDialogShown = false

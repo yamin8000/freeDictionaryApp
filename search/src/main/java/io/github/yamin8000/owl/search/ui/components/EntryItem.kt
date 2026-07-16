@@ -23,6 +23,7 @@ package io.github.yamin8000.owl.search.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +46,8 @@ private fun Preview() {
             phonetics = Phonetic.mockList().toImmutableList(),
             meanings = Meaning.mockList().toImmutableList(),
             onPlayAudio = {},
-            onWordChipClick = {}
+            onExpandText = {},
+            onTextToSpeech = {}
         )
     }
 }
@@ -56,8 +58,9 @@ internal fun EntryItem(
     license: License?,
     phonetics: ImmutableList<Phonetic>,
     meanings: ImmutableList<Meaning>,
-    onWordChipClick: (String) -> Unit,
+    onExpandText: (String) -> Unit,
     onPlayAudio: (String) -> Unit,
+    onTextToSpeech: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -72,7 +75,8 @@ internal fun EntryItem(
                 )
             }
             if (phonetics.isNotEmpty()) {
-                PhoneticList(
+                PhoneticListCard(
+                    modifier = Modifier.fillMaxWidth(),
                     phonetics = phonetics,
                     onPlayAudio = onPlayAudio
                 )
@@ -81,7 +85,8 @@ internal fun EntryItem(
                 MeaningCard(
                     word = word,
                     meaning = meaning,
-                    onWordChipClick = onWordChipClick
+                    onExpandText = onExpandText,
+                    onTextToSpeech = onTextToSpeech
                 )
             }
         }
