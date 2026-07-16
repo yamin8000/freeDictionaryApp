@@ -1,4 +1,4 @@
-<i>freeDictionaryApp</i> is an android dictionary for <a href='https://dictionaryapi.dev/'>Free Dictionary API</a> and <a href="https://wiktionary.org/">Wiktionary API<a/>. You can just use the search input to search the word.
+<i>freeDictionaryApp</i> is an android dictionary for <a href='https://dictionaryapi.dev/'>Free Dictionary API</a> and <a href="https://wiktionary.org/">Wiktionary API</a>. You can just use the search input to search the word.
 
 <b>Features</b>
 <ol>
