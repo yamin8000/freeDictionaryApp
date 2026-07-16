@@ -1,0 +1,77 @@
+name: Android APK Build
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    env:
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 21
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Clean Build Directory
+        run: rm -rf app/build
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Setup keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
+          cp ./keystore.jks ./app/keystore.jks
+        shell: bash
+
+      - name: Verify keystore file
+        run: |
+          if [ -s "keystore.jks" ]; then
+            echo "Keystore file exists and is non-empty."
+          else
+            echo "Keystore file is missing or empty!" && exit 1
+          fi
+
+      - name: Build signed release APK
+        run: |
+          bash ./gradlew clean assembleRelease \
+          -Pandroid.injected.signing.store.file=keystore.jks \
+          -Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+          -Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }} \
+          -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }} \
+          --stacktrace
+        shell: bash
+
+      - name: List APK outputs
+        id: list_apk
+        run: find app/build/outputs/apk -type f -name "*.apk"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v3
+        with:
+          working_directory: app/build/outputs/apk/release
+          files: "*.apk"
+          generate_release_notes: true
