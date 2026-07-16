@@ -1,0 +1,5 @@
+- Improved home screen speed
+- Improved home screen UI/UX
+- Moved text selection to expanded text dialog
+- Fixed TTS memory bugs
+- Fixed a bug where TTS languages were not shown
