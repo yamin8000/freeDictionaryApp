@@ -1,5 +1,5 @@
 [versions]
-android-application = "9.2.1"
+android-application = "9.3.0"
 androidx-activity-compose = "1.13.0"
 androidx-compose-bom = "2026.06.01"
 androidx-core-ktx = "1.19.0"
