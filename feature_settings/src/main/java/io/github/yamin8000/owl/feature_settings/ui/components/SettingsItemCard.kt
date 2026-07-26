@@ -60,28 +60,43 @@ internal fun SettingsItemCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Column(
+    SettingsItemCard(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Sizes.Small, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.Start,
-        content = {
+        content = content,
+        title = {
             AppText(
                 text = title,
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.primary
             )
+        }
+    )
+}
+
+@Composable
+internal fun SettingsItemCard(
+    modifier: Modifier = Modifier,
+    title: @Composable () -> Unit = {},
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(Sizes.Small, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.Start,
+        content = {
+            title()
             OutlinedCard(
                 border = BorderStroke(Sizes.xxSmall, MaterialTheme.colorScheme.secondary),
                 shape = DefaultCutShape,
                 content = {
                     Column(
                         modifier = Modifier.padding(Sizes.Large),
+                        content = content,
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(
                             Sizes.Medium,
                             Alignment.CenterVertically
-                        ),
-                        content = content
+                        )
                     )
                 }
             )

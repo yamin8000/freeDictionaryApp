@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_settings.ui.components
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,16 +46,16 @@ import io.github.yamin8000.owl.strings.R
 private fun Preview() {
     PreviewTheme {
         DictionarySourceSettings(
-            dictionarySource = DictionarySource.entries.toTypedArray().random(),
-            onDictionarySourceChanged = {}
+            source = DictionarySource.entries.toTypedArray().random(),
+            onSourceChanged = {}
         )
     }
 }
 
 @Composable
 internal fun DictionarySourceSettings(
-    dictionarySource: DictionarySource,
-    onDictionarySourceChanged: (DictionarySource) -> Unit,
+    source: DictionarySource,
+    onSourceChanged: (DictionarySource) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -72,26 +73,28 @@ internal fun DictionarySourceSettings(
                 space = Sizes.Large,
                 content = {
                     SegmentedButton(
-                        selected = dictionarySource == DictionarySource.FreeDictionary,
-                        onClick = { onDictionarySourceChanged(DictionarySource.FreeDictionary) },
+                        selected = source == DictionarySource.FreeDictionary,
+                        onClick = { onSourceChanged(DictionarySource.FreeDictionary) },
                         shape = CircleShape,
                         label = {
                             AppText(
                                 text = DictionarySource.FreeDictionary.name,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.basicMarquee()
                             )
                         }
                     )
                     SegmentedButton(
-                        selected = dictionarySource == DictionarySource.Wiktionary,
-                        onClick = { onDictionarySourceChanged(DictionarySource.Wiktionary) },
+                        selected = source == DictionarySource.Wiktionary,
+                        onClick = { onSourceChanged(DictionarySource.Wiktionary) },
                         shape = CircleShape,
                         label = {
                             AppText(
                                 text = DictionarySource.Wiktionary.name,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.basicMarquee()
                             )
                         }
                     )

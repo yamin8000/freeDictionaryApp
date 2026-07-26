@@ -21,26 +21,35 @@
 
 package io.github.yamin8000.owl.feature_settings.ui
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.components.ScaffoldWithTitle
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
+import io.github.yamin8000.owl.feature_settings.ui.components.DictionarySourceSettings
 import io.github.yamin8000.owl.feature_settings.ui.components.GeneralSettings
+import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItemCard
 import io.github.yamin8000.owl.feature_settings.ui.components.theme.ThemeSetting
 import io.github.yamin8000.owl.feature_settings.ui.components.tts.TtsLanguageSetting
+import io.github.yamin8000.owl.feature_settings.utils.Utility.resourceName
 import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlin.random.Random
@@ -59,7 +68,8 @@ private fun Preview() {
                 ttsLang = "en-US",
                 isVibrating = Random.nextBoolean(),
                 isStartingBlank = Random.nextBoolean(),
-                languages = persistentListOf()
+                languages = persistentListOf(),
+                currentTab = SettingsTab.entries.random()
             )
         )
     }
@@ -97,36 +107,97 @@ internal fun SettingsContent(
         onBackClick = onBackClick,
         content = {
             Column(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
                     Sizes.Medium,
                     Alignment.CenterVertically
                 ),
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(bottom = Sizes.Large),
                 content = {
-                    GeneralSettings(
-                        isVibrating = state.isVibrating,
-                        onVibratingChange = { onAction(SettingsAction.OnVibrationChange(it)) },
-                        isStartingBlank = state.isStartingBlank,
-                        onStartingBlankChange = { onAction(SettingsAction.OnStartingBlankChange(it)) },
-                        dictionarySource = state.source,
-                        onDictionarySourceChanged = {
-                            onAction(SettingsAction.OnDictionarySourceChanged(it))
+                    PrimaryTabRow(
+                        selectedTabIndex = state.currentTab.ordinal,
+                        divider = {},
+                        tabs = {
+                            SettingsTab.entries.toTypedArray().forEach { tab ->
+                                Tab(
+                                    selected = tab == state.currentTab,
+                                    onClick = { onAction(SettingsAction.OnTabChanged(tab)) },
+                                    content = {
+                                        AppText(
+                                            text = tab.resourceName(LocalContext.current),
+                                            maxLines = 1,
+                                            modifier = Modifier
+                                                .basicMarquee()
+                                                .padding(Sizes.Small)
+                                        )
+                                    }
+                                )
+                            }
                         }
                     )
-                    ThemeSetting(
-                        theme = state.theme,
-                        onThemeChanged = { newTheme ->
-                            onAction(SettingsAction.OnThemeChange(newTheme))
-                            onThemeChanged(newTheme)
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(
+                            Sizes.Medium,
+                            Alignment.CenterVertically
+                        ),
+                        content = {
+                            when (state.currentTab) {
+                                SettingsTab.General -> {
+                                    GeneralSettings(
+                                        isVibrating = state.isVibrating,
+                                        onVibratingChange = {
+                                            onAction(
+                                                SettingsAction.OnVibrationChange(
+                                                    it
+                                                )
+                                            )
+                                        },
+                                        isStartingBlank = state.isStartingBlank,
+                                        onStartingBlankChange = {
+                                            onAction(
+                                                SettingsAction.OnStartingBlankChange(
+                                                    it
+                                                )
+                                            )
+                                        }
+                                    )
+                                    ThemeSetting(
+                                        theme = state.theme,
+                                        onThemeChanged = { newTheme ->
+                                            onAction(SettingsAction.OnThemeChange(newTheme))
+                                            onThemeChanged(newTheme)
+                                        }
+                                    )
+                                }
+
+                                SettingsTab.Advanced -> {
+                                    SettingsItemCard(
+                                        title = stringResource(R.string.dictionary_source),
+                                        content = {
+                                            DictionarySourceSettings(
+                                                source = state.source,
+                                                onSourceChanged = {
+                                                    onAction(SettingsAction.OnSourceChanged(it))
+                                                }
+                                            )
+                                        }
+                                    )
+                                    TtsLanguageSetting(
+                                        currentTtsTag = state.ttsLang,
+                                        languages = state.languages,
+                                        onTtsTagChange = {
+                                            onAction(
+                                                SettingsAction.OnTtsLangChange(
+                                                    it
+                                                )
+                                            )
+                                        }
+                                    )
+                                }
+                            }
                         }
-                    )
-                    TtsLanguageSetting(
-                        currentTtsTag = state.ttsLang,
-                        languages = state.languages,
-                        onTtsTagChange = { onAction(SettingsAction.OnTtsLangChange(it)) }
                     )
                 }
             )

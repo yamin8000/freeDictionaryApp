@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_settings.main
- *     SettingsEvent.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
- *     SettingsEvent.kt Last modified at 2024/8/19
+ *     Utility.kt Copyrighted by Yamin Siahmargooei at 2026/7/26
+ *     Utility.kt Last modified at 2026/7/26
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_settings.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.feature_settings.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,16 +19,18 @@
  *     along with freeDictionaryApp.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.yamin8000.owl.feature_settings.ui
+package io.github.yamin8000.owl.feature_settings.utils
 
-import io.github.yamin8000.owl.common.domain.model.DictionarySource
-import io.github.yamin8000.owl.datastore.domain.model.ThemeType
+import android.content.Context
+import io.github.yamin8000.owl.feature_settings.ui.SettingsTab
+import io.github.yamin8000.owl.strings.R
 
-sealed interface SettingsAction {
-    data class OnVibrationChange(val value: Boolean) : SettingsAction
-    data class OnStartingBlankChange(val value: Boolean) : SettingsAction
-    data class OnTtsLangChange(val value: String) : SettingsAction
-    data class OnThemeChange(val newTheme: ThemeType) : SettingsAction
-    data class OnSourceChanged(val source: DictionarySource) : SettingsAction
-    data class OnTabChanged(val newTab: SettingsTab) : SettingsAction
+object Utility {
+
+    fun SettingsTab.resourceName(context: Context): String {
+        return when (this) {
+            SettingsTab.General -> context.getString(R.string.general)
+            SettingsTab.Advanced -> context.getString(R.string.advanced)
+        }
+    }
 }

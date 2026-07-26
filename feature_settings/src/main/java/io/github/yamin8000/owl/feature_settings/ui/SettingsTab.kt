@@ -1,9 +1,9 @@
 /*
  *     freeDictionaryApp/freeDictionaryApp.feature_settings.main
- *     SettingsEvent.kt Copyrighted by Yamin Siahmargooei at 2024/8/19
- *     SettingsEvent.kt Last modified at 2024/8/19
+ *     SettingsTab.kt Copyrighted by Yamin Siahmargooei at 2026/7/26
+ *     SettingsTab.kt Last modified at 2026/7/26
  *     This file is part of freeDictionaryApp/freeDictionaryApp.feature_settings.main.
- *     Copyright (C) 2024  Yamin Siahmargooei
+ *     Copyright (C) 2026  Yamin Siahmargooei
  *
  *     freeDictionaryApp/freeDictionaryApp.feature_settings.main is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -21,14 +21,6 @@
 
 package io.github.yamin8000.owl.feature_settings.ui
 
-import io.github.yamin8000.owl.common.domain.model.DictionarySource
-import io.github.yamin8000.owl.datastore.domain.model.ThemeType
-
-sealed interface SettingsAction {
-    data class OnVibrationChange(val value: Boolean) : SettingsAction
-    data class OnStartingBlankChange(val value: Boolean) : SettingsAction
-    data class OnTtsLangChange(val value: String) : SettingsAction
-    data class OnThemeChange(val newTheme: ThemeType) : SettingsAction
-    data class OnSourceChanged(val source: DictionarySource) : SettingsAction
-    data class OnTabChanged(val newTab: SettingsTab) : SettingsAction
+enum class SettingsTab {
+    General, Advanced
 }

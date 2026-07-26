@@ -28,7 +28,6 @@ import androidx.compose.material.icons.twotone.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.strings.R
@@ -39,8 +38,6 @@ import kotlin.random.Random
 private fun Preview() {
     PreviewTheme {
         GeneralSettings(
-            dictionarySource = DictionarySource.entries.toTypedArray().random(),
-            onDictionarySourceChanged = {},
             isVibrating = Random.nextBoolean(),
             onVibratingChange = {},
             isStartingBlank = Random.nextBoolean(),
@@ -51,8 +48,6 @@ private fun Preview() {
 
 @Composable
 internal fun GeneralSettings(
-    dictionarySource: DictionarySource,
-    onDictionarySourceChanged: (DictionarySource) -> Unit,
     isVibrating: Boolean,
     onVibratingChange: (Boolean) -> Unit,
     isStartingBlank: Boolean,
@@ -61,13 +56,7 @@ internal fun GeneralSettings(
 ) {
     SettingsItemCard(
         modifier = modifier.fillMaxWidth(),
-        title = stringResource(R.string.general),
         content = {
-            DictionarySourceSettings(
-                dictionarySource = dictionarySource,
-                onDictionarySourceChanged = onDictionarySourceChanged
-            )
-
             SwitchItem(
                 imageVector = Icons.TwoTone.Language,
                 caption = stringResource(R.string.vibrate_on_scroll),

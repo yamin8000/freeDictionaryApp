@@ -85,9 +85,13 @@ class SettingsViewModel @Inject constructor(
                 scope.launch { useCases.setTheme(action.newTheme) }
             }
 
-            is SettingsAction.OnDictionarySourceChanged -> {
+            is SettingsAction.OnSourceChanged -> {
                 _state.update { it.copy(source = action.source) }
                 scope.launch { useCases.setSource(action.source) }
+            }
+
+            is SettingsAction.OnTabChanged -> {
+                _state.update { it.copy(currentTab = action.newTab) }
             }
         }
     }
