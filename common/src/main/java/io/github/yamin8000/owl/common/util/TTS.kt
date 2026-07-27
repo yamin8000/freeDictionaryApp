@@ -50,15 +50,15 @@ class TTS(
     }
 
     /**
-     * Extension method for [TextToSpeech] that calls [TextToSpeech.speak] with
+     * Helper method that calls [TextToSpeech.speak] with
      * some predefined parameters
      */
-    suspend fun speak(text: String) {
+    suspend fun speak(text: String): Int? {
         if (tts == null) {
             tts = createEngine()
         }
 
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        return tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     suspend fun languages(): List<Locale> {

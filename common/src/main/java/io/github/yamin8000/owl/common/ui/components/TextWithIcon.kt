@@ -1,7 +1,7 @@
 /*
 *     freeDictionaryApp/freeDictionaryApp.common.main
-*     Texts.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
-*     Texts.kt Last modified at 2024/8/18
+*     TextWithIcon.kt Copyrighted by Yamin Siahmargooei at 2024/8/18
+*     TextWithIcon.kt Last modified at 2024/8/18
 *     This file is part of freeDictionaryApp/freeDictionaryApp.common.main.
 *     Copyright (C) 2024  Yamin Siahmargooei
 *

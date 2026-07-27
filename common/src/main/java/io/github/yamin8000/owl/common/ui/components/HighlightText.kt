@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.common.ui.components
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -51,7 +52,8 @@ fun HighlightText(
     modifier: Modifier = Modifier,
     highlightedTextStyle: SpanStyle = SpanStyle(
         fontWeight = FontWeight.ExtraBold,
-        textDecoration = TextDecoration.Underline
+        textDecoration = TextDecoration.Underline,
+        background = MaterialTheme.colorScheme.surfaceBright
     )
 ) {
     if (highlightedText.isNotBlank() && fullText.contains(highlightedText, true)) {

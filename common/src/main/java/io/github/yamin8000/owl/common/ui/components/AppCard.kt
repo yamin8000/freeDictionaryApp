@@ -21,11 +21,9 @@
 
 package io.github.yamin8000.owl.common.ui.components
 
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 
@@ -33,7 +31,7 @@ import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 fun AppCard(
     modifier: Modifier = Modifier,
     shape: Shape = DefaultCutShape,
-    content: @Composable BoxScope.() -> Unit,
+    content: @Composable () -> Unit,
 ) {
     BoxWithMovingGradientBorder(
         modifier = modifier,
@@ -41,7 +39,7 @@ fun AppCard(
         content = {
             Surface(
                 shape = shape,
-                content = { content() }
+                content = content
             )
         }
     )
