@@ -25,7 +25,6 @@ retrofit = "3.0.0"
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidx-compose-bom" }
-androidx-compose-material = { module = "androidx.compose.material:material" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "androidx-material3" }
 androidx-compose-material3-window-size = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "androidx-material3" }
