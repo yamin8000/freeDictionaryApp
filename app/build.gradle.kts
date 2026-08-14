@@ -104,16 +104,7 @@ dependencies {
     implementation(project(":feature_about"))
     //core android/kotlin
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.core.splashscreen)
-    //
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material3.window.size)
-    implementation(libs.androidx.lifecycle.runtime.compose)
     //navigation
     implementation(libs.androidx.navigation.compose)
     //hilt
