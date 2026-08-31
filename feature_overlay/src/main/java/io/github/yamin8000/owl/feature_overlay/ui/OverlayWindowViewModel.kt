@@ -26,11 +26,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_overlay.di.OverlayViewModelFactory
 import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
 import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
+import io.github.yamin8000.owl.search.domain.usecase.search.SearchWiktionary
 import io.github.yamin8000.owl.search.utils.MediaPlayerHelper
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -44,6 +47,8 @@ import kotlinx.coroutines.launch
 class OverlayWindowViewModel @AssistedInject constructor(
     @Assisted("intent") private val intentSearch: String?,
     private val searchFreeDictionaryUseCase: SearchFreeDictionary,
+    private val searchWiktionaryUseCase: SearchWiktionary,
+    private val settingsUseCases: SettingUseCases,
     private val cacheUseCases: WordCacheUseCases,
     private val mediaPlayerHelper: MediaPlayerHelper,
     private val tts: TTS,
@@ -73,7 +78,9 @@ class OverlayWindowViewModel @AssistedInject constructor(
                         )
                     }
                 } else {
-                    val entries = searchFreeDictionaryUseCase(term)
+                    val entries = if (settingsUseCases.getSource() == DictionarySource.FreeDictionary) {
+                        searchFreeDictionaryUseCase(term)
+                    } else searchWiktionaryUseCase(term)
                     if (entries.isNotEmpty()) {
                         _state.update {
                             it.copy(
