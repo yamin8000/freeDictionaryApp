@@ -37,7 +37,7 @@ More screenshots [here](./screenshots).
 ## Compatibility
 
 > [!important]
-> **SDK23+** or **Android 6.0+**
+> **SDK24+** or **Android 7.0+**
 
 ## Usage
 
