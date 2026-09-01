@@ -23,7 +23,6 @@ package io.github.yamin8000.owl.search.data.datasource.remote.wiktionary
 
 import io.github.yamin8000.owl.search.data.datasource.remote.wiktionary.dto.WikiMeaningDto
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.Path
 
 interface WiktionaryAPI {

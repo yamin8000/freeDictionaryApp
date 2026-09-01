@@ -37,7 +37,6 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import io.github.yamin8000.owl.common.ui.components.ClickableIcon
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R

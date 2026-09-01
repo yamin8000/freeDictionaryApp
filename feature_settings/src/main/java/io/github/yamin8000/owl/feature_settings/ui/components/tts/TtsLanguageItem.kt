@@ -21,10 +21,8 @@
 
 package io.github.yamin8000.owl.feature_settings.ui.components.tts
 
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

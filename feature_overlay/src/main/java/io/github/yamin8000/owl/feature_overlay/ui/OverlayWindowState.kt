@@ -22,7 +22,6 @@
 package io.github.yamin8000.owl.feature_overlay.ui
 
 import io.github.yamin8000.owl.search.domain.model.Entry
-import io.github.yamin8000.owl.search.domain.model.Meaning
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

@@ -23,15 +23,7 @@ package io.github.yamin8000.owl.feature_home.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
-import io.github.yamin8000.owl.search.domain.model.Definition
-import io.github.yamin8000.owl.search.domain.model.Entry
-import io.github.yamin8000.owl.search.domain.model.Meaning
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import net.datafaker.Faker
-import kotlin.random.Random
-import kotlin.random.nextInt
 
 @Preview(showBackground = true)
 @Composable
