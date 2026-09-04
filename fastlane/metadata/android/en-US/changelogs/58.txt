@@ -1,0 +1,4 @@
+- Settings is now tabbed
+- Set minimum android version to sdk 24 (Android 7.0)
+- Fixed a bug where Pop-up screen only used FreeDictionaryAPI
+- Other minor bug fixes
