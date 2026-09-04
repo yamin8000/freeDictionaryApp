@@ -44,7 +44,7 @@ jobs:
       - name: Setup keystore
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
-          cp ./keystore.jks ./app/keystore.jks
+          cp ./keystore.jks "$RUNNER_TEMP/keystore.jks"
         shell: bash
 
       - name: Verify keystore file
@@ -58,7 +58,7 @@ jobs:
       - name: Build signed release APK
         run: |
           bash ./gradlew clean assembleRelease \
-          -Pandroid.injected.signing.store.file=app/keystore.jks \
+          -Pandroid.injected.signing.store.file=${{ runner.temp }}/keystore.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }} \
           -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }} \
