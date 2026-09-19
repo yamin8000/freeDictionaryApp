@@ -28,11 +28,14 @@ import io.github.yamin8000.owl.common.util.TTS
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -42,26 +45,23 @@ class SettingsViewModel @Inject constructor(
     private val scope = viewModelScope
 
     private var _state = MutableStateFlow(SettingsState())
-    val state = _state.asStateFlow()
-
-    init {
-        runBlocking {
-            _state.update { settingsState ->
-                settingsState.copy(
-                    theme = useCases.getTheme(),
-                    ttsLang = useCases.getTTS(),
-                    isVibrating = useCases.getVibration(),
-                    isStartingBlank = useCases.getStartingBlank(),
-                    source = useCases.getSource()
-                )
-            }
+    val state = _state.onStart {
+        _state.update {
+            it.copy(
+                theme = useCases.getTheme(),
+                ttsLang = useCases.getTTS(),
+                isVibrating = useCases.getVibration(),
+                isStartingBlank = useCases.getStartingBlank(),
+                source = useCases.getSource(),
+                languages = tts.languages().toImmutableList(),
+                isTtsAvailable = tts.engine != null
+            )
         }
-        scope.launch {
-            _state.update { settingsState ->
-                settingsState.copy(languages = tts.languages().toImmutableList())
-            }
-        }
-    }
+    }.stateIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(5.seconds),
+        SettingsState()
+    )
 
     fun onAction(action: SettingsAction) {
         when (action) {

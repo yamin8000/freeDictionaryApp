@@ -81,4 +81,5 @@
     <string name="license">License</string>
     <string name="see_source">See source</string>
     <string name="advanced">Advanced</string>
+    <string name="tts_error">Failed to play the speech, TTS error!</string>
 </resources>

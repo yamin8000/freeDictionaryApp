@@ -51,17 +51,18 @@ object Utils {
 
     internal fun getErrorText(
         context: Context,
-        error: HomeSnackbarType?
+        error: HomeError?
     ) = when (error) {
-        HomeSnackbarType.SearchFailed -> context.getString(R.string.general_net_error)
-        HomeSnackbarType.TermIsEmpty -> context.getString(R.string.no_search_term_entered)
-        HomeSnackbarType.NoInternet -> context.getString(R.string.general_net_error)
-        HomeSnackbarType.ApiAuthorizationError -> context.getString(R.string.api_authorization_error)
-        HomeSnackbarType.ApiThrottled -> context.getString(R.string.api_throttled)
-        HomeSnackbarType.Cancelled -> context.getString(R.string.cancelled)
-        HomeSnackbarType.NotFound -> context.getString(R.string.definition_not_found)
-        HomeSnackbarType.Unknown -> context.getString(R.string.untracked_error)
-        HomeSnackbarType.AddedToFavourite -> context.getString(R.string.added_to_favourites)
+        HomeError.SearchFailed -> context.getString(R.string.general_net_error)
+        HomeError.TermIsEmpty -> context.getString(R.string.no_search_term_entered)
+        HomeError.NoInternet -> context.getString(R.string.general_net_error)
+        HomeError.ApiAuthorizationError -> context.getString(R.string.api_authorization_error)
+        HomeError.ApiThrottled -> context.getString(R.string.api_throttled)
+        HomeError.Cancelled -> context.getString(R.string.cancelled)
+        HomeError.NotFound -> context.getString(R.string.definition_not_found)
+        HomeError.Unknown -> context.getString(R.string.untracked_error)
+        HomeError.AddedToFavourite -> context.getString(R.string.added_to_favourites)
+        HomeError.TtsError -> context.getString(R.string.tts_error)
         null -> ""
     }
 }

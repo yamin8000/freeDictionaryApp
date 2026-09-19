@@ -76,4 +76,5 @@
     <string name="license">پروانه</string>
     <string name="see_source">دیدن منبع</string>
     <string name="advanced">پیشرفته</string>
+    <string name="tts_error">Failed to play the speech, TTS error!</string>
 </resources>

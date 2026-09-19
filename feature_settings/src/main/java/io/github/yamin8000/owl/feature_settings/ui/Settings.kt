@@ -187,6 +187,7 @@ internal fun SettingsContent(
                                     TtsLanguageSetting(
                                         currentTtsTag = state.ttsLang,
                                         languages = state.languages,
+                                        isTtsAvailable = state.isTtsAvailable,
                                         onTtsTagChange = {
                                             onAction(
                                                 SettingsAction.OnTtsLangChange(

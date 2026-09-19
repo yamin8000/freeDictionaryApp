@@ -21,14 +21,15 @@
 
 package io.github.yamin8000.owl.feature_home.ui.util
 
-sealed interface HomeSnackbarType {
-    data object TermIsEmpty : HomeSnackbarType
-    data object SearchFailed : HomeSnackbarType
-    data object NoInternet : HomeSnackbarType
-    data object ApiAuthorizationError : HomeSnackbarType
-    data object NotFound : HomeSnackbarType
-    data object ApiThrottled : HomeSnackbarType
-    data object Cancelled : HomeSnackbarType
-    data object Unknown : HomeSnackbarType
-    data object AddedToFavourite : HomeSnackbarType
+sealed interface HomeError {
+    data object TermIsEmpty : HomeError
+    data object SearchFailed : HomeError
+    data object NoInternet : HomeError
+    data object ApiAuthorizationError : HomeError
+    data object NotFound : HomeError
+    data object ApiThrottled : HomeError
+    data object Cancelled : HomeError
+    data object Unknown : HomeError
+    data object AddedToFavourite : HomeError
+    data object TtsError : HomeError
 }

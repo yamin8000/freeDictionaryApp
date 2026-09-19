@@ -45,6 +45,7 @@ import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
+import kotlin.random.Random
 
 @AppPreview
 @Composable
@@ -53,7 +54,8 @@ private fun Preview() {
         TtsLanguageSetting(
             currentTtsTag = "en-us",
             languages = persistentListOf(),
-            onTtsTagChange = {}
+            onTtsTagChange = {},
+            isTtsAvailable = Random.nextBoolean()
         )
     }
 }
@@ -63,6 +65,7 @@ internal fun TtsLanguageSetting(
     currentTtsTag: String,
     languages: ImmutableList<Locale>,
     onTtsTagChange: (String) -> Unit,
+    isTtsAvailable: Boolean,
     modifier: Modifier = Modifier
 ) {
     SettingsItemCard(
@@ -104,6 +107,9 @@ internal fun TtsLanguageSetting(
                         )
                     }
                 }
+            )
+            AppText(
+                text = "TTS available: $isTtsAvailable"
             )
         }
     )

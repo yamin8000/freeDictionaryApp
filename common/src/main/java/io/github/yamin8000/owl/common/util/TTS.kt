@@ -32,16 +32,18 @@ class TTS(
     private val context: Context,
     private val languageTag: String
 ) {
-    private var tts: TextToSpeech? = null
+    var engine: TextToSpeech? = null
+        get() = field
+        private set
 
     suspend fun createEngine(
         tag: String = languageTag
     ): TextToSpeech? = suspendCancellableCoroutine { continuation ->
-        tts = TextToSpeech(context) {
+        engine = TextToSpeech(context) {
             if (it == TextToSpeech.SUCCESS) {
-                tts?.language = Locale.forLanguageTag(tag)
+                engine?.language = Locale.forLanguageTag(tag)
                 log("TTS init success!")
-                continuation.resume(tts)
+                continuation.resume(engine)
             } else {
                 log("TTS init failed!")
                 continuation.resume(null)
@@ -54,18 +56,18 @@ class TTS(
      * some predefined parameters
      */
     suspend fun speak(text: String): Int? {
-        if (tts == null) {
-            tts = createEngine()
+        if (engine == null) {
+            engine = createEngine()
         }
 
-        return tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        return engine?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 
     suspend fun languages(): List<Locale> {
-        if (tts == null) {
-            tts = createEngine()
+        if (engine == null) {
+            engine = createEngine()
         }
 
-        return tts?.availableLanguages?.filterNotNull()?.sortedBy { it.displayName } ?: listOf()
+        return engine?.availableLanguages?.filterNotNull()?.sortedBy { it.displayName } ?: listOf()
     }
 }

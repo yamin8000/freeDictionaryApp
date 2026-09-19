@@ -34,5 +34,6 @@ data class SettingsState(
     val isStartingBlank: Boolean = true,
     val languages: ImmutableList<Locale> = persistentListOf(),
     val source: DictionarySource = DictionarySource.FreeDictionary,
-    val currentTab: SettingsTab = SettingsTab.General
+    val currentTab: SettingsTab = SettingsTab.General,
+    val isTtsAvailable: Boolean = false
 )

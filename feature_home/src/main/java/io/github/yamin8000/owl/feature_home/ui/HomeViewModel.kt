@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_home.ui
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -39,7 +40,7 @@ import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
-import io.github.yamin8000.owl.feature_home.ui.util.HomeSnackbarType
+import io.github.yamin8000.owl.feature_home.ui.util.HomeError
 import io.github.yamin8000.owl.search.utils.MediaPlayerHelper
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
@@ -93,18 +94,18 @@ class HomeViewModel @AssistedInject constructor(
         viewModelScope.launch {
             when (throwable) {
                 is HttpException -> when (throwable.code()) {
-                    401 -> errorChannel.send(HomeSnackbarType.ApiAuthorizationError)
-                    404 -> errorChannel.send(HomeSnackbarType.NotFound)
-                    429 -> errorChannel.send(HomeSnackbarType.ApiThrottled)
-                    else -> errorChannel.send(HomeSnackbarType.Unknown)
+                    401 -> errorChannel.send(HomeError.ApiAuthorizationError)
+                    404 -> errorChannel.send(HomeError.NotFound)
+                    429 -> errorChannel.send(HomeError.ApiThrottled)
+                    else -> errorChannel.send(HomeError.Unknown)
                 }
 
                 is SocketTimeoutException, is UnknownHostException -> errorChannel.send(
-                    HomeSnackbarType.NoInternet
+                    HomeError.NoInternet
                 )
 
-                is CancellationException -> errorChannel.send(HomeSnackbarType.Cancelled)
-                else -> errorChannel.send(HomeSnackbarType.Unknown)
+                is CancellationException -> errorChannel.send(HomeError.Cancelled)
+                else -> errorChannel.send(HomeError.Unknown)
             }
         }
     }
@@ -113,7 +114,7 @@ class HomeViewModel @AssistedInject constructor(
 
     val searchTerm = savedState.getStateFlow("Search", intentSearch ?: navigationSearch ?: "")
 
-    private var errorChannel = Channel<HomeSnackbarType>()
+    private var errorChannel = Channel<HomeError>()
     val errorChannelFlow = errorChannel.receiveAsFlow()
 
     private var shareChannel = Channel<List<Entry>>()
@@ -208,11 +209,17 @@ class HomeViewModel @AssistedInject constructor(
             is HomeAction.OnAddToFavourite -> {
                 scope.launch {
                     favouriteUseCases.addFavourite(action.word)
-                    errorChannel.send(HomeSnackbarType.AddedToFavourite)
+                    errorChannel.send(HomeError.AddedToFavourite)
                 }
             }
 
-            is HomeAction.OnTextToSpeech -> scope.launch { tts.speak(action.text) }
+            is HomeAction.OnTextToSpeech -> scope.launch {
+                val result = tts.speak(action.text)
+                if (result == TextToSpeech.ERROR) {
+                    errorChannel.send(HomeError.TtsError)
+                }
+            }
+
             is HomeAction.OnPlayAudio -> mediaPlayerHelper.playFromUrl(action.audioUrl)
             is HomeAction.OnExpandText -> {
                 _state.update {
@@ -273,7 +280,7 @@ class HomeViewModel @AssistedInject constructor(
             } else loadCachedWord(cachedEntry)
 
             _state.update { it.copy(isSearching = false) }
-        } else errorChannel.send(HomeSnackbarType.TermIsEmpty)
+        } else errorChannel.send(HomeError.TermIsEmpty)
     }
 
     private fun loadCachedWord(cachedEntries: List<Entry>) {
