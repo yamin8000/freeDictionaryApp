@@ -124,7 +124,7 @@ internal fun TtsLanguageSetting(
                     )
                     OutlinedButton(
                         onClick = onTestTts,
-                        content = { AppText(text = "Test TTS") }
+                        content = { AppText(text = stringResource(R.string.test_tts)) }
                     )
                 }
             )
