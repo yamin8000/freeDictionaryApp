@@ -29,12 +29,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowDropDownCircle
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
@@ -44,6 +46,7 @@ import io.github.yamin8000.owl.common.ui.theme.Sizes
 private fun Preview() {
     PreviewTheme {
         SettingsItem(
+            modifier = Modifier.padding(Sizes.Large),
             onClick = {},
             content = {}
         )
@@ -57,11 +60,13 @@ internal fun SettingsItem(
     content: @Composable RowScope.() -> Unit
 ) {
     Box(
-        modifier = modifier.clickable(
-            interactionSource = null,
-            indication = LocalIndication.current,
-            onClick = onClick,
-        ),
+        modifier = modifier
+            .clip(CutCornerShape(Sizes.Small))
+            .clickable(
+                interactionSource = null,
+                indication = LocalIndication.current,
+                onClick = onClick,
+            ),
         content = {
             Row(
                 modifier = Modifier.fillMaxWidth(),

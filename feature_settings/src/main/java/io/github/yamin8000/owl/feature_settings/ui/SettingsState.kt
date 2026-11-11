@@ -21,6 +21,7 @@
 
 package io.github.yamin8000.owl.feature_settings.ui
 
+import android.speech.tts.TextToSpeech
 import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import kotlinx.collections.immutable.ImmutableList
@@ -35,5 +36,6 @@ data class SettingsState(
     val languages: ImmutableList<Locale> = persistentListOf(),
     val source: DictionarySource = DictionarySource.FreeDictionary,
     val currentTab: SettingsTab = SettingsTab.General,
-    val isTtsAvailable: Boolean = false
+    val ttsEngine: TextToSpeech? = null,
+    val isShowingTtsEngineDialog: Boolean = false,
 )

@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.util.TTS
+import io.github.yamin8000.owl.common.util.log
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,7 +55,7 @@ class SettingsViewModel @Inject constructor(
                 isStartingBlank = useCases.getStartingBlank(),
                 source = useCases.getSource(),
                 languages = tts.languages().toImmutableList(),
-                isTtsAvailable = tts.engine != null
+                ttsEngine = tts.engine
             )
         }
     }.stateIn(
@@ -92,6 +93,20 @@ class SettingsViewModel @Inject constructor(
 
             is SettingsAction.OnTabChanged -> {
                 _state.update { it.copy(currentTab = action.newTab) }
+            }
+
+            SettingsAction.OnHideTtsEngineInfoDialog -> {
+                _state.update { it.copy(isShowingTtsEngineDialog = false) }
+            }
+
+            SettingsAction.OnShowTtsEngineInfoDialog -> {
+                _state.update { it.copy(isShowingTtsEngineDialog = true) }
+            }
+
+            is SettingsAction.OnTextToSpeech -> {
+                scope.launch {
+                    log(tts.speak(action.text).toString())
+                }
             }
         }
     }

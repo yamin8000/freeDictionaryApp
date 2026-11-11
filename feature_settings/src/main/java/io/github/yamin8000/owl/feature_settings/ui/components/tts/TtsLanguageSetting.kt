@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Language
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,7 +46,6 @@ import io.github.yamin8000.owl.strings.R
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
-import kotlin.random.Random
 
 @AppPreview
 @Composable
@@ -55,7 +55,8 @@ private fun Preview() {
             currentTtsTag = "en-us",
             languages = persistentListOf(),
             onTtsTagChange = {},
-            isTtsAvailable = Random.nextBoolean()
+            onTestTts = {},
+            onSeeTtsEngineInfo = {}
         )
     }
 }
@@ -65,7 +66,8 @@ internal fun TtsLanguageSetting(
     currentTtsTag: String,
     languages: ImmutableList<Locale>,
     onTtsTagChange: (String) -> Unit,
-    isTtsAvailable: Boolean,
+    onSeeTtsEngineInfo: () -> Unit,
+    onTestTts: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     SettingsItemCard(
@@ -108,8 +110,23 @@ internal fun TtsLanguageSetting(
                     }
                 }
             )
-            AppText(
-                text = "TTS available: $isTtsAvailable"
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(
+                    Sizes.Medium,
+                    Alignment.CenterHorizontally
+                ),
+                content = {
+                    OutlinedButton(
+                        onClick = onSeeTtsEngineInfo,
+                        content = { AppText(text = stringResource(R.string.see_tts_engine_info)) }
+                    )
+                    OutlinedButton(
+                        onClick = onTestTts,
+                        content = { AppText(text = "Test TTS") }
+                    )
+                }
             )
         }
     )

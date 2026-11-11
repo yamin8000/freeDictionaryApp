@@ -48,6 +48,7 @@ import io.github.yamin8000.owl.feature_settings.ui.components.DictionarySourceSe
 import io.github.yamin8000.owl.feature_settings.ui.components.GeneralSettings
 import io.github.yamin8000.owl.feature_settings.ui.components.SettingsItemCard
 import io.github.yamin8000.owl.feature_settings.ui.components.theme.ThemeSetting
+import io.github.yamin8000.owl.feature_settings.ui.components.tts.TtsEngineDialog
 import io.github.yamin8000.owl.feature_settings.ui.components.tts.TtsLanguageSetting
 import io.github.yamin8000.owl.feature_settings.utils.Utility.resourceName
 import io.github.yamin8000.owl.strings.R
@@ -149,17 +150,13 @@ internal fun SettingsContent(
                                         isVibrating = state.isVibrating,
                                         onVibratingChange = {
                                             onAction(
-                                                SettingsAction.OnVibrationChange(
-                                                    it
-                                                )
+                                                SettingsAction.OnVibrationChange(it)
                                             )
                                         },
                                         isStartingBlank = state.isStartingBlank,
                                         onStartingBlankChange = {
                                             onAction(
-                                                SettingsAction.OnStartingBlankChange(
-                                                    it
-                                                )
+                                                SettingsAction.OnStartingBlankChange(it)
                                             )
                                         }
                                     )
@@ -187,15 +184,34 @@ internal fun SettingsContent(
                                     TtsLanguageSetting(
                                         currentTtsTag = state.ttsLang,
                                         languages = state.languages,
-                                        isTtsAvailable = state.isTtsAvailable,
+                                        onSeeTtsEngineInfo = { onAction(SettingsAction.OnShowTtsEngineInfoDialog) },
                                         onTtsTagChange = {
                                             onAction(
-                                                SettingsAction.OnTtsLangChange(
-                                                    it
-                                                )
+                                                SettingsAction.OnTtsLangChange(it)
                                             )
+                                        },
+                                        onTestTts = {
+                                            val language =
+                                                state.ttsEngine?.voice?.locale?.displayName
+                                                    ?: "Null"
+                                            onAction(SettingsAction.OnTextToSpeech(language))
                                         }
                                     )
+
+                                    if (state.isShowingTtsEngineDialog) {
+                                        TtsEngineDialog(
+                                            engine = state.ttsEngine?.defaultEngine
+                                                ?: "No default engine",
+                                            engines = state.ttsEngine?.engines?.joinToString { it.label }
+                                                ?: "No engines",
+                                            language = state.ttsEngine?.voice?.locale?.displayName
+                                                ?: "No default language",
+                                            languages = state.languages.joinToString { it.displayName },
+                                            voice = state.ttsEngine?.voice?.name
+                                                ?: "No default voice",
+                                            onDismissRequest = { onAction(SettingsAction.OnHideTtsEngineInfoDialog) }
+                                        )
+                                    }
                                 }
                             }
                         }
