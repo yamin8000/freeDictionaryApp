@@ -105,6 +105,8 @@ dependencies {
     //core android/kotlin
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.splashscreen)
+    //leak canary
+    debugImplementation(libs.leakcanary.android)
     //navigation
     implementation(libs.androidx.navigation.compose)
     //hilt
