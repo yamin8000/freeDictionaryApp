@@ -273,7 +273,7 @@ class HomeViewModel @AssistedInject constructor(
                     )
                 }
 
-                cachedEntry.forEach { entry ->
+                entries.forEach { entry ->
                     cacheUseCases.cacheEntry(entry)
                     cacheUseCases.cacheWordData(entry)
                 }
