@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.window.DialogProperties
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
@@ -75,6 +76,10 @@ internal fun ThemeChangerDialog(
     BasicAlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            blurBehindRadius = Sizes.Medium,
+            backgroundBlurRadius = Sizes.xLarge
+        ),
         content = {
             Surface(
                 shape = DefaultCutShape,

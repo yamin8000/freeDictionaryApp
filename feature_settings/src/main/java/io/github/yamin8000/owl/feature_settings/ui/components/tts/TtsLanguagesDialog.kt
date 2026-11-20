@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.DialogProperties
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
@@ -74,6 +75,10 @@ internal fun TtsLanguagesDialog(
     BasicAlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            blurBehindRadius = Sizes.Medium,
+            backgroundBlurRadius = Sizes.xLarge
+        ),
         content = {
             TtsLanguagesDialogContent(
                 currentTtsTag = currentTtsTag,

@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.yamin8000.owl.common.ui.components.AppText
@@ -62,7 +65,8 @@ private fun Preview() {
 internal fun ThemeSetting(
     theme: ThemeType,
     onThemeChanged: (ThemeType) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     var isShowingDialog by remember { mutableStateOf(false) }
 
@@ -78,6 +82,7 @@ internal fun ThemeSetting(
                 )
             }
             SettingsItem(
+                enabled = enabled,
                 onClick = { isShowingDialog = true },
                 content = {
                     Row(
@@ -92,10 +97,12 @@ internal fun ThemeSetting(
                             Icon(
                                 imageVector = Icons.TwoTone.DisplaySettings,
                                 contentDescription = null,
+                                tint = if (enabled) LocalContentColor.current else MaterialTheme.colorScheme.outline
                             )
                             AppText(
                                 text = theme.toStringResource(context),
-                                maxLines = 2
+                                maxLines = 2,
+                                color = if (enabled) Color.Unspecified else MaterialTheme.colorScheme.outline
                             )
                         }
                     )

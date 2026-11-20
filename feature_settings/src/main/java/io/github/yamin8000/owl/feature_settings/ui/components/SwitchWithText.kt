@@ -31,6 +31,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
+import kotlin.random.Random
 
 @AppPreview
 @Composable
@@ -56,7 +59,8 @@ private fun Preview() {
         SwitchWithText(
             caption = "some settingssssssssssssssssssssssssssssssssssssssssssssssssssssssss",
             checked = checked,
-            onCheckedChange = { checked = it }
+            onCheckedChange = { checked = it },
+            enabled = Random.nextBoolean()
         )
     }
 }
@@ -66,7 +70,8 @@ internal fun SwitchWithText(
     caption: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
     val feedbackType = remember(checked) {
@@ -91,7 +96,8 @@ internal fun SwitchWithText(
                         text = caption,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(5f)
+                        modifier = Modifier.weight(5f),
+                        color = if (enabled) Color.Unspecified else MaterialTheme.colorScheme.outline
                     )
                     Box(
                         modifier = Modifier.weight(1f),
@@ -103,6 +109,7 @@ internal fun SwitchWithText(
                                 checked = checked,
                                 onCheckedChange = onCheckedChange,
                                 modifier = Modifier.align(Alignment.CenterEnd),
+                                enabled = enabled,
                                 thumbContent = {
                                     Icon(
                                         imageVector = icon,

@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogProperties
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
@@ -75,6 +76,10 @@ internal fun ExpandedTextDialog(
     BasicAlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            blurBehindRadius = Sizes.Medium,
+            backgroundBlurRadius = Sizes.xLarge
+        ),
         content = {
             ExpandedTextDialogContent(
                 modifier = modifier,

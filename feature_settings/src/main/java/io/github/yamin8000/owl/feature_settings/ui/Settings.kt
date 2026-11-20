@@ -147,13 +147,14 @@ internal fun SettingsContent(
                             when (state.currentTab) {
                                 SettingsTab.General -> {
                                     GeneralSettings(
-                                        isVibrating = state.isVibrating,
+                                        enabled = state.isVibrating != null,
+                                        isVibrating = state.isVibrating ?: true,
                                         onVibratingChange = {
                                             onAction(
                                                 SettingsAction.OnVibrationChange(it)
                                             )
                                         },
-                                        isStartingBlank = state.isStartingBlank,
+                                        isStartingBlank = state.isStartingBlank ?: true,
                                         onStartingBlankChange = {
                                             onAction(
                                                 SettingsAction.OnStartingBlankChange(it)
@@ -161,7 +162,8 @@ internal fun SettingsContent(
                                         }
                                     )
                                     ThemeSetting(
-                                        theme = state.theme,
+                                        enabled = state.theme != null,
+                                        theme = state.theme ?: ThemeType.System,
                                         onThemeChanged = { newTheme ->
                                             onAction(SettingsAction.OnThemeChange(newTheme))
                                             onThemeChanged(newTheme)

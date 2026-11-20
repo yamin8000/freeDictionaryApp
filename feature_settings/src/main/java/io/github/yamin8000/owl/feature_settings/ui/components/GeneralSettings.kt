@@ -41,7 +41,8 @@ private fun Preview() {
             isVibrating = Random.nextBoolean(),
             onVibratingChange = {},
             isStartingBlank = Random.nextBoolean(),
-            onStartingBlankChange = {}
+            onStartingBlankChange = {},
+            enabled = Random.nextBoolean()
         )
     }
 }
@@ -52,7 +53,8 @@ internal fun GeneralSettings(
     onVibratingChange: (Boolean) -> Unit,
     isStartingBlank: Boolean,
     onStartingBlankChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     SettingsItemCard(
         modifier = modifier.fillMaxWidth(),
@@ -61,13 +63,15 @@ internal fun GeneralSettings(
                 imageVector = Icons.TwoTone.Language,
                 caption = stringResource(R.string.vibrate_on_scroll),
                 checked = isVibrating,
-                onCheckedChange = onVibratingChange
+                onCheckedChange = onVibratingChange,
+                enabled = enabled
             )
             SwitchItem(
                 imageVector = Icons.TwoTone.Search,
                 caption = stringResource(R.string.start_blank_search),
                 checked = isStartingBlank,
-                onCheckedChange = onStartingBlankChange
+                onCheckedChange = onStartingBlankChange,
+                enabled = enabled
             )
         }
     )

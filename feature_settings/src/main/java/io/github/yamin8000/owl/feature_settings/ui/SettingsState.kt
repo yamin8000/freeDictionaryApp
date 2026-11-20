@@ -29,10 +29,10 @@ import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
 
 data class SettingsState(
-    val theme: ThemeType = ThemeType.System,
+    val theme: ThemeType? = null,
     val ttsLang: String = "en-US",
-    val isVibrating: Boolean = true,
-    val isStartingBlank: Boolean = true,
+    val isVibrating: Boolean? = null,
+    val isStartingBlank: Boolean? = null,
     val languages: ImmutableList<Locale> = persistentListOf(),
     val source: DictionarySource = DictionarySource.FreeDictionary,
     val currentTab: SettingsTab = SettingsTab.General,

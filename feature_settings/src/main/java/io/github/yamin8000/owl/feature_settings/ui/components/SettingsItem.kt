@@ -33,6 +33,9 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowDropDownCircle
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
+import kotlin.random.Random
 
 @AppPreview
 @Composable
@@ -48,7 +52,12 @@ private fun Preview() {
         SettingsItem(
             modifier = Modifier.padding(Sizes.Large),
             onClick = {},
-            content = {}
+            enabled = Random.nextBoolean(),
+            content = {
+                Text(
+                    text = "Some Settings"
+                )
+            }
         )
     }
 }
@@ -57,7 +66,8 @@ private fun Preview() {
 internal fun SettingsItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
+    enabled: Boolean = true
 ) {
     Box(
         modifier = modifier
@@ -66,6 +76,7 @@ internal fun SettingsItem(
                 interactionSource = null,
                 indication = LocalIndication.current,
                 onClick = onClick,
+                enabled = enabled
             ),
         content = {
             Row(
@@ -89,7 +100,8 @@ internal fun SettingsItem(
                             Icon(
                                 imageVector = Icons.TwoTone.ArrowDropDownCircle,
                                 contentDescription = null,
-                                modifier = Modifier.align(Alignment.CenterEnd)
+                                modifier = Modifier.align(Alignment.CenterEnd),
+                                tint = if (enabled) LocalContentColor.current else MaterialTheme.colorScheme.outline
                             )
                         }
                     )

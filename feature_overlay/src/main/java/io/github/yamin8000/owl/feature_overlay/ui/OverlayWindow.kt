@@ -75,7 +75,9 @@ fun OverlayScreen(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
             dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false
+            usePlatformDefaultWidth = false,
+            blurBehindRadius = Sizes.Medium,
+            backgroundBlurRadius = Sizes.xLarge
         ),
         content = {
             Box(

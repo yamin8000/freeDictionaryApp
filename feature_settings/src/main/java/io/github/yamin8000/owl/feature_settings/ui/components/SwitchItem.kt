@@ -21,11 +21,13 @@
 
 package io.github.yamin8000.owl.feature_settings.ui.components
 
+import android.R.attr.enabled
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Category
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +36,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import io.github.yamin8000.owl.common.ui.theme.AppPreview
 import io.github.yamin8000.owl.common.ui.theme.PreviewTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
+import kotlin.random.Random
 
 @AppPreview
 @Composable
@@ -42,8 +45,9 @@ private fun Preview() {
         SwitchItem(
             imageVector = Icons.TwoTone.Category,
             caption = "Item on/off",
-            checked = false,
-            onCheckedChange = {}
+            checked = Random.nextBoolean(),
+            onCheckedChange = {},
+            enabled = Random.nextBoolean()
         )
     }
 }
@@ -54,7 +58,8 @@ internal fun SwitchItem(
     caption: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Row(
         modifier = modifier,
@@ -64,12 +69,13 @@ internal fun SwitchItem(
             Icon(
                 imageVector = imageVector,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary
+                tint = if (enabled) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outline
             )
             SwitchWithText(
                 caption = caption,
                 checked = checked,
-                onCheckedChange = onCheckedChange
+                onCheckedChange = onCheckedChange,
+                enabled = enabled
             )
         }
     )
