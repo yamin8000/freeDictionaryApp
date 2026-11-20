@@ -66,7 +66,7 @@ class MeaningRoomRepository(
                     entryId = item.entryId,
                     partOfSpeech = item.partOfSpeech,
                     createdAt = epoch(),
-                    language = item.language ?: "English"
+                    language = item.language ?: ""
                 )
             )
         } else -1

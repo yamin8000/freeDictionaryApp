@@ -31,10 +31,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -118,6 +122,34 @@ fun SearchList(
                     }
                 )
             }
+
+            /*item {
+                val languages = remember(entries) {
+                    entries.flatMap { it.meanings }
+                        .mapNotNull { it.language }
+                        .toSet()
+                        .toList()
+                }
+
+                LazyRow(
+                    content = {
+                        items(
+                            items = languages,
+                            itemContent = { language ->
+                                FilterChip(
+                                    selected = false,
+                                    onClick = {},
+                                    label = {
+                                        Text(
+                                            text = language
+                                        )
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
+            }*/
 
             items(
                 items = entries,

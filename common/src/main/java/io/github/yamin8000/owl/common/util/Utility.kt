@@ -27,7 +27,7 @@ import io.github.yamin8000.owl.common.BuildConfig
 import kotlin.random.Random
 
 /** Prints [message] to logcat if app is in debug build */
-fun log(
+fun logD(
     message: String
 ) {
     if (BuildConfig.DEBUG) {

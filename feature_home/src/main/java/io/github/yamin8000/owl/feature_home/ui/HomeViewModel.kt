@@ -33,7 +33,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.common.util.StringUtils.sanitizeWord
 import io.github.yamin8000.owl.common.util.TTS
-import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.common.util.logD
 import io.github.yamin8000.owl.datastore.domain.usecase.favourites.FavouriteUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.history.HistoryUseCases
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
@@ -90,7 +90,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         _state.update { it.copy(isSearching = false) }
-        log(throwable.stackTraceToString())
+        logD(throwable.stackTraceToString())
         viewModelScope.launch {
             when (throwable) {
                 is HttpException -> when (throwable.code()) {
@@ -263,12 +263,11 @@ class HomeViewModel @AssistedInject constructor(
                 val entries = if (settingsUseCases.getSource() == DictionarySource.FreeDictionary) {
                     searchFreeDictionaryUseCase(searchTerm)
                 } else searchWiktionaryUseCase(searchTerm)
-                val firstEntry = entries.firstOrNull()
 
                 _state.update {
                     it.copy(
                         searchResult = entries.toPersistentList(),
-                        word = firstEntry?.word ?: "",
+                        word = entries.firstOrNull()?.word ?: "",
                         searchSuggestions = persistentListOf()
                     )
                 }
@@ -284,11 +283,10 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun loadCachedWord(cachedEntries: List<Entry>) {
-        val firstEntry = cachedEntries.firstOrNull()
         _state.update {
             it.copy(
                 searchResult = cachedEntries.toPersistentList(),
-                word = firstEntry?.word ?: "",
+                word = cachedEntries.firstOrNull()?.word ?: "",
                 searchSuggestions = persistentListOf()
             )
         }

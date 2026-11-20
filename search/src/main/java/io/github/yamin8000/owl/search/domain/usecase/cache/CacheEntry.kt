@@ -27,7 +27,6 @@ import io.github.yamin8000.owl.search.domain.repository.local.DefinitionReposito
 import io.github.yamin8000.owl.search.domain.repository.local.EntryRepository
 import io.github.yamin8000.owl.search.domain.repository.local.MeaningRepository
 import io.github.yamin8000.owl.search.domain.repository.local.PhoneticRepository
-import kotlinx.collections.immutable.persistentListOf
 
 class CacheEntry(
     private val entryRepository: EntryRepository,
@@ -36,8 +35,18 @@ class CacheEntry(
     private val phoneticRepository: PhoneticRepository
 ) {
     suspend operator fun invoke(wordEntry: Entry) {
-        val isNotCached = entryRepository.findByTerm(wordEntry.word.lowercase().trim()).isEmpty()
-        if (isNotCached) {
+        val oldEntries = entryRepository.findByTerm(wordEntry.word.lowercase().trim())
+        if (oldEntries.isNotEmpty()) {
+            val newLanguage = wordEntry.meanings.firstNotNullOfOrNull { it.language }
+            if (newLanguage != null) {
+                val cachedLanguages = oldEntries.flatMap { it.meanings }
+                    .mapNotNull { it.language }
+                    .toSet()
+                if (!cachedLanguages.contains(newLanguage)) {
+                    addWordEntryToDatabase(wordEntry)
+                }
+            }
+        } else {
             addWordEntryToDatabase(wordEntry)
         }
     }
@@ -49,17 +58,18 @@ class CacheEntry(
             phoneticRepository.add(phonetic.copy(entryId = entryId))
         }
 
-        wordEntry.meanings.forEach { (partOfSpeech, definitions, _, _) ->
+        wordEntry.meanings.forEach { meaning ->
             val meaningId = meaningRepository.add(
                 Meaning(
                     entryId = entryId,
-                    partOfSpeech = partOfSpeech,
-                    definitions = persistentListOf(),
-                    antonyms = persistentListOf(),
-                    synonyms = persistentListOf()
+                    partOfSpeech = meaning.partOfSpeech,
+                    language = meaning.language,
+                    definitions = meaning.definitions,
+                    antonyms = meaning.antonyms,
+                    synonyms = meaning.synonyms
                 )
             )
-            definitions.forEach { definition ->
+            meaning.definitions.forEach { definition ->
                 definitionRepository.add(definition.copy(meaningId = meaningId))
             }
         }

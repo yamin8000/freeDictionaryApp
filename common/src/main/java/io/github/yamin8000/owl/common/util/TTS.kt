@@ -42,10 +42,10 @@ class TTS(
         engine = TextToSpeech(context) {
             if (it == TextToSpeech.SUCCESS) {
                 engine?.language = Locale.forLanguageTag(tag)
-                log("TTS init success!")
+                logD("TTS init success!")
                 continuation.resume(engine)
             } else {
-                log("TTS init failed!")
+                logD("TTS init failed!")
                 continuation.resume(null)
             }
         }

@@ -22,7 +22,7 @@
 package io.github.yamin8000.owl.search.utils
 
 import android.media.MediaPlayer
-import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.common.util.logD
 
 class MediaPlayerHelper {
     private var player: MediaPlayer? = MediaPlayer()
@@ -43,7 +43,7 @@ class MediaPlayerHelper {
                 player = null
             }
         } catch (e: Exception) {
-            log(e.stackTraceToString())
+            logD(e.stackTraceToString())
             player?.reset()
             player?.release()
             player = null

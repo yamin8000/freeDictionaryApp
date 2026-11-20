@@ -27,7 +27,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.yamin8000.owl.common.BuildConfig
-import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.common.util.logD
 import io.github.yamin8000.owl.search.data.datasource.remote.free.FreeDictionaryAPI
 import io.github.yamin8000.owl.search.data.datasource.remote.wiktionary.WiktionaryAPI
 import io.github.yamin8000.owl.search.data.repository.remote.FreeDictionaryRetrofitApiRepository
@@ -62,11 +62,11 @@ object SearchWeb {
         if (BuildConfig.DEBUG) {
             clientBuilder.addInterceptor { chain ->
                 val request = chain.request()
-                log("Retrofit/OkHttp request: ${request.method}:${request.url}")
-                log("Request body: ${request.body}")
+                logD("Retrofit/OkHttp request: ${request.method}:${request.url}")
+                logD("Request body: ${request.body}")
 
                 val response = chain.proceed(request)
-                log("Response code for: ${request.method}:${request.url} is ${response.code}")
+                logD("Response code for: ${request.method}:${request.url} is ${response.code}")
 
                 return@addInterceptor response
             }
@@ -113,11 +113,11 @@ object SearchWeb {
         if (BuildConfig.DEBUG) {
             clientBuilder.addInterceptor { chain ->
                 val request = chain.request()
-                log("Retrofit/OkHttp request: ${request.method}:${request.url}")
-                log("Request body: ${request.body}")
+                logD("Retrofit/OkHttp request: ${request.method}:${request.url}")
+                logD("Request body: ${request.body}")
 
                 val response = chain.proceed(request)
-                log("Response code for: ${request.method}:${request.url} is ${response.code}")
+                logD("Response code for: ${request.method}:${request.url} is ${response.code}")
 
                 return@addInterceptor response
             }

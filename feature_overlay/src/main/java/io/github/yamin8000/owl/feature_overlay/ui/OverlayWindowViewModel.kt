@@ -28,7 +28,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.domain.model.DictionarySource
 import io.github.yamin8000.owl.common.util.TTS
-import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.common.util.logD
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import io.github.yamin8000.owl.feature_overlay.di.OverlayViewModelFactory
 import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
@@ -55,7 +55,7 @@ class OverlayWindowViewModel @AssistedInject constructor(
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        log(throwable.stackTraceToString())
+        logD(throwable.stackTraceToString())
         _state.update { it.copy(isSearching = false) }
     }
 

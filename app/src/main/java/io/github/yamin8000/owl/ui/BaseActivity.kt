@@ -33,7 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.yamin8000.owl.common.ui.theme.AppTheme
 import io.github.yamin8000.owl.datastore.domain.model.ThemeType
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
-import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.common.util.logD
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -72,7 +72,7 @@ internal open class BaseActivity : ComponentActivity() {
                 settings.getTheme()
             }
         } catch (e: InterruptedException) {
-            log(e.stackTraceToString())
+            logD(e.stackTraceToString())
             ThemeType.System
         }
     }

@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.yamin8000.owl.common.util.TTS
-import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.common.util.logD
 import io.github.yamin8000.owl.datastore.domain.usecase.settings.SettingUseCases
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -105,7 +105,7 @@ class SettingsViewModel @Inject constructor(
 
             is SettingsAction.OnTextToSpeech -> {
                 scope.launch {
-                    log(tts.speak(action.text).toString())
+                    logD(tts.speak(action.text).toString())
                 }
             }
         }

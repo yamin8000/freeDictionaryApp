@@ -24,7 +24,7 @@ package io.github.yamin8000.owl.feature_about.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.yamin8000.owl.common.util.log
+import io.github.yamin8000.owl.common.util.logD
 import io.github.yamin8000.owl.common.util.randomColor
 import io.github.yamin8000.owl.feature_about.domain.repository.GithubRepoRepository
 import kotlinx.collections.immutable.toImmutableList
@@ -48,7 +48,7 @@ class AboutViewModel @Inject constructor(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         _state.update { it.copy(isLoading = false) }
-        log(throwable.stackTraceToString())
+        logD(throwable.stackTraceToString())
     }
 
     private val scope = CoroutineScope(
