@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -46,7 +45,6 @@ import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.feature_overlay.ui.components.ButtonsRow
 import io.github.yamin8000.owl.search.ui.components.SearchList
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverlayScreen(
     onDismissRequest: () -> Unit,

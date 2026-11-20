@@ -23,7 +23,6 @@ package io.github.yamin8000.owl.feature_home.ui.components.bottom_app_bar
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -48,7 +47,6 @@ private fun Preview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun RainbowWavyLinearProgress(
     modifier: Modifier = Modifier,

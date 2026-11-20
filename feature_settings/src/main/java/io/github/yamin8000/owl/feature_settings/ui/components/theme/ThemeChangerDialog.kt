@@ -33,7 +33,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.DisplaySettings
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -65,7 +64,6 @@ private fun Preview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ThemeChangerDialog(
     currentTheme: ThemeType,

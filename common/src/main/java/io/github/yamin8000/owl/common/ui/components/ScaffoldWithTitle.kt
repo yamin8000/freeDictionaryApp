@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
@@ -46,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldWithTitle(
     title: String,
