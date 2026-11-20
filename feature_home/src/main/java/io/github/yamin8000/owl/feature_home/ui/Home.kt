@@ -241,7 +241,7 @@ internal fun HomeContent(
                             onAction(HomeAction.OnTextToSpeech(it))
                         }
                     },
-                    onPlayAudio = { onAction(HomeAction.OnPlayAudio(it)) }
+                    onPlayAudio = { onAction(HomeAction.OnPlayAudio(it)) },
                 )
 
                 if (state.isShowingExpandedTextDialog) {

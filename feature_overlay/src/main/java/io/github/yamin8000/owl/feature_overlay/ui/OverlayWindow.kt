@@ -101,21 +101,11 @@ fun OverlayScreen(
                                         onAddToFavourite = null,
                                         onShareWord = null,
                                         onExpandText = {},
+                                        entries = state.entries,
+                                        onPlayAudio = { vm.onAction(OverlayAction.OnPlayAudio(it)) },
                                         onTextToSpeech = {
-                                            vm.onAction(
-                                                OverlayWindowAction.OnTextToSpeech(
-                                                    it
-                                                )
-                                            )
-                                        },
-                                        onPlayAudio = {
-                                            vm.onAction(
-                                                OverlayWindowAction.OnPlayAudio(
-                                                    it
-                                                )
-                                            )
-                                        },
-                                        entries = state.entries
+                                            vm.onAction(OverlayAction.OnTextToSpeech(it))
+                                        }
                                     )
                                 }
                             )

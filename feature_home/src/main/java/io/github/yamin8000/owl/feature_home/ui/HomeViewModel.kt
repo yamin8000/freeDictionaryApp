@@ -41,11 +41,11 @@ import io.github.yamin8000.owl.feature_home.di.HomeViewModelFactory
 import io.github.yamin8000.owl.feature_home.domain.repository.TermSuggesterRepository
 import io.github.yamin8000.owl.feature_home.domain.usecase.GetRandomWord
 import io.github.yamin8000.owl.feature_home.ui.util.HomeError
-import io.github.yamin8000.owl.search.utils.MediaPlayerHelper
 import io.github.yamin8000.owl.search.domain.model.Entry
 import io.github.yamin8000.owl.search.domain.usecase.cache.WordCacheUseCases
 import io.github.yamin8000.owl.search.domain.usecase.search.SearchFreeDictionary
 import io.github.yamin8000.owl.search.domain.usecase.search.SearchWiktionary
+import io.github.yamin8000.owl.search.utils.MediaPlayerHelper
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -258,8 +258,8 @@ class HomeViewModel @AssistedInject constructor(
 
             _state.update { it.copy(isSearching = true) }
 
-            val cachedEntry = cacheUseCases.getCachedEntries(searchTerm)
-            if (cachedEntry.isEmpty()) {
+            val cachedEntries = cacheUseCases.getCachedEntries(searchTerm)
+            if (cachedEntries.isEmpty()) {
                 val entries = if (settingsUseCases.getSource() == DictionarySource.FreeDictionary) {
                     searchFreeDictionaryUseCase(searchTerm)
                 } else searchWiktionaryUseCase(searchTerm)
@@ -272,13 +272,17 @@ class HomeViewModel @AssistedInject constructor(
                     )
                 }
 
+                _state.update { it.copy(isSearching = false) }
+
                 entries.forEach { entry ->
                     cacheUseCases.cacheEntry(entry)
                     cacheUseCases.cacheWordData(entry)
                 }
-            } else loadCachedWord(cachedEntry)
+            } else {
+                loadCachedWord(cachedEntries)
+                _state.update { it.copy(isSearching = false) }
+            }
 
-            _state.update { it.copy(isSearching = false) }
         } else errorChannel.send(HomeError.TermIsEmpty)
     }
 

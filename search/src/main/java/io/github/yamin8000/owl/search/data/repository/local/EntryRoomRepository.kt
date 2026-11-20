@@ -56,7 +56,7 @@ class EntryRoomRepository(
                 id = item.id,
                 word = item.word,
                 phonetics = phoneticRepository.findAllByEntryId(item.id).toImmutableList(),
-                meanings = meaningRepository.findAllByEntryId(item.id).toImmutableList()
+                meanings = meaningRepository.findAllByEntryId(item.id).toImmutableList(),
             )
         } else null
     }
