@@ -40,6 +40,7 @@ private val appId = "io.github.yamin8000.owl"
 android {
     namespace = appId
     compileSdk = 37
+    compileSdkMinor = 2
 
     defaultConfig {
         applicationId = appId
