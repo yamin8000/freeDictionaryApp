@@ -25,13 +25,13 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.jetbrains.kotlin.compose.plugin)
-    alias(libs.plugins.legacy.kapt)
     alias(libs.plugins.hilt)
 }
 
 android {
     namespace = "io.github.yamin8000.owl.feature_about"
     compileSdk = 37
+    compileSdkMinor = 2
 
     defaultConfig {
         minSdk = 24
@@ -67,7 +67,6 @@ dependencies {
     //retrofit
     api(libs.retrofit.main)
     implementation(libs.retrofit.converter.moshi)
-    kapt(libs.retrofit.type.keeper)
     //moshi
     implementation(libs.moshi.kotlin)
     ksp(libs.moshi.kotlin.codegen)

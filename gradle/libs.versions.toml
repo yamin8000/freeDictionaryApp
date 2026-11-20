@@ -18,10 +18,10 @@ jsoup = "1.24.1"
 kotlin = "2.4.21"
 kotlinx-collections-immutable = "0.5.2"
 ksp = "2.3.14"
+leakcanary = "2.14"
 lottie-compose = "6.7.1"
 moshi = "1.15.2"
 retrofit = "3.0.0"
-leakcanary = "2.14"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
@@ -49,13 +49,12 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 hilt-lifecycle-compose = { module = "androidx.hilt:hilt-lifecycle-viewmodel-compose", version.ref = "hilt-lifecycle-compose" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie-compose" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 retrofit-main = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit-type-keeper = { module = "com.squareup.retrofit2:response-type-keeper", version.ref = "retrofit" }
-leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-application" }
@@ -66,4 +65,3 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 jetbrains-kotlin-compose-plugin = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
-legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "android-application" }

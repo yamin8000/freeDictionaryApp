@@ -31,6 +31,7 @@ plugins {
 android {
     namespace = "io.github.yamin8000.owl.feature_overlay"
     compileSdk = 37
+    compileSdkMinor = 2
 
     defaultConfig {
         minSdk = 24
