@@ -1,0 +1,5 @@
+- Cache bug fix
+- Added TTS info for testing TTS
+- Fixed some bugs
+- Added background blur when showing Dialogs
+- Updated compose libraries
