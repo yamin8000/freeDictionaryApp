@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogProperties
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.AppTheme
 import io.github.yamin8000.owl.common.ui.theme.Sizes
@@ -46,6 +47,10 @@ internal fun TtsEngineDialog(
     BasicAlertDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            blurBehindRadius = Sizes.Medium,
+            backgroundBlurRadius = Sizes.xLarge
+        ),
         content = {
             TtsEngineDialogContent(
                 engine = engine,

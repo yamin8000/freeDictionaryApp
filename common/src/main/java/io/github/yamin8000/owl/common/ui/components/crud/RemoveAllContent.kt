@@ -30,8 +30,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.DialogProperties
 import io.github.yamin8000.owl.common.ui.components.AppText
 import io.github.yamin8000.owl.common.ui.theme.DefaultCutShape
+import io.github.yamin8000.owl.common.ui.theme.Sizes
 import io.github.yamin8000.owl.strings.R
 
 @Composable
@@ -46,6 +48,10 @@ internal fun RemoveAllContent(
             onDismissRequest = { isShowingDialog = false },
             title = { AppText(stringResource(R.string.clear_all)) },
             text = { AppText(stringResource(R.string.remove_all_prompt)) },
+            properties = DialogProperties(
+                blurBehindRadius = Sizes.Medium,
+                backgroundBlurRadius = Sizes.xLarge
+            ),
             confirmButton = {
                 Button(
                     onClick = onRemoveAllClick,
